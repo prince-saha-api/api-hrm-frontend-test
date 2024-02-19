@@ -1,0 +1,59 @@
+
+.topbar {
+    background: var(--gradient-color);
+    border-bottom: 1px solid transparent;
+    height: 60px;
+    z-index: 1044;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.logoBox{
+  width: 275px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo{
+  max-width: 100%;
+  max-height: 45px;
+  object-fit: contain;
+}
+
+.toggleIcon{
+  font-size: 30px;
+  margin-left: 20px;
+  color: #fff;
+}
+.toggleIcon:hover{
+  cursor: pointer;
+}
+
+
+.profile_img {
+  height: 40px;
+  width: 40px;
+  line-height: 70px;
+  border-radius: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.topbar .btn-primary {
+  --bs-btn-bg: none !important;
+}
+.topbar .btn:hover {
+  background-color: transparent !important;
+  border-color: 1px solid transparent !important;
+}
+.topbar .btn.show,
+.btn:first-child:active,
+:not(.btn-check) + .btn:active {
+  color: var(--bs-btn-active-color);
+  background-color: transparent !important;
+  border-color: var(--bs-btn-active-border-color);
+}

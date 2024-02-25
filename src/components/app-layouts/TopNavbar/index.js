@@ -8,11 +8,13 @@ import { logout } from "../../../lib/auth";
 import { getLoggedInUser } from "../../../lib/getter";
 import { getStoragePath } from "../../../lib/helper";
 import { authTokenKey, authUserKey } from "../../../lib/config";
+import { HiMenuAlt2 } from "react-icons/hi";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../../../public/logo.png";
 import profileImg from "../../../../public/profile01.jpg";
 import { RiMenu4Fill } from "react-icons/ri";
+
 
 const Navbar = () => {
    // const { logout } = useAuth();
@@ -62,7 +64,7 @@ const Navbar = () => {
 
          <div className="d-flex justify-content-between align-items-center w-100">
             <div className="toggle">
-               <RiMenu4Fill className="toggleIcon" />
+               <HiMenuAlt2 className="toggleIcon" />
             </div>
             <div className="profileBox">
                <Dropdown>

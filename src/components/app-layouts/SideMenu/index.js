@@ -8,7 +8,11 @@ import { MdDeviceHub } from "react-icons/md";
 import { LuNewspaper } from "react-icons/lu";
 import { FiSettings } from "react-icons/fi";
 import { VscSettings } from "react-icons/vsc";
-import { TbUserStar } from "react-icons/tb";
+import { RiUserSettingsLine } from "react-icons/ri";
+import { BiDevices } from "react-icons/bi";
+import { LuListChecks } from "react-icons/lu";
+import { FaRegMoneyBillAlt } from "react-icons/fa";
+import { LuUser2 } from "react-icons/lu";
 import Accordion from "react-bootstrap/Accordion";
 import Image from "next/image";
 import Logo from "../../../../public/logo.png";
@@ -22,21 +26,21 @@ const Page = () => {
             <Accordion>
               {/* manu item 0 */}
               <Accordion.Item eventKey="0" className="pt-0">
-              <p className="menuTitle mb-0">Main</p>
+              <p className="menuTitle mb-0">Menu</p>
                 <Accordion.Header className="p-0 m-0 text-capitalize">
                   <VscSettings className="sideMenu menu_icon" />
                   <span className="text-capitalize sideMenu">
-                    Company setup
+                    Company
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
                     <li className="text-capitalize text-decoration-none sidenav_sub_item">
                       <Link
-                        href="/add-employee"
+                        href="/basic-info"
                         className="text-decoration-none subMenu"
                       >
-                        Basic setup
+                        Basic info
                       </Link>
                     </li>
                     <li className="text-capitalize text-decoration-none sidenav_sub_item">
@@ -80,16 +84,16 @@ const Page = () => {
               {/* manu item 1 */}
               <Accordion.Item eventKey="1" className="pt-0">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <VscSettings className="sideMenu menu_icon" />
+                  <LuUser2 className="sideMenu menu_icon" />
                   <span className="text-capitalize sideMenu">
-                    Employee Management
+                    Employee
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
                     <li className="text-capitalize text-decoration-none sidenav_sub_item">
                       <Link
-                        href="/add-employee"
+                        href="/employees"
                         className="text-decoration-none subMenu"
                       >
                         All employee
@@ -102,9 +106,9 @@ const Page = () => {
               {/* manu item 2 */}
               <Accordion.Item eventKey="2" className="pt-0">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <VscSettings className="sideMenu menu_icon" />
+                  <LuNewspaper className="sideMenu menu_icon" />
                   <span className="text-capitalize sideMenu">
-                    Leave Management
+                    Leave
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -134,9 +138,9 @@ const Page = () => {
               {/* manu item 3 */}
               <Accordion.Item eventKey="3" className="pt-0">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <VscSettings className="sideMenu menu_icon" />
+                  <FaRegMoneyBillAlt className="sideMenu menu_icon" />
                   <span className="text-capitalize sideMenu">
-                    Payroll Management
+                    Payroll
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -174,9 +178,9 @@ const Page = () => {
               {/* manu item 4 */}
               <Accordion.Item eventKey="4" className="pt-0">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <VscSettings className="sideMenu menu_icon" />
+                  <LuListChecks className="sideMenu menu_icon" />
                   <span className="text-capitalize sideMenu">
-                  Attendance Management
+                  Attendance
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -205,9 +209,9 @@ const Page = () => {
               {/* manu item 5 */}
               <Accordion.Item eventKey="5" className="pt-0">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <VscSettings className="sideMenu menu_icon" />
+                  <BiDevices className="sideMenu menu_icon" />
                   <span className="text-capitalize sideMenu">
-                  Device Management
+                  Device
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -259,9 +263,9 @@ const Page = () => {
               {/* manu item 6 */}
               <Accordion.Item eventKey="6" className="pt-0">
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <TbUserStar className="sideMenu menu_icon" />
+                  <RiUserSettingsLine className="sideMenu menu_icon" />
                   <span className="text-capitalize sideMenu">
-                  User Management
+                  User
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>

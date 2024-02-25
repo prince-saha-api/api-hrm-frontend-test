@@ -1,6 +1,9 @@
 import { ToastContainer } from "react-toastify";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
+import "@mantine/core/styles.css";
+import "mantine-datatable/styles.css";
 import "aos/dist/aos.css";
 import "../styles/globals.scss";
 
@@ -9,11 +12,18 @@ export const metadata = {
   description: "HRM PAYROLL",
 };
 
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <ColorSchemeScript defaultColorScheme="auto" />
+      </head>
       <body>
-        {children}
+
+
+      <MantineProvider>
+      {children}
         <ToastContainer
           position="bottom-right"
           autoClose={5000}
@@ -26,6 +36,8 @@ export default function RootLayout({ children }) {
           pauseOnHover
           theme="light"
         />
+        </MantineProvider>
+        
       </body>
     </html>
   );

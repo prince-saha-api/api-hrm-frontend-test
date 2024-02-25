@@ -1,0 +1,43 @@
+.dataBox {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+}
+.dataBoxIcon {
+   padding: 20px;
+   border-radius: 100px;
+   margin-bottom: 30px;
+   background-color: #f7f7f7;
+}
+.dataBoxIcon svg {
+   font-size: 70px;
+}
+
+.compmanyLogo img {
+   max-width: 170px;
+   max-height: 70px;
+   height: auto;
+   object-fit: contain;
+   border-radius: 6px;
+   padding-top: 20px;
+}
+
+.uploadBox {
+   text-align: center;
+//    background-color: #f5f5ff;
+   padding: 30px 30px;
+//    border: dashed 1px;
+   border-color: #ccc;
+   border-radius: 6px;
+}
+.uploadBox svg {
+   font-size: 70px;
+}
+
+.updatedImage img {
+   text-align: center;
+   max-width: 200px;
+   max-height: 200px;
+   object-fit: contain;
+}

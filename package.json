@@ -10,6 +10,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mantine/core": "^7.5.3",
+    "@mantine/form": "^7.5.3",
+    "@mantine/hooks": "^7.5.3",
     "ag-grid-react": "^31.0.3",
     "aos": "^2.3.4",
     "axios": "^1.6.2",
@@ -20,6 +23,7 @@
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.1",
+    "mantine-datatable": "^7.5.1",
     "next": "13.4.19",
     "react": "18.2.0",
     "react-bootstrap": "^2.8.0",

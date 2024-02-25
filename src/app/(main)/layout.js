@@ -11,7 +11,7 @@ import "../../styles/main.scss";
 
 export const metadata = {
    title: "Dashboard",
-   description: "DMC HRM",
+   description: "HRM Payroll",
 };
 
 export default async function RootLayout({ children }) {

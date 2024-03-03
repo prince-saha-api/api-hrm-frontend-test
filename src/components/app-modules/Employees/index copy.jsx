@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
-import Link from "next/link";
 // import Button from "react-bootstrap/Button";
 import EditEmployee from "./EditEmployee";
 import Spinner from "react-bootstrap/Spinner";
@@ -15,7 +14,6 @@ import { fetcher } from "../../../lib/fetch";
 import { AiOutlineFilePdf } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
-import { LuPlus } from "react-icons/lu";
 import {
    formatDate,
    getDate,
@@ -23,17 +21,7 @@ import {
    getStoragePath,
 } from "../../../lib/helper";
 
-import {
-   Popover,
-   Button,
-   Select,
-   Input,
-   Menu,
-   Breadcrumbs,
-   Anchor,
-   Badge,
-   NavLink,
-} from "@mantine/core";
+import { Popover, Button, Select, Input, Menu, Breadcrumbs, Anchor } from "@mantine/core";
 
 import { CiSearch } from "react-icons/ci";
 import { IoIosArrowDown } from "react-icons/io";
@@ -242,7 +230,7 @@ const Employees = () => {
 
    const items = [
       { title: "Dashboard", href: "/" },
-      { title: "All Employee", href: "#" },
+      { title: "Basic Setup", href: "#" },
    ].map((item, index) => (
       <Anchor href={item.href} key={index}>
          {item.title}
@@ -259,17 +247,214 @@ const Employees = () => {
 
    return (
       <>
-         <div className="pageTop mb-4">
+      <div className="pageTop mb-4">
             <h3>Basic info</h3>
             <Breadcrumbs>{items}</Breadcrumbs>
          </div>
+         <div className="filterBox mb-3">
+            <Popover
+               classNames={{
+                  dropdown: "filterDropdown",
+               }}
+               width={400}
+               position="bottom-start"
+               offset={5}
+               shadow="md"
+               opened={open1}
+            >
+               <Popover.Target onClick={() => setOpen1((prev) => !prev)}>
+                  <Button
+                     classNames={{
+                        root: "filterNav",
+                     }}
+                  >
+                     {item1} <IoIosArrowDown className="ms-1" />
+                  </Button>
+               </Popover.Target>
+               <Popover.Dropdown>
+                  <p className="p-2 mb-0">Designation</p>
+                  <Select
+                     leftSectionPointerEvents="none"
+                     leftSection={icon}
+                     nothingFoundMessage="Nothing found..."
+                     classNames={{
+                        wrapper: "my-wrapper",
+                        root: "my-root",
+                        dropdown: "selectFilter",
+                     }}
+                     onChange={(value, option) => {
+                        console.log(value);
+                        setItem1(value);
+                        setOpen1(false);
+                     }}
+                     clearable={true}
+                     dropdownOpened={open}
+                     withScrollArea={true}
+                     searchable
+                     placeholder="Search"
+                     data={[
+                        "React",
+                        "Angular",
+                        "Vue",
+                        "Svelte",
+                        "Reactg",
+                        "Ankgular",
+                        "Vjue",
+                        "Other-1",
+                        "Other-2",
+                        "Other-3",
+                        "Some text here",
+                     ]}
+                     comboboxProps={{
+                        withinPortal: false,
+                     }}
+                  />
+               </Popover.Dropdown>
+            </Popover>
 
-         {/* <div className="search_part mb-3">
+            <Menu width={200} shadow="md" position="bottom-start" offset={5}>
+               <Menu.Target>
+                  <Button
+                     classNames={{
+                        root: "filterNav",
+                     }}
+                  >
+                     {item2} <IoIosArrowDown className="ms-1" />
+                  </Button>
+               </Menu.Target>
+
+               <Menu.Dropdown className="p-2">
+                  <p className="p-2 mb-0 border-bottom mb-1">Group</p>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem2("Group_01");
+                     }}
+                  >
+                     Group_01
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem2("Group_02");
+                     }}
+                  >
+                     Group_02
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem2("Group_03");
+                     }}
+                  >
+                     Group_03
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem2("Group_04");
+                     }}
+                  >
+                     Group_04
+                  </Menu.Item>
+               </Menu.Dropdown>
+            </Menu>
+            <Menu width={200} shadow="md" position="bottom-start" offset={5}>
+               <Menu.Target>
+                  <Button
+                     classNames={{
+                        root: "filterNav",
+                     }}
+                  >
+                     {item3} <IoIosArrowDown className="ms-1" />
+                  </Button>
+               </Menu.Target>
+
+               <Menu.Dropdown className="p-2">
+                  <p className="p-2 mb-0 border-bottom mb-1">Department</p>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem3("Department_01");
+                     }}
+                  >
+                     Department_01
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem3("Department_02");
+                     }}
+                  >
+                     Department_02
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem3("Department_03");
+                     }}
+                  >
+                     Department_03
+                  </Menu.Item>
+               </Menu.Dropdown>
+            </Menu>
+            <Menu width={200} shadow="md" position="bottom-start" offset={5}>
+               <Menu.Target>
+                  <Button
+                     classNames={{
+                        root: "filterNav",
+                     }}
+                  >
+                     {item4} <IoIosArrowDown className="ms-1" />
+                  </Button>
+               </Menu.Target>
+
+               <Menu.Dropdown className="p-2">
+                  <p className="p-2 mb-0 border-bottom mb-1">Shift</p>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem4("Shift_01");
+                     }}
+                  >
+                     Shift_01
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem4("Shift_02");
+                     }}
+                  >
+                     Shift_02
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem4("Shift_03");
+                     }}
+                  >
+                     Shift_03
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem4("Shift_04");
+                     }}
+                  >
+                     Shift_04
+                  </Menu.Item>
+               </Menu.Dropdown>
+            </Menu>
+            <Button variant="filled" size="md">
+               Search
+            </Button>
+         </div>
+         <div className="search_part mb-3">
             <div className="d-flex justify-content-between">
                <form className="" onSubmit={handleFileSubmit}>
                   <div className="d-flex align-items-center">
-                     
-                     <div className="ms-2 d-flex align-items-center">
+                     <Input leftSection={icon} size="md" placeholder="Search" />
+                     {/* <div className="ms-2 d-flex align-items-center">
                            <a
                               className="me-2"
                               href="/csv_file.csv"
@@ -280,258 +465,46 @@ const Employees = () => {
                            <a href="/zip_file.zip" download="zip_file.zip">
                               Sample ZIP
                            </a>
-                        </div>
+                        </div> */}
                   </div>
                </form>
 
-               
-            </div>
-         </div> */}
-
-         <div className="d-flex justify-content-between mb-3">
-            <div className="downItem d-flex">
-               <div className="me-2">
-                  <Button
-                     type="submit"
-                     className="rounded-1 px-3 btn btn-success border-0"
-                     onClick={() => handleExportToPDF()}
-                  >
-                     <AiOutlineFilePdf className="me-1" />
-                     PDF
-                  </Button>
-               </div>
-               <div className="me-2">
-                  <Button
-                     type="submit"
-                     className="rounded-1 px-3 btn btn-success border-0"
-                     onClick={() => handleExportToCSV()}
-                  >
-                     <FaRegFileAlt className="me-1" />
-                     CSV
-                  </Button>
-               </div>
-               <div>
-                  <Button
-                     variant="filled"
-                     size="sm"
-                     className="px-3"
-                     onClick={() => handleExportToExcel()}
-                  >
-                     <RiFileExcel2Line className="me-1" />
-                     Excel
-                  </Button>
+               <div className="d-flex justify-content-between">
+                  <div className="me-2">
+                     <Button
+                        type="submit"
+                        className="rounded-1 px-3 btn btn-success border-0"
+                        onClick={() => handleExportToPDF()}
+                     >
+                        <AiOutlineFilePdf className="me-1" />
+                        PDF
+                     </Button>
+                  </div>
+                  <div className="me-2">
+                     <Button
+                        type="submit"
+                        className="rounded-1 px-3 btn btn-success border-0"
+                        onClick={() => handleExportToCSV()}
+                     >
+                        <FaRegFileAlt className="me-1" />
+                        CSV
+                     </Button>
+                  </div>
+                  <div>
+                     <Button
+                        type="submit"
+                        className="rounded-1 px-3 btn btn-success border-0"
+                        onClick={() => handleExportToExcel()}
+                     >
+                        <RiFileExcel2Line className="me-1" />
+                        Excel
+                     </Button>
+                  </div>
                </div>
             </div>
-
-            <Link className="cusNav" href="/add-employee">
-               <LuPlus className="me-1" />
-               Add Employee
-            </Link>
          </div>
 
          <div className="itemCard datatable-wrapper">
-            <div className="filterBox mb-3 d-flex align-items-center">
-               <Popover
-                  classNames={{
-                     dropdown: "filterDropdown",
-                  }}
-                  width={400}
-                  position="bottom-start"
-                  offset={5}
-                  shadow="md"
-                  opened={open1}
-               >
-                  <Popover.Target onClick={() => setOpen1((prev) => !prev)}>
-                     <Button
-                        classNames={{
-                           root: "filterNav",
-                        }}
-                     >
-                        {item1} <IoIosArrowDown className="ms-1" />
-                     </Button>
-                  </Popover.Target>
-                  <Popover.Dropdown>
-                     <p className="p-2 mb-0">Designation</p>
-                     <Select
-                        leftSectionPointerEvents="none"
-                        leftSection={icon}
-                        nothingFoundMessage="Nothing found..."
-                        classNames={{
-                           wrapper: "my-wrapper",
-                           root: "my-root",
-                           dropdown: "selectFilter",
-                        }}
-                        onChange={(value, option) => {
-                           console.log(value);
-                           setItem1(value);
-                           setOpen1(false);
-                        }}
-                        clearable={true}
-                        dropdownOpened={open}
-                        withScrollArea={true}
-                        searchable
-                        placeholder="Search"
-                        data={[
-                           "Front-end developer",
-                           "Back-end developer",
-                           "Vue",
-                           "Svelte",
-                           "Other-2",
-                           "Other-3",
-                           "Some text here",
-                        ]}
-                        comboboxProps={{
-                           withinPortal: false,
-                        }}
-                     />
-                  </Popover.Dropdown>
-               </Popover>
-
-               <Menu width={200} shadow="md" position="bottom-start" offset={5}>
-                  <Menu.Target>
-                     <Button
-                        classNames={{
-                           root: "filterNav",
-                        }}
-                     >
-                        {item2} <IoIosArrowDown className="ms-1" />
-                     </Button>
-                  </Menu.Target>
-
-                  <Menu.Dropdown className="p-2">
-                     <p className="p-2 mb-0 border-bottom mb-1">Group</p>
-                     <Menu.Item
-                        onClick={(e) => {
-                           e.preventDefault();
-                           setItem2("Group_01");
-                        }}
-                     >
-                        Group_01
-                     </Menu.Item>
-                     <Menu.Item
-                        onClick={(e) => {
-                           e.preventDefault();
-                           setItem2("Group_02");
-                        }}
-                     >
-                        Group_02
-                     </Menu.Item>
-                     <Menu.Item
-                        onClick={(e) => {
-                           e.preventDefault();
-                           setItem2("Group_03");
-                        }}
-                     >
-                        Group_03
-                     </Menu.Item>
-                     <Menu.Item
-                        onClick={(e) => {
-                           e.preventDefault();
-                           setItem2("Group_04");
-                        }}
-                     >
-                        Group_04
-                     </Menu.Item>
-                  </Menu.Dropdown>
-               </Menu>
-               <Menu width={200} shadow="md" position="bottom-start" offset={5}>
-                  <Menu.Target>
-                     <Button
-                        classNames={{
-                           root: "filterNav",
-                        }}
-                     >
-                        {item3} <IoIosArrowDown className="ms-1" />
-                     </Button>
-                  </Menu.Target>
-
-                  <Menu.Dropdown className="p-2">
-                     <p className="p-2 mb-0 border-bottom mb-1">Department</p>
-                     <Menu.Item
-                        onClick={(e) => {
-                           e.preventDefault();
-                           setItem3("Department_01");
-                        }}
-                     >
-                        Department_01
-                     </Menu.Item>
-                     <Menu.Item
-                        onClick={(e) => {
-                           e.preventDefault();
-                           setItem3("Department_02");
-                        }}
-                     >
-                        Department_02
-                     </Menu.Item>
-                     <Menu.Item
-                        onClick={(e) => {
-                           e.preventDefault();
-                           setItem3("Department_03");
-                        }}
-                     >
-                        Department_03
-                     </Menu.Item>
-                  </Menu.Dropdown>
-               </Menu>
-               <Menu width={200} shadow="md" position="bottom-start" offset={5}>
-                  <Menu.Target>
-                     <Button
-                        classNames={{
-                           root: "filterNav",
-                        }}
-                     >
-                        {item4} <IoIosArrowDown className="ms-1" />
-                     </Button>
-                  </Menu.Target>
-
-                  <Menu.Dropdown className="p-2">
-                     <p className="p-2 mb-0 border-bottom mb-1">Shift</p>
-                     <Menu.Item
-                        onClick={(e) => {
-                           e.preventDefault();
-                           setItem4("Shift_01");
-                        }}
-                     >
-                        Shift_01
-                     </Menu.Item>
-                     <Menu.Item
-                        onClick={(e) => {
-                           e.preventDefault();
-                           setItem4("Shift_02");
-                        }}
-                     >
-                        Shift_02
-                     </Menu.Item>
-                     <Menu.Item
-                        onClick={(e) => {
-                           e.preventDefault();
-                           setItem4("Shift_03");
-                        }}
-                     >
-                        Shift_03
-                     </Menu.Item>
-                     <Menu.Item
-                        onClick={(e) => {
-                           e.preventDefault();
-                           setItem4("Shift_04");
-                        }}
-                     >
-                        Shift_04
-                     </Menu.Item>
-                  </Menu.Dropdown>
-               </Menu>
-               <Input
-                  classNames={{
-                     input: "searchBtn",
-                  }}
-                  size="sm"
-                  placeholder="Employee name or ID"
-               />
-
-               <Button className="ms-3" variant="filled" size="sm">
-                  Filter
-               </Button>
-            </div>
             <DataTable
                style={{
                   height: apiData?.results?.length === 0 ? "300px" : "auto",

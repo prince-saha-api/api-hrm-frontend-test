@@ -3,6 +3,7 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "@mantine/core/styles.css";
+import '@mantine/dates/styles.css';
 import "mantine-datatable/styles.css";
 import "aos/dist/aos.css";
 import "../styles/globals.scss";

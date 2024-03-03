@@ -1,3 +1,6 @@
+// .filterBox{
+//   background-color: #eee;
+// }
 .filterDropdown{
   box-shadow: none;
   border: none;
@@ -11,10 +14,31 @@
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px !important;
 }
 
+.filterNav{
+  margin-right: 10px;
+  border: 1px solid #aaa !important;
+  background-color: transparent !important;
+  color: #333 !important;
+  // height: 40px !important;
+}
+.searchBtn{
+  border: 1px solid #aaa !important;
+}
+.filterNav.mantine-active:active {
+  transform: translateY(0) !important;
+}
 
-
-
-
+.cusNav{
+  color: var(--mantine-color-white);
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: var(--main-color);
+}
+.jiaurBd:active{
+  transform: translateY(2px) !important;
+}
 
 
 

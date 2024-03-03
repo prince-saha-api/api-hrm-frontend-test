@@ -13,6 +13,7 @@ import { BiDevices } from "react-icons/bi";
 import { LuListChecks } from "react-icons/lu";
 import { FaRegMoneyBillAlt } from "react-icons/fa";
 import { LuUser2 } from "react-icons/lu";
+import { PiBuildings } from "react-icons/pi";
 import Accordion from "react-bootstrap/Accordion";
 import Image from "next/image";
 import Logo from "../../../../public/logo.png";
@@ -28,7 +29,7 @@ const Page = () => {
               <Accordion.Item eventKey="0" className="pt-0">
               <p className="menuTitle mb-0">Menu</p>
                 <Accordion.Header className="p-0 m-0 text-capitalize">
-                  <VscSettings className="sideMenu menu_icon" />
+                  <PiBuildings className="sideMenu menu_icon" />
                   <span className="text-capitalize sideMenu">
                     Company
                   </span>

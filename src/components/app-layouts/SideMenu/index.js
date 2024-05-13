@@ -46,7 +46,7 @@ const Page = () => {
                     </li>
                     <li className="text-capitalize text-decoration-none sidenav_sub_item">
                       <Link
-                        href="/add-employee"
+                        href="/branch"
                         className="text-decoration-none subMenu"
                       >
                         Branch
@@ -54,15 +54,15 @@ const Page = () => {
                     </li>
                     <li className="text-capitalize text-decoration-none sidenav_sub_item">
                       <Link
-                        href="/add-employee"
+                        href="/departments"
                         className="text-decoration-none subMenu"
                       >
-                        Department
+                        Departments
                       </Link>
                     </li>
                     <li className="text-capitalize text-decoration-none sidenav_sub_item">
                       <Link
-                        href="/add-employee"
+                        href="/designation"
                         className="text-decoration-none subMenu"
                       >
                         Designation
@@ -70,7 +70,7 @@ const Page = () => {
                     </li>
                     <li className="text-capitalize text-decoration-none sidenav_sub_item">
                       <Link
-                        href="/add-employee"
+                        href="/#"
                         className="text-decoration-none subMenu"
                       >
                         Shift
@@ -116,7 +116,7 @@ const Page = () => {
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
                     <li className="text-capitalize text-decoration-none sidenav_sub_item">
                       <Link
-                        href="/add-employee"
+                        href="/#"
                         className="text-decoration-none subMenu"
                       >
                         Holiday list
@@ -124,7 +124,7 @@ const Page = () => {
                     </li>
                     <li className="text-capitalize text-decoration-none sidenav_sub_item">
                       <Link
-                        href="/add-employee"
+                        href="/#"
                         className="text-decoration-none subMenu"
                       >
                         Leave policy
@@ -146,6 +146,14 @@ const Page = () => {
                 </Accordion.Header>
                 <Accordion.Body>
                   <ul className="text-decoration-none mb-0 sidenav_submenu">
+                    <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                      <Link
+                        href="/payslip"
+                        className="text-decoration-none subMenu"
+                      >
+                        payslip
+                      </Link>
+                    </li>
                     <li className="text-capitalize text-decoration-none sidenav_sub_item">
                       <Link
                         href="/add-employee"

@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { TextInput, Textarea } from "@mantine/core";
 import useSWR from "swr";
+import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 // import Button from "react-bootstrap/Button";
-import EditEmployee from "./EditEmployee";
+import EditBranch from "./EditBranch";
+import AddButton from "@/components/utils/AddButton";
 import Spinner from "react-bootstrap/Spinner";
 import { Row, Col } from "react-bootstrap";
 import classEase from "classease";
@@ -24,9 +27,11 @@ import {
 } from "../../../lib/helper";
 
 import {
+   Modal,
    Popover,
    Button,
    Select,
+   Group,
    Input,
    Menu,
    Breadcrumbs,
@@ -42,7 +47,7 @@ import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 
 const PAGE_SIZES = [10, 20, 30, 40];
 
-const Employees = () => {
+const index = () => {
    const [currentPage, setCurrentPage] = useState(1);
    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
    const [sortStatus, setSortStatus] = useState({
@@ -242,7 +247,7 @@ const Employees = () => {
 
    const items = [
       { title: "Dashboard", href: "/" },
-      { title: "All Employee", href: "#" },
+      { title: "Designation" },
    ].map((item, index) => (
       <Anchor href={item.href} key={index}>
          {item.title}
@@ -257,21 +262,54 @@ const Employees = () => {
    const [item4, setItem4] = useState("Shift");
    const icon = <CiSearch />;
 
+   // for Modal
+   const [opened, { open, close }] = useDisclosure(false);
+
    return (
       <>
+         <Modal
+            classNames={{
+               title: "modalTitle",
+            }}
+            opened={opened}
+            title="Add Designation"
+            onClose={close}
+            centered
+         >
+            <form>
+               <Select
+                  label="Designation"
+                  placeholder="Select Designation"
+                  data={["Supervisor", "Team Leader", "Project Manager", "Developer"]}
+               />
+
+               <Group justify="flex-end" mt="md">
+                  <Button type="submit">Submit</Button>
+               </Group>
+            </form>
+         </Modal>
+
          <div className="mb-4 d-flex justify-content-between align-items-end">
             <div className="pageTop">
-               <h3>Employees</h3>
+               <h3>Designation</h3>
                <Breadcrumbs>{items}</Breadcrumbs>
             </div>
 
+            {/* <Button
+               classNames={{
+                  root: "cusBtn"
+               }}
+               onClick={open}
+            >
+               Add Department
+            </Button> */}
 
-
-
-         <Link className="cusNav" href="/add-employee">
-               <LuPlus className="me-1" />
-               Add Employee
-            </Link>
+            <AddButton
+               label="Add Designation"
+               fontSize="16px"
+               icon={<LuPlus className="fs-5" />}
+               handleClick={open}
+            />
          </div>
 
          {/* <div className="search_part mb-3">
@@ -298,150 +336,7 @@ const Employees = () => {
             </div>
          </div> */}
 
-         <div className="d-flex justify-content-between mb-3">
-            <p> </p>
-            {/* <div className="downItem d-flex">
-               <div className="me-2">
-                  <Button
-                     type="submit"
-                     className="rounded-1 px-3 btn btn-success border-0"
-                     onClick={() => handleExportToPDF()}
-                  >
-                     <AiOutlineFilePdf className="me-1" />
-                     PDF
-                  </Button>
-               </div>
-               <div className="me-2">
-                  <Button
-                     type="submit"
-                     className="rounded-1 px-3 btn btn-success border-0"
-                     onClick={() => handleExportToCSV()}
-                  >
-                     <FaRegFileAlt className="me-1" />
-                     CSV
-                  </Button>
-               </div>
-               <div>
-                  <Button
-                     variant="filled"
-                     size="sm"
-                     className="px-3"
-                     onClick={() => handleExportToExcel()}
-                  >
-                     <RiFileExcel2Line className="me-1" />
-                     Excel
-                  </Button>
-               </div>
-            </div> */}
-
-            {/* <Link className="cusNav" href="/add-employee">
-               <LuPlus className="me-1" />
-               Add Employee
-            </Link> */}
-         </div>
-
          <div className="filterBox mb-4 d-flex align-items-center">
-            <Popover
-               classNames={{
-                  dropdown: "filterDropdown",
-               }}
-               width={400}
-               position="bottom-start"
-               offset={5}
-               shadow="md"
-               opened={open1}
-            >
-               <Popover.Target onClick={() => setOpen1((prev) => !prev)}>
-                  <Button
-                     classNames={{
-                        root: "filterNav",
-                     }}
-                  >
-                     {item1} <IoIosArrowDown className="ms-1" />
-                  </Button>
-               </Popover.Target>
-               <Popover.Dropdown>
-                  <p className="p-2 mb-0">Designation</p>
-                  <Select
-                     leftSectionPointerEvents="none"
-                     leftSection={icon}
-                     nothingFoundMessage="Nothing found..."
-                     classNames={{
-                        dropdown: "selectFilter",
-                     }}
-                     onChange={(value, option) => {
-                        console.log(value);
-                        setItem1(value);
-                        setOpen1(false);
-                     }}
-                     clearable={true}
-                     dropdownOpened={open}
-                     withScrollArea={true}
-                     searchable
-                     placeholder="Search"
-                     data={[
-                        "Front-end developer",
-                        "Back-end developer",
-                        "Vue",
-                        "Svelte",
-                        "Other-2",
-                        "Other-3",
-                        "Some text here",
-                     ]}
-                     comboboxProps={{
-                        withinPortal: false,
-                     }}
-                  />
-               </Popover.Dropdown>
-            </Popover>
-
-            <Menu width={200} shadow="md" position="bottom-start" offset={5}>
-               <Menu.Target>
-                  <Button
-                     classNames={{
-                        root: "filterNav",
-                     }}
-                  >
-                     {item2} <IoIosArrowDown className="ms-1" />
-                  </Button>
-               </Menu.Target>
-
-               <Menu.Dropdown className="p-2">
-                  <p className="p-2 mb-0 border-bottom mb-1">Group</p>
-                  <Menu.Item
-                     onClick={(e) => {
-                        e.preventDefault();
-                        setItem2("Group_01");
-                     }}
-                  >
-                     Group_01
-                  </Menu.Item>
-                  <Menu.Item
-                     onClick={(e) => {
-                        e.preventDefault();
-                        setItem2("Group_02");
-                     }}
-                  >
-                     Group_02
-                  </Menu.Item>
-                  <Menu.Item
-                     onClick={(e) => {
-                        e.preventDefault();
-                        setItem2("Group_03");
-                     }}
-                  >
-                     Group_03
-                  </Menu.Item>
-                  <Menu.Item
-                     onClick={(e) => {
-                        e.preventDefault();
-                        setItem2("Group_04");
-                     }}
-                  >
-                     Group_04
-                  </Menu.Item>
-               </Menu.Dropdown>
-            </Menu>
             <Menu width={200} shadow="md" position="bottom-start" offset={5}>
                <Menu.Target>
                   <Button
@@ -481,79 +376,21 @@ const Employees = () => {
                   </Menu.Item>
                </Menu.Dropdown>
             </Menu>
-            <Menu width={200} shadow="md" position="bottom-start" offset={5}>
-               <Menu.Target>
-                  <Button
-                     classNames={{
-                        root: "filterNav",
-                     }}
-                  >
-                     {item4} <IoIosArrowDown className="ms-1" />
-                  </Button>
-               </Menu.Target>
-
-               <Menu.Dropdown className="p-2">
-                  <p className="p-2 mb-0 border-bottom mb-1">Shift</p>
-                  <Menu.Item
-                     onClick={(e) => {
-                        e.preventDefault();
-                        setItem4("Shift_01");
-                     }}
-                  >
-                     Shift_01
-                  </Menu.Item>
-                  <Menu.Item
-                     onClick={(e) => {
-                        e.preventDefault();
-                        setItem4("Shift_02");
-                     }}
-                  >
-                     Shift_02
-                  </Menu.Item>
-                  <Menu.Item
-                     onClick={(e) => {
-                        e.preventDefault();
-                        setItem4("Shift_03");
-                     }}
-                  >
-                     Shift_03
-                  </Menu.Item>
-                  <Menu.Item
-                     onClick={(e) => {
-                        e.preventDefault();
-                        setItem4("Shift_04");
-                     }}
-                  >
-                     Shift_04
-                  </Menu.Item>
-               </Menu.Dropdown>
-            </Menu>
-            <Input
-               classNames={{
-                  input: "searchBtn",
-               }}
-               size="sm"
-               placeholder="Employee name or ID"
-            />
-
-            <Button className="ms-3" variant="filled" size="sm">
-               Filter
-            </Button>
          </div>
 
          <div className="d-flex justify-content-between mb-3">
             <div className="showItem d-flex align-items-center justify-content-center">
-            <p className="mb-0 me-2">Show</p>
-            <Select
-            withCheckIcon={false}
-            classNames={{
-               input: 'showInput',
-             }}
-               placeholder="Pick value"
-               data={["10", "20", "30", "50"]}
-               defaultValue="10"
-            />
-            <p className="mb-0 ms-2">Entries</p>
+               <p className="mb-0 me-2">Show</p>
+               <Select
+                  withCheckIcon={false}
+                  classNames={{
+                     input: "showInput",
+                  }}
+                  placeholder="Pick value"
+                  data={["10", "20", "30", "50"]}
+                  defaultValue="10"
+               />
+               <p className="mb-0 ms-2">Entries</p>
             </div>
             <div className="downItem d-flex">
                <div className="me-2">
@@ -612,78 +449,38 @@ const Employees = () => {
                striped
                columns={[
                   {
-                     title: "SL",
+                     title: "#",
                      accessor: "na",
                      noWrap: true,
                      sortable: false,
+                     width: 90,
                      render: (_, index) =>
                         (currentPage - 1) * pageSize + index + 1,
                   },
-                  {
-                     accessor: "image",
-                     title: "Image",
-                     sortable: false,
-                     render: ({ image }) => (
-                        <div className="text-center">
-                           <img
-                              src={getStoragePath(image)}
-                              alt="img"
-                              className="table_user_img"
-                           />
-                        </div>
-                     ),
-                  },
-                  {
-                     accessor: "employee_id",
-                     title: "Employee ID",
-                     noWrap: true,
-                     sortable: true,
-                  },
-                  {
-                     accessor: "username",
-                     title: "Employee Name",
-                     sortable: true,
-                     // visibleMediaQuery: aboveXs,
-                  },
+
                   {
                      accessor: "designation_name",
-                     title: "Designation",
+                     title: "Department Name",
                      noWrap: true,
                      // visibleMediaQuery: aboveXs,
                      render: ({ designation_name }) =>
                         designation_name || "N/A",
                   },
                   {
-                     accessor: "group_name",
-                     title: "Group",
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ group_name }) => group_name || "N/A",
-                  },
-                  {
                      accessor: "department_name",
-                     title: "Department",
+                     title: "Department Details",
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
-                  {
-                     accessor: "shift_name",
-                     title: "Shift",
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ shift_name }) => shift_name || "N/A",
-                  },
-                  {
-                     accessor: "is_active",
-                     title: "Status",
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ is_active }) =>
-                        is_active ? "Active" : "Inactive",
-                  },
+
                   {
                      accessor: "actions",
                      title: "Actions",
+                     width: 90,
+                     textAlign: "center",
                      // width: "0%",
                      render: (item) => (
-                        <EditEmployee
+                        <EditBranch
                            employee={item}
                            setData={setDisplayedData}
                         />
@@ -711,4 +508,4 @@ const Employees = () => {
    );
 };
 
-export default Employees;
+export default index;

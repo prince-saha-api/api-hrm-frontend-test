@@ -32,21 +32,29 @@ const index = () => {
                title: "modalTitle",
             }}
             opened={opened}
-            title="Edit Department"
+            title="Edit Branch"
             onClose={close}
             centered
          >
             <form>
                <TextInput
-                  label="Department Name"
-                  placeholder="Department Name"
+                  label="Branch Name"
+                  placeholder="Branch Name"
                />
-               <Textarea
+               <TextInput
                   mt="md"
-                  placeholder="Department Details"
-                  label="Department Details"
-                  autosize
-                  minRows={2}
+                  label="Description"
+                  placeholder="Description"
+               />
+               <TextInput
+                  mt="md"
+                  label="Location"
+                  placeholder="Location"
+               />
+               <TextInput
+                  mt="md"
+                  label="Address"
+                  placeholder="Address"
                />
                <Group justify="flex-end" mt="md">
                   <Button type="submit">Save</Button>

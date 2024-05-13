@@ -7,7 +7,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css"; // Theme
 import SideMenu from "../../components/app-layouts/SideMenu";
 import Navbar from "../../components/app-layouts/TopNavbar";
 import { checkIsAuthenticated } from "../../lib/check";
-import "../../styles/main.scss";
+// import "../../styles/main.scss";
 
 export const metadata = {
    title: "Dashboard",

@@ -278,8 +278,6 @@ const Employees = () => {
                      leftSection={icon}
                      nothingFoundMessage="Nothing found..."
                      classNames={{
-                        wrapper: "my-wrapper",
-                        root: "my-root",
                         dropdown: "selectFilter",
                      }}
                      onChange={(value, option) => {

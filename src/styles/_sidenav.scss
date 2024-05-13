@@ -11,7 +11,7 @@
   -ms-transition: all 0.2s ease;
   transition: all 0.2s ease;
   width: 260px;
-  z-index: 2000;
+  z-index: 100;
 }
 .menuTitle{
   color: #ebebec;
@@ -31,7 +31,7 @@
 
 
 
-// sid-bad menu style old
+// side-bad menu style old
 
 #navigation_part .accordion {
   --bs-accordion-border-color: none;
@@ -59,12 +59,13 @@
   height: 18px;
   margin-right: 10px;
 }
+
 .accordion-button::after {
   transform: rotate(-90deg);
   filter: brightness(0) invert(1);
-  width: 12px;
-  height: 12px;
-  background-size: 12px;
+  width: 13px !important;
+  height: 13px !important;
+  background-size: 13px !important;
 }
 .accordion-button.collapsed {
   padding-bottom: 10px !important;
@@ -104,5 +105,5 @@
   opacity: 1;
 }
 
-// sid-bad menu style old
+// side-bad menu style old
 

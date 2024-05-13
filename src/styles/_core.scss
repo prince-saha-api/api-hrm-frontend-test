@@ -21,13 +21,12 @@ P {
    font-size: 20px;
 }
 
-.color-light{
-  color: var(--color-light);
+.color-light {
+   color: var(--color-light);
 }
-.color-dark{
-  color: var(--color-dark);
+.color-dark {
+   color: var(--color-dark);
 }
-
 
 .wrapper {
    margin: 0 0 0 290px;
@@ -37,27 +36,22 @@ P {
 }
 
 .itemCard {
-  padding: 30px 40px;
-  border: 1px solid #ededed;
-  border-radius: 7px;
-  margin-bottom: 30px;
-  background-color: #fff;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+   padding: 30px 40px;
+   border: 1px solid #ededed;
+   border-radius: 7px;
+   margin-bottom: 30px;
+   background-color: #fff;
+   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+   -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-.pageTop a{
-  color: var(--color-light);
+.pageTop a {
+   color: var(--color-light);
 }
-.mantine-Breadcrumbs-separator{
-  opacity: 0.8;
+.mantine-Breadcrumbs-separator {
+   opacity: 0.8;
 }
-
-
-
-
-
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -158,12 +152,8 @@ employee manage css end
    transition: all 0.5s !important;
    min-width: 92px;
 }
-.app-button.loading {
-}
 .spinner {
    margin-left: 5px;
-}
-.invalid-feedback {
 }
 .success-feedback {
    color: #198754;
@@ -255,3 +245,70 @@ employee manage css end
    border-color: var(--bs-form-invalid-border-color) !important;
 }
 
+.login_bg {
+   height: 100vh;
+   background: linear-gradient(
+         0deg,
+         rgba(255, 0, 150, 0.3),
+         rgba(255, 0, 150, 0.3)
+      ),
+      url(/login.jpg);
+   background-size: cover;
+}
+.div_height {
+   height: 100vh;
+   display: flex;
+   align-items: center;
+}
+.login_form {
+   margin-left: 50%;
+   transform: translate(-50%);
+}
+.form_padding {
+   padding: 13px 10px;
+}
+
+/* forgot_password */
+.forgot_password {
+   background: linear-gradient(
+         0deg,
+         rgba(255, 0, 150, 0.3),
+         rgba(255, 0, 150, 0.3)
+      ),
+      url(../../public/login.jpg);
+   background-size: cover;
+   height: 100vh;
+   display: flex;
+   justify-content: center;
+}
+
+.datatable_header {
+   // background-color: #aaa !important;
+   height: 60px !important;
+}
+.datatable_table[data-striped] tbody tr:nth-of-type(odd) {
+   background-color: #f2f2f2 !important;
+}
+
+.modalTitle {
+   font-size: 20px !important;
+   font-weight: 600 !important;
+   color: var(--color-dark);
+}
+
+.cusBtn {
+   height: 42px !important;
+   // padding: 0 25px !important;
+   border-radius: 100px !important;
+   background-color: var(--main-color) !important;
+}
+
+.cusNav{
+   color: var(--mantine-color-white);
+   text-decoration: none;
+   display: inline-block;
+   padding: 8px 16px;
+   border-radius: 100px;
+   background-color: var(--main-color);
+   
+ }

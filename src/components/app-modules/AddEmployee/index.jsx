@@ -7,6 +7,7 @@ import OfficeDetails from "./steps/OfficeDetails";
 import SalaryAndLeaves from "./steps/SalaryAndLeaves";
 import EmergencyContact from "./steps/EmergencyContact";
 import UploadDocuments from "./steps/UploadDocuments";
+import SuccessCheckmarkAnimation from "./steps/SuccessCheckmarkAnimation";
 
 const AddEmployee = () => {
    const items = [
@@ -34,26 +35,28 @@ const AddEmployee = () => {
          <div className="itemCard">
             <Stepper active={active} onStepClick={setActive}>
                <Stepper.Step label="Personal Details" description="step 1">
-                  <PersonalDetails/>
+                  <PersonalDetails />
                </Stepper.Step>
 
                <Stepper.Step label="Official Detail" description="step 2">
-                  <OfficeDetails/>
+                  <OfficeDetails />
                </Stepper.Step>
 
                <Stepper.Step label="Salary and Leaves" description="step 3">
-                  <SalaryAndLeaves/>
+                  <SalaryAndLeaves />
                </Stepper.Step>
 
                <Stepper.Step label="Emergency Contact" description="step 4">
-                  <EmergencyContact/>
+                  <EmergencyContact />
                </Stepper.Step>
 
                <Stepper.Step label="Upload Documents" description="final">
-                  <UploadDocuments/>
+                  <UploadDocuments />
                </Stepper.Step>
 
-               <Stepper.Completed>Successfully done!</Stepper.Completed>
+               <Stepper.Completed>
+                  <SuccessCheckmarkAnimation />
+               </Stepper.Completed>
             </Stepper>
 
             <Group justify="left" mt="xl">

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useDisclosure } from '@mantine/hooks';
+import { Burger } from '@mantine/core';
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -8,12 +10,10 @@ import { logout } from "../../../lib/auth";
 import { getLoggedInUser } from "../../../lib/getter";
 import { getStoragePath } from "../../../lib/helper";
 import { authTokenKey, authUserKey } from "../../../lib/config";
-import { HiMenuAlt2 } from "react-icons/hi";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../../../public/logo.png";
 import profileImg from "../../../../public/profile01.jpg";
-import { RiMenu4Fill } from "react-icons/ri";
 
 
 const Navbar = () => {
@@ -51,6 +51,7 @@ const Navbar = () => {
       }
    };
 
+   const [opened, { toggle }] = useDisclosure();
    return (
       <div className="topbar d-flex">
          <div className="logoBox">
@@ -63,8 +64,12 @@ const Navbar = () => {
          </div>
 
          <div className="d-flex justify-content-between align-items-center w-100">
-            <div className="toggle">
-               <HiMenuAlt2 className="toggleIcon" />
+            <div className="toggle ms-3">
+               <Burger
+               classNames={{
+                  burger: 'toggleIcon'
+                }}
+               opened={opened} onClick={toggle} aria-label="Toggle navigation" />
             </div>
             <div className="profileBox">
                <Dropdown>

@@ -3,7 +3,7 @@
     background: var(--gradient-color);
     border-bottom: 1px solid transparent;
     height: 60px;
-    z-index: 1044;
+    z-index: 150;
     position: fixed;
     top: 0;
     right: 0;
@@ -25,14 +25,24 @@
   object-fit: contain;
 }
 
+
+// toggleIcon CSS here 
 .toggleIcon{
-  font-size: 30px;
-  margin-left: 20px;
-  color: #fff;
+  --burger-color:  #fff !important;
+  background-color: var(--burger-color);
 }
-.toggleIcon:hover{
-  cursor: pointer;
+.toggleIcon::after,
+.toggleIcon::before{
+  background-color: var(--burger-color);
 }
+.toggleIcon::after{
+  width: 16px !important;
+}
+
+.m-d4fb9cad[data-opened]::after {
+  width: var(--burger-size) !important;
+}
+// toggleIcon CSS here 
 
 
 .profile_img {

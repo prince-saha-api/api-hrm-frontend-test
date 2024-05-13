@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 // import { authTokenKey } from "../../lib/config";
 // import Accessible from "../../components/utils/CheckAccessibleForAuthPages";
 import { checkIsAuthenticated } from "../../lib/check";
-import "../../styles/auth.scss";
+// import "../../styles/auth.scss";
 
 export const metadata = {
   title: "Login",

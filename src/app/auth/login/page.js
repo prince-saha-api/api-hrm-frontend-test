@@ -22,7 +22,6 @@ const Page = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -79,10 +78,10 @@ const Page = () => {
       <Container>
         <Row>
           <Col lg={6} className="div_height">
-            <div className="w-100 bg-white py-5 rounded-1">
-              <div className="d-flex justify-content-center mb-3">
+            <div className="w-100 bg-white py-5 rounded-1 auth_box">
+              {/* <div className="d-flex justify-content-center mb-3">
                 <img src="/th.jpg" alt="dmc logo" className="img-fluid" />
-              </div>
+              </div> */}
 
               <div className="px-5">
                 <Form onSubmit={(e) => handleLogin(e)}>

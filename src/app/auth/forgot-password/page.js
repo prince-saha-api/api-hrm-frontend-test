@@ -205,7 +205,7 @@ const Page = () => {
     return (
       <section className="forgot_password">
         <Col lg={4} className="d-flex align-items-center">
-          <div className="bg-white w-100 rounded-1 p-5">
+          <div className="bg-white w-100 rounded-1 p-5 auth_box">
             <div className="text-center">
               <h1 className="py-3 fw-bold">Password Reset</h1>
             </div>

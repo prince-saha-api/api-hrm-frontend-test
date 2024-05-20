@@ -9,16 +9,12 @@ import {
   Textarea,
   Box,
   Select,
-  FileInput,
-  rem,
   Button,
   Flex,
   FileButton,
   Group,
   Text,
 } from "@mantine/core";
-import { FaFile } from "react-icons/fa6";
-import { TbPhotoFilled } from "react-icons/tb";
 import { Grid } from "@mantine/core";
 import { FcAcceptDatabase } from "react-icons/fc";
 import Image from "next/image";
@@ -26,7 +22,7 @@ import compmanyLogo from "public/full_logo.png";
 import uploadImg from "public/profile01.jpg";
 import { FcAddImage } from "react-icons/fc";
 
-const UploadDocuments = ({ data, onChange }) => {
+const AcademicRecord = ({ data, onChange }) => {
   const form = useForm({
     initialValues: data,
     // validate: {
@@ -55,64 +51,18 @@ const UploadDocuments = ({ data, onChange }) => {
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
           <Grid.Col span={5}>
             <Box className="stepBox">
-              {/* <h4 className="text-dark mb-4 pb-2">Upload Documents</h4> */}
-
-              <FileInput
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                leftSection={<FaFile className="fileIcon" />}
-                label="NID/Passport"
-                placeholder="NID/Passport"
-                leftSectionPointerEvents="none"
-                // {...form.getInputProps("nidPassport")}
-              />
-              <FileInput
+              <Select
                 classNames={{
                   root: "cust_iputRoot",
                   label: "cust_iputLabel",
                   wrapper: "cust_iputWrapper",
                 }}
                 mt="sm"
-                leftSection={<FaFile className="fileIcon" />}
-                label="Resume"
-                placeholder="Resume"
-                leftSectionPointerEvents="none"
-                // {...form.getInputProps("cv")}
+                label="Certification"
+                placeholder="Certification"
+                data={["Brother", "Sister"]}
+                {...form.getInputProps("certification")}
               />
-              <FileInput
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                mt="sm"
-                leftSection={<FaFile className="fileIcon" />}
-                label="Appointment Letter"
-                placeholder="Appointment Letter"
-                leftSectionPointerEvents="none"
-                {...form.getInputProps("appointmentLetter")}
-              />
-              <FileInput
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                mt="sm"
-                leftSection={<TbPhotoFilled className="fileIcon" />}
-                label="Photo"
-                placeholder="Photo"
-                leftSectionPointerEvents="none"
-                {...form.getInputProps("photo")}
-              />
-            </Box>
-          </Grid.Col>
-          {/* <Grid.Col span={5}>
-            <Box className="stepBox">
-              <h4 className="text-dark mb-4 pb-2">Upload Other Documents</h4>
 
               <TextInput
                 classNames={{
@@ -120,44 +70,62 @@ const UploadDocuments = ({ data, onChange }) => {
                   label: "cust_iputLabel",
                   wrapper: "cust_iputWrapper",
                 }}
-                label="Document Name"
-                placeholder="Document Name"
-                // {...form.getInputProps("name")}
+                mt="sm"
+                label="Institute"
+                placeholder="Institute"
+                {...form.getInputProps("institute")}
               />
-              <FileInput
+
+              <Select
                 classNames={{
                   root: "cust_iputRoot",
                   label: "cust_iputLabel",
                   wrapper: "cust_iputWrapper",
                 }}
                 mt="sm"
-                leftSection={<FaFile className="fileIcon" />}
-                label="Document File"
-                placeholder="Document File"
-                leftSectionPointerEvents="none"
+                label="Level"
+                placeholder="Level"
+                data={["Brother", "Sister"]}
+                {...form.getInputProps("level")}
               />
-              <Textarea
+
+              <Select
                 classNames={{
                   root: "cust_iputRoot",
                   label: "cust_iputLabel",
                   wrapper: "cust_iputWrapper",
                 }}
                 mt="sm"
-                label="Description"
-                placeholder="Description"
-                // {...form.getInputProps("address")}
+                label="Grade"
+                placeholder="Grade"
+                data={["Brother", "Sister"]}
+                {...form.getInputProps("grade")}
+              />
+
+              <NumberInput
+                classNames={{
+                  root: "cust_iputRoot",
+                  label: "cust_iputLabel",
+                  wrapper: "cust_iputWrapper",
+                }}
+                rightSection={<></>}
+                rightSectionWidth={0}
+                mt="sm"
+                label="Passing Year"
+                placeholder="Passing Year"
+                {...form.getInputProps("passingYear")}
               />
             </Box>
-          </Grid.Col> */}
+          </Grid.Col>
         </Grid>
 
         <Group justify="left" mt="xl">
           <Button variant="default">Back</Button>
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Next step</Button>
         </Group>
       </form>
     </>
   );
 };
 
-export default UploadDocuments;
+export default AcademicRecord;

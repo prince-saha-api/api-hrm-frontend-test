@@ -1,20 +1,21 @@
 // .filterBox{
 //   background-color: #eee;
 // }
-.filterDropdown{
+.filterDropdown {
   box-shadow: none;
   border: none;
 }
 
-.selectFilter{
+.selectFilter {
   box-shadow: none !important;
   border: none !important;
   width: 100% !important;
   padding: 0 16px !important;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px !important;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+    rgba(0, 0, 0, 0.06) 0px 2px 4px -1px !important;
 }
 
-.filterNav{
+.filterNav {
   margin-right: 10px;
   border: 1px solid #ddd !important;
   background-color: #fff !important;
@@ -22,7 +23,7 @@
   color: #333 !important;
   // height: 40px !important;
 }
-.searchBtn{
+.searchBtn {
   border: 1px solid #ddd !important;
 }
 .filterNav.mantine-active:active {
@@ -30,8 +31,8 @@
 }
 
 .stepBox {
-  margin-top: 25px;
-  margin-bottom: 25px;
+  margin-top: 32px;
+  margin-bottom: 16px;
 }
 
 .cust_iputRoot {
@@ -52,15 +53,13 @@
   width: 20px;
   height: 20px;
 }
-.mantine-Stepper-stepCompletedIcon{
+.mantine-Stepper-stepCompletedIcon {
   transform: scale(0.7) !important;
 }
 
-.showInput{
+.showInput {
   max-width: 70px;
 }
-
-
 
 // Success Check Animation CSS
 .success-checkmark {
@@ -91,7 +90,8 @@
   border-radius: 0 100px 100px 0;
   animation: rotate-circle 6s ease-in;
 }
-.success-checkmark .check-icon::before, .success-checkmark .check-icon::after {
+.success-checkmark .check-icon::before,
+.success-checkmark .check-icon::after {
   content: "";
   height: 100px;
   position: absolute;
@@ -206,8 +206,3 @@
   }
 }
 // Success Check Animation CSS
-
-
-
-
-

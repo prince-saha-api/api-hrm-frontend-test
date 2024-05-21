@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { DateInput } from "@mantine/dates";
 import { Breadcrumbs, Anchor } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -23,9 +23,7 @@ import compmanyLogo from "public/full_logo.png";
 import uploadImg from "public/profile01.jpg";
 import { FcAddImage } from "react-icons/fc";
 
-const OfficeDetails = ({ data, onChange }) => {
-  const [value, setValue] = useState(null);
-
+const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
     initialValues: data,
     // validate: {
@@ -38,23 +36,24 @@ const OfficeDetails = ({ data, onChange }) => {
     // },
   });
 
+  useImperativeHandle(ref, () => ({
+    validateStep: (updateFormData, key) => {
+      const values = form.getValues();
+      updateFormData(key, values);
+      return form.isValid();
+    },
+    showValidationErrors: () => {
+      form.validate();
+    },
+  }));
+
   const handleSubmit = (values) => {
-    if (form.validate().hasErrors) {
-      console.log(values);
-    } else {
-      // form.setValues((prev) => ({ ...prev, ...values }));
-      onChange("officialDetails", form.values);
-      console.log(values);
-    }
+    onNext(values);
   };
 
   return (
     <>
-      <form
-        // onSubmit={handleSubmit}
-        method="POST"
-        onSubmit={form.onSubmit(handleSubmit)}
-      >
+      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
           <Grid.Col span={5}>
             <Box className="stepBox">
@@ -66,7 +65,7 @@ const OfficeDetails = ({ data, onChange }) => {
                 }}
                 label="Employee ID"
                 placeholder="Employee ID"
-                {...form.getInputProps("employeeId")}
+                {...form.getInputProps("official_id")}
               />
               <TextInput
                 classNames={{
@@ -77,7 +76,7 @@ const OfficeDetails = ({ data, onChange }) => {
                 mt="sm"
                 label="Official Email"
                 placeholder="Official Email"
-                {...form.getInputProps("officialEmail")}
+                {...form.getInputProps("official_email")}
               />
               <NumberInput
                 classNames={{
@@ -90,7 +89,7 @@ const OfficeDetails = ({ data, onChange }) => {
                 mt="sm"
                 label="Official Phone"
                 placeholder="Official Phone"
-                {...form.getInputProps("officialPhone")}
+                {...form.getInputProps("official_phone")}
               />
 
               <PasswordInput
@@ -124,7 +123,7 @@ const OfficeDetails = ({ data, onChange }) => {
                   "Commission",
                   "Labour",
                 ]}
-                {...form.getInputProps("employeeType")}
+                {...form.getInputProps("employee_type")}
               />
               <Select
                 classNames={{
@@ -189,7 +188,7 @@ const OfficeDetails = ({ data, onChange }) => {
                 label="Default Shift"
                 placeholder="Default Shift"
                 data={["Day", "Night"]}
-                {...form.getInputProps("defaultShift")}
+                {...form.getInputProps("shift")}
               />
 
               {/* <Select
@@ -215,9 +214,21 @@ const OfficeDetails = ({ data, onChange }) => {
                 // onChange={setValue}
                 label="Joining Date"
                 placeholder="Date input"
-                {...form.getInputProps("joiningDate")}
+                {...form.getInputProps("joining_date")}
               />
 
+              <Select
+                classNames={{
+                  root: "cust_iputRoot",
+                  label: "cust_iputLabel",
+                  wrapper: "cust_iputWrapper",
+                }}
+                mt="sm"
+                label="Supervisor"
+                placeholder="Supervisor"
+                data={["Day", "Night"]}
+                {...form.getInputProps("supervisor")}
+              />
               <Select
                 classNames={{
                   root: "cust_iputRoot",
@@ -228,7 +239,7 @@ const OfficeDetails = ({ data, onChange }) => {
                 label="Expense Approver"
                 placeholder="Expense Approver"
                 data={["Day", "Night"]}
-                {...form.getInputProps("expenseApprover")}
+                {...form.getInputProps("expense_approver")}
               />
               <Select
                 classNames={{
@@ -240,7 +251,7 @@ const OfficeDetails = ({ data, onChange }) => {
                 label="Leave Approver"
                 placeholder="Leave Approver"
                 data={["Day", "Night"]}
-                {...form.getInputProps("leaveApprover")}
+                {...form.getInputProps("leave_approver")}
               />
 
               <Select
@@ -253,19 +264,21 @@ const OfficeDetails = ({ data, onChange }) => {
                 label="Shift Approver"
                 placeholder="Shift Approver"
                 data={["Day", "Night"]}
-                {...form.getInputProps("shiftApprover")}
+                {...form.getInputProps("shift_request_approver")}
               />
             </Box>
           </Grid.Col>
         </Grid>
 
         <Group justify="left" mt="xl">
-          <Button variant="default">Back</Button>
+          <Button variant="default" onClick={onBack}>
+            Back
+          </Button>
           <Button type="submit">Next step</Button>
         </Group>
       </form>
     </>
   );
-};
+});
 
 export default OfficeDetails;

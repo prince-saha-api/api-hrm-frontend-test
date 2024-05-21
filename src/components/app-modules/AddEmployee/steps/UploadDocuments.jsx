@@ -1,57 +1,71 @@
 "use client";
-import React, { useState } from "react";
-import { DateInput } from "@mantine/dates";
-import { Breadcrumbs, Anchor } from "@mantine/core";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { useForm } from "@mantine/form";
-import {
-  NumberInput,
-  TextInput,
-  Textarea,
-  Box,
-  Select,
-  FileInput,
-  rem,
-  Button,
-  Flex,
-  FileButton,
-  Group,
-  Text,
-} from "@mantine/core";
+import { Box, FileInput, Button, Group } from "@mantine/core";
 import { FaFile } from "react-icons/fa6";
 import { TbPhotoFilled } from "react-icons/tb";
 import { Grid } from "@mantine/core";
 import { FcAcceptDatabase } from "react-icons/fc";
-import Image from "next/image";
-import compmanyLogo from "public/full_logo.png";
 import uploadImg from "public/profile01.jpg";
 import { FcAddImage } from "react-icons/fc";
 
-const UploadDocuments = ({ data, onChange }) => {
+const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
+  const validateFile = (file, allowedTypes, maxSizeMb) => {
+    if (!file) return null;
+    const fileType = file.type;
+    const fileSizeMb = file.size / 1024 / 1024;
+
+    if (!allowedTypes.includes(fileType)) {
+      return `File type must be one of ${allowedTypes.join(", ")}`;
+    }
+
+    if (fileSizeMb > maxSizeMb) {
+      return `File size must be no more than ${maxSizeMb} MB`;
+    }
+
+    console.log(file);
+
+    return null;
+  };
+
   const form = useForm({
     initialValues: data,
-    // validate: {
-    //   firstName: (value) =>
-    //     value.length < 2 ? "First Name must have at least 2 letters" : null,
-    //   lastName: (value) =>
-    //     value.length < 2 ? "Last Name must have at least 2 letters" : null,
-    //   // email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-    //   // // add other validations as needed
-    // },
+    validate: {
+      nidPassport: (value) =>
+        value
+          ? validateFile(value, ["application/pdf"], 1)
+          : "NID/Passport is required",
+      cv: (value) =>
+        value
+          ? validateFile(value, ["application/pdf"], 1)
+          : "Resume is required",
+      appointmentLetter: (value) =>
+        value ? validateFile(value, ["application/pdf"], 1) : null,
+      photo: (value) =>
+        value
+          ? validateFile(value, ["image/jpeg", "image/png"], 1)
+          : "Photo is required",
+    },
   });
 
+  useImperativeHandle(ref, () => ({
+    validateStep: (updateFormData, key) => {
+      const values = form.getValues();
+      updateFormData(key, values);
+      return form.isValid();
+    },
+    showValidationErrors: () => {
+      form.validate();
+    },
+  }));
+
   const handleSubmit = (values) => {
-    if (form.validate().hasErrors) {
-      console.log(values);
-    } else {
-      // form.setValues((prev) => ({ ...prev, ...values }));
-      onChange("personalDetails", form.values);
-      console.log(values);
-    }
+    onNext(values);
   };
 
   return (
     <>
-      <form method="POST" onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
           <Grid.Col span={5}>
             <Box className="stepBox">
@@ -67,7 +81,7 @@ const UploadDocuments = ({ data, onChange }) => {
                 label="NID/Passport"
                 placeholder="NID/Passport"
                 leftSectionPointerEvents="none"
-                // {...form.getInputProps("nidPassport")}
+                {...form.getInputProps("nidPassport")}
               />
               <FileInput
                 classNames={{
@@ -80,7 +94,7 @@ const UploadDocuments = ({ data, onChange }) => {
                 label="Resume"
                 placeholder="Resume"
                 leftSectionPointerEvents="none"
-                // {...form.getInputProps("cv")}
+                {...form.getInputProps("cv")}
               />
               <FileInput
                 classNames={{
@@ -152,12 +166,14 @@ const UploadDocuments = ({ data, onChange }) => {
         </Grid>
 
         <Group justify="left" mt="xl">
-          <Button variant="default">Back</Button>
+          <Button variant="default" onClick={onBack}>
+            Back
+          </Button>
           <Button type="submit">Submit</Button>
         </Group>
       </form>
     </>
   );
-};
+});
 
 export default UploadDocuments;

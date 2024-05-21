@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { MultiSelect } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { Breadcrumbs, Anchor } from "@mantine/core";
@@ -23,32 +23,37 @@ import compmanyLogo from "public/full_logo.png";
 import uploadImg from "public/profile01.jpg";
 import { FcAddImage } from "react-icons/fc";
 
-const SalaryAndLeaves = ({ data, onChange }) => {
+const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
     initialValues: data,
-    validate: {
-      firstName: (value) =>
-        value.length < 2 ? "First Name must have at least 2 letters" : null,
-      lastName: (value) =>
-        value.length < 2 ? "Last Name must have at least 2 letters" : null,
-      // email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-      // // add other validations as needed
-    },
+    // validate: {
+    //   firstName: (value) =>
+    //     value.length < 2 ? "First Name must have at least 2 letters" : null,
+    //   lastName: (value) =>
+    //     value.length < 2 ? "Last Name must have at least 2 letters" : null,
+    //   // email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+    //   // // add other validations as needed
+    // },
   });
 
+  useImperativeHandle(ref, () => ({
+    validateStep: (updateFormData, key) => {
+      const values = form.getValues();
+      updateFormData(key, values);
+      return form.isValid();
+    },
+    showValidationErrors: () => {
+      form.validate();
+    },
+  }));
+
   const handleSubmit = (values) => {
-    if (form.validate().hasErrors) {
-      console.log(values);
-    } else {
-      // form.setValues((prev) => ({ ...prev, ...values }));
-      onChange("personalDetails", form.values);
-      console.log(values);
-    }
+    onNext(values);
   };
 
   return (
     <>
-      <form method="POST" onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
           <Grid.Col span={5}>
             <Box className="stepBox">
@@ -62,7 +67,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 label="Payment In"
                 placeholder="Payment In"
                 data={["Cash", "Cheque", "Bank"]}
-                {...form.getInputProps("paymentIn")}
+                {...form.getInputProps("payment_in")}
               />
 
               <TextInput
@@ -74,7 +79,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 mt="sm"
                 label="Bank Account Name"
                 placeholder="Bank Account Name"
-                {...form.getInputProps("bankAccount.bankName")}
+                {...form.getInputProps("bank_account.bank_name")}
               />
 
               <Select
@@ -87,7 +92,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 label="Branch"
                 placeholder="Branch"
                 data={["Current", "Savings", "Salary", "Chequing", "Business"]}
-                {...form.getInputProps("bankAccount.branch")}
+                {...form.getInputProps("bank_account.branch_name")}
               />
 
               <Select
@@ -100,7 +105,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 label="Bank Account Type"
                 placeholder="Bank Account Type"
                 data={["Current", "Savings", "Salary", "Chequing", "Business"]}
-                {...form.getInputProps("bankAccount.accountType")}
+                {...form.getInputProps("bank_account.account_type")}
               />
 
               <NumberInput
@@ -114,7 +119,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 mt="sm"
                 label="Accounting No"
                 placeholder="Accounting No"
-                {...form.getInputProps("bankAccount.accountingNo")}
+                {...form.getInputProps("bank_account.account_no")}
               />
               <NumberInput
                 classNames={{
@@ -127,7 +132,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 mt="sm"
                 label="Routing No"
                 placeholder="Routing No"
-                {...form.getInputProps("bankAccount.routingNo")}
+                {...form.getInputProps("bank_account.routing_no")}
               />
               <NumberInput
                 classNames={{
@@ -140,7 +145,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 mt="sm"
                 label="SWIFT"
                 placeholder="SWIFT"
-                {...form.getInputProps("bankAccount.swiftBIC")}
+                {...form.getInputProps("bank_account.swift_bic")}
               />
 
               <Select
@@ -153,7 +158,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 label="City"
                 placeholder="City"
                 data={["Dhaka", "Khulna"]}
-                {...form.getInputProps("bankAccount.city")}
+                {...form.getInputProps("bank_account.address.city")}
               />
             </Box>
           </Grid.Col>
@@ -170,7 +175,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 label="Division"
                 placeholder="Division"
                 data={["Dhaka", "Khulna"]}
-                {...form.getInputProps("bankAccount.state")}
+                {...form.getInputProps("bank_account.address.state_division")}
               />
 
               <TextInput
@@ -182,7 +187,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 mt="sm"
                 label="ZIP Code"
                 placeholder="ZIP Code"
-                {...form.getInputProps("bankAccount.zipCode")}
+                {...form.getInputProps("bank_account.address.post_zip_code")}
               />
 
               <Select
@@ -195,7 +200,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 label="Country"
                 placeholder="Country"
                 data={["Bangladesh"]}
-                {...form.getInputProps("bankAccount.country")}
+                {...form.getInputProps("bank_account.address.country")}
               />
 
               <Textarea
@@ -207,7 +212,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 mt="sm"
                 label="Address"
                 placeholder="Permanent Address"
-                {...form.getInputProps("bankAccount.address")}
+                {...form.getInputProps("bank_account.address.address")}
               />
 
               <NumberInput
@@ -221,7 +226,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 mt="sm"
                 label="Salary"
                 placeholder="Salary"
-                // {...form.getInputProps("monthlyGrossSalary")}
+                // {...form.getInputProps("gross_salary")}
               />
 
               <MultiSelect
@@ -243,7 +248,7 @@ const SalaryAndLeaves = ({ data, onChange }) => {
                 ]}
                 searchable
                 withAsterisk
-                // {...form.getInputProps("leavePolicyAssign")}
+                // {...form.getInputProps("leavepolicy")}
               />
               <MultiSelect
                 classNames={{
@@ -264,12 +269,14 @@ const SalaryAndLeaves = ({ data, onChange }) => {
         </Grid>
 
         <Group justify="left" mt="xl">
-          <Button variant="default">Back</Button>
+          <Button variant="default" onClick={onBack}>
+            Back
+          </Button>
           <Button type="submit">Next step</Button>
         </Group>
       </form>
     </>
   );
-};
+});
 
 export default SalaryAndLeaves;

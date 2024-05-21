@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { DateInput } from "@mantine/dates";
 import { Breadcrumbs, Anchor } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -22,7 +22,7 @@ import compmanyLogo from "public/full_logo.png";
 import uploadImg from "public/profile01.jpg";
 import { FcAddImage } from "react-icons/fc";
 
-const EmergencyContact = ({ data, onChange }) => {
+const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
     initialValues: data,
     // validate: {
@@ -35,19 +35,24 @@ const EmergencyContact = ({ data, onChange }) => {
     // },
   });
 
+  useImperativeHandle(ref, () => ({
+    validateStep: (updateFormData, key) => {
+      const values = form.getValues();
+      updateFormData(key, values);
+      return form.isValid();
+    },
+    showValidationErrors: () => {
+      form.validate();
+    },
+  }));
+
   const handleSubmit = (values) => {
-    if (form.validate().hasErrors) {
-      console.log(values);
-    } else {
-      // form.setValues((prev) => ({ ...prev, ...values }));
-      onChange("personalDetails", form.values);
-      console.log(values);
-    }
+    onNext(values);
   };
 
   return (
     <>
-      <form method="POST" onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
           <Grid.Col span={5}>
             <Box className="stepBox">
@@ -126,12 +131,14 @@ const EmergencyContact = ({ data, onChange }) => {
         </Grid>
 
         <Group justify="left" mt="xl">
-          <Button variant="default">Back</Button>
+          <Button variant="default" onClick={onBack}>
+            Back
+          </Button>
           <Button type="submit">Next step</Button>
         </Group>
       </form>
     </>
   );
-};
+});
 
 export default EmergencyContact;

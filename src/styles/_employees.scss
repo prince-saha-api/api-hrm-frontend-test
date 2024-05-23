@@ -43,10 +43,19 @@
 .cust_iputLabel {
   min-width: 130px;
   margin-right: 10px;
+  line-height: 36px;
+  font-weight: 500;
+  word-break: break-word;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+  font-size: var(--input-label-size, var(--mantine-font-size-sm));
 }
 .cust_iputWrapper {
   width: 100% !important;
   max-width: 350px;
+}
+.cust_mt {
+  margin-top: 12px;
 }
 
 .fileIcon {

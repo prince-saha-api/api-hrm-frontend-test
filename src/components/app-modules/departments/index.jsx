@@ -312,7 +312,7 @@ const index = () => {
             <AddButton
                label="Add Department"
                fontSize="16px"
-               icon={<LuPlus className="fs-5" />}
+               icon={<LuPlus className="me-1 fs-5" />}
                handleClick={open}
             />
          </div>
@@ -340,8 +340,6 @@ const index = () => {
                
             </div>
          </div> */}
-
-        
 
          <div className="filterBox mb-4 d-flex align-items-center">
             <Popover
@@ -613,7 +611,6 @@ const index = () => {
                fz="sm"
                verticalAlign="center"
                striped
-               
                columns={[
                   {
                      title: "#",
@@ -644,7 +641,7 @@ const index = () => {
                      accessor: "actions",
                      title: "Actions",
                      width: 90,
-                     textAlign: 'center',
+                     textAlign: "center",
                      // width: "0%",
                      render: (item) => (
                         <EditDepartment

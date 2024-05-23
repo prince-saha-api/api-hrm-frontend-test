@@ -4,13 +4,13 @@ import { Button } from "@mantine/core";
 const AddButton = ({ label, icon, handleClick, fontSize }) => {
    return (
       <Button
-        style={{ fontSize: fontSize }}
+         style={{ fontSize: fontSize }}
          classNames={{
             root: "cusBtn",
          }}
          onClick={handleClick}
-         leftSection={icon}
       >
+         {icon}
          {label}
       </Button>
    );

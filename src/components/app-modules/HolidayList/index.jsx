@@ -1,18 +1,11 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
-import { TextInput, Textarea } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
-import Link from "next/link";
-// import Button from "react-bootstrap/Button";
 import Edit from "./Edit";
 import Delete from "./Delete";
+import Add from "./Add";
 import AddButton from "@/components/utils/AddButton";
-import Spinner from "react-bootstrap/Spinner";
-import { Row, Col } from "react-bootstrap";
-import classEase from "classease";
 import { toast } from "react-toastify";
 import { DataTable } from "mantine-datatable";
 import { submit } from "../../../lib/submit";
@@ -24,29 +17,9 @@ import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BiMessageSquareEdit } from "react-icons/bi";
-import {
-   formatDate,
-   getDate,
-   getTime,
-   getStoragePath,
-} from "../../../lib/helper";
-
-import {
-   Modal,
-   Popover,
-   Button,
-   Select,
-   Group,
-   Input,
-   Menu,
-   Breadcrumbs,
-   Anchor,
-   Badge,
-   NavLink,
-} from "@mantine/core";
+import { Button, Select, Menu, Breadcrumbs, Anchor } from "@mantine/core";
 
 import { CiSearch } from "react-icons/ci";
-import { IoIosArrowDown } from "react-icons/io";
 
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 
@@ -268,14 +241,16 @@ const index = () => {
    const icon = <CiSearch />;
 
    // for Modal
-   const [opened, { open, close }] = useDisclosure(false);
-   const [opened2, { open: open2, close: close2 }] = useDisclosure(false);
+   const [edit, { open, close }] = useDisclosure(false);
+   const [addOpened, { open: addOpen, close: addClose }] = useDisclosure(false);
+   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
+      useDisclosure(false);
 
    return (
       <>
-         <Edit opened={opened} close={close} />
-
-         <Delete opened={opened2} close={close2} />
+         <Edit opened={edit} close={close} />
+         <Delete opened={deleteOpened} close={deleteClose} />
+         <Add opened={addOpened} close={addClose} />
 
          <div className="mb-4 d-flex justify-content-between align-items-end">
             <div className="pageTop">
@@ -286,8 +261,8 @@ const index = () => {
             <AddButton
                label="Add Holiday"
                fontSize="16px"
-               icon={<LuPlus className="fs-5" />}
-               handleClick={open}
+               icon={<LuPlus className="me-1 fs-5" />}
+               handleClick={addOpen}
             />
          </div>
 
@@ -423,7 +398,7 @@ const index = () => {
                                     Edit
                                  </Menu.Item>
                                  <Menu.Item
-                                    onClick={open2}
+                                    onClick={deleteOpen}
                                     leftSection={
                                        <AiOutlineDelete className="fs-6" />
                                     }

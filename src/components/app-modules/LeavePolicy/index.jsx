@@ -1,15 +1,11 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
-import { TextInput, Textarea } from "@mantine/core";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
-import Link from "next/link";
-// import Button from "react-bootstrap/Button";
-import EditBranch from "./EditBranch";
+import Edit from "./Edit";
+import Delete from "./Delete";
+import Add from "./Add";
 import AddButton from "@/components/utils/AddButton";
-import Spinner from "react-bootstrap/Spinner";
-import { Row, Col } from "react-bootstrap";
 import classEase from "classease";
 import { toast } from "react-toastify";
 import { DataTable } from "mantine-datatable";
@@ -19,35 +15,19 @@ import { AiOutlineFilePdf } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
 import { LuPlus } from "react-icons/lu";
-import {
-   formatDate,
-   getDate,
-   getTime,
-   getStoragePath,
-} from "../../../lib/helper";
+import { HiDotsVertical } from "react-icons/hi";
+import { AiOutlineDelete } from "react-icons/ai";
+import { BiMessageSquareEdit } from "react-icons/bi";
 
-import {
-   Modal,
-   Popover,
-   Button,
-   Select,
-   Group,
-   Input,
-   Menu,
-   Breadcrumbs,
-   Anchor,
-   Badge,
-   NavLink,
-} from "@mantine/core";
+import { Button, Select, Menu, Breadcrumbs, Anchor } from "@mantine/core";
 
 import { CiSearch } from "react-icons/ci";
-import { IoIosArrowDown } from "react-icons/io";
 
 import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 
 const PAGE_SIZES = [10, 20, 30, 40];
 
-const index = () => {
+const Index = () => {
    const [currentPage, setCurrentPage] = useState(1);
    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
    const [sortStatus, setSortStatus] = useState({
@@ -135,8 +115,6 @@ const index = () => {
             setValidationError(`Missing required file: ${requiredFileName}`);
             valid = false;
             break;
-
-            // return valid;
          }
       }
 
@@ -247,7 +225,7 @@ const index = () => {
 
    const items = [
       { title: "Dashboard", href: "/" },
-      { title: "Designation" },
+      { title: "Leave Policy" },
    ].map((item, index) => (
       <Anchor href={item.href} key={index}>
          {item.title}
@@ -263,124 +241,28 @@ const index = () => {
    const icon = <CiSearch />;
 
    // for Modal
-   const [opened, { open, close }] = useDisclosure(false);
+   const [edit, { open, close }] = useDisclosure(false);
+   const [addOpened, { open: addOpen, close: addClose }] = useDisclosure(false);
+   const [deleteOpened, { open: deleteOpen, close: deleteClose }] = useDisclosure(false);
 
    return (
       <>
-         <Modal
-            classNames={{
-               title: "modalTitle",
-            }}
-            opened={opened}
-            title="Add Designation"
-            onClose={close}
-            centered
-         >
-            <form>
-               <Select
-                  label="Designation"
-                  placeholder="Select Designation"
-                  data={[
-                     "Supervisor",
-                     "Team Leader",
-                     "Project Manager",
-                     "Developer",
-                  ]}
-               />
-
-               <Group justify="flex-end" mt="md">
-                  <Button type="submit">Submit</Button>
-               </Group>
-            </form>
-         </Modal>
+         <Edit opened={edit} close={close} />
+         <Delete opened={deleteOpened} close={deleteClose} />
+         <Add opened={addOpened} close={addClose} />
 
          <div className="mb-4 d-flex justify-content-between align-items-end">
             <div className="pageTop">
-               <h3>Designation</h3>
+               <h3>Leave Policy</h3>
                <Breadcrumbs>{items}</Breadcrumbs>
             </div>
 
-            {/* <Button
-               classNames={{
-                  root: "cusBtn"
-               }}
-               onClick={open}
-            >
-               Add Department
-            </Button> */}
-
             <AddButton
-               label="Add Designation"
+               label="Add Leave Policy"
                fontSize="16px"
-               icon={<LuPlus className="me-1 fs-5" />}
-               handleClick={open}
+               icon={<LuPlus className="fs-5 me-0 mr-0" />}
+               handleClick={addOpen}
             />
-         </div>
-
-         {/* <div className="search_part mb-3">
-            <div className="d-flex justify-content-between">
-               <form className="" onSubmit={handleFileSubmit}>
-                  <div className="d-flex align-items-center">
-                     
-                     <div className="ms-2 d-flex align-items-center">
-                           <a
-                              className="me-2"
-                              href="/csv_file.csv"
-                              download="csv_file.csv"
-                           >
-                              Sample CSV
-                           </a>
-                           <a href="/zip_file.zip" download="zip_file.zip">
-                              Sample ZIP
-                           </a>
-                        </div>
-                  </div>
-               </form>
-
-               
-            </div>
-         </div> */}
-
-         <div className="filterBox mb-4 d-flex align-items-center">
-            <Menu width={200} shadow="md" position="bottom-start" offset={5}>
-               <Menu.Target>
-                  <Button
-                     classNames={{
-                        root: "filterNav",
-                     }}
-                  >
-                     {item3} <IoIosArrowDown className="ms-1" />
-                  </Button>
-               </Menu.Target>
-
-               <Menu.Dropdown className="p-2">
-                  <p className="p-2 mb-0 border-bottom mb-1">Department</p>
-                  <Menu.Item
-                     onClick={(e) => {
-                        e.preventDefault();
-                        setItem3("Department_01");
-                     }}
-                  >
-                     Department_01
-                  </Menu.Item>
-                  <Menu.Item
-                     onClick={(e) => {
-                        e.preventDefault();
-                        setItem3("Department_02");
-                     }}
-                  >
-                     Department_02
-                  </Menu.Item>
-                  <Menu.Item
-                     onClick={(e) => {
-                        e.preventDefault();
-                        setItem3("Department_03");
-                     }}
-                  >
-                     Department_03
-                  </Menu.Item>
-               </Menu.Dropdown>
-            </Menu>
          </div>
 
          <div className="d-flex justify-content-between mb-3">
@@ -465,7 +347,7 @@ const index = () => {
 
                   {
                      accessor: "designation_name",
-                     title: "Department Name",
+                     title: "Name",
                      noWrap: true,
                      // visibleMediaQuery: aboveXs,
                      render: ({ designation_name }) =>
@@ -473,7 +355,19 @@ const index = () => {
                   },
                   {
                      accessor: "department_name",
-                     title: "Department Details",
+                     title: "Description",
+                     // visibleMediaQuery: aboveXs,
+                     render: ({ department_name }) => department_name || "N/A",
+                  },
+                  {
+                     accessor: "department_name",
+                     title: "Allocation Days",
+                     // visibleMediaQuery: aboveXs,
+                     render: ({ department_name }) => department_name || "N/A",
+                  },
+                  {
+                     accessor: "department_name",
+                     title: "Leave Type",
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
@@ -485,10 +379,34 @@ const index = () => {
                      textAlign: "center",
                      // width: "0%",
                      render: (item) => (
-                        <EditBranch
-                           employee={item}
-                           setData={setDisplayedData}
-                        />
+                        <>
+                           <Menu shadow="md" width={150} position="bottom-end">
+                              <Menu.Target>
+                                 <button className="border-0 bg-transparent">
+                                    <HiDotsVertical />
+                                 </button>
+                              </Menu.Target>
+
+                              <Menu.Dropdown>
+                                 <Menu.Item
+                                    onClick={open}
+                                    leftSection={
+                                       <BiMessageSquareEdit className="fs-6" />
+                                    }
+                                 >
+                                    Edit
+                                 </Menu.Item>
+                                 <Menu.Item
+                                    onClick={deleteOpen}
+                                    leftSection={
+                                       <AiOutlineDelete className="fs-6" />
+                                    }
+                                 >
+                                    Delete
+                                 </Menu.Item>
+                              </Menu.Dropdown>
+                           </Menu>
+                        </>
                      ),
                   },
                ]}
@@ -513,4 +431,4 @@ const index = () => {
    );
 };
 
-export default index;
+export default Index;

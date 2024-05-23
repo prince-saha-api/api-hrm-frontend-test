@@ -308,7 +308,7 @@ const index = () => {
             <AddButton
                label="Add Branch"
                fontSize="16px"
-               icon={<LuPlus className="fs-5" />}
+               icon={<LuPlus className="me-1 fs-5" />}
                handleClick={open}
             />
          </div>

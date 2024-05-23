@@ -24,7 +24,7 @@ import { FcAddImage } from "react-icons/fc";
 
 const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
-    initialValues: data,
+    initialValues: data[0],
     // validate: {
     //   firstName: (value) =>
     //     value.length < 2 ? "First Name must have at least 2 letters" : null,
@@ -47,7 +47,19 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
   }));
 
   const handleSubmit = (values) => {
-    onNext(values);
+    console.log(values);
+
+    const records = [
+      {
+        certification: values.certification,
+        board_institute_name: values.board_institute_name,
+        level: values.level,
+        score_grade: values.score_grade,
+        year_of_passing: values.year_of_passing,
+      },
+    ];
+
+    onNext(records);
   };
 
   return (
@@ -56,70 +68,65 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
           <Grid.Col span={5}>
             <Box className="stepBox">
-              <Select
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                mt="sm"
-                label="Certification"
-                placeholder="Certification"
-                data={["Brother", "Sister"]}
-                {...form.getInputProps("certification")}
-              />
-
-              <TextInput
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                mt="sm"
-                label="Institute"
-                placeholder="Institute"
-                {...form.getInputProps("institute")}
-              />
-
-              <Select
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                mt="sm"
-                label="Level"
-                placeholder="Level"
-                data={["Brother", "Sister"]}
-                {...form.getInputProps("level")}
-              />
-
-              <Select
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                mt="sm"
-                label="Grade"
-                placeholder="Grade"
-                data={["Brother", "Sister"]}
-                {...form.getInputProps("grade")}
-              />
-
-              <NumberInput
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                rightSection={<></>}
-                rightSectionWidth={0}
-                mt="sm"
-                label="Passing Year"
-                placeholder="Passing Year"
-                {...form.getInputProps("passingYear")}
-              />
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Certification</div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  placeholder="Certification"
+                  {...form.getInputProps("certification")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Institute</div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  placeholder="Institute"
+                  {...form.getInputProps("board_institute_name")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Level</div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  placeholder="Level"
+                  {...form.getInputProps("level")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Grade</div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  placeholder="Grade"
+                  {...form.getInputProps("score_grade")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Passing Year</div>
+                <NumberInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  rightSection={<></>}
+                  rightSectionWidth={0}
+                  // mt="sm"
+                  // label="Passing Year"
+                  placeholder="Passing Year"
+                  {...form.getInputProps("year_of_passing")}
+                />
+              </div>
             </Box>
           </Grid.Col>
         </Grid>

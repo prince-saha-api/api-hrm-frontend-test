@@ -1,7 +1,7 @@
 "use client";
+
 import React, { forwardRef, useImperativeHandle } from "react";
 import { DateInput } from "@mantine/dates";
-import { Breadcrumbs, Anchor } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
   NumberInput,
@@ -10,22 +10,15 @@ import {
   Box,
   Select,
   Button,
-  Flex,
-  FileButton,
   Group,
-  Text,
+  Grid,
 } from "@mantine/core";
-import { Grid } from "@mantine/core";
-import { FcAcceptDatabase } from "react-icons/fc";
-import Image from "next/image";
-import compmanyLogo from "public/full_logo.png";
-import uploadImg from "public/profile01.jpg";
-import { FcAddImage } from "react-icons/fc";
+
 import { countries } from "@/data/countries";
 
-const PersonalDetails = forwardRef(({ data, onNext, onBack }, ref) => {
+const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
   const form = useForm({
-    initialValues: data,
+    initialValues: { ...data, dob: data.dob ? new Date(data.dob) : null },
     // validate: {
     //   first_name: (value) =>
     //     value.length < 2 ? "First Name must have at least 2 letters" : null,
@@ -85,7 +78,10 @@ const PersonalDetails = forwardRef(({ data, onNext, onBack }, ref) => {
   }));
 
   const handleSubmit = (values) => {
-    onNext(values);
+    const formattedDOB = values.dob
+      ? values.dob.toISOString().split("T")[0]
+      : null;
+    onNext({ ...values, dob: formattedDOB });
   };
 
   return (
@@ -289,14 +285,14 @@ const PersonalDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // label="Religion"
                   placeholder="Religion"
                   data={[
-                    "Islam",
-                    "Hinduism",
-                    "Christianity",
-                    "Buddhism",
-                    "Sikhism",
-                    "Judaism",
-                    "Jainism",
-                    "Others",
+                    { value: "1", label: "Islam" },
+                    { value: "2", label: "Hinduism" },
+                    { value: "3", label: "Christianity" },
+                    { value: "4", label: "Buddhism" },
+                    { value: "5", label: "Sikhism" },
+                    { value: "6", label: "Judaism" },
+                    { value: "7", label: "Jainism" },
+                    { value: "8", label: "Others" },
                   ]}
                   {...form.getInputProps("religion")}
                 />

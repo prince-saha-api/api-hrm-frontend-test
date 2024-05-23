@@ -160,18 +160,18 @@ const AddEmployee = () => {
   //       "employee_type":"Intern",
   //       "company":1,
   //       "branch":3,
-  //       "department":2,
+  //       "department":1,
   //       "designation":1,
   //       "shift":1,
   //       "grade": 3,
-  //       "role_permission": [1, 2],
+  //       "role_permission": [1],
   //       "official_note": "",
   //       "ethnic_group": [1],
   //       "joining_date":"2020-08-01",
-  //       "supervisor": "",
-  //       "expense_approver":"",
-  //       "leave_approver":"",
-  //       "shift_request_approver":""
+  //       "supervisor": 1,
+  //       "expense_approver": 1,
+  //       "leave_approver": 1,
+  //       "shift_request_approver": 1
   //    },
   //    "salaryAndLeaves":{
   //       "payment_in":"Cash",
@@ -207,9 +207,37 @@ const AddEmployee = () => {
   //                 "address":"Kalamridha, Sardar Bari"
   //             },
   //             "relation":"Father"
+  //         },
+  //         {
+  //             "name":"Jakir Hossain",
+  //             "age":20,
+  //             "phone_no":"01745625588",
+  //             "email":"jakir@jakir.com",
+  //             "address":{
+  //                 "city":"Faridpur",
+  //                 "state_division":"Dhaka",
+  //                 "post_zip_code":"5607",
+  //                 "country":"Bangladesh",
+  //                 "address":"Kalamridha, Sardar Bari"
+  //             },
+  //             "relation":"Brother"
   //         }
   //    ],
   //    "academicRecord":[
+  //         {
+  //             "certification":"Secondary School Certificate",
+  //             "board_institute_name":"Faridpur Zila High School",
+  //             "level":"SSC",
+  //             "score_grade":"5.00",
+  //             "year_of_passing":2014
+  //         },
+  //         {
+  //             "certification":"Higher Secondary Certificate",
+  //             "board_institute_name":"KM College",
+  //             "level":"HSC",
+  //             "score_grade":"4.60",
+  //             "year_of_passing":2016
+  //         },
   //         {
   //             "certification":"Bachelor of Science in Computer Science and Engineering",
   //             "board_institute_name":"Green University",
@@ -259,11 +287,11 @@ const AddEmployee = () => {
       marital_status: "",
       spouse_name: "",
       nationality: "",
-      religion: "",
+      religion: null,
       personal_email: "",
       personal_phone: "",
       nid_passport_no: "",
-      tin_no: "",
+      tin_no: null,
       photo: "",
       present_address: {
         city: "",
@@ -286,66 +314,98 @@ const AddEmployee = () => {
       official_phone: "",
       password: "",
       employee_type: "",
-      company: "",
-      branch: "",
-      department: "",
-      designation: "",
-      shift: "",
-      grade: "",
-      group: "",
+      company: null,
+      branch: null,
+      department: null,
+      designation: null,
+      shift: null,
+      grade: null,
+      role_permission: [],
+      official_note: "",
+      ethnic_group: [],
+      // group: "",
       joining_date: null,
       supervisor: "",
-      expense_approver: "",
-      leave_approver: "",
-      shift_request_approver: "",
+      expense_approver: null,
+      leave_approver: null,
+      shift_request_approver: null,
     },
     salaryAndLeaves: {
-      paymentIn: "",
-      bankAccount: {
-        bankName: "",
-        branch: "",
-        accountType: "",
-        accountingNo: "",
-        routingNo: "",
-        swiftBIC: "",
-        address: "",
-        city: "",
-        state: "",
-        zipCode: "",
-        country: "",
+      payment_in: "",
+      bank_account: {
+        bank_name: "",
+        branch_name: "",
+        account_type: null,
+        account_no: "",
+        routing_no: "",
+        swift_bic: "",
+        address: {
+          city: "",
+          state_division: "",
+          post_zip_code: "",
+          country: "",
+          address: "",
+        },
       },
-      monthlyGrossSalary: "",
-      leavePolicyAssign: "",
-      payrollPolicyAssign: "",
+      gross_salary: null,
+      leavepolicy: [],
+      payrollpolicy: {
+        earningpolicy: [],
+        deductionpolicy: [],
+      },
     },
-    emergencyContact: {
-      name: "",
-      age: "",
-      phoneNo: "",
-      email: "",
-      address: "",
-      relation: "",
-    },
-    academicRecord: {
-      certification: "",
-      institute: "",
-      level: "",
-      grade: "",
-      passingYear: "",
-    },
-    previousExperience: {
-      companyName: "",
-      designation: "",
-      address: "",
-      from: "",
-      to: "",
-    },
-    uploadDocuments: {
-      nidPassport: "",
-      cv: "",
-      appointmentLetter: "",
-      photo: "",
-    },
+    emergencyContact: [
+      {
+        name: "",
+        age: "",
+        phone_no: "",
+        email: "",
+        address: {
+          city: "",
+          state_division: "",
+          post_zip_code: "",
+          country: "",
+          address: "",
+        },
+        relation: "",
+      },
+    ],
+    academicRecord: [
+      {
+        certification: "",
+        board_institute_name: "",
+        level: "",
+        score_grade: "",
+        year_of_passing: null,
+      },
+    ],
+    previousExperience: [
+      {
+        company_name: "",
+        designation: "",
+        address: "",
+        from_date: null,
+        to_date: null,
+      },
+    ],
+    uploadDocuments: [
+      {
+        title: "",
+        attachment: null,
+      },
+      {
+        title: "",
+        attachment: null,
+      },
+      {
+        title: "",
+        attachment: null,
+      },
+      {
+        title: "",
+        attachment: null,
+      },
+    ],
   });
 
   const [active, setActive] = useState(0);
@@ -364,6 +424,7 @@ const AddEmployee = () => {
   const handleNextStep = (currentStepData) => {
     handleFormDataChange(stepKeys[active], currentStepData);
     nextStep();
+    console.log(formData);
   };
 
   const handleStepClick = (index) => {
@@ -400,24 +461,133 @@ const AddEmployee = () => {
   const handleSubmit = async (currentStepData) => {
     handleFormDataChange(stepKeys[active], currentStepData);
     console.log(formData);
-    return;
+    // return;
 
     try {
-      const response = await fetch("/api/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+      const initialValues = {
+        employee_id: "",
+        is_superuser: false,
+        is_staff: true,
+        is_active: true,
+        // date_joined: "",
+        username: "",
+        email: "",
+        password: "",
+        confirm_password: "",
+        phone_number: "",
+        shift_id: "",
+        image: "",
+        group_id: "",
+        department: "",
+        designation: "",
+      };
+
+      const formValues = new FormData();
+
+      const flattenObject = (obj, prefix = "") => {
+        Object.keys(obj).forEach((key) => {
+          const value = obj[key];
+          const formKey = prefix ? `${prefix}[${key}]` : key;
+
+          if (value && typeof value === "object" && !(value instanceof File)) {
+            flattenObject(value, formKey);
+          } else {
+            formValues.append(formKey, value);
+          }
+        });
+      };
+
+      // Flatten and append form values
+      flattenObject(formData);
+
+      // Example of how to append a specific file (e.g., the "photo" field)
+      // formData.append('photo', formValues.personalDetails.photo);
+
+      // Append uploadDocuments separately if they contain files
+      // formData.uploadDocuments.forEach((doc, index) => {
+      //   if (doc.attachment) {
+      //     formValues.append(`uploadDocuments[${index}][title]`, doc.title);
+      //     formValues.append(
+      //       `uploadDocuments[${index}][attachment]`,
+      //       doc.attachment
+      //     );
+      //   }
+      // });
+
+      console.log(formValues);
+
+      const response = await fetch(
+        "http://10.10.23.64:8000/api/user/add-employee/",
+        {
+          method: "POST",
+          body: formValues,
+        }
+      );
+
       const result = await response.json();
-      console.log("Form submitted successfully:", result);
+      console.log(result);
+
+      return;
     } catch (error) {
       console.error("Error submitting form:", error);
     }
+
+    // try {
+    //   const formValues = new FormData();
+
+    //   const flattenObject = (obj, prefix = "") => {
+    //     Object.keys(obj).forEach((key) => {
+    //       const value = obj[key];
+    //       const formKey = prefix ? `${prefix}[${key}]` : key;
+
+    //       if (value && typeof value === "object" && !(value instanceof File)) {
+    //         flattenObject(value, formKey);
+    //       } else {
+    //         formValues.append(formKey, value);
+    //       }
+    //     });
+    //   };
+
+    //   // Flatten and append form values
+    //   flattenObject(formData);
+
+    //   // Example of how to append a specific file (e.g., the "photo" field)
+    //   // formData.append('photo', formValues.personalDetails.photo);
+
+    //   // Append uploadDocuments separately if they contain files
+    //   formData.uploadDocuments.forEach((doc, index) => {
+    //     if (doc.attachment) {
+    //       formValues.append(`uploadDocuments[${index}][title]`, doc.title);
+    //       formValues.append(
+    //         `uploadDocuments[${index}][attachment]`,
+    //         doc.attachment
+    //       );
+    //     }
+    //   });
+
+    //   console.log(formValues);
+
+    //   // const response = await submit("/employee/", formData, true);
+
+    //   const response = await fetch(
+    //     "http://10.10.23.64:8000/api/user/add-employee/",
+    //     {
+    //       method: "POST",
+    //       // headers: {
+    //       //   // "Authorization": "Bearer token",
+    //       //   // "Content-Type": "multipart/form-data",
+    //       // },
+    //       body: formValues,
+    //     }
+    //   );
+
+    //   console.log(response);
+
+    //   return;
+
+    // } catch (error) {
+    //   console.error("Error submitting form:", error);
+    // }
   };
 
   return (
@@ -429,16 +599,16 @@ const AddEmployee = () => {
 
       <div className="itemCard">
         <Stepper active={active} onStepClick={handleStepClick}>
-          <Stepper.Step label="Personal Details" description="step 1">
+          <Stepper.Step label="Personal Details" description="Step 1">
             <PersonalDetails
               ref={(el) => (stepRefs.current[0] = el)}
               data={formData.personalDetails}
               onNext={handleNextStep}
-              onBack={prevStep}
+              // onBack={prevStep}
             />
           </Stepper.Step>
 
-          <Stepper.Step label="Official Detail" description="step 2">
+          <Stepper.Step label="Official Details" description="Step 2">
             <OfficeDetails
               ref={(el) => (stepRefs.current[1] = el)}
               data={formData.officialDetails}
@@ -447,7 +617,7 @@ const AddEmployee = () => {
             />
           </Stepper.Step>
 
-          <Stepper.Step label="Salary and Leaves" description="step 3">
+          <Stepper.Step label="Salary and Leaves" description="Step 3">
             <SalaryAndLeaves
               ref={(el) => (stepRefs.current[2] = el)}
               data={formData.salaryAndLeaves}
@@ -456,7 +626,7 @@ const AddEmployee = () => {
             />
           </Stepper.Step>
 
-          <Stepper.Step label="Emergency Contact" description="step 4">
+          <Stepper.Step label="Emergency Contact" description="Step 4">
             <EmergencyContact
               ref={(el) => (stepRefs.current[3] = el)}
               data={formData.emergencyContact}
@@ -465,7 +635,7 @@ const AddEmployee = () => {
             />
           </Stepper.Step>
 
-          <Stepper.Step label="Academic Record" description="step 5">
+          <Stepper.Step label="Academic Record" description="Step 5">
             <AcademicRecord
               ref={(el) => (stepRefs.current[4] = el)}
               data={formData.academicRecord}
@@ -474,7 +644,7 @@ const AddEmployee = () => {
             />
           </Stepper.Step>
 
-          <Stepper.Step label="Previous Experience" description="step 6">
+          <Stepper.Step label="Previous Experience" description="Step 6">
             <PreviousExperience
               ref={(el) => (stepRefs.current[5] = el)}
               data={formData.previousExperience}
@@ -483,7 +653,7 @@ const AddEmployee = () => {
             />
           </Stepper.Step>
 
-          <Stepper.Step label="Upload Documents" description="final">
+          <Stepper.Step label="Upload Documents" description="Final">
             <UploadDocuments
               ref={(el) => (stepRefs.current[6] = el)}
               data={formData.uploadDocuments}

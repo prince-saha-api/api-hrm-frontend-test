@@ -29,7 +29,17 @@ const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
   };
 
   const form = useForm({
-    initialValues: data,
+    initialValues: {
+      // ...data,
+      // nidPassport: null,
+      // cv: null,
+      // appointmentLetter: null,
+      // photo: null,
+      nidPassport: data[0]?.attachment || null,
+      cv: data[1]?.attachment || null,
+      appointmentLetter: data[2]?.attachment || null,
+      photo: data[3]?.attachment || null,
+    },
     validate: {
       nidPassport: (value) =>
         value
@@ -60,7 +70,16 @@ const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
   }));
 
   const handleSubmit = (values) => {
-    onNext(values);
+    const uploadDocuments = [
+      { title: "NID/Passport", attachment: values.nidPassport },
+      { title: "Resume", attachment: values.cv },
+      { title: "Appointment Letter", attachment: values.appointmentLetter },
+      { title: "Photo", attachment: values.photo },
+    ];
+
+    onNext(uploadDocuments);
+
+    // onNext(values);
   };
 
   return (
@@ -70,58 +89,65 @@ const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
           <Grid.Col span={5}>
             <Box className="stepBox">
               {/* <h4 className="text-dark mb-4 pb-2">Upload Documents</h4> */}
-
-              <FileInput
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                leftSection={<FaFile className="fileIcon" />}
-                label="NID/Passport"
-                placeholder="NID/Passport"
-                leftSectionPointerEvents="none"
-                {...form.getInputProps("nidPassport")}
-              />
-              <FileInput
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                mt="sm"
-                leftSection={<FaFile className="fileIcon" />}
-                label="Resume"
-                placeholder="Resume"
-                leftSectionPointerEvents="none"
-                {...form.getInputProps("cv")}
-              />
-              <FileInput
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                mt="sm"
-                leftSection={<FaFile className="fileIcon" />}
-                label="Appointment Letter"
-                placeholder="Appointment Letter"
-                leftSectionPointerEvents="none"
-                {...form.getInputProps("appointmentLetter")}
-              />
-              <FileInput
-                classNames={{
-                  root: "cust_iputRoot",
-                  label: "cust_iputLabel",
-                  wrapper: "cust_iputWrapper",
-                }}
-                mt="sm"
-                leftSection={<TbPhotoFilled className="fileIcon" />}
-                label="Photo"
-                placeholder="Photo"
-                leftSectionPointerEvents="none"
-                {...form.getInputProps("photo")}
-              />
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">NID/Passport</div>
+                <FileInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  leftSection={<FaFile className="fileIcon" />}
+                  // label="NID/Passport"
+                  placeholder="NID/Passport"
+                  leftSectionPointerEvents="none"
+                  {...form.getInputProps("nidPassport")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Resume</div>
+                <FileInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  leftSection={<FaFile className="fileIcon" />}
+                  // label="Resume"
+                  placeholder="Resume"
+                  leftSectionPointerEvents="none"
+                  {...form.getInputProps("cv")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Appointment Letter</div>
+                <FileInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  leftSection={<FaFile className="fileIcon" />}
+                  // label="Appointment Letter"
+                  placeholder="Appointment Letter"
+                  leftSectionPointerEvents="none"
+                  {...form.getInputProps("appointmentLetter")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Photo</div>
+                <FileInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  leftSection={<TbPhotoFilled className="fileIcon" />}
+                  // label="Photo"
+                  placeholder="Photo"
+                  leftSectionPointerEvents="none"
+                  {...form.getInputProps("photo")}
+                />
+              </div>
             </Box>
           </Grid.Col>
           {/* <Grid.Col span={5}>

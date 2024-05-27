@@ -8,6 +8,7 @@ import SalaryAndLeaves from "./steps/SalaryAndLeaves";
 import EmergencyContact from "./steps/EmergencyContact";
 import AcademicRecord from "./steps/AcademicRecord";
 import PreviousExperience from "./steps/PreviousExperience";
+import EducationAndExperience from "./steps/EducationAndExperience";
 import UploadDocuments from "./steps/UploadDocuments";
 import SuccessCheckmarkAnimation from "./steps/SuccessCheckmarkAnimation";
 
@@ -644,8 +645,8 @@ const AddEmployee = () => {
             />
           </Stepper.Step>
 
-          <Stepper.Step label="Previous Experience" description="Step 6">
-            <PreviousExperience
+          <Stepper.Step label="Education & Experience" description="Step 6">
+            <EducationAndExperience
               ref={(el) => (stepRefs.current[5] = el)}
               data={formData.previousExperience}
               onNext={handleNextStep}

@@ -29,6 +29,7 @@ const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
   };
 
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: {
       // ...data,
       // nidPassport: null,
@@ -86,7 +87,7 @@ const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
     <>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={5}>
+          <Grid.Col span={6}>
             <Box className="stepBox">
               {/* <h4 className="text-dark mb-4 pb-2">Upload Documents</h4> */}
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -150,7 +151,7 @@ const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
               </div>
             </Box>
           </Grid.Col>
-          {/* <Grid.Col span={5}>
+          {/* <Grid.Col span={6}>
             <Box className="stepBox">
               <h4 className="text-dark mb-4 pb-2">Upload Other Documents</h4>
 

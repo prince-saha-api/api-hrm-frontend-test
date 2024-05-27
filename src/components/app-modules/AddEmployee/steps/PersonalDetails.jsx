@@ -12,12 +12,14 @@ import {
   Button,
   Group,
   Grid,
+  Checkbox,
 } from "@mantine/core";
 
 import { countries } from "@/data/countries";
 
 const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: { ...data, dob: data.dob ? new Date(data.dob) : null },
     // validate: {
     //   first_name: (value) =>
@@ -88,7 +90,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
     <>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={5}>
+          <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">First Name</div>
@@ -314,41 +316,47 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Contact No.</div>
-                <NumberInput
+                <TextInput
                   classNames={{
                     root: "w-100",
-                    // root: "cust_iputRoot",
-                    // label: "cust_iputLabel",
                     wrapper: "cust_iputWrapper",
                   }}
-                  rightSection={<></>}
-                  rightSectionWidth={0}
-                  // mt="sm"
-                  // label="Contact No."
                   placeholder="Contact No"
                   {...form.getInputProps("personal_phone")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">NID / Passport</div>
-                <NumberInput
+                <TextInput
                   classNames={{
                     root: "w-100",
-                    // root: "cust_iputRoot",
-                    // label: "cust_iputLabel",
                     wrapper: "cust_iputWrapper",
                   }}
-                  rightSection={<></>}
-                  rightSectionWidth={0}
-                  // mt="sm"
-                  // label="NID / Passport"
                   placeholder="NID / Passport"
                   {...form.getInputProps("nid_passport_no")}
                 />
+                {/* <NumberInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  rightSection={<></>}
+                  rightSectionWidth={0}
+                  placeholder="NID / Passport"
+                  {...form.getInputProps("nid_passport_no")}
+                /> */}
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">TIN No</div>
-                <NumberInput
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  placeholder="TIN No"
+                  {...form.getInputProps("tin_no")}
+                />
+                {/* <NumberInput
                   classNames={{
                     root: "w-100",
                     // root: "cust_iputRoot",
@@ -357,20 +365,35 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   }}
                   rightSection={<></>}
                   rightSectionWidth={0}
-                  // mt="sm"
-                  // label="TIN No"
                   placeholder="TIN No"
                   {...form.getInputProps("tin_no")}
-                />
+                /> */}
               </div>
             </Box>
           </Grid.Col>
         </Grid>
 
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={5}>
+          <Grid.Col span={6}>
             <Box className="stepBox mt-0">
               <p className="fw-bold mb-3">Present Address</p>
+
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Address</div>
+                <Textarea
+                  classNames={{
+                    root: "w-100",
+                    // root: "cust_iputRoot",
+                    // label: "cust_iputLabel",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  // label="Address"
+                  placeholder="Present Address"
+                  {...form.getInputProps("present_address.address")}
+                />
+              </div>
+
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">City</div>
                 <TextInput
@@ -433,6 +456,17 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   {...form.getInputProps("present_address.country")}
                 />
               </div>
+            </Box>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Box className="stepBox mt-0">
+              <div className="mb-3 d-flex align-items-center justify-content-between">
+                <p className="fw-bold mb-0 d-flex align-items-center">
+                  Permanent Address
+                </p>
+                <Checkbox defaultChecked label="Same as present address" />
+              </div>
+
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Address</div>
                 <Textarea
@@ -442,17 +476,13 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     // label: "cust_iputLabel",
                     wrapper: "cust_iputWrapper",
                   }}
-                  // mt="sm"
+                  // // mt="sm"
                   // label="Address"
-                  placeholder="Present Address"
-                  {...form.getInputProps("present_address.address")}
+                  placeholder="Permanent Address"
+                  {...form.getInputProps("permanent_address.address")}
                 />
               </div>
-            </Box>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <Box className="stepBox mt-0">
-              <p className="fw-bold mb-3">Permanent Address</p>
+
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">City</div>
                 <TextInput
@@ -513,21 +543,6 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   searchable
                   data={countries}
                   {...form.getInputProps("permanent_address.country")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Address</div>
-                <Textarea
-                  classNames={{
-                    root: "w-100",
-                    // root: "cust_iputRoot",
-                    // label: "cust_iputLabel",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // // mt="sm"
-                  // label="Address"
-                  placeholder="Permanent Address"
-                  {...form.getInputProps("permanent_address.address")}
                 />
               </div>
             </Box>

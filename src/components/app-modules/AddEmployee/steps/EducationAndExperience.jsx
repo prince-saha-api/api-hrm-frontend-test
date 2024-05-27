@@ -69,6 +69,8 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
           <Grid.Col span={6}>
             <Box className="stepBox">
+              <h5 className="fw-bold mb-3">Educational Background</h5>
+
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Certification</div>
                 <TextInput
@@ -126,6 +128,80 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
                   // label="Passing Year"
                   placeholder="Passing Year"
                   {...form.getInputProps("year_of_passing")}
+                />
+              </div>
+            </Box>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Box className="stepBox">
+              <h5 className="fw-bold mb-3">Experiences</h5>
+
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Company Name</div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // label="Company Name"
+                  placeholder="Company Name"
+                  {...form.getInputProps("company_name")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Designation</div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  // label="Designation"
+                  placeholder="Designation"
+                  {...form.getInputProps("designation")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Address</div>
+                <Textarea
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  // label="Address"
+                  placeholder="Address"
+                  {...form.getInputProps("address")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">From</div>
+                <DateInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  // value={value}
+                  // onChange={setValue}
+                  // label="From"
+                  placeholder="From"
+                  {...form.getInputProps("from_date")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">To</div>
+                <DateInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  // value={value}
+                  // onChange={setValue}
+                  // label="To"
+                  placeholder="To"
+                  {...form.getInputProps("to_date")}
                 />
               </div>
             </Box>

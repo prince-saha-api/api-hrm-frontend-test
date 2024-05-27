@@ -25,6 +25,7 @@ import { countries } from "@/data/countries";
 
 const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: data[0],
     // validate: {
     //   firstName: (value) =>
@@ -74,7 +75,7 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
     <>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={5}>
+          <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Name</div>

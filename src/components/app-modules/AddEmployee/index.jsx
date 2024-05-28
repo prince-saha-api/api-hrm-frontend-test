@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Breadcrumbs, Anchor, Stepper, Button, Group } from "@mantine/core";
+import { Breadcrumbs, Anchor, Stepper } from "@mantine/core";
 import PersonalDetails from "./steps/PersonalDetails";
 import OfficeDetails from "./steps/OfficeDetails";
 import SalaryAndLeaves from "./steps/SalaryAndLeaves";
 import EmergencyContact from "./steps/EmergencyContact";
-import AcademicRecord from "./steps/AcademicRecord";
-import PreviousExperience from "./steps/PreviousExperience";
 import EducationAndExperience from "./steps/EducationAndExperience";
 import UploadDocuments from "./steps/UploadDocuments";
 import SuccessCheckmarkAnimation from "./steps/SuccessCheckmarkAnimation";
@@ -21,260 +19,6 @@ const AddEmployee = () => {
       {item.title}
     </Anchor>
   ));
-
-  // const [formData, setFormData] = useState({
-  //   personalDetails: {
-  //     firstName: "",
-  //     lastName: "",
-  //     gender: "",
-  //     dateOfBirth: null,
-  //     bloodGroup: "",
-  //     fathersName: "",
-  //     mothersName: "",
-  //     maritalStatus: "",
-  //     spouseName: "",
-  //     nationality: "",
-  //     religion: "",
-  //     email: "",
-  //     contactNo: "",
-  //     nidPassport: "",
-  //     tinNo: "",
-
-  //     presentAddress: {
-  //       city: "",
-  //       state: "",
-  //       zipCode: "",
-  //       country: "",
-  //       address: "",
-  //     },
-  //     permanentAddress: {
-  //       city: "",
-  //       state: "",
-  //       zipCode: "",
-  //       country: "",
-  //       address: "",
-  //     },
-  //   },
-  //   officialDetails: {
-  //     employeeId: "",
-  //     officialEmail: "",
-  //     officialPhone: "",
-  //     password: "",
-  //     employeeType: "",
-  //     company: "",
-  //     branch: "",
-  //     department: "",
-  //     designation: "",
-  //     defaultShift: "",
-  //     joiningDate: null,
-  //     expenseApprover: "",
-  //     leaveApprover: "",
-  //     shiftApprover: "",
-  //   },
-  //   salaryAndLeaves: {
-  //     paymentIn: "",
-  //     bankAccount: {
-  //       bankName: "",
-  //       branch: "",
-  //       accountType: "",
-  //       accountingNo: "",
-  //       routingNo: "",
-  //       swiftBIC: "",
-  //       address: "",
-  //       city: "",
-  //       state: "",
-  //       zipCode: "",
-  //       country: "",
-  //     },
-  //     monthlyGrossSalary: "",
-  //     leavePolicyAssign: "",
-  //     payrollPolicyAssign: "",
-  //   },
-  //   emergencyContact: {
-  //     name: "",
-  //     age: "",
-  //     phoneNo: "",
-  //     email: "",
-  //     address: "",
-  //     relation: "",
-  //   },
-  //   academicRecord: {
-  //     certification: "",
-  //     institute: "",
-  //     level: "",
-  //     grade: "",
-  //     passingYear: "",
-  //   },
-  //   previousExperience: {
-  //     companyName: "",
-  //     designation: "",
-  //     address: "",
-  //     from: "",
-  //     to: "",
-  //   },
-  //   uploadDocuments: {
-  //     nidPassport: "",
-  //     cv: "",
-  //     appointmentLetter: "",
-  //     photo: "",
-  //   },
-  // });
-
-  //   {
-  //     "personalDetails":{
-  //       "first_name":"Rakib",
-  //       "last_name":"Hossain",
-  //       "gender":"Male",
-  //       "dob":"1999-08-05",
-  //       "blood_group":"B+",
-  //       "fathers_name":"Joynal Hossain",
-  //       "mothers_name":"Jahanara Begum",
-  //       "marital_status":"Single",
-  //       "spouse_name":"",
-  //       "nationality":"Bangladeshi",
-  //       "religion":1,
-  //       "personal_email":"rakib@rakib.com",
-  //       "personal_phone":"01784625533",
-  //       "nid_passport_no":"66745126",
-  //       "tin_no":"54135478512654411254554",
-  //       "photo":"profile pic",
-  //       "present_address":{
-  //          "city":"Dhaka",
-  //          "state_division":"Dhaka",
-  //          "post_zip_code":"1100",
-  //          "country":"Bangladesh",
-  //          "address":"Soroni Lane, 23/A"
-  //       },
-  //       "permanent_address":{
-  //          "city":"Faridpur",
-  //          "state_division":"Dhaka",
-  //          "post_zip_code":"5607",
-  //          "country":"Bangladesh",
-  //          "address":"Kalamridha, Sardar Bari"
-  //       }
-  //    },
-  //    "officialDetails":{
-  //       "official_id":"API1234567",
-  //       "official_email":"rakib.api@official.com",
-  //       "official_phone":"01784526633",
-  //       "password":"rakib",
-  //       "employee_type":"Intern",
-  //       "company":1,
-  //       "branch":3,
-  //       "department":1,
-  //       "designation":1,
-  //       "shift":1,
-  //       "grade": 3,
-  //       "role_permission": [1],
-  //       "official_note": "",
-  //       "ethnic_group": [1],
-  //       "joining_date":"2020-08-01",
-  //       "supervisor": 1,
-  //       "expense_approver": 1,
-  //       "leave_approver": 1,
-  //       "shift_request_approver": 1
-  //    },
-  //    "salaryAndLeaves":{
-  //       "payment_in":"Cash",
-  //       "bank_account":{
-  //          "bank_name":"Prime Bank",
-  //          "branch_name":"Banani",
-  //          "account_type":1,
-  //          "account_no":"126521460000525",
-  //          "routing_no":"98541222220540",
-  //          "swift_bic":"AAAA-BB-CC-123",
-  //          "address":{
-  //             "city":"Dhaka",
-  //             "state_division":"Dhaka",
-  //             "post_zip_code":"1213",
-  //             "country":"Bangladesh",
-  //             "address":"62 Block - E, Kemal Ataturk Avenue, Banani, Dhaka 1213"
-  //          }
-  //       },
-  //       "gross_salary":10000,
-  //       "leavepolicy": [1, 2]
-  //    },
-  //    "emergencyContact":[
-  //         {
-  //             "name":"Joynal Hossain",
-  //             "age":50,
-  //             "phone_no":"01745625578",
-  //             "email":"",
-  //             "address":{
-  //                 "city":"Faridpur",
-  //                 "state_division":"Dhaka",
-  //                 "post_zip_code":"5607",
-  //                 "country":"Bangladesh",
-  //                 "address":"Kalamridha, Sardar Bari"
-  //             },
-  //             "relation":"Father"
-  //         },
-  //         {
-  //             "name":"Jakir Hossain",
-  //             "age":20,
-  //             "phone_no":"01745625588",
-  //             "email":"jakir@jakir.com",
-  //             "address":{
-  //                 "city":"Faridpur",
-  //                 "state_division":"Dhaka",
-  //                 "post_zip_code":"5607",
-  //                 "country":"Bangladesh",
-  //                 "address":"Kalamridha, Sardar Bari"
-  //             },
-  //             "relation":"Brother"
-  //         }
-  //    ],
-  //    "academicRecord":[
-  //         {
-  //             "certification":"Secondary School Certificate",
-  //             "board_institute_name":"Faridpur Zila High School",
-  //             "level":"SSC",
-  //             "score_grade":"5.00",
-  //             "year_of_passing":2014
-  //         },
-  //         {
-  //             "certification":"Higher Secondary Certificate",
-  //             "board_institute_name":"KM College",
-  //             "level":"HSC",
-  //             "score_grade":"4.60",
-  //             "year_of_passing":2016
-  //         },
-  //         {
-  //             "certification":"Bachelor of Science in Computer Science and Engineering",
-  //             "board_institute_name":"Green University",
-  //             "level":"B.Sc",
-  //             "score_grade":"3.14",
-  //             "year_of_passing":2020
-  //         }
-  //    ],
-  //    "previousExperience":[
-  //         {
-  //             "company_name":"5 minutes solutions ltd",
-  //             "designation":"Intern Frontend Develover",
-  //             "address":"Jatrabari, Hujur Bari Gate",
-  //             "from_date":"2020-02-01",
-  //             "to_date":"2020-05-01"
-  //         }
-  //    ],
-  //    "uploadDocuments": [
-  //         {
-  //             "title": "nid",
-  //             "attachment": "nid File"
-  //         },
-  //         {
-  //             "title": "cv",
-  //             "attachment": "cv File"
-  //         },
-  //         {
-  //             "title": "appointmentLetter",
-  //             "attachment": "appointmentLetter File"
-  //         },
-  //         {
-  //             "title": "photo",
-  //             "attachment": "photo File"
-  //         }
-  //    ]
-  // }
 
   const [formData, setFormData] = useState({
     personalDetails: {
@@ -308,6 +52,7 @@ const AddEmployee = () => {
         country: "",
         address: "",
       },
+      permanentAddressSameAsPresent: false,
     },
     officialDetails: {
       official_id: "",
@@ -324,7 +69,6 @@ const AddEmployee = () => {
       role_permission: [],
       official_note: "",
       ethnic_group: [],
-      // group: "",
       joining_date: null,
       supervisor: "",
       expense_approver: null,
@@ -412,8 +156,18 @@ const AddEmployee = () => {
   const [active, setActive] = useState(0);
   const stepRefs = useRef([]);
 
+  const stepKeys = [
+    "personalDetails",
+    "officialDetails",
+    "salaryAndLeaves",
+    "emergencyContact",
+    "academicRecord",
+    "previousExperience",
+    "uploadDocuments",
+  ];
+
   const nextStep = () =>
-    setActive((current) => (current < 7 ? current + 1 : current));
+    setActive((current) => (current < 6 ? current + 1 : current));
 
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
@@ -449,40 +203,12 @@ const AddEmployee = () => {
     }
   };
 
-  const stepKeys = [
-    "personalDetails",
-    "officialDetails",
-    "salaryAndLeaves",
-    "emergencyContact",
-    "academicRecord",
-    "previousExperience",
-    "uploadDocuments",
-  ];
-
   const handleSubmit = async (currentStepData) => {
     handleFormDataChange(stepKeys[active], currentStepData);
     console.log(formData);
     // return;
 
     try {
-      const initialValues = {
-        employee_id: "",
-        is_superuser: false,
-        is_staff: true,
-        is_active: true,
-        // date_joined: "",
-        username: "",
-        email: "",
-        password: "",
-        confirm_password: "",
-        phone_number: "",
-        shift_id: "",
-        image: "",
-        group_id: "",
-        department: "",
-        designation: "",
-      };
-
       const formValues = new FormData();
 
       const flattenObject = (obj, prefix = "") => {
@@ -636,18 +362,18 @@ const AddEmployee = () => {
             />
           </Stepper.Step>
 
-          <Stepper.Step label="Academic Record" description="Step 5">
+          {/* <Stepper.Step label="Academic Record" description="Step 5">
             <AcademicRecord
               ref={(el) => (stepRefs.current[4] = el)}
               data={formData.academicRecord}
               onNext={handleNextStep}
               onBack={prevStep}
             />
-          </Stepper.Step>
+          </Stepper.Step> */}
 
           <Stepper.Step label="Education & Experience" description="Step 6">
             <EducationAndExperience
-              ref={(el) => (stepRefs.current[5] = el)}
+              ref={(el) => (stepRefs.current[4] = el)}
               data={formData.previousExperience}
               onNext={handleNextStep}
               onBack={prevStep}
@@ -656,7 +382,7 @@ const AddEmployee = () => {
 
           <Stepper.Step label="Upload Documents" description="Final">
             <UploadDocuments
-              ref={(el) => (stepRefs.current[6] = el)}
+              ref={(el) => (stepRefs.current[5] = el)}
               data={formData.uploadDocuments}
               onNext={handleSubmit}
               onBack={prevStep}

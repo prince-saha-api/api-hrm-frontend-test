@@ -1,7 +1,5 @@
 "use client";
-import React, { forwardRef, useImperativeHandle } from "react";
-import { DateInput } from "@mantine/dates";
-import { Breadcrumbs, Anchor } from "@mantine/core";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { useForm } from "@mantine/form";
 import {
   NumberInput,
@@ -10,23 +8,18 @@ import {
   Box,
   Select,
   Button,
-  Flex,
-  FileButton,
   Group,
-  Text,
+  Grid,
 } from "@mantine/core";
-import { Grid } from "@mantine/core";
-import { FcAcceptDatabase } from "react-icons/fc";
-import Image from "next/image";
-import compmanyLogo from "public/full_logo.png";
-import uploadImg from "public/profile01.jpg";
-import { FcAddImage } from "react-icons/fc";
+import { LuPlus } from "react-icons/lu";
 import { countries } from "@/data/countries";
 
 const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
+  const [emergencyContacts, setEmergencyContacts] = useState(data);
+
   const form = useForm({
     mode: "uncontrolled",
-    initialValues: data[0],
+    initialValues: { emergencyContacts: data },
     // validate: {
     //   firstName: (value) =>
     //     value.length < 2 ? "First Name must have at least 2 letters" : null,
@@ -39,7 +32,7 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
 
   useImperativeHandle(ref, () => ({
     validateStep: (updateFormData, key) => {
-      const values = form.getValues();
+      const values = form.values.emergencyContacts;
       updateFormData(key, values);
       return form.isValid();
     },
@@ -48,175 +41,205 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
     },
   }));
 
-  const handleSubmit = (values) => {
-    console.log(values);
-
-    const contacts = [
+  const addMoreEmergencyContact = () => {
+    setEmergencyContacts([
+      ...emergencyContacts,
       {
-        name: values.name,
-        age: values.age,
-        phone_no: values.phone_no,
-        email: values.email,
+        name: "",
+        age: "",
+        phone_no: "",
+        email: "",
         address: {
-          city: values.address.city,
-          state_division: values.address.state_division,
-          post_zip_code: values.address.post_zip_code,
-          country: values.address.country,
-          address: values.address.address,
+          city: "",
+          state_division: "",
+          post_zip_code: "",
+          country: "",
+          address: "",
         },
-        relation: values.name,
+        relation: "",
       },
-    ];
+    ]);
+    form.setValues({
+      emergencyContacts: [
+        ...form.values.emergencyContacts,
+        {
+          name: "",
+          age: "",
+          phone_no: "",
+          email: "",
+          address: {
+            city: "",
+            state_division: "",
+            post_zip_code: "",
+            country: "",
+            address: "",
+          },
+          relation: "",
+        },
+      ],
+    });
+  };
 
-    onNext(contacts);
+  const handleSubmit = (values) => {
+    onNext(values.emergencyContacts);
   };
 
   return (
     <>
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={6}>
-            <Box className="stepBox">
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Name</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // label="Name"
-                  placeholder="Name"
-                  {...form.getInputProps("name")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Age</div>
-                <NumberInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  rightSection={<></>}
-                  rightSectionWidth={0}
-                  // mt="sm"
-                  // label="Age"
-                  placeholder="Age"
-                  {...form.getInputProps("age")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Phone No</div>
-                <NumberInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  rightSection={<></>}
-                  rightSectionWidth={0}
-                  // mt="sm"
-                  // label="Phone No"
-                  placeholder="Phone No"
-                  {...form.getInputProps("phone_no")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Email</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // label="Email"
-                  placeholder="Email"
-                  {...form.getInputProps("email")}
-                />
-              </div>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        {form.values.emergencyContacts.map((contact, index) => (
+          <Grid key={index} gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
+            <Grid.Col span={6}>
+              <Box className="stepBox">
+                <div className="d-flex align-items-start w-100 cust_mt">
+                  <div className="cust_iputLabel">Name</div>
+                  <TextInput
+                    classNames={{
+                      root: "w-100",
+                      wrapper: "cust_iputWrapper",
+                    }}
+                    placeholder="Name"
+                    {...form.getInputProps(`emergencyContacts.${index}.name`)}
+                  />
+                </div>
+                <div className="d-flex align-items-start w-100 cust_mt">
+                  <div className="cust_iputLabel">Age</div>
+                  <NumberInput
+                    classNames={{
+                      root: "w-100",
+                      wrapper: "cust_iputWrapper",
+                    }}
+                    rightSection={<></>}
+                    rightSectionWidth={0}
+                    placeholder="Age"
+                    {...form.getInputProps(`emergencyContacts.${index}.age`)}
+                  />
+                </div>
+                <div className="d-flex align-items-start w-100 cust_mt">
+                  <div className="cust_iputLabel">Phone No</div>
+                  <NumberInput
+                    classNames={{
+                      root: "w-100",
+                      wrapper: "cust_iputWrapper",
+                    }}
+                    rightSection={<></>}
+                    rightSectionWidth={0}
+                    placeholder="Phone No"
+                    {...form.getInputProps(
+                      `emergencyContacts.${index}.phone_no`
+                    )}
+                  />
+                </div>
+                <div className="d-flex align-items-start w-100 cust_mt">
+                  <div className="cust_iputLabel">Email</div>
+                  <TextInput
+                    classNames={{
+                      root: "w-100",
+                      wrapper: "cust_iputWrapper",
+                    }}
+                    placeholder="Email"
+                    {...form.getInputProps(`emergencyContacts.${index}.email`)}
+                  />
+                </div>
+                <div className="d-flex align-items-start w-100 cust_mt">
+                  <div className="cust_iputLabel">Relation</div>
+                  <TextInput
+                    classNames={{
+                      root: "w-100",
+                      wrapper: "cust_iputWrapper",
+                    }}
+                    placeholder="Relation"
+                    {...form.getInputProps(
+                      `emergencyContacts.${index}.relation`
+                    )}
+                  />
+                </div>
+              </Box>
+            </Grid.Col>
 
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Relation</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  placeholder="Relation"
-                  {...form.getInputProps("relation")}
-                />
-              </div>
-            </Box>
-          </Grid.Col>
+            <Grid.Col span={6}>
+              <Box className="stepBox">
+                <div className="d-flex align-items-start w-100 cust_mt">
+                  <div className="cust_iputLabel">City</div>
+                  <TextInput
+                    classNames={{
+                      root: "w-100",
+                      wrapper: "cust_iputWrapper",
+                    }}
+                    placeholder="City"
+                    {...form.getInputProps(
+                      `emergencyContacts.${index}.address.city`
+                    )}
+                  />
+                </div>
+                <div className="d-flex align-items-start w-100 cust_mt">
+                  <div className="cust_iputLabel">State</div>
+                  <TextInput
+                    classNames={{
+                      root: "w-100",
+                      wrapper: "cust_iputWrapper",
+                    }}
+                    placeholder="State"
+                    {...form.getInputProps(
+                      `emergencyContacts.${index}.address.state_division`
+                    )}
+                  />
+                </div>
+                <div className="d-flex align-items-start w-100 cust_mt">
+                  <div className="cust_iputLabel">ZIP Code</div>
+                  <TextInput
+                    classNames={{
+                      root: "w-100",
+                      wrapper: "cust_iputWrapper",
+                    }}
+                    placeholder="ZIP Code"
+                    {...form.getInputProps(
+                      `emergencyContacts.${index}.address.post_zip_code`
+                    )}
+                  />
+                </div>
+                <div className="d-flex align-items-start w-100 cust_mt">
+                  <div className="cust_iputLabel">Country</div>
+                  <Select
+                    classNames={{
+                      root: "w-100",
+                      wrapper: "cust_iputWrapper",
+                    }}
+                    placeholder="Country"
+                    searchable
+                    data={countries}
+                    {...form.getInputProps(
+                      `emergencyContacts.${index}.address.country`
+                    )}
+                  />
+                </div>
+                <div className="d-flex align-items-start w-100 cust_mt">
+                  <div className="cust_iputLabel">Address</div>
+                  <Textarea
+                    classNames={{
+                      root: "w-100",
+                      wrapper: "cust_iputWrapper",
+                    }}
+                    placeholder="Present Address"
+                    {...form.getInputProps(
+                      `emergencyContacts.${index}.address.address`
+                    )}
+                  />
+                </div>
+              </Box>
+            </Grid.Col>
+          </Grid>
+        ))}
 
-          <Grid.Col span={6}>
-            <Box className="stepBox">
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">City</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  placeholder="City"
-                  {...form.getInputProps("address.city")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">State</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  placeholder="State"
-                  {...form.getInputProps("address.state_division")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">ZIP Code</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  placeholder="ZIP Code"
-                  {...form.getInputProps("address.post_zip_code")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Country</div>
-                <Select
-                  classNames={{
-                    root: "w-100",
-                    // root: "cust_iputRoot",
-                    // label: "cust_iputLabel",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // label="Country"
-                  placeholder="Country"
-                  searchable
-                  data={countries}
-                  {...form.getInputProps("address.country")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Address</div>
-                <Textarea
-                  classNames={{
-                    root: "w-100",
-                    // root: "cust_iputRoot",
-                    // label: "cust_iputLabel",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // label="Address"
-                  placeholder="Present Address"
-                  {...form.getInputProps("address.address")}
-                />
-              </div>
-            </Box>
-          </Grid.Col>
-        </Grid>
+        <Button
+          justify="center"
+          leftSection={<LuPlus className="me-0 fs-5" />}
+          variant="transparent"
+          // mt="md"
+          onClick={addMoreEmergencyContact}
+        >
+          Add More
+        </Button>
 
         <Group justify="left" mt="xl">
           <Button variant="default" onClick={onBack}>

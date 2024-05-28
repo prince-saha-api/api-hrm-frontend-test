@@ -1,10 +1,10 @@
 "use client";
 
-import React, { forwardRef, useImperativeHandle } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import {
-  NumberInput,
+  // NumberInput,
   TextInput,
   Textarea,
   Box,
@@ -18,6 +18,8 @@ import {
 import { countries } from "@/data/countries";
 
 const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
+  // const [sameAsPresent, setSameAsPresent] = useState(false);
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: { ...data, dob: data.dob ? new Date(data.dob) : null },
@@ -68,6 +70,8 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
     // },
   });
 
+  const sameAsPresent = form.getValues().permanentAddressSameAsPresent;
+
   useImperativeHandle(ref, () => ({
     validateStep: (updateFormData, key) => {
       const values = form.getValues();
@@ -78,6 +82,29 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
       form.validate();
     },
   }));
+
+  const handleSameAsPresentChange = (event) => {
+    const isChecked = event.currentTarget.checked;
+    form.setValues({
+      ...form.getValues(),
+      permanentAddressSameAsPresent: isChecked,
+    });
+
+    // setSameAsPresent(isChecked);
+
+    if (isChecked) {
+      const presentAddress = form.getValues().present_address;
+      form.setValues({
+        ...form.getValues(),
+        permanent_address: { ...presentAddress },
+      });
+
+      // console.log(
+      //   form.getValues().present_address,
+      //   form.getValues().permanent_address
+      // );
+    }
+  };
 
   const handleSubmit = (values) => {
     const formattedDOB = values.dob
@@ -460,12 +487,18 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
           </Grid.Col>
           <Grid.Col span={6}>
             <Box className="stepBox mt-0">
-              <div className="mb-3 d-flex align-items-center justify-content-between">
-                <p className="fw-bold mb-0 d-flex align-items-center">
-                  Permanent Address
-                </p>
-                <Checkbox defaultChecked label="Same as present address" />
-              </div>
+              <Group
+                align="center" //
+                justify="space-between"
+                classNames={{ root: "mb-3" }}
+              >
+                <p className="fw-bold mb-0">Permanent Address</p>
+                <Checkbox
+                  label="Same as Present Address"
+                  checked={sameAsPresent}
+                  onChange={handleSameAsPresentChange}
+                />
+              </Group>
 
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Address</div>
@@ -480,6 +513,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   // label="Address"
                   placeholder="Permanent Address"
                   {...form.getInputProps("permanent_address.address")}
+                  disabled={sameAsPresent}
                 />
               </div>
 
@@ -496,6 +530,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   // label="City"
                   placeholder="City"
                   {...form.getInputProps("permanent_address.city")}
+                  disabled={sameAsPresent}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -511,6 +546,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   // label="State"
                   placeholder="State"
                   {...form.getInputProps("permanent_address.state_division")}
+                  disabled={sameAsPresent}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -526,6 +562,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   // label="ZIP Code"
                   placeholder="ZIP Code"
                   {...form.getInputProps("permanent_address.post_zip_code")}
+                  disabled={sameAsPresent}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -543,6 +580,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   searchable
                   data={countries}
                   {...form.getInputProps("permanent_address.country")}
+                  disabled={sameAsPresent}
                 />
               </div>
             </Box>

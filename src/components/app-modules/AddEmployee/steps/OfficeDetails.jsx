@@ -3,16 +3,11 @@ import React, { forwardRef, useImperativeHandle } from "react";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import {
-  NumberInput,
   TextInput,
-  Textarea,
   Box,
   Select,
   Button,
-  Flex,
-  FileButton,
   Group,
-  Text,
   PasswordInput,
   MultiSelect,
   Grid,
@@ -68,7 +63,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // label="Employee ID"
-                  placeholder="Employee ID"
+                  placeholder="Ex: API2307047"
                   {...form.getInputProps("official_id")}
                 />
               </div>
@@ -89,15 +84,11 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
 
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Official Phone</div>
-                <NumberInput
+                <TextInput
                   classNames={{
                     root: "w-100",
                     wrapper: "cust_iputWrapper",
                   }}
-                  rightSection={<></>}
-                  rightSectionWidth={0}
-                  // mt="sm"
-                  // label="Official Phone"
                   placeholder="Official Phone"
                   {...form.getInputProps("official_phone")}
                 />

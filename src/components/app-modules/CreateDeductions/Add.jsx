@@ -1,6 +1,5 @@
 import React from "react";
 import { DateInput } from "@mantine/dates";
-import { Checkbox } from "@mantine/core";
 import {
    Modal,
    TextInput,
@@ -8,7 +7,11 @@ import {
    Button,
    Select,
    Group,
+   Grid,
+   NumberInput,
+   Checkbox,
 } from "@mantine/core";
+import { FiFile } from "react-icons/fi";
 
 const Index = ({ opened, close }) => {
    return (
@@ -18,38 +21,32 @@ const Index = ({ opened, close }) => {
                title: "modalTitle",
             }}
             opened={opened}
-            title="Edit Leave Policy"
+            title="Create Deductions"
             onClose={close}
             centered
          >
             <form>
-               <TextInput label="Name" placeholder="Name" />
+               <TextInput mb="sm" label="Title" placeholder="Title" />
                <Textarea
-                  mt="md"
+                  mb="sm"
                   label="Description"
                   placeholder="Description"
                />
-               <TextInput
-                  mt="md"
-                  label="Allocation Days"
-                  placeholder="Allocation Days"
-               />
                <Select
-                  mt="md"
-                  label="Leave Type"
+                  mb="sm"
+                  label="Amount Type"
                   placeholder="Pick value"
-                  data={["Paid", "Unpaid"]}
+                  data={["Fixed", "Percentage"]}
                />
-
-               <Checkbox mt="md" label="Is Optional?" variant="outline" />
-               <Checkbox mt="md" label="Is Calendar Day?" variant="outline" />
-               <Checkbox
-                  mt="md"
-                  label="Require Attachment?"
-                  variant="outline"
+               <NumberInput
+                  mb="sm"
+                  label="Amount"
+                  rightSection={<></>}
+                  rightSectionWidth={0}
+                  placeholder="Amount"
                />
-
-               <Group justify="flex-end" mt="md">
+               <Checkbox label="Depends on Attendance" />
+               <Group justify="flex-end">
                   <Button type="submit">Save</Button>
                </Group>
             </form>

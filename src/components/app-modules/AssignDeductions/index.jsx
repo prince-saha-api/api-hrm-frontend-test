@@ -198,7 +198,7 @@ const Index = () => {
    return (
       <>
          <div className="pageTop mb-4">
-            <h3>Leave Policy Assign</h3>
+            <h3>Assign Deductions</h3>
             <Breadcrumbs>{items}</Breadcrumbs>
          </div>
 
@@ -254,7 +254,7 @@ const Index = () => {
                      </div>
                   </Modal>
 
-                  <div className="d-flex align-items-center mt-4" >
+                  <div className="d-flex align-items-center mt-4">
                      <p className="cust_iputLabel mb-0">Employee</p>
                      <Button onClick={open}>Filter</Button>
                   </div>

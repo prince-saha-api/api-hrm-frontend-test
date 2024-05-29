@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { useForm } from "@mantine/form";
 import {
@@ -22,12 +23,29 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
     mode: "uncontrolled",
     initialValues: { emergencyContacts: data },
     // validate: {
-    //   firstName: (value) =>
-    //     value.length < 2 ? "First Name must have at least 2 letters" : null,
-    //   lastName: (value) =>
-    //     value.length < 2 ? "Last Name must have at least 2 letters" : null,
-    //   // email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-    //   // // add other validations as needed
+    //   emergencyContacts: {
+    //     name: (value) =>
+    //       value.length < 2 ? "Name must have at least 2 letters" : null,
+    //     age: (value) => (value < 1 ? "Age must be a positive number" : null),
+    //     phone_no: (value) =>
+    //       value.length < 10
+    //         ? "Phone number must have at least 10 digits"
+    //         : null,
+    //     email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+    //     relation: (value) =>
+    //       value.length < 2 ? "Relation must have at least 2 letters" : null,
+    //     address: {
+    //       city: (value) =>
+    //         value.length < 2 ? "City must have at least 2 letters" : null,
+    //       state_division: (value) =>
+    //         value.length < 2 ? "State must have at least 2 letters" : null,
+    //       post_zip_code: (value) =>
+    //         value.length < 4 ? "ZIP Code must have at least 4 digits" : null,
+    //       country: (value) => (value ? null : "Country is required"),
+    //       address: (value) =>
+    //         value.length < 5 ? "Address must have at least 5 letters" : null,
+    //     },
+    //   },
     // },
   });
 
@@ -43,48 +61,34 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
   }));
 
   const addMoreEmergencyContact = () => {
-    setEmergencyContacts([
-      ...emergencyContacts,
-      {
-        name: "",
-        age: "",
-        phone_no: "",
-        email: "",
-        address: {
-          city: "",
-          state_division: "",
-          post_zip_code: "",
-          country: "",
-          address: "",
-        },
-        relation: "",
+    const newContact = {
+      name: "",
+      age: "",
+      phone_no: "",
+      email: "",
+      address: {
+        city: "",
+        state_division: "",
+        post_zip_code: "",
+        country: "",
+        address: "",
       },
-    ]);
+      relation: "",
+    };
+
+    setEmergencyContacts([...emergencyContacts, newContact]);
+
     form.setValues({
-      emergencyContacts: [
-        ...form.values.emergencyContacts,
-        {
-          name: "",
-          age: "",
-          phone_no: "",
-          email: "",
-          address: {
-            city: "",
-            state_division: "",
-            post_zip_code: "",
-            country: "",
-            address: "",
-          },
-          relation: "",
-        },
-      ],
+      emergencyContacts: [...form.values.emergencyContacts, newContact],
     });
   };
 
   const removeEmergencyContact = (index) => {
-    const updatedContacts = emergencyContacts.filter((_, i) => i !== index);
-    setEmergencyContacts(updatedContacts);
-    form.setValues({ emergencyContacts: updatedContacts });
+    if (emergencyContacts.length > 1) {
+      const updatedContacts = emergencyContacts.filter((_, i) => i !== index);
+      setEmergencyContacts(updatedContacts);
+      form.setValues({ emergencyContacts: updatedContacts });
+    }
   };
 
   const handleSubmit = (values) => {
@@ -97,16 +101,19 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
         {/* {form.values.emergencyContacts.map((contact, index) => ( */}
         {emergencyContacts.map((contact, index) => (
           <>
-            <div className="d-flex align-items-start w-100 cust_mt">
-              <Button
-                color="red"
-                variant="outline"
-                leftSection={<FaTrashAlt />}
-                onClick={() => removeEmergencyContact(index)}
-              >
-                Remove
-              </Button>
-            </div>
+            {index > 0 && (
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <Button
+                  color="red"
+                  variant="outline"
+                  leftSection={<FaTrashAlt />}
+                  onClick={() => removeEmergencyContact(index)}
+                >
+                  Remove
+                </Button>
+              </div>
+            )}
+
             <Grid key={index} gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
               <Grid.Col span={6}>
                 <Box className="stepBox">
@@ -241,7 +248,7 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                         root: "w-100",
                         wrapper: "cust_iputWrapper",
                       }}
-                      placeholder="Present Address"
+                      placeholder="Address"
                       {...form.getInputProps(
                         `emergencyContacts.${index}.address.address`
                       )}

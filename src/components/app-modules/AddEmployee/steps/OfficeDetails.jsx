@@ -3,16 +3,11 @@ import React, { forwardRef, useImperativeHandle } from "react";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import {
-  NumberInput,
   TextInput,
-  Textarea,
   Box,
   Select,
   Button,
-  Flex,
-  FileButton,
   Group,
-  Text,
   PasswordInput,
   MultiSelect,
   Grid,
@@ -25,6 +20,7 @@ import { FcAddImage } from "react-icons/fc";
 
 const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: {
       ...data,
       joining_date: data.joining_date ? new Date(data.joining_date) : null,
@@ -57,7 +53,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
     <>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={5}>
+          <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Employee ID</div>
@@ -67,7 +63,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // label="Employee ID"
-                  placeholder="Employee ID"
+                  placeholder="Ex: API2307047"
                   {...form.getInputProps("official_id")}
                 />
               </div>
@@ -88,15 +84,11 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
 
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Official Phone</div>
-                <NumberInput
+                <TextInput
                   classNames={{
                     root: "w-100",
                     wrapper: "cust_iputWrapper",
                   }}
-                  rightSection={<></>}
-                  rightSectionWidth={0}
-                  // mt="sm"
-                  // label="Official Phone"
                   placeholder="Official Phone"
                   {...form.getInputProps("official_phone")}
                 />
@@ -280,13 +272,13 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
               </div>
 
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Ethnic Group</div>
+                <div className="cust_iputLabel">Group</div>
                 <MultiSelect
                   classNames={{
                     root: "w-100",
                     wrapper: "cust_iputWrapper",
                   }}
-                  placeholder="Ethnic Group"
+                  placeholder="Group"
                   data={[
                     { value: "1", label: "Group 1" },
                     { value: "2", label: "Group 2" },

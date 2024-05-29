@@ -26,6 +26,7 @@ import { countries } from "@/data/countries";
 
 const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: data,
     // validate: {
     //   firstName: (value) =>
@@ -56,7 +57,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
     <>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={5}>
+          <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Payment In</div>
@@ -73,160 +74,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Bank Name</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // label="Bank Account Name"
-                  placeholder="Bank Account Name"
-                  {...form.getInputProps("bank_account.bank_name")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Branch</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  placeholder="Branch"
-                  {...form.getInputProps("bank_account.branch_name")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Bank Account Type</div>
-                <Select
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // label="Bank Account Type"
-                  placeholder="Bank Account Type"
-                  data={[
-                    { value: "1", label: "Current" },
-                    { value: "2", label: "Savings" },
-                    { value: "3", label: "Salary" },
-                    { value: "4", label: "Chequing" },
-                    { value: "5", label: "Business" },
-                  ]}
-                  {...form.getInputProps("bank_account.account_type")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Account No</div>
-                <NumberInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  rightSection={<></>}
-                  rightSectionWidth={0}
-                  placeholder="Account No"
-                  {...form.getInputProps("bank_account.account_no")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Routing No</div>
-                <NumberInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  rightSection={<></>}
-                  rightSectionWidth={0}
-                  // mt="sm"
-                  // label="Routing No"
-                  placeholder="Routing No"
-                  {...form.getInputProps("bank_account.routing_no")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">SWIFT</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  placeholder="SWIFT"
-                  {...form.getInputProps("bank_account.swift_bic")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">City</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  placeholder="City"
-                  {...form.getInputProps("bank_account.address.city")}
-                />
-              </div>
-            </Box>
-          </Grid.Col>
-
-          <Grid.Col span={6}>
-            <Box className="stepBox">
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Division</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  placeholder="Division"
-                  {...form.getInputProps("bank_account.address.state_division")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">ZIP Code</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // label="ZIP Code"
-                  placeholder="ZIP Code"
-                  {...form.getInputProps("bank_account.address.post_zip_code")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Country</div>
-                <Select
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // label="Country"
-                  placeholder="Country"
-                  searchable
-                  data={countries}
-                  {...form.getInputProps("bank_account.address.country")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Address</div>
-                <Textarea
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // label="Address"
-                  placeholder="Permanent Address"
-                  {...form.getInputProps("bank_account.address.address")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Salary</div>
+                <div className="cust_iputLabel">Monthly Gross Salary</div>
                 <NumberInput
                   classNames={{
                     root: "w-100",
@@ -236,7 +84,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   rightSectionWidth={0}
                   // mt="sm"
                   // label="Salary"
-                  placeholder="Salary"
+                  placeholder="Monthly Gross Salary"
                   {...form.getInputProps("gross_salary")}
                 />
               </div>
@@ -295,6 +143,161 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   searchable
                   withAsterisk
                   {...form.getInputProps("payrollpolicy.deductionpolicy")}
+                />
+              </div>
+
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Bank Name</div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  // label="Bank Account Name"
+                  placeholder="Bank Account Name"
+                  {...form.getInputProps("bank_account.bank_name")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Branch</div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  placeholder="Branch"
+                  {...form.getInputProps("bank_account.branch_name")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Bank Account Type</div>
+                <Select
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  // label="Bank Account Type"
+                  placeholder="Bank Account Type"
+                  data={[
+                    { value: "1", label: "Current" },
+                    { value: "2", label: "Savings" },
+                    { value: "3", label: "Salary" },
+                    { value: "4", label: "Chequing" },
+                    { value: "5", label: "Business" },
+                  ]}
+                  {...form.getInputProps("bank_account.account_type")}
+                />
+              </div>
+            </Box>
+          </Grid.Col>
+
+          <Grid.Col span={6}>
+            <Box className="stepBox">
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Account No</div>
+                <NumberInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  rightSection={<></>}
+                  rightSectionWidth={0}
+                  placeholder="Account No"
+                  {...form.getInputProps("bank_account.account_no")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Routing No</div>
+                <NumberInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  rightSection={<></>}
+                  rightSectionWidth={0}
+                  // mt="sm"
+                  // label="Routing No"
+                  placeholder="Routing No"
+                  {...form.getInputProps("bank_account.routing_no")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">SWIFT</div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  placeholder="SWIFT"
+                  {...form.getInputProps("bank_account.swift_bic")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Bank Address</div>
+                <Textarea
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  // label="Address"
+                  placeholder="Address"
+                  {...form.getInputProps("bank_account.address.address")}
+                />
+              </div>
+
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel"></div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  placeholder="City"
+                  {...form.getInputProps("bank_account.address.city")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel"></div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  placeholder="Division"
+                  {...form.getInputProps("bank_account.address.state_division")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel"></div>
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  // label="ZIP Code"
+                  placeholder="ZIP / Postal Code"
+                  {...form.getInputProps("bank_account.address.post_zip_code")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel"></div>
+                <Select
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  // label="Country"
+                  placeholder="Country"
+                  searchable
+                  data={countries}
+                  {...form.getInputProps("bank_account.address.country")}
                 />
               </div>
             </Box>

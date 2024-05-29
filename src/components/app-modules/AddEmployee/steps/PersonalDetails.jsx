@@ -1,10 +1,10 @@
 "use client";
 
-import React, { forwardRef, useImperativeHandle } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import {
-  NumberInput,
+  // NumberInput,
   TextInput,
   Textarea,
   Box,
@@ -12,12 +12,16 @@ import {
   Button,
   Group,
   Grid,
+  Checkbox,
 } from "@mantine/core";
 
 import { countries } from "@/data/countries";
 
 const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
+  // const [sameAsPresent, setSameAsPresent] = useState(false);
+
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: { ...data, dob: data.dob ? new Date(data.dob) : null },
     // validate: {
     //   first_name: (value) =>
@@ -66,6 +70,8 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
     // },
   });
 
+  const sameAsPresent = form.getValues().permanentAddressSameAsPresent;
+
   useImperativeHandle(ref, () => ({
     validateStep: (updateFormData, key) => {
       const values = form.getValues();
@@ -76,6 +82,29 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
       form.validate();
     },
   }));
+
+  const handleSameAsPresentChange = (event) => {
+    const isChecked = event.currentTarget.checked;
+    form.setValues({
+      ...form.getValues(),
+      permanentAddressSameAsPresent: isChecked,
+    });
+
+    // setSameAsPresent(isChecked);
+
+    if (isChecked) {
+      const presentAddress = form.getValues().present_address;
+      form.setValues({
+        ...form.getValues(),
+        permanent_address: { ...presentAddress },
+      });
+
+      // console.log(
+      //   form.getValues().present_address,
+      //   form.getValues().permanent_address
+      // );
+    }
+  };
 
   const handleSubmit = (values) => {
     const formattedDOB = values.dob
@@ -88,7 +117,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
     <>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={5}>
+          <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">First Name</div>
@@ -314,41 +343,47 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Contact No.</div>
-                <NumberInput
+                <TextInput
                   classNames={{
                     root: "w-100",
-                    // root: "cust_iputRoot",
-                    // label: "cust_iputLabel",
                     wrapper: "cust_iputWrapper",
                   }}
-                  rightSection={<></>}
-                  rightSectionWidth={0}
-                  // mt="sm"
-                  // label="Contact No."
                   placeholder="Contact No"
                   {...form.getInputProps("personal_phone")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">NID / Passport</div>
-                <NumberInput
+                <TextInput
                   classNames={{
                     root: "w-100",
-                    // root: "cust_iputRoot",
-                    // label: "cust_iputLabel",
                     wrapper: "cust_iputWrapper",
                   }}
-                  rightSection={<></>}
-                  rightSectionWidth={0}
-                  // mt="sm"
-                  // label="NID / Passport"
                   placeholder="NID / Passport"
                   {...form.getInputProps("nid_passport_no")}
                 />
+                {/* <NumberInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  rightSection={<></>}
+                  rightSectionWidth={0}
+                  placeholder="NID / Passport"
+                  {...form.getInputProps("nid_passport_no")}
+                /> */}
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">TIN No</div>
-                <NumberInput
+                <TextInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  placeholder="TIN No"
+                  {...form.getInputProps("tin_no")}
+                />
+                {/* <NumberInput
                   classNames={{
                     root: "w-100",
                     // root: "cust_iputRoot",
@@ -357,20 +392,35 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   }}
                   rightSection={<></>}
                   rightSectionWidth={0}
-                  // mt="sm"
-                  // label="TIN No"
                   placeholder="TIN No"
                   {...form.getInputProps("tin_no")}
-                />
+                /> */}
               </div>
             </Box>
           </Grid.Col>
         </Grid>
 
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={5}>
+          <Grid.Col span={6}>
             <Box className="stepBox mt-0">
               <p className="fw-bold mb-3">Present Address</p>
+
+              <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Address</div>
+                <Textarea
+                  classNames={{
+                    root: "w-100",
+                    // root: "cust_iputRoot",
+                    // label: "cust_iputLabel",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  // mt="sm"
+                  // label="Address"
+                  placeholder="Present Address"
+                  {...form.getInputProps("present_address.address")}
+                />
+              </div>
+
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">City</div>
                 <TextInput
@@ -433,6 +483,23 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   {...form.getInputProps("present_address.country")}
                 />
               </div>
+            </Box>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Box className="stepBox mt-0">
+              <Group
+                align="center" //
+                justify="space-between"
+                classNames={{ root: "mb-3" }}
+              >
+                <p className="fw-bold mb-0">Permanent Address</p>
+                <Checkbox
+                  label="Same as Present Address"
+                  checked={sameAsPresent}
+                  onChange={handleSameAsPresentChange}
+                />
+              </Group>
+
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Address</div>
                 <Textarea
@@ -442,17 +509,14 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     // label: "cust_iputLabel",
                     wrapper: "cust_iputWrapper",
                   }}
-                  // mt="sm"
+                  // // mt="sm"
                   // label="Address"
-                  placeholder="Present Address"
-                  {...form.getInputProps("present_address.address")}
+                  placeholder="Permanent Address"
+                  {...form.getInputProps("permanent_address.address")}
+                  disabled={sameAsPresent}
                 />
               </div>
-            </Box>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <Box className="stepBox mt-0">
-              <p className="fw-bold mb-3">Permanent Address</p>
+
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">City</div>
                 <TextInput
@@ -466,6 +530,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   // label="City"
                   placeholder="City"
                   {...form.getInputProps("permanent_address.city")}
+                  disabled={sameAsPresent}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -481,6 +546,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   // label="State"
                   placeholder="State"
                   {...form.getInputProps("permanent_address.state_division")}
+                  disabled={sameAsPresent}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -496,6 +562,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   // label="ZIP Code"
                   placeholder="ZIP Code"
                   {...form.getInputProps("permanent_address.post_zip_code")}
+                  disabled={sameAsPresent}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -513,21 +580,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   searchable
                   data={countries}
                   {...form.getInputProps("permanent_address.country")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Address</div>
-                <Textarea
-                  classNames={{
-                    root: "w-100",
-                    // root: "cust_iputRoot",
-                    // label: "cust_iputLabel",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // // mt="sm"
-                  // label="Address"
-                  placeholder="Permanent Address"
-                  {...form.getInputProps("permanent_address.address")}
+                  disabled={sameAsPresent}
                 />
               </div>
             </Box>

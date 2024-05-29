@@ -198,7 +198,7 @@ const Index = () => {
    return (
       <>
          <div className="pageTop mb-4">
-            <h3>Leave Policy Assign</h3>
+            <h3>Assign Allowance</h3>
             <Breadcrumbs>{items}</Breadcrumbs>
          </div>
 

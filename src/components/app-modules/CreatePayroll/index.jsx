@@ -6,6 +6,7 @@ import Edit from "./Edit";
 import Delete from "./Delete";
 import Add from "./Add";
 import AddButton from "@/components/utils/AddButton";
+import { countries } from "@/data/countries";
 import { toast } from "react-toastify";
 import { DataTable } from "mantine-datatable";
 import { submit } from "../../../lib/submit";
@@ -17,7 +18,21 @@ import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BiMessageSquareEdit } from "react-icons/bi";
-import { Button, Select, Menu, Breadcrumbs, Anchor } from "@mantine/core";
+import { DateInput } from "@mantine/dates";
+import {
+   Button,
+   Select,
+   Menu,
+   Breadcrumbs,
+   Anchor,
+   Modal,
+   Grid,
+   TextInput,
+   NumberInput,
+   Accordion,
+   Input,
+   Group,
+} from "@mantine/core";
 
 import { CiSearch } from "react-icons/ci";
 
@@ -225,7 +240,7 @@ const index = () => {
 
    const items = [
       { title: "Dashboard", href: "/" },
-      { title: "Leave Allocation Request" },
+      { title: "Create Payroll" },
    ].map((item, index) => (
       <Anchor href={item.href} key={index}>
          {item.title}
@@ -234,6 +249,7 @@ const index = () => {
 
    const [open1, setOpen1] = useState(false);
    const [item1, setItem1] = useState("Designation");
+
    const [item2, setItem2] = useState("Group");
    const [item3, setItem3] = useState("Department");
    const [item4, setItem4] = useState("Shift");
@@ -245,6 +261,9 @@ const index = () => {
    const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
       useDisclosure(false);
 
+   const [payrollOpened, { open: payrollOpen, close: payrollClose }] =
+      useDisclosure(false);
+
    return (
       <>
          <Edit opened={edit} close={close} />
@@ -253,16 +272,118 @@ const index = () => {
 
          <div className="mb-4 d-flex justify-content-between align-items-end">
             <div className="pageTop">
-               <h3>Leave Allocation Request</h3>
+               <h3>Create Payroll</h3>
                <Breadcrumbs>{items}</Breadcrumbs>
             </div>
 
             <AddButton
-               label="Leave Request"
+               label="Create Payroll"
                fontSize="16px"
                icon={<LuPlus className="me-1 fs-5" />}
                handleClick={addOpen}
             />
+         </div>
+
+         <Modal
+            opened={payrollOpened}
+            onClose={payrollClose}
+            title="Filter"
+            centered
+         >
+            <form>
+               <DateInput
+                  mb="sm"
+                  valueFormat="DD MMM YYYY"
+                  label="Posting Date"
+                  placeholder="DD MMM YYYY"
+               />
+               <DateInput
+                  mb="sm"
+                  valueFormat="DD MMM YYYY"
+                  label="From Date"
+                  placeholder="DD MMM YYYY"
+               />
+               <DateInput
+                  mb="sm"
+                  valueFormat="DD MMM YYYY"
+                  label="To Date"
+                  placeholder="DD MMM YYYY"
+               />
+
+               <Grid>
+                  <Grid.Col span={6}>
+                     <Select
+                        label="Gross Payable"
+                        placeholder="Pick value"
+                        data={[">", "<", "=>", "<=", "=="]}
+                     />
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                  <NumberInput
+                        rightSection={<></>}
+                        rightSectionWidth={0}
+                        mb="sm"
+                        label="Amount"
+                        placeholder="amount"
+                     />
+                  </Grid.Col>
+               </Grid>
+               <Grid>
+                  <Grid.Col span={6}>
+                     <Select
+                        label="Total Deductible"
+                        placeholder="Pick value"
+                        data={[">", "<", "=>", "<=", "=="]}
+                     />
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                  <NumberInput
+                        rightSection={<></>}
+                        rightSectionWidth={0}
+                        mb="sm"
+                        label="Amount"
+                        placeholder="amount"
+                     />
+                  </Grid.Col>
+               </Grid>
+               <Grid>
+                  <Grid.Col span={6}>
+                     <Select
+                        label="Net Payable"
+                        placeholder="Pick value"
+                        data={[">", "<", "=>", "<=", "=="]}
+                     />
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                     <NumberInput
+                        rightSection={<></>}
+                        rightSectionWidth={0}
+                        mb="sm"
+                        label="Amount"
+                        placeholder="amount"
+                     />
+                  </Grid.Col>
+               </Grid>
+            </form>
+
+            <div className="d-flex justify-content-end">
+               <Button variant="filled" size="sm" mt="sm">
+                  Search
+               </Button>
+            </div>
+         </Modal>
+
+         <div className="filterBox mb-4 d-flex align-items-center">
+            <Input
+               classNames={{
+                  input: "searchBtn",
+               }}
+               size="sm"
+               placeholder="Employee name or ID"
+            />
+            <Button className="ms-3" onClick={payrollOpen}>
+               Filter
+            </Button>
          </div>
 
          <div className="d-flex justify-content-between mb-3">
@@ -347,11 +468,17 @@ const index = () => {
 
                   {
                      accessor: "designation_name",
-                     title: "Leave Type",
+                     title: "Posting Date",
                      noWrap: true,
                      // visibleMediaQuery: aboveXs,
                      render: ({ designation_name }) =>
                         designation_name || "N/A",
+                  },
+                  {
+                     accessor: "department_name",
+                     title: "Title",
+                     // visibleMediaQuery: aboveXs,
+                     render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
@@ -367,19 +494,19 @@ const index = () => {
                   },
                   {
                      accessor: "department_name",
-                     title: "Total Days",
+                     title: "Gross Payable",
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
-                     title: "Attachment",
+                     title: "Total Deductible",
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
-                     title: "Detail",
+                     title: "Net Payable",
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },

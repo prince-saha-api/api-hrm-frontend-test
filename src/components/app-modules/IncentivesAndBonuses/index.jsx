@@ -419,7 +419,6 @@ const index = () => {
                      render: (_, index) =>
                         (currentPage - 1) * pageSize + index + 1,
                   },
-
                   {
                      accessor: "designation_name",
                      title: "Title",
@@ -464,7 +463,6 @@ const index = () => {
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
-
                   {
                      accessor: "actions",
                      title: "Actions",

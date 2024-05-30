@@ -33,7 +33,6 @@ import {
    Input,
    Group,
    Textarea,
-   Checkbox,
 } from "@mantine/core";
 
 import { CiSearch } from "react-icons/ci";
@@ -242,7 +241,7 @@ const index = () => {
 
    const items = [
       { title: "Dashboard", href: "/" },
-      { title: "Create Allowance" },
+      { title: "Manual Attendance" },
    ].map((item, index) => (
       <Anchor href={item.href} key={index}>
          {item.title}
@@ -274,12 +273,12 @@ const index = () => {
 
          <div className="mb-4 d-flex justify-content-between align-items-end">
             <div className="pageTop">
-               <h3>Create Allowance</h3>
+               <h3>Manual Attendance</h3>
                <Breadcrumbs>{items}</Breadcrumbs>
             </div>
 
             <AddButton
-               label="Create Allowance"
+               label="Add Attendance"
                fontSize="16px"
                icon={<LuPlus className="me-1 fs-5" />}
                handleClick={addOpen}
@@ -293,15 +292,26 @@ const index = () => {
             centered
          >
             <form>
-               <TextInput mb="sm" label="Title" placeholder="Title" />
                <Select
                   mb="sm"
-                  label="Amount Type"
-                  placeholder="Pick value"
-                  data={["Fixed", "Percentage"]}
+                  label="Employee"
+                  placeholder="Employee"
+                  data={["Jiaur Rahman", "Nazmul Hussain"]}
                />
-               <Checkbox label="Depends on Attendance" />
+               <DateInput
+                  mb="sm"
+                  valueFormat="DD MMM YYYY"
+                  label="Date"
+                  placeholder="DD MMM YYYY"
+               />
+               <Select
+                  mb="sm"
+                  label="Status"
+                  placeholder="Pick value"
+                  data={["Pending", "Approved", "Rejected"]}
+               />
             </form>
+
             <div className="d-flex justify-content-end">
                <Button variant="filled" size="sm" mt="sm">
                   Search
@@ -402,36 +412,26 @@ const index = () => {
                         (currentPage - 1) * pageSize + index + 1,
                   },
                   {
-                     accessor: "department_name",
-                     title: "Title",
+                     accessor: "username",
+                     title: "Employee",
                      // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
+                     render: ({ username }) => username || "N/A",
                   },
                   {
-                     accessor: "department_name",
-                     title: "Amount Type",
+                     accessor: "designation_name",
+                     title: "Date",
+                     noWrap: true,
                      // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
-                  },
-                  {
-                     accessor: "department_name",
-                     title: "Amount",
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
-                  },
-                  {
-                     accessor: "department_name",
-                     title: "Is Taxable",
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
-                  },
-                  {
-                     accessor: "department_name",
-                     title: "Depends on Attendance",
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
+                     render: ({ designation_name }) =>
+                        designation_name || "N/A",
                   },
 
+                  {
+                     accessor: "department_name",
+                     title: "Status",
+                     // visibleMediaQuery: aboveXs,
+                     render: ({ department_name }) => department_name || "N/A",
+                  },
                   {
                      accessor: "actions",
                      title: "Actions",

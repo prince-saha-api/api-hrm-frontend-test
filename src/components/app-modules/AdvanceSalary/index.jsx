@@ -242,7 +242,7 @@ const index = () => {
 
    const items = [
       { title: "Dashboard", href: "/" },
-      { title: "Create Allowance" },
+      { title: "Advance Salary" },
    ].map((item, index) => (
       <Anchor href={item.href} key={index}>
          {item.title}
@@ -251,7 +251,6 @@ const index = () => {
 
    const [open1, setOpen1] = useState(false);
    const [item1, setItem1] = useState("Designation");
-
    const [item2, setItem2] = useState("Group");
    const [item3, setItem3] = useState("Department");
    const [item4, setItem4] = useState("Shift");
@@ -274,12 +273,12 @@ const index = () => {
 
          <div className="mb-4 d-flex justify-content-between align-items-end">
             <div className="pageTop">
-               <h3>Create Allowance</h3>
+               <h3>Advance Salary/Loan Request</h3>
                <Breadcrumbs>{items}</Breadcrumbs>
             </div>
 
             <AddButton
-               label="Create Allowance"
+               label="Create Advance Salary"
                fontSize="16px"
                icon={<LuPlus className="me-1 fs-5" />}
                handleClick={addOpen}
@@ -293,14 +292,29 @@ const index = () => {
             centered
          >
             <form>
-               <TextInput mb="sm" label="Title" placeholder="Title" />
                <Select
                   mb="sm"
-                  label="Amount Type"
+                  label="Type"
                   placeholder="Pick value"
-                  data={["Fixed", "Percentage"]}
+                  data={["Advance Salary", "Loan"]}
                />
-               <Checkbox label="Depends on Attendance" />
+               <Select
+                  mb="sm"
+                  label="Adjustment Type"
+                  placeholder="Pick value"
+                  data={["Salary", "Cash"]}
+               />
+               <Select
+                  mb="sm"
+                  label="Status"
+                  placeholder="Pick value"
+                  data={[
+                     "Pending",
+                     "Rejected",
+                     "On Going",
+                     "Repayment Completed",
+                  ]}
+               />
             </form>
             <div className="d-flex justify-content-end">
                <Button variant="filled" size="sm" mt="sm">
@@ -401,37 +415,55 @@ const index = () => {
                      render: (_, index) =>
                         (currentPage - 1) * pageSize + index + 1,
                   },
+
                   {
-                     accessor: "department_name",
+                     accessor: "username",
                      title: "Title",
                      // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
+                     render: ({ username }) => username || "N/A",
                   },
                   {
                      accessor: "department_name",
-                     title: "Amount Type",
+                     title: "Loan Type",
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
-                     accessor: "department_name",
+                     accessor: "employee_id",
                      title: "Amount",
                      // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
+                     render: ({ employee_id }) => employee_id || "N/A",
                   },
                   {
                      accessor: "department_name",
-                     title: "Is Taxable",
+                     title: "Adjustment Type",
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
-                     title: "Depends on Attendance",
+                     title: "Total Installment",
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
-
+                  {
+                     accessor: "department_name",
+                     title: "Installment Amount",
+                     // visibleMediaQuery: aboveXs,
+                     render: ({ department_name }) => department_name || "N/A",
+                  },
+                  {
+                     accessor: "department_name",
+                     title: "Installment Left",
+                     // visibleMediaQuery: aboveXs,
+                     render: ({ department_name }) => department_name || "N/A",
+                  },
+                  {
+                     accessor: "department_name",
+                     title: "Status",
+                     // visibleMediaQuery: aboveXs,
+                     render: ({ department_name }) => department_name || "N/A",
+                  },
                   {
                      accessor: "actions",
                      title: "Actions",

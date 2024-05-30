@@ -7,13 +7,12 @@ import {
    Button,
    Select,
    Group,
-   MultiSelect,
-   FileInput,
    Grid,
    NumberInput,
    Checkbox,
 } from "@mantine/core";
 import { FiFile } from "react-icons/fi";
+
 const Index = ({ opened, close }) => {
    return (
       <>
@@ -22,23 +21,19 @@ const Index = ({ opened, close }) => {
                title: "modalTitle",
             }}
             opened={opened}
-            title="Edit Deductions"
+            title="Create Advance Salary"
             onClose={close}
             centered
          >
             <form>
                <TextInput mb="sm" label="Title" placeholder="Title" />
-               <Textarea
-                  mb="sm"
-                  label="Description"
-                  placeholder="Description"
-               />
                <Select
                   mb="sm"
-                  label="Amount Type"
+                  label="Type"
                   placeholder="Pick value"
-                  data={["Fixed", "Percentage"]}
+                  data={["Advance Salary", "Loan"]}
                />
+               <TextInput mb="sm" label="Reason" placeholder="Reason" />
                <NumberInput
                   mb="md"
                   label="Amount"
@@ -46,8 +41,19 @@ const Index = ({ opened, close }) => {
                   rightSectionWidth={0}
                   placeholder="Amount"
                />
-               <Checkbox mb="sm" label="Is Exempted From Tax" />
-               <Checkbox label="Depends on Attendance" />
+               <Select
+                  mb="sm"
+                  label="Adjustment Type"
+                  placeholder="Pick value"
+                  data={["Salary", "Cash"]}
+               />
+               <NumberInput
+                  mb="md"
+                  label="Total Installment"
+                  rightSection={<></>}
+                  rightSectionWidth={0}
+                  placeholder="Total Installment"
+               />
                <Group justify="flex-end">
                   <Button type="submit">Save</Button>
                </Group>

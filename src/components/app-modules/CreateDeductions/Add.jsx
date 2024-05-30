@@ -39,12 +39,13 @@ const Index = ({ opened, close }) => {
                   data={["Fixed", "Percentage"]}
                />
                <NumberInput
-                  mb="sm"
+                  mb="md"
                   label="Amount"
                   rightSection={<></>}
                   rightSectionWidth={0}
                   placeholder="Amount"
                />
+               <Checkbox mb="sm" label="Is Exempted From Tax" />
                <Checkbox label="Depends on Attendance" />
                <Group justify="flex-end">
                   <Button type="submit">Save</Button>

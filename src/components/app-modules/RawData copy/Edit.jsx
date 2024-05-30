@@ -11,7 +11,6 @@ import {
    FileInput,
    Grid,
    NumberInput,
-   Checkbox,
 } from "@mantine/core";
 import { FiFile } from "react-icons/fi";
 const Index = ({ opened, close }) => {
@@ -22,32 +21,38 @@ const Index = ({ opened, close }) => {
                title: "modalTitle",
             }}
             opened={opened}
-            title="Edit Deductions"
+            title="Edit Payroll"
             onClose={close}
             centered
          >
             <form>
-               <TextInput mb="sm" label="Title" placeholder="Title" />
-               <Textarea
-                  mb="sm"
-                  label="Description"
-                  placeholder="Description"
-               />
                <Select
                   mb="sm"
-                  label="Amount Type"
-                  placeholder="Pick value"
-                  data={["Fixed", "Percentage"]}
+                  label="Employee"
+                  placeholder="Employee"
+                  data={["Jiaur Rahman", "Nazmul Hussain"]}
+               />
+               <DateInput
+                  mb="sm"
+                  valueFormat="DD MMM YYYY"
+                  label="Date"
+                  placeholder="DD MMM YYYY"
                />
                <NumberInput
-                  mb="md"
-                  label="Amount"
+                  mb="sm"
+                  label="In Time"
                   rightSection={<></>}
                   rightSectionWidth={0}
-                  placeholder="Amount"
+                  placeholder="In Time"
                />
-               <Checkbox mb="sm" label="Is Exempted From Tax" />
-               <Checkbox label="Depends on Attendance" />
+               <NumberInput
+                  mb="sm"
+                  label="Out Time"
+                  rightSection={<></>}
+                  rightSectionWidth={0}
+                  placeholder="Out Time"
+               />
+               <Textarea mb="sm" label="Admin Note" placeholder="Admin Note" />
                <Group justify="flex-end">
                   <Button type="submit">Save</Button>
                </Group>

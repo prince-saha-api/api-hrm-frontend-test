@@ -291,49 +291,18 @@ const Page = () => {
                                           <ul className="text-decoration-none mb-0 sidenav_submenu">
                                              <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                                 <Link
-                                                   href="/"
+                                                   href="/advance-salary"
                                                    className="text-decoration-none subMenu"
                                                 >
-                                                   Loan Request
+                                                   Adv. Salary/Loan Request
                                                 </Link>
                                              </li>
                                              <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                                 <Link
-                                                   href="/"
+                                                   href="/loan-management"
                                                    className="text-decoration-none subMenu"
                                                 >
-                                                   Loan Management
-                                                </Link>
-                                             </li>
-                                          </ul>
-                                       </Accordion.Body>
-                                    </Accordion.Item>
-                                    <Accordion.Item
-                                       eventKey="1"
-                                       className="pt-0"
-                                    >
-                                       <Accordion.Header className="p-0 m-0 text-capitalize subTab">
-                                          {/* <LuUser2 className="sideMenu menu_icon" /> */}
-                                          <span className="text-capitalize sideMenu">
-                                             Attendance
-                                          </span>
-                                       </Accordion.Header>
-                                       <Accordion.Body>
-                                          <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                             <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                                <Link
-                                                   href="/"
-                                                   className="text-decoration-none subMenu"
-                                                >
-                                                   Raw Data
-                                                </Link>
-                                             </li>
-                                             <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                                <Link
-                                                   href="/"
-                                                   className="text-decoration-none subMenu"
-                                                >
-                                                   Attendance Report
+                                                   Adv. Salary/Loan Management
                                                 </Link>
                                              </li>
                                           </ul>
@@ -356,7 +325,7 @@ const Page = () => {
                               <ul className="text-decoration-none mb-0 sidenav_submenu">
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
-                                       href="/add-employee"
+                                       href="/raw-data"
                                        className="text-decoration-none subMenu"
                                     >
                                        Raw Data
@@ -364,7 +333,7 @@ const Page = () => {
                                  </li>
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
-                                       href="/add-employee"
+                                       href="/"
                                        className="text-decoration-none subMenu"
                                     >
                                        Attendance Report

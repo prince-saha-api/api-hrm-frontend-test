@@ -21,25 +21,34 @@ import Image from "next/image";
 import compmanyLogo from "public/full_logo.png";
 import uploadImg from "public/profile01.jpg";
 import { FcAddImage } from "react-icons/fc";
+import { LuPlus } from "react-icons/lu";
+import { FaTrashAlt } from "react-icons/fa";
 
 const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
-    mode: "uncontrolled",
-    initialValues: data[0],
-    // validate: {
-    //   firstName: (value) =>
-    //     value.length < 2 ? "First Name must have at least 2 letters" : null,
-    //   lastName: (value) =>
-    //     value.length < 2 ? "Last Name must have at least 2 letters" : null,
-    //   // email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-    //   // // add other validations as needed
-    // },
+    mode: "controlled",
+    initialValues: {
+      academicRecord: data.academicRecord,
+      previousExperience: data.previousExperience,
+    },
+    validate: {
+      academicRecord: {
+        certification: (value) =>
+          value?.length < 2 ? "Name must have at least 2 letters" : null,
+      },
+      previousExperience: {
+        company_name: (value) =>
+          value?.length < 2 ? "Name must have at least 2 letters" : null,
+      },
+    },
   });
 
   useImperativeHandle(ref, () => ({
-    validateStep: (updateFormData, key) => {
+    validateStep: (updateFormData) => {
       const values = form.getValues();
-      updateFormData(key, values);
+      // console.log(values);
+      // return false;
+      updateFormData(values);
       return form.isValid();
     },
     showValidationErrors: () => {
@@ -47,20 +56,47 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
     },
   }));
 
+  const addMoreAcademicRecord = () => {
+    const newAcademicRecord = {
+      certification: "",
+      board_institute_name: "",
+      level: "",
+      score_grade: "",
+      year_of_passing: "",
+    };
+
+    form.insertListItem("academicRecord", newAcademicRecord);
+  };
+
+  const addMorePreviousExperience = () => {
+    const newPreviousExperience = {
+      company_name: "",
+      designation: "",
+      address: "",
+      from_date: "",
+      to_date: "",
+    };
+
+    form.insertListItem("previousExperience", newPreviousExperience);
+  };
+
+  const removeAcademicRecord = (index) => {
+    if (form.values.academicRecord.length > 1) {
+      form.removeListItem("academicRecord", index);
+    }
+  };
+  const removePreviousExperience = (index) => {
+    if (form.values.previousExperience.length > 1) {
+      form.removeListItem("previousExperience", index);
+    }
+  };
+
   const handleSubmit = (values) => {
     console.log(values);
-
-    const records = [
-      {
-        certification: values.certification,
-        board_institute_name: values.board_institute_name,
-        level: values.level,
-        score_grade: values.score_grade,
-        year_of_passing: values.year_of_passing,
-      },
-    ];
-
-    onNext(records);
+    onNext({
+      academicRecord: values.academicRecord,
+      previousExperience: values.previousExperience,
+    });
   };
 
   return (
@@ -71,139 +107,212 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
             <Box className="stepBox">
               <h5 className="fw-bold mb-3">Educational Background</h5>
 
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Certification</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  placeholder="Certification"
-                  {...form.getInputProps("certification")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Institute</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  placeholder="Institute"
-                  {...form.getInputProps("board_institute_name")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Level</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  placeholder="Level"
-                  {...form.getInputProps("level")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Grade</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  placeholder="Grade"
-                  {...form.getInputProps("score_grade")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Passing Year</div>
-                <NumberInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  rightSection={<></>}
-                  rightSectionWidth={0}
-                  // mt="sm"
-                  // label="Passing Year"
-                  placeholder="Passing Year"
-                  {...form.getInputProps("year_of_passing")}
-                />
-              </div>
+              {form.values.academicRecord.map((contact, index) => (
+                <div key={index}>
+                  {form.values.academicRecord.length > 1 && (
+                    <div className="d-flex align-items-start w-100 cust_mt">
+                      <Button
+                        color="red"
+                        variant="outline"
+                        leftSection={<FaTrashAlt />}
+                        onClick={() => removeAcademicRecord(index)}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  )}
+
+                  <div className="d-flex align-items-start w-100 cust_mt">
+                    <div className="cust_iputLabel">Certification</div>
+                    <TextInput
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      placeholder="Certification"
+                      {...form.getInputProps(
+                        `academicRecord.${index}.certification`
+                      )}
+                    />
+                  </div>
+                  <div className="d-flex align-items-start w-100 cust_mt">
+                    <div className="cust_iputLabel">Institute</div>
+                    <TextInput
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      placeholder="Institute"
+                      {...form.getInputProps(
+                        `academicRecord.${index}.board_institute_name`
+                      )}
+                    />
+                  </div>
+                  <div className="d-flex align-items-start w-100 cust_mt">
+                    <div className="cust_iputLabel">Level</div>
+                    <TextInput
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      placeholder="Level"
+                      {...form.getInputProps(`academicRecord.${index}.level`)}
+                    />
+                  </div>
+                  <div className="d-flex align-items-start w-100 cust_mt">
+                    <div className="cust_iputLabel">Grade</div>
+                    <TextInput
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      placeholder="Grade"
+                      {...form.getInputProps(
+                        `academicRecord.${index}.score_grade`
+                      )}
+                    />
+                  </div>
+                  <div className="d-flex align-items-start w-100 cust_mt">
+                    <div className="cust_iputLabel">Passing Year</div>
+                    <NumberInput
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      rightSection={<></>}
+                      rightSectionWidth={0}
+                      // mt="sm"
+                      // label="Passing Year"
+                      placeholder="Passing Year"
+                      {...form.getInputProps(
+                        `academicRecord.${index}.year_of_passing`
+                      )}
+                    />
+                  </div>
+                </div>
+              ))}
+
+              <Button
+                justify="center"
+                leftSection={<LuPlus className="me-0 fs-5" />}
+                variant="transparent"
+                mt="sm"
+                onClick={addMoreAcademicRecord}
+              >
+                Add More
+              </Button>
             </Box>
           </Grid.Col>
+
           <Grid.Col span={6}>
             <Box className="stepBox">
               <h5 className="fw-bold mb-3">Experiences</h5>
 
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Company Name</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // label="Company Name"
-                  placeholder="Company Name"
-                  {...form.getInputProps("company_name")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Designation</div>
-                <TextInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // label="Designation"
-                  placeholder="Designation"
-                  {...form.getInputProps("designation")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Address</div>
-                <Textarea
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // label="Address"
-                  placeholder="Address"
-                  {...form.getInputProps("address")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">From</div>
-                <DateInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // value={value}
-                  // onChange={setValue}
-                  // label="From"
-                  placeholder="From"
-                  {...form.getInputProps("from_date")}
-                />
-              </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">To</div>
-                <DateInput
-                  classNames={{
-                    root: "w-100",
-                    wrapper: "cust_iputWrapper",
-                  }}
-                  // mt="sm"
-                  // value={value}
-                  // onChange={setValue}
-                  // label="To"
-                  placeholder="To"
-                  {...form.getInputProps("to_date")}
-                />
-              </div>
+              {form.values.previousExperience.map((contact, index) => (
+                <div key={index}>
+                  {form.values.previousExperience.length > 1 && (
+                    <div className="d-flex align-items-start w-100 cust_mt">
+                      <Button
+                        color="red"
+                        variant="outline"
+                        leftSection={<FaTrashAlt />}
+                        onClick={() => removePreviousExperience(index)}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  )}
+
+                  <div className="d-flex align-items-start w-100 cust_mt">
+                    <div className="cust_iputLabel">Company Name</div>
+                    <TextInput
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      // label="Company Name"
+                      placeholder="Company Name"
+                      {...form.getInputProps(
+                        `previousExperience.${index}.company_name`
+                      )}
+                    />
+                  </div>
+                  <div className="d-flex align-items-start w-100 cust_mt">
+                    <div className="cust_iputLabel">Designation</div>
+                    <TextInput
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      // mt="sm"
+                      // label="Designation"
+                      placeholder="Designation"
+                      {...form.getInputProps(
+                        `previousExperience.${index}.designation`
+                      )}
+                    />
+                  </div>
+                  <div className="d-flex align-items-start w-100 cust_mt">
+                    <div className="cust_iputLabel">Address</div>
+                    <Textarea
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      // mt="sm"
+                      // label="Address"
+                      placeholder="Address"
+                      {...form.getInputProps(
+                        `previousExperience.${index}.address`
+                      )}
+                    />
+                  </div>
+                  <div className="d-flex align-items-start w-100 cust_mt">
+                    <div className="cust_iputLabel">From</div>
+                    <DateInput
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      // mt="sm"
+                      // value={value}
+                      // onChange={setValue}
+                      // label="From"
+                      placeholder="From"
+                      {...form.getInputProps(
+                        `previousExperience.${index}.from_date`
+                      )}
+                    />
+                  </div>
+                  <div className="d-flex align-items-start w-100 cust_mt">
+                    <div className="cust_iputLabel">To</div>
+                    <DateInput
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      // mt="sm"
+                      // value={value}
+                      // onChange={setValue}
+                      // label="To"
+                      placeholder="To"
+                      {...form.getInputProps(
+                        `previousExperience.${index}.to_date`
+                      )}
+                    />
+                  </div>
+                </div>
+              ))}
+
+              <Button
+                justify="center"
+                leftSection={<LuPlus className="me-0 fs-5" />}
+                variant="transparent"
+                mt="sm"
+                onClick={addMorePreviousExperience}
+              >
+                Add More
+              </Button>
             </Box>
           </Grid.Col>
         </Grid>

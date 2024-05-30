@@ -25,10 +25,10 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
       ...data,
       joining_date: data.joining_date ? new Date(data.joining_date) : null,
     },
-    validate: {
-      official_id: (value) =>
-        value.length < 2 ? "Official Id must have at least 2 letters" : null,
-    },
+    // validate: {
+    //   official_id: (value) =>
+    //     value.length < 2 ? "Official Id must have at least 2 letters" : null,
+    // },
   });
 
   useImperativeHandle(ref, () => ({

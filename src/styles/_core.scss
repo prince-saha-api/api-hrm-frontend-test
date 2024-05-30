@@ -312,3 +312,31 @@ employee manage css end
 .auth_box {
   box-shadow: 0 0 30px rgba(186, 203, 210, 0.2509803922);
 }
+
+.column_visibility_dropdown {
+  height: 0;
+  padding: 0 !important;
+}
+.column_visibility_root {
+  width: 200px;
+  height: 0;
+}
+.column_visibility_input {
+  height: 0 !important;
+  visibility: hidden;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+.column_visibility_input span {
+  background-color: transparent;
+}
+.column_visibility_input button,
+.column_visibility_input svg {
+  display: none;
+}
+.column_visibility_btn {
+  padding: 0 7px 0 14px !important;
+}
+.column_visibility_btn_section {
+  --_button-section-margin-left: 5px !important;
+}

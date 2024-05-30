@@ -65,3 +65,11 @@ export const getDate = (dateString) => {
 export const getStoragePath = (path) => {
   return apiBaseUrl + path;
 };
+
+export const convertMinutesToHoursAndMinutes = (minutes) => {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  const formattedHours = String(hours).padStart(2, "0"); // Add leading zero if needed
+  const formattedMinutes = String(remainingMinutes).padStart(2, "0"); // Add leading zero if needed
+  return `${formattedHours}:${formattedMinutes}`;
+};

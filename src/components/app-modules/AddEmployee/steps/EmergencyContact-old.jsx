@@ -17,53 +17,89 @@ import { FaTrashAlt } from "react-icons/fa";
 import { countries } from "@/data/countries";
 
 const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
+  const [emergencyContacts, setEmergencyContacts] = useState(data);
+
   const form = useForm({
-    mode: "controlled",
-    initialValues: {
-      emergencyContacts:
-        data && data.length
-          ? data
-          : [
-              {
-                name: "",
-                age: "",
-                phone_no: "",
-                email: "",
-                address: {
-                  city: "",
-                  state_division: "",
-                  post_zip_code: "",
-                  country: "",
-                  address: "",
-                },
-                relation: "",
-              },
-            ],
+    mode: "uncontrolled",
+    initialValues: { emergencyContacts: data },
+    validate: {
+      emergencyContacts: {
+        name: (value) =>
+          value.length < 2 ? "Name must have at least 2 letters" : null,
+        age: (value) => (value < 1 ? "Age must be a positive number" : null),
+        phone_no: (value) =>
+          value.length < 10
+            ? "Phone number must have at least 10 digits"
+            : null,
+        email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+        relation: (value) =>
+          value.length < 2 ? "Relation must have at least 2 letters" : null,
+        address: {
+          city: (value) =>
+            value.length < 2 ? "City must have at least 2 letters" : null,
+          state_division: (value) =>
+            value.length < 2 ? "State must have at least 2 letters" : null,
+          post_zip_code: (value) =>
+            value.length < 4 ? "ZIP Code must have at least 4 digits" : null,
+          country: (value) => (value ? null : "Country is required"),
+          address: (value) =>
+            value.length < 5 ? "Address must have at least 5 letters" : null,
+        },
+      },
     },
-    // validate: {
-    //   emergencyContacts: {
-    //     name: (value) =>
-    //       value?.length < 2 ? "Name must have at least 2 letters" : null,
-    //     age: (value) => (value < 1 ? "Age must be a positive number" : null),
-    //     phone_no: (value) =>
-    //       value?.length < 10
-    //         ? "Phone number must have at least 10 digits"
-    //         : null,
-    //     email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-    //     relation: (value) =>
-    //       value?.length < 2 ? "Relation must have at least 2 letters" : null,
-    //     address: {
-    //       city: (value) =>
-    //         value?.length < 2 ? "City must have at least 2 letters" : null,
-    //       state_division: (value) =>
-    //         value?.length < 2 ? "State must have at least 2 letters" : null,
-    //       post_zip_code: (value) =>
-    //         value?.length < 4 ? "ZIP Code must have at least 4 digits" : null,
-    //       country: (value) => (value ? null : "Country is required"),
-    //       address: (value) =>
-    //         value?.length < 5 ? "Address must have at least 5 letters" : null,
-    //     },
-    //   },
+    // validate: (values) => {
+    //   const errors = {};
+    //   values.emergencyContacts.forEach((contact, index) => {
+    //     const contactErrors = {};
+    //     if (!contact.name || contact.name.length < 2) {
+    //       contactErrors.name = "Name must have at least 2 letters";
+    //     }
+    //     if (!contact.age || contact.age < 1) {
+    //       contactErrors.age = "Age must be a positive number";
+    //     }
+    //     if (!contact.phone_no || contact.phone_no.length < 10) {
+    //       contactErrors.phone_no = "Phone number must have at least 10 digits";
+    //     }
+    //     if (!contact.email || !/^\S+@\S+$/.test(contact.email)) {
+    //       contactErrors.email = "Invalid email";
+    //     }
+    //     if (!contact.relation || contact.relation.length < 2) {
+    //       contactErrors.relation = "Relation must have at least 2 letters";
+    //     }
+    //     const addressErrors = {};
+    //     if (!contact.address.city || contact.address.city.length < 2) {
+    //       addressErrors.city = "City must have at least 2 letters";
+    //     }
+    //     if (
+    //       !contact.address.state_division ||
+    //       contact.address.state_division.length < 2
+    //     ) {
+    //       addressErrors.state_division = "State must have at least 2 letters";
+    //     }
+    //     if (
+    //       !contact.address.post_zip_code ||
+    //       contact.address.post_zip_code.length < 4
+    //     ) {
+    //       addressErrors.post_zip_code = "ZIP Code must have at least 4 digits";
+    //     }
+    //     if (!contact.address.country) {
+    //       addressErrors.country = "Country is required";
+    //     }
+    //     if (!contact.address.address || contact.address.address.length < 5) {
+    //       addressErrors.address = "Address must have at least 5 letters";
+    //     }
+    //     if (
+    //       Object.keys(contactErrors).length > 0 ||
+    //       Object.keys(addressErrors).length > 0
+    //     ) {
+    //       errors.emergencyContacts = errors.emergencyContacts || [];
+    //       errors.emergencyContacts[index] = {
+    //         ...contactErrors,
+    //         address: addressErrors,
+    //       };
+    //     }
+    //   });
+    //   return errors;
     // },
   });
 
@@ -94,26 +130,32 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
       relation: "",
     };
 
-    form.insertListItem("emergencyContacts", newContact);
+    setEmergencyContacts([...emergencyContacts, newContact]);
+
+    form.setValues({
+      emergencyContacts: [...form.values.emergencyContacts, newContact],
+    });
   };
 
   const removeEmergencyContact = (index) => {
-    if (form.values.emergencyContacts.length > 1) {
-      form.removeListItem("emergencyContacts", index);
+    if (emergencyContacts.length > 1) {
+      const updatedContacts = emergencyContacts.filter((_, i) => i !== index);
+      setEmergencyContacts(updatedContacts);
+      form.setValues({ emergencyContacts: updatedContacts });
     }
   };
 
   const handleSubmit = (values) => {
-    console.log(values);
     onNext(values.emergencyContacts);
   };
 
   return (
     <>
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        {form.values.emergencyContacts.map((contact, index) => (
-          <div key={index}>
-            {form.values.emergencyContacts.length > 1 && (
+        {/* {form.values.emergencyContacts.map((contact, index) => ( */}
+        {emergencyContacts.map((contact, index) => (
+          <>
+            {emergencyContacts.length > 1 && (
               <div className="d-flex align-items-start w-100 cust_mt">
                 <Button
                   color="red"
@@ -267,13 +309,14 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                 </Box>
               </Grid.Col>
             </Grid>
-          </div>
+          </>
         ))}
 
         <Button
           justify="center"
           leftSection={<LuPlus className="me-0 fs-5" />}
           variant="transparent"
+          // mt="md"
           onClick={addMoreEmergencyContact}
         >
           Add More

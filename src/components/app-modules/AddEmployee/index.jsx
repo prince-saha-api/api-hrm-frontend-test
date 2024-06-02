@@ -37,7 +37,7 @@ const AddEmployee = () => {
       personal_phone: "",
       nid_passport_no: "",
       tin_no: null,
-      photo: "",
+      // photo: "",
       present_address: {
         city: "",
         state_division: "",
@@ -100,56 +100,56 @@ const AddEmployee = () => {
       },
     },
     emergencyContact: [
-      {
-        name: "",
-        age: "",
-        phone_no: "",
-        email: "",
-        address: {
-          city: "",
-          state_division: "",
-          post_zip_code: "",
-          country: "",
-          address: "",
-        },
-        relation: "",
-      },
+      // {
+      //   name: "",
+      //   age: "",
+      //   phone_no: "",
+      //   email: "",
+      //   address: {
+      //     city: "",
+      //     state_division: "",
+      //     post_zip_code: "",
+      //     country: "",
+      //     address: "",
+      //   },
+      //   relation: "",
+      // },
     ],
     academicRecord: [
-      {
-        certification: "",
-        board_institute_name: "",
-        level: "",
-        score_grade: "",
-        year_of_passing: null,
-      },
+      // {
+      //   certification: "",
+      //   board_institute_name: "",
+      //   level: "",
+      //   score_grade: "",
+      //   year_of_passing: null,
+      // },
     ],
     previousExperience: [
-      {
-        company_name: "",
-        designation: "",
-        address: "",
-        from_date: null,
-        to_date: null,
-      },
+      // {
+      //   company_name: "",
+      //   designation: "",
+      //   address: "",
+      //   from_date: null,
+      //   to_date: null,
+      // },
     ],
     uploadDocuments: [
-      {
-        title: "",
-        attachment: null,
-      },
-      {
-        title: "",
-        attachment: null,
-      },
-      {
-        title: "",
-        attachment: null,
-      },
-      {
-        title: "",
-        attachment: null,
-      },
+      // {
+      //   title: "",
+      //   attachment: null,
+      // },
+      // {
+      //   title: "",
+      //   attachment: null,
+      // },
+      // {
+      //   title: "",
+      //   attachment: null,
+      // },
+      // {
+      //   title: "",
+      //   attachment: null,
+      // },
     ],
   });
 
@@ -176,16 +176,44 @@ const AddEmployee = () => {
     setFormData((prev) => ({ ...prev, [step]: data }));
   };
 
+  const handleFormDataChange2 = (data) => {
+    setFormData((prev) => ({
+      ...prev,
+      academicRecord: data.academicRecord,
+      previousExperience: data.previousExperience,
+    }));
+  };
+
   const handleNextStep = (currentStepData) => {
     handleFormDataChange(stepKeys[active], currentStepData);
     nextStep();
     console.log(formData);
   };
 
+  const handleEducationAndExperienceNext = (currentStepData) => {
+    handleFormDataChange("academicRecord", currentStepData.academicRecord);
+    handleFormDataChange(
+      "previousExperience",
+      currentStepData.previousExperience
+    );
+    nextStep();
+    console.log(formData);
+  };
+
   const handleStepClick = (index) => {
     if (index <= active - 1 || index === active + 1) {
+      if (index === active + 1 && active === 4) {
+        const isValid = stepRefs.current[active].validateStep(
+          handleFormDataChange2
+        );
+        if (isValid) {
+          setActive(index);
+        } else {
+          stepRefs.current[active].showValidationErrors();
+        }
+      }
       // Allow clicking only on the immediate previous or next step
-      if (index === active + 1) {
+      else if (index === active + 1) {
         // const currentStepData = formData[stepKeys[active]];
         const isValid = stepRefs.current[active].validateStep(
           handleFormDataChange,
@@ -204,7 +232,7 @@ const AddEmployee = () => {
   };
 
   const handleSubmit = async (currentStepData) => {
-    handleFormDataChange(stepKeys[active], currentStepData);
+    handleFormDataChange(stepKeys[active + 1], currentStepData);
     console.log(formData);
     // return;
 
@@ -374,8 +402,11 @@ const AddEmployee = () => {
           <Stepper.Step label="Education & Experience" description="Step 6">
             <EducationAndExperience
               ref={(el) => (stepRefs.current[4] = el)}
-              data={formData.previousExperience}
-              onNext={handleNextStep}
+              data={{
+                academicRecord: formData.academicRecord,
+                previousExperience: formData.previousExperience,
+              }}
+              onNext={handleEducationAndExperienceNext}
               onBack={prevStep}
             />
           </Stepper.Step>

@@ -19,7 +19,27 @@ import { countries } from "@/data/countries";
 const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
     mode: "controlled",
-    initialValues: { emergencyContacts: data },
+    initialValues: {
+      emergencyContacts:
+        data && data.length
+          ? data
+          : [
+              {
+                name: "",
+                age: "",
+                phone_no: "",
+                email: "",
+                address: {
+                  city: "",
+                  state_division: "",
+                  post_zip_code: "",
+                  country: "",
+                  address: "",
+                },
+                relation: "",
+              },
+            ],
+    },
     // validate: {
     //   emergencyContacts: {
     //     name: (value) =>

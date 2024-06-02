@@ -37,7 +37,7 @@ const AddEmployee = () => {
       personal_phone: "",
       nid_passport_no: "",
       tin_no: null,
-      photo: "",
+      // photo: "",
       present_address: {
         city: "",
         state_division: "",
@@ -232,7 +232,7 @@ const AddEmployee = () => {
   };
 
   const handleSubmit = async (currentStepData) => {
-    handleFormDataChange(stepKeys[active], currentStepData);
+    handleFormDataChange(stepKeys[active + 1], currentStepData);
     console.log(formData);
     // return;
 
@@ -272,7 +272,7 @@ const AddEmployee = () => {
       console.log(formValues);
 
       const response = await fetch(
-        "http://10.10.23.61:8000/api/user/add-employee/",
+        "http://10.10.23.64:8000/api/user/add-employee/",
         {
           method: "POST",
           body: formValues,

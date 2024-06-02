@@ -28,8 +28,30 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
     mode: "controlled",
     initialValues: {
-      academicRecord: data.academicRecord,
-      previousExperience: data.previousExperience,
+      academicRecord:
+        data.academicRecord && data.academicRecord.length
+          ? data.academicRecord
+          : [
+              {
+                certification: "",
+                board_institute_name: "",
+                level: "",
+                score_grade: "",
+                year_of_passing: null,
+              },
+            ],
+      previousExperience:
+        data.previousExperience && data.previousExperience.length
+          ? data.previousExperience
+          : [
+              {
+                company_name: "",
+                designation: "",
+                address: "",
+                from_date: null,
+                to_date: null,
+              },
+            ],
     },
     validate: {
       academicRecord: {

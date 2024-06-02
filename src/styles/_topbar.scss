@@ -26,7 +26,7 @@
 }
 
 
-// toggleIcon CSS here 
+// toggleIcon CSS here
 .toggleIcon{
   --burger-color:  #fff !important;
   background-color: var(--burger-color);
@@ -39,10 +39,10 @@
   width: 16px !important;
 }
 
-.m-d4fb9cad[data-opened]::after {
+.toggleIcon[data-opened]::after {
   width: var(--burger-size) !important;
 }
-// toggleIcon CSS here 
+// toggleIcon CSS here
 
 
 .profile_img {

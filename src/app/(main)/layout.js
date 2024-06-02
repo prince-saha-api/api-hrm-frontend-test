@@ -10,31 +10,31 @@ import { checkIsAuthenticated } from "../../lib/check";
 // import "../../styles/main.scss";
 
 export const metadata = {
-   title: "Dashboard",
-   description: "HRM Payroll",
+  title: "Dashboard",
+  description: "HRM Payroll",
 };
 
 export default async function RootLayout({ children }) {
-   // const cookieStore = cookies();
-   // let token = cookieStore.get(authTokenKey);
-   // if (token === undefined || token === null) {
-   //   redirect("/auth/login");
-   // }
+  // const cookieStore = cookies();
+  // let token = cookieStore.get(authTokenKey);
+  // if (token === undefined || token === null) {
+  //   redirect("/auth/login");
+  // }
 
-   const isAuthenticated = await checkIsAuthenticated();
+  const isAuthenticated = await checkIsAuthenticated();
 
-   if (!isAuthenticated) {
-      redirect("/auth/login");
-   }
+  if (!isAuthenticated) {
+    redirect("/auth/login");
+  }
 
-   return (
-      <>
-         {/* <Accessible /> */}
-         <div className="wrapper">
-            <SideMenu />
-            <Navbar />
-            <div className="pageContent">{children}</div>
-         </div>
-      </>
-   );
+  return (
+    <>
+      {/* <Accessible /> */}
+      <div className="wrapper">
+        <SideMenu />
+        <Navbar />
+        <div className="pageContent">{children}</div>
+      </div>
+    </>
+  );
 }

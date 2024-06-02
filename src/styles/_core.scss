@@ -46,8 +46,13 @@ P {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-.pageTop a {
+.pageTop a,
+.pageTop span {
   color: var(--color-light);
+  text-decoration: none;
+}
+.pageTop a:hover {
+  text-decoration: underline;
 }
 .mantine-Breadcrumbs-separator {
   opacity: 0.8;

@@ -45,7 +45,7 @@ const BasicInfo = () => {
       // updated_at: "2024-06-02T09:10:22.140828Z",
       // code: "202406021510221408",
       // is_active: false,
-      name: "API",
+      name: "",
       // legal_name: "fgf",
       establishment_date: null,
       business_registration_number: "",

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { Breadcrumbs, Anchor } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -16,11 +16,9 @@ import {
   Select,
 } from "@mantine/core";
 import { Grid } from "@mantine/core";
-import { FcAcceptDatabase } from "react-icons/fc";
+import { FcAcceptDatabase, FcAddImage } from "react-icons/fc";
 import Image from "next/image";
 import compmanyLogo from "public/full_logo.png";
-import uploadImg from "public/profile01.jpg";
-import { FcAddImage } from "react-icons/fc";
 import { countries } from "@/data/countries";
 
 const items = [
@@ -40,13 +38,7 @@ const BasicInfo = () => {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      // id: 1,
-      // created_at: "2024-06-02T09:10:22.140828Z",
-      // updated_at: "2024-06-02T09:10:22.140828Z",
-      // code: "202406021510221408",
-      // is_active: false,
       name: "",
-      // legal_name: "fgf",
       establishment_date: null,
       business_registration_number: "",
       tax_id_number: null,
@@ -56,11 +48,8 @@ const BasicInfo = () => {
       primary_email: null,
       primary_phone_number: null,
       fax: null,
-      logo: "",
+      logo: null,
       industry_type: null,
-      // address: null,
-      // cupdated_by: null,
-      // created_by: null,
       address: {
         city: "",
         state_division: "",
@@ -69,28 +58,28 @@ const BasicInfo = () => {
         address: "",
       },
     },
-
-    // functions will be used to validate values at corresponding key
     validate: {
       name: (value) =>
         value.length < 2 ? "Name must have at least 2 letters" : null,
       primary_phone_number: (value) =>
-        value < 12 ? "You must be at least 12 number" : null,
-      fax: (value) => (value < 8 ? "You must be at least 8 number" : null),
+        value?.length < 12 ? "Phone number must be at least 12 digits" : null,
+      fax: (value) =>
+        value?.length < 8 ? "Fax must be at least 8 digits" : null,
       primary_email: (value) =>
         /^\S+@\S+$/.test(value) ? null : "Invalid email",
       website_url: (value) =>
         /^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$/.test(value)
           ? null
-          : "Must have at a website",
+          : "Must be a valid website URL",
     },
   });
 
   const [file, setFile] = useState(null);
+  const fileInputRef = useRef(null);
+  const [preview, setPreview] = useState(null);
 
   const handleSubmit = async (values) => {
-    console.log("nazmul");
-    return;
+    console.log(values);
     const formattedDate = values.establishment_date
       ? values.establishment_date.toISOString().split("T")[0]
       : null;
@@ -112,24 +101,25 @@ const BasicInfo = () => {
       };
 
       flattenObject(form.values);
-
-      // console.log(formValues, form.values);
-
-      // const response = await fetch(
-      //   "http://10.10.23.64:8000/api/user/add-employee/",
-      //   {
-      //     method: "POST",
-      //     body: formValues,
-      //   }
-      // );
-
-      // const result = await response.json();
-      // console.log(result);
     } catch (error) {
       console.error("Error submitting form:", error);
     }
+  };
 
-    // onNext({ ...values, establishment_date: formattedDate });
+  const handleFileChange = (file) => {
+    setFile(file);
+    setPreview(URL.createObjectURL(file));
+    form.setFieldValue("logo", file); // add this line
+    console.log(preview);
+  };
+
+  const handleClearLogo = () => {
+    setFile(null);
+    setPreview(null);
+    form.setFieldValue("logo", null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Reset the file input
+    }
   };
 
   return (
@@ -154,7 +144,7 @@ const BasicInfo = () => {
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
           <Grid.Col span={6}>
             <div className="compmanyLogo">
-              <Image src={compmanyLogo} alt="img" />
+              <Image src={compmanyLogo} alt="Company Logo" />
             </div>
           </Grid.Col>
           <Grid.Col span={6}>
@@ -222,19 +212,11 @@ const BasicInfo = () => {
                       {...form.getInputProps("name")}
                     />
 
-                    {/* <div className="d-flex align-items-start w-100 cust_mt">
-                  <div className="cust_iputLabel">Establishment Date</div>
-
-                </div> */}
-
                     <DateInput
                       classNames={{
                         root: "w-100",
-                        // wrapper: "cust_iputWrapper",
                       }}
                       mt="sm"
-                      // value={value}
-                      // onChange={setValue}
                       label="Establishment Date"
                       placeholder="Establishment Date"
                       {...form.getInputProps("establishment_date")}
@@ -254,20 +236,6 @@ const BasicInfo = () => {
                       {...form.getInputProps("business_registration_number")}
                     />
 
-                    {/* <TextInput
-                      mt="sm"
-                      label="TAX ID"
-                      placeholder="TAX ID"
-                      {...form.getInputProps("tax_id_number")}
-                    />
-
-                    <TextInput
-                      mt="sm"
-                      label="BIN"
-                      placeholder="BIN"
-                      {...form.getInputProps("bin_no")}
-                    /> */}
-
                     <TextInput
                       mt="sm"
                       label="Phone"
@@ -278,8 +246,6 @@ const BasicInfo = () => {
                       mt="sm"
                       label="Fax"
                       placeholder="Fax"
-                      //  min={0}
-                      //  max={99}
                       {...form.getInputProps("fax")}
                     />
                     <TextInput
@@ -300,7 +266,6 @@ const BasicInfo = () => {
                 <Grid.Col span={6}>
                   <Box>
                     <TextInput
-                      // mt="sm"
                       label="TAX ID"
                       placeholder="TAX ID"
                       {...form.getInputProps("tax_id_number")}
@@ -323,7 +288,6 @@ const BasicInfo = () => {
                     <TextInput
                       classNames={{
                         root: "w-100",
-                        // wrapper: "cust_iputWrapper",
                       }}
                       mt="sm"
                       label="City"
@@ -334,7 +298,6 @@ const BasicInfo = () => {
                     <TextInput
                       classNames={{
                         root: "w-100",
-                        // wrapper: "cust_iputWrapper",
                       }}
                       mt="sm"
                       label="State"
@@ -345,7 +308,6 @@ const BasicInfo = () => {
                     <TextInput
                       classNames={{
                         root: "w-100",
-                        // wrapper: "cust_iputWrapper",
                       }}
                       mt="sm"
                       label="ZIP Code"
@@ -356,7 +318,6 @@ const BasicInfo = () => {
                     <Select
                       classNames={{
                         root: "w-100",
-                        // wrapper: "cust_iputWrapper",
                       }}
                       mt="sm"
                       label="Country"
@@ -369,20 +330,12 @@ const BasicInfo = () => {
                     <Textarea
                       classNames={{
                         root: "w-100",
-                        // wrapper: "cust_iputWrapper",
                       }}
                       mt="sm"
                       label="Address"
                       placeholder="Address"
                       {...form.getInputProps("address.address")}
                     />
-
-                    {/* <Textarea
-                      mt="sm"
-                      label="Address"
-                      placeholder="Address"
-                      {...form.getInputProps("address")}
-                    /> */}
                   </Box>
                 </Grid.Col>
               </Grid>
@@ -392,30 +345,55 @@ const BasicInfo = () => {
             </Grid.Col>
             <Grid.Col span={4}>
               <div className="uploadBox">
-                <p className="uploadIcon">
-                  <FcAddImage />
-                </p>
+                {preview !== null ? (
+                  <div
+                    className="updatedImage text-center"
+                    style={{ position: "relative", display: "inline-block" }}
+                  >
+                    <Image
+                      src={preview}
+                      alt="Preview"
+                      width={200}
+                      height={200}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleClearLogo}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        background: "red",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "50%",
+                        width: "24px",
+                        height: "24px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      X
+                    </button>
+                  </div>
+                ) : (
+                  <p className="uploadIcon">
+                    <FcAddImage />
+                  </p>
+                )}
                 <h6 className="mb-4 color-light">
                   NOTE : Supported formats are JPG, JPEG, PNG
                 </h6>
 
                 <Group justify="center">
-                  <FileButton onChange={setFile} accept="image/png,image/jpeg">
+                  <FileButton
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="image/png,image/jpeg"
+                  >
                     {(props) => <Button {...props}>Upload Logo</Button>}
                   </FileButton>
                 </Group>
               </div>
-
-              {/* <div className="updatedImage text-center">
-                        <Image src={compmanyLogo} alt="img" />
-                  </div> */}
-
-              {/* {file && (
-                     <Text size="sm" ta="center" mt="sm">
-                        Picked file: {file.name}
-                      {  console.log(file)}
-                     </Text>
-                  )} */}
             </Grid.Col>
           </Grid>
         </form>

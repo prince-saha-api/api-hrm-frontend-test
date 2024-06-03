@@ -29,17 +29,18 @@ export const checkIsAuthenticated = async () => {
     return false;
   } else {
     setAuthToken(token?.value);
-    try {
-      const checkToken = await api.get(`/employee/${user?.value}/`);
-      // console.log(checkToken);
-      if (!(checkToken?.data?.employee_id === user.value)) {
-        return false;
-      } else {
-        return true;
-      }
-    } catch (error) {
-      return false;
-    }
+    // try {
+    //   const checkToken = await api.get(`/employee/${user?.value}/`);
+    //   // console.log(checkToken);
+    //   if (!(checkToken?.data?.employee_id === user.value)) {
+    //     return false;
+    //   } else {
+    //     return true;
+    //   }
+    // } catch (error) {
+    //   return false;
+    // }
+    return true;
   }
 };
 

@@ -36,7 +36,7 @@ const Page = () => {
 
     try {
       const { access, user } = await login({
-        employee_id: employeeId,
+        username: employeeId,
         password,
       });
 
@@ -50,12 +50,12 @@ const Page = () => {
       } else if (!rememberMe) {
         // should be updated
         localStorage.setItem("user", JSON.stringify(user));
-        Cookies.set(authUserKey, user?.employee_id);
+        Cookies.set(authUserKey, user?.username);
         Cookies.set(authTokenKey, access);
       } else {
         localStorage.setItem("user", JSON.stringify(user));
         // Expires in 30 days
-        Cookies.set(authUserKey, user?.employee_id, {
+        Cookies.set(authUserKey, user?.username, {
           expires: 30,
         });
         Cookies.set(authTokenKey, access, {

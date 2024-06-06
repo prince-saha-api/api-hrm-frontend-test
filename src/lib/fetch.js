@@ -141,4 +141,30 @@ export const fetchEmployeeDataFromMis = async (employeeId) => {
   }
 };
 
+export const getData = async (url) => {
+  try {
+    let token = Cookies.get(authTokenKey);
+    setAuthToken(token);
+
+    const response = await api.get(url);
+
+    // if (!response.ok) {
+    //   console.error("Error");
+    //   return {
+    //     error: true,
+    //     message: "Failed to get data",
+    //   };
+    // }
+
+    return response;
+  } catch (error) {
+    console.error("Failed: ", error);
+    // throw error;
+    return {
+      error: true,
+      message: "An error occurred. Please try again later.",
+    };
+  }
+};
+
 export default api;

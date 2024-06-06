@@ -2,7 +2,6 @@
 
 import React, { useState, useRef } from "react";
 import Link from "next/link";
-import { Breadcrumbs, Anchor } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import {
@@ -14,25 +13,13 @@ import {
   FileButton,
   Group,
   Select,
+  Grid,
 } from "@mantine/core";
-import { Grid } from "@mantine/core";
 import { FcAcceptDatabase, FcAddImage } from "react-icons/fc";
 import Image from "next/image";
+import Breadcrumb from "@/components/utils/Breadcrumb";
 import compmanyLogo from "public/full_logo.png";
 import { countries } from "@/data/countries";
-
-const items = [
-  { title: "Dashboard", href: "/dashboard" },
-  { title: "Basic Setup" },
-].map((item, index) =>
-  item.hasOwnProperty("href") ? (
-    <Link key={index} href={item.href}>
-      {item.title}
-    </Link>
-  ) : (
-    <span key={index}>{item.title}</span>
-  )
-);
 
 const BasicInfo = () => {
   const form = useForm({
@@ -124,10 +111,16 @@ const BasicInfo = () => {
 
   return (
     <>
-      <div className="pageTop mb-4">
-        <h3>Basic info</h3>
-        <Breadcrumbs>{items}</Breadcrumbs>
-      </div>
+      <Breadcrumb
+        classNames={{
+          root: "mb-4",
+        }}
+        title="Basic Info"
+        items={[
+          { title: "Dashboard", href: "/dashboard" },
+          { title: "Basic Setup" },
+        ]}
+      />
 
       <div className="itemCard">
         <div className="dataBox">

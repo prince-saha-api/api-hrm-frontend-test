@@ -8,7 +8,7 @@ const api = axios.create({
 
 export const login = async (credentials) => {
   try {
-    const response = await api.post("/login/", credentials);
+    const response = await api.post("/auth/login/", credentials);
     // console.log(response);
     return response.data;
   } catch (error) {

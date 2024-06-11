@@ -371,7 +371,7 @@ const Page = () => {
                               <ul className="text-decoration-none mb-0 sidenav_submenu">
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
-                                       href="/add-employee"
+                                       href="/add-device"
                                        className="text-decoration-none subMenu"
                                     >
                                        Add Device
@@ -379,7 +379,7 @@ const Page = () => {
                                  </li>
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
-                                       href="/add-employee"
+                                       href="/add-group"
                                        className="text-decoration-none subMenu"
                                     >
                                        Add Group
@@ -387,7 +387,7 @@ const Page = () => {
                                  </li>
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
-                                       href="/add-employee"
+                                       href="/assign-to-group"
                                        className="text-decoration-none subMenu"
                                     >
                                        Assign to Group
@@ -395,7 +395,7 @@ const Page = () => {
                                  </li>
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
-                                       href="/add-employee"
+                                       href="/sync-log-data"
                                        className="text-decoration-none subMenu"
                                     >
                                        Sync Log Data
@@ -403,7 +403,7 @@ const Page = () => {
                                  </li>
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
-                                       href="/add-employee"
+                                       href="/clear-raw-data"
                                        className="text-decoration-none subMenu"
                                     >
                                        Clear Raw Data

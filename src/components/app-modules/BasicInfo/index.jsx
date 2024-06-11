@@ -26,6 +26,7 @@ import { update, submit } from "@/lib/submit";
 const BasicInfo = () => {
   const [basicInfo, setBasicInfo] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchBasicInfo = async () => {
@@ -99,6 +100,8 @@ const BasicInfo = () => {
     //   ? values.establishment_date.toISOString().split("T")[0]
     //   : null;
 
+    setIsSubmitting(true);
+
     try {
       const formValues = new FormData();
 
@@ -129,8 +132,15 @@ const BasicInfo = () => {
         ? update(endpoint, formValues, true)
         : submit(endpoint, formValues, true);
       console.log(response);
+
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 5000);
     } catch (error) {
       console.error("Error submitting form:", error);
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 5000);
     }
   };
 
@@ -312,6 +322,7 @@ const BasicInfo = () => {
                         label="Company Name"
                         placeholder="Name"
                         {...form.getInputProps("name")}
+                        disabled={isSubmitting}
                       />
 
                       {/* <DateInput
@@ -329,6 +340,7 @@ const BasicInfo = () => {
                         label="Industry"
                         placeholder="Industry"
                         {...form.getInputProps("industry_type")}
+                        disabled={isSubmitting}
                       />
 
                       <TextInput
@@ -336,6 +348,7 @@ const BasicInfo = () => {
                         label="Business Registration No"
                         placeholder="Business Registration No"
                         {...form.getInputProps("business_registration_number")}
+                        disabled={isSubmitting}
                       />
 
                       <TextInput
@@ -343,24 +356,28 @@ const BasicInfo = () => {
                         label="Phone"
                         placeholder="Phone"
                         {...form.getInputProps("primary_phone_number")}
+                        disabled={isSubmitting}
                       />
                       <TextInput
                         mt="sm"
                         label="Fax"
                         placeholder="Fax"
                         {...form.getInputProps("fax")}
+                        disabled={isSubmitting}
                       />
                       <TextInput
                         mt="sm"
                         label="Email"
                         placeholder="Email"
                         {...form.getInputProps("primary_email")}
+                        disabled={isSubmitting}
                       />
                       <TextInput
                         mt="sm"
                         label="Website"
                         placeholder="Website"
                         {...form.getInputProps("website_url")}
+                        disabled={isSubmitting}
                       />
                     </Box>
                   </Grid.Col>
@@ -371,6 +388,7 @@ const BasicInfo = () => {
                         label="TAX ID"
                         placeholder="TAX ID"
                         {...form.getInputProps("tax_id_number")}
+                        disabled={isSubmitting}
                       />
 
                       <TextInput
@@ -378,6 +396,7 @@ const BasicInfo = () => {
                         label="BIN"
                         placeholder="BIN"
                         {...form.getInputProps("bin_no")}
+                        disabled={isSubmitting}
                       />
 
                       <TextInput
@@ -385,6 +404,7 @@ const BasicInfo = () => {
                         label="Description"
                         placeholder="Description"
                         {...form.getInputProps("description")}
+                        disabled={isSubmitting}
                       />
 
                       <TextInput
@@ -395,6 +415,7 @@ const BasicInfo = () => {
                         label="City"
                         placeholder="City"
                         {...form.getInputProps("address.city")}
+                        disabled={isSubmitting}
                       />
 
                       <TextInput
@@ -405,6 +426,7 @@ const BasicInfo = () => {
                         label="State"
                         placeholder="State"
                         {...form.getInputProps(`address.state_division`)}
+                        disabled={isSubmitting}
                       />
 
                       <TextInput
@@ -415,6 +437,7 @@ const BasicInfo = () => {
                         label="ZIP Code"
                         placeholder="ZIP Code"
                         {...form.getInputProps(`address.post_zip_code`)}
+                        disabled={isSubmitting}
                       />
 
                       <Select
@@ -427,6 +450,7 @@ const BasicInfo = () => {
                         searchable
                         data={countries}
                         {...form.getInputProps("address.country")}
+                        disabled={isSubmitting}
                       />
 
                       <Textarea
@@ -437,6 +461,7 @@ const BasicInfo = () => {
                         label="Address"
                         placeholder="Address"
                         {...form.getInputProps("address.address")}
+                        disabled={isSubmitting}
                       />
                     </Box>
                   </Grid.Col>
@@ -449,10 +474,17 @@ const BasicInfo = () => {
                   variant="outline"
                   ml="sm"
                   onClick={() => setIsEditing(false)}
+                  disabled={isSubmitting}
                 >
                   Cancel
                 </Button>
-                <Button type="submit" mt="lg" size="md">
+                <Button
+                  type="submit"
+                  mt="lg"
+                  size="md"
+                  loading={isSubmitting}
+                  loaderProps={{ type: "dots" }}
+                >
                   Submit
                 </Button>
               </Grid.Col>
@@ -502,6 +534,7 @@ const BasicInfo = () => {
                       ref={fileInputRef}
                       onChange={handleFileChange}
                       accept="image/png,image/jpeg"
+                      disabled={isSubmitting}
                     >
                       {(props) => <Button {...props}>Upload Logo</Button>}
                     </FileButton>

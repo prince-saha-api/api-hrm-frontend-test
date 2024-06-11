@@ -29,11 +29,11 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "date",
+    columnAccessor: "name",
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/leave/get-holiday/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let apiUrl = `/api/branch/get-branch/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -96,14 +96,14 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "title",
-      title: "Title",
+      accessor: "name",
+      title: "Name",
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ title }) => title || "N/A",
+      render: ({ name }) => name || "N/A",
       // for export
-      key: "title",
+      key: "name",
     },
     {
       // for table display
@@ -117,13 +117,50 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "date",
-      title: "Date",
+      accessor: "email",
+      title: "Email",
+      // visibleMediaQuery: aboveXs,
+      render: ({ email }) => email || "N/A",
+      // for export
+      key: "email",
+    },
+    {
+      // for table display
+      accessor: "phone",
+      title: "Phone",
+      // visibleMediaQuery: aboveXs,
+      render: ({ phone }) => phone || "N/A",
+      // for export
+      key: "phone",
+    },
+    {
+      // for table display
+      accessor: "company",
+      title: "Company",
       // visibleMediaQuery: aboveXs,
       sortable: true,
-      render: ({ date }) => (date ? getDate(date) : "N/A"),
+      render: ({ company }) => company?.basic_information?.name || "N/A",
       // for export
-      key: "date",
+      key: "company",
+    },
+    {
+      // for table display
+      accessor: "address",
+      title: "Address",
+      // visibleMediaQuery: aboveXs,
+      render: ({ address }) => `${address?.state_division}` || "N/A",
+      // for export
+      key: "address",
+    },
+    {
+      // for table display
+      accessor: "operating_hour",
+      title: "Operating Hour",
+      // visibleMediaQuery: aboveXs,
+      render: ({ operating_hour }) =>
+        operating_hour?.operating_hour_from || "N/A",
+      // for export
+      key: "operating_hour",
     },
     {
       // for table display
@@ -172,16 +209,32 @@ const Index = () => {
       value: "na",
     },
     {
-      label: "Title",
-      value: "title",
+      label: "Name",
+      value: "name",
     },
     {
       label: "Description",
       value: "description",
     },
     {
-      label: "Date",
-      value: "date",
+      label: "Email",
+      value: "email",
+    },
+    {
+      label: "Phone",
+      value: "phone",
+    },
+    {
+      label: "Company",
+      value: "company",
+    },
+    {
+      label: "Address",
+      value: "address",
+    },
+    {
+      label: "Operating Hour",
+      value: "operating_hour",
     },
     {
       label: "Actions",
@@ -191,15 +244,19 @@ const Index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "title",
+    "name",
     "description",
-    "date",
+    "email",
+    "phone",
+    "company",
+    "address",
+    "operating_hour",
     "actions",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set(["na", "title", "leave_type", "actions", ...keys]),
+      ...new Set(["na", "name", "description", "actions", ...keys]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>
@@ -219,7 +276,7 @@ const Index = () => {
   // const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/api/leave/get-leavepolicy/?column_accessor=${
+    let url = `/api/branch/get-branch/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -290,7 +347,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "Leave Policy", "leave-policy");
+        exportToPDF(headers, data, "Branches", "branches");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -353,7 +410,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "leave-policy");
+        exportToCSV(data, "branches");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -415,7 +472,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "leave-policy");
+        exportToExcel(data, "branches");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,
@@ -454,15 +511,15 @@ const Index = () => {
 
       <div className="mb-4 d-flex justify-content-between align-items-end">
         <Breadcrumb
-          title="Holiday List"
+          title="Branch"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Holiday List" },
+            { title: "Branch" },
           ]}
         />
 
         <AddButton
-          label="Add Holiday"
+          label="Add Branch"
           fontSize="16px"
           icon={<LuPlus className="fs-5 me-0 mr-0" />}
           handleClick={addOpen}

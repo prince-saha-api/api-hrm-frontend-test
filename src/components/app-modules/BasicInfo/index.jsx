@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import useSWR from "swr";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import {
@@ -15,6 +16,7 @@ import {
   Select,
   Grid,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { FcAcceptDatabase, FcAddImage } from "react-icons/fc";
 import Image from "next/image";
 import Breadcrumb from "@/components/utils/Breadcrumb";
@@ -22,6 +24,8 @@ import compmanyLogo from "public/full_logo.png";
 import { countries } from "@/data/countries";
 import { getData } from "@/lib/fetch";
 import { update, submit } from "@/lib/submit";
+import { fetcher } from "@/lib/fetch";
+import { formatDate, getStoragePath } from "@/lib/helper";
 
 const BasicInfo = () => {
   const [basicInfo, setBasicInfo] = useState(null);
@@ -32,8 +36,6 @@ const BasicInfo = () => {
     const fetchBasicInfo = async () => {
       try {
         const response = await getData(`/api/company/get-basicinformation/`);
-        // const data = await response.json();
-        // console.log(response);
         setBasicInfo(response?.data[0]);
       } catch (error) {
         console.error("Failed to fetch basic information:", error);
@@ -42,8 +44,6 @@ const BasicInfo = () => {
 
     fetchBasicInfo();
   }, []);
-
-  // console.log(basicInfo);
 
   const form = useForm({
     mode: "uncontrolled",
@@ -59,7 +59,10 @@ const BasicInfo = () => {
       primary_phone_number: null,
       fax: null,
       logo: null,
-      industry_type: null,
+      industry_type: {
+        id: "",
+        name: "",
+      },
       address: {
         city: "",
         state_division: "",
@@ -84,6 +87,33 @@ const BasicInfo = () => {
     },
   });
 
+  const {
+    data,
+    error,
+    isLoading: isFetchLoading,
+  } = useSWR(`/api/company/get-companytype/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const company_types = data?.data?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: String(item?.id || ""),
+  }));
+
+  // const company_types = [
+  //   {
+  //     label: "IT",
+  //     value: "1",
+  //   },
+  //   {
+  //     label: "sdfg",
+  //     value: "2",
+  //   },
+  // ];
+
+  console.log(company_types);
+
   useEffect(() => {
     if (basicInfo) {
       form.setValues(basicInfo);
@@ -95,12 +125,19 @@ const BasicInfo = () => {
   const [preview, setPreview] = useState(null);
 
   const handleSubmit = async (values) => {
-    // console.log(values);
     // const formattedDate = values.establishment_date
     //   ? values.establishment_date.toISOString().split("T")[0]
     //   : null;
 
     setIsSubmitting(true);
+
+    // const transformedValues = {
+    //   ...values,
+    //   industry_type: values.industry_type.id,
+    // };
+
+    // Remove the industry_type field completely
+    const { industry_type, ...transformedValues } = values; // temporary
 
     try {
       const formValues = new FormData();
@@ -118,9 +155,8 @@ const BasicInfo = () => {
         });
       };
 
-      flattenObject(values);
+      flattenObject(transformedValues);
 
-      console.log(formValues);
       // return;
 
       const method = basicInfo ? "PUT" : "POST";
@@ -131,10 +167,21 @@ const BasicInfo = () => {
       const response = basicInfo
         ? update(endpoint, formValues, true)
         : submit(endpoint, formValues, true);
-      console.log(response);
 
       setTimeout(() => {
         setIsSubmitting(false);
+        notifications.show({
+          id: "hello-there",
+          withCloseButton: true,
+          autoClose: 5000,
+          title: "You've been compromised",
+          message: "Leave the building immediately",
+          color: "red",
+          // icon: <></>,
+          className: "my-notification-class",
+          // style: { backgroundColor: "red" },
+          loading: false,
+        });
       }, 5000);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -144,11 +191,15 @@ const BasicInfo = () => {
     }
   };
 
+  const handleCancel = async () => {
+    form.setValues(basicInfo);
+    setIsEditing(false);
+  };
+
   const handleFileChange = (file) => {
     setFile(file);
     setPreview(URL.createObjectURL(file));
     form.setFieldValue("logo", file); // add this line
-    console.log(preview);
   };
 
   const handleClearLogo = () => {
@@ -210,7 +261,16 @@ const BasicInfo = () => {
           <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
             <Grid.Col span={6}>
               <div className="compmanyLogo">
-                <Image src={compmanyLogo} alt="Company Logo" />
+                <Image
+                  src={
+                    basicInfo?.logo
+                      ? getStoragePath(basicInfo?.logo)
+                      : compmanyLogo
+                  }
+                  alt="Company Logo"
+                  width="80"
+                  height="40"
+                />
               </div>
             </Grid.Col>
             <Grid.Col span={6}>
@@ -239,8 +299,24 @@ const BasicInfo = () => {
                 </p>
               </div>
               <div className="infoText">
+                <p className="color-light font_14 mb-1">Legal Name</p>
+                <p className="font_18">
+                  {basicInfo?.legal_name}
+                  {/* API Solutions Ltd. */}
+                </p>
+              </div>
+              <div className="infoText">
+                <p className="color-light font_14 mb-1">Company Type</p>
+                <p className="font_18">
+                  {basicInfo?.industry_type?.name}
+                  {/* API Solutions Ltd. */}
+                </p>
+              </div>
+              <div className="infoText">
                 <p className="color-light font_14 mb-1">Establishment Date</p>
-                <p className="font_18">{basicInfo?.establishment_date}</p>
+                <p className="font_18">
+                  {formatDate(basicInfo?.establishment_date)}
+                </p>
               </div>
               <div className="infoText">
                 <p className="color-light font_14 mb-1">
@@ -265,12 +341,12 @@ const BasicInfo = () => {
                   {/* 3875387658 */}
                 </p>
               </div>
+            </Grid.Col>
+            <Grid.Col span={3}>
               <div className="infoText">
                 <p className="color-light font_14 mb-1">Tax ID Number</p>
                 <p className="font_18">{basicInfo?.tax_id_number}</p>
               </div>
-            </Grid.Col>
-            <Grid.Col span={3}>
               <div className="infoText">
                 <p className="color-light font_14 mb-1">Phone</p>
                 <p className="font_18">
@@ -300,9 +376,21 @@ const BasicInfo = () => {
               <div className="infoText">
                 <p className="color-light font_14 mb-1">Address</p>
                 <p className="font_18">
-                  {`${basicInfo?.address?.address || ""}, ${
-                    basicInfo?.address?.city || ""
-                  }, ${basicInfo?.address?.country || ""}`}
+                  {basicInfo?.address?.address
+                    ? `${basicInfo.address.address}`
+                    : ""}
+                  {basicInfo?.address?.city
+                    ? `, ${basicInfo.address.city}`
+                    : ""}
+                  {basicInfo?.address?.state_division
+                    ? `, ${basicInfo.address.state_division}`
+                    : ""}
+                  {basicInfo?.address?.post_zip_code
+                    ? ` - ${basicInfo.address.post_zip_code}`
+                    : ""}
+                  {basicInfo?.address?.country
+                    ? `, ${basicInfo.address.country}`
+                    : ""}
 
                   {/* House -4, Road 23/A, Block B, Banani Dhaka 1213, Bangladesh */}
                 </p>
@@ -324,7 +412,6 @@ const BasicInfo = () => {
                         {...form.getInputProps("name")}
                         disabled={isSubmitting}
                       />
-
                       {/* <DateInput
                         classNames={{
                           root: "w-100",
@@ -335,11 +422,18 @@ const BasicInfo = () => {
                         {...form.getInputProps("establishment_date")}
                       /> */}
 
-                      <TextInput
+                      <Select
                         mt="sm"
-                        label="Industry"
-                        placeholder="Industry"
-                        {...form.getInputProps("industry_type")}
+                        label="Industry Type"
+                        placeholder="Select industry type"
+                        data={company_types || []}
+                        value={form.getValues().industry_type.id.toString()}
+                        onChange={(value, option) => {
+                          form.setFieldValue("industry_type", {
+                            id: option?.value || "",
+                            name: option?.label || "",
+                          });
+                        }}
                         disabled={isSubmitting}
                       />
 
@@ -350,7 +444,6 @@ const BasicInfo = () => {
                         {...form.getInputProps("business_registration_number")}
                         disabled={isSubmitting}
                       />
-
                       <TextInput
                         mt="sm"
                         label="Phone"
@@ -379,20 +472,20 @@ const BasicInfo = () => {
                         {...form.getInputProps("website_url")}
                         disabled={isSubmitting}
                       />
+                      <TextInput
+                        mt="sm"
+                        label="TAX ID"
+                        placeholder="TAX ID"
+                        {...form.getInputProps("tax_id_number")}
+                        disabled={isSubmitting}
+                      />
                     </Box>
                   </Grid.Col>
 
                   <Grid.Col span={6}>
                     <Box>
                       <TextInput
-                        label="TAX ID"
-                        placeholder="TAX ID"
-                        {...form.getInputProps("tax_id_number")}
-                        disabled={isSubmitting}
-                      />
-
-                      <TextInput
-                        mt="sm"
+                        // mt="sm"
                         label="BIN"
                         placeholder="BIN"
                         {...form.getInputProps("bin_no")}
@@ -472,8 +565,8 @@ const BasicInfo = () => {
                   me={"lg"}
                   size="md"
                   variant="outline"
-                  ml="sm"
-                  onClick={() => setIsEditing(false)}
+                  // ml="sm"
+                  onClick={() => handleCancel()}
                   disabled={isSubmitting}
                 >
                   Cancel
@@ -490,35 +583,41 @@ const BasicInfo = () => {
               </Grid.Col>
               <Grid.Col span={4}>
                 <div className="uploadBox">
-                  {preview !== null ? (
+                  {basicInfo?.logo || preview !== null ? (
                     <div
                       className="updatedImage text-center"
                       style={{ position: "relative", display: "inline-block" }}
                     >
                       <Image
-                        src={preview}
+                        src={
+                          preview ? preview : getStoragePath(basicInfo?.logo)
+                        }
                         alt="Preview"
                         width={200}
                         height={200}
                       />
-                      <button
-                        type="button"
-                        onClick={handleClearLogo}
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          right: 0,
-                          background: "red",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "50%",
-                          width: "24px",
-                          height: "24px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        X
-                      </button>
+                      {preview ? (
+                        <button
+                          type="button"
+                          onClick={handleClearLogo}
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                            background: "red",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "50%",
+                            width: "24px",
+                            height: "24px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          X
+                        </button>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   ) : (
                     <p className="uploadIcon">

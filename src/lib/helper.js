@@ -31,6 +31,17 @@ export const formatDate = (dateString) => {
     year: "numeric",
     month: "long",
     day: "numeric",
+  };
+
+  const date = new Date(dateString);
+  return date.toLocaleString("en-US", options);
+};
+
+export const formatDateTime = (dateString) => {
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
     hour: "numeric",
     minute: "numeric",
     second: "numeric",

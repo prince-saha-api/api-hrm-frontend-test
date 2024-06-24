@@ -492,7 +492,11 @@ const Index = () => {
 
   return (
     <>
-      <Add opened={addOpened} close={addClose} />
+      <Add
+        opened={addOpened} //
+        close={addClose}
+        mutate={mutate}
+      />
 
       <Edit
         opened={editOpened}

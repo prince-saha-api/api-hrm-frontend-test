@@ -49,7 +49,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       form.setValues({
         name: item.name || "",
         description: item.description || "",
-        company: item.company || "",
+        company: item.company.id || "",
         email: item.email || "",
         phone: item.phone || "",
         fax: item.fax || "",
@@ -89,7 +89,10 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await update("/api/branch/update-branch/", values);
+      const response = await update(
+        `/api/branch/update-branch/${item.id}`,
+        values
+      );
       // const response = res.json();
       console.log(response);
 

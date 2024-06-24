@@ -71,6 +71,14 @@ const Page = () => {
                                  </li>
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
+                                       href="/employee-grade"
+                                       className="text-decoration-none subMenu"
+                                    >
+                                       Employee Grade
+                                    </Link>
+                                 </li>
+                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                    <Link
                                        href="/#"
                                        className="text-decoration-none subMenu"
                                     >

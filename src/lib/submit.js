@@ -125,18 +125,18 @@ export const deleteItem = async (route) => {
 
     // console.log(response);
 
-    if (!response.ok) {
-      return {
-        error: true,
-        message: "Failed to delete",
-      };
-    }
+    // if (!response.ok) {
+    //   return {
+    //     error: true,
+    //     message: "Failed to delete",
+    //   };
+    // }
 
     // console.log("Successful");
+    console.log(response);
+    // const responseData = await response.json();
 
-    const responseData = await response.json();
-
-    return responseData;
+    return response;
   } catch (error) {
     console.error("Failed: ", error);
     return {

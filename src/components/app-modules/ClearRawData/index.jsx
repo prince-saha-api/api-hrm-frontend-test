@@ -21,7 +21,7 @@ import Breadcrumb from "@/components/utils/Breadcrumb";
 import compmanyLogo from "public/full_logo.png";
 import { countries } from "@/data/countries";
 
-const BasicInfo = () => {
+const ClearRawData = () => {
    const form = useForm({
       mode: "uncontrolled",
       initialValues: {
@@ -138,4 +138,4 @@ const BasicInfo = () => {
    );
 };
 
-export default BasicInfo;
+export default ClearRawData;

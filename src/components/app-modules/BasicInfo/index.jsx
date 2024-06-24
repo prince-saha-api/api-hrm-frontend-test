@@ -283,7 +283,7 @@ const BasicInfo = () => {
               >
                 <Button
                   variant="filled"
-                  size="md"
+                  size="sm"
                   onClick={() => setIsEditing(true)}
                 >
                   Edit
@@ -563,7 +563,7 @@ const BasicInfo = () => {
                   type="button"
                   mt="lg"
                   me={"lg"}
-                  size="md"
+                  size="sm"
                   variant="outline"
                   // ml="sm"
                   onClick={() => handleCancel()}
@@ -574,7 +574,7 @@ const BasicInfo = () => {
                 <Button
                   type="submit"
                   mt="lg"
-                  size="md"
+                  size="sm"
                   loading={isSubmitting}
                   loaderProps={{ type: "dots" }}
                 >

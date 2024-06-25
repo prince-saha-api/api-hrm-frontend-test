@@ -6,7 +6,7 @@ import { deleteItem } from "@/lib/submit";
 const Index = ({ opened, close, item, mutate }) => {
   const handleDelete = async () => {
     try {
-      const response = deleteItem(`/api/branch/delete-branch/${item.id}`);
+      const response = await deleteItem(`/api/branch/delete-branch/${item.id}`);
 
       // const response = await fetch(`/api/branch/delete-branch/${item.id}/`, {
       //   method: "DELETE",

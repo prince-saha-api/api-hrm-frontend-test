@@ -22,7 +22,6 @@ import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
 import { getDate } from "@/lib/helper";
-import { IoIosArrowDown } from "react-icons/io";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -30,11 +29,11 @@ const Index = () => {
    const [currentPage, setCurrentPage] = useState(1);
    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
    const [sortStatus, setSortStatus] = useState({
-      columnAccessor: "name",
+      columnAccessor: "date",
       direction: "asc", // desc
    });
 
-   let apiUrl = `/api/user/get-dsignation/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+   let apiUrl = `/api/leave/get-holiday/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
    }${sortStatus.columnAccessor}`;
 
@@ -97,36 +96,35 @@ const Index = () => {
       },
       {
          // for table display
-         accessor: "name",
-         title: "Name",
+         accessor: "title",
+         title: "Title",
          noWrap: true,
          sortable: true,
          // visibleMediaQuery: aboveXs,
-         render: ({ name }) => name || "N/A",
+         render: ({ title }) => title || "N/A",
          // for export
-         key: "name",
+         key: "title",
       },
       {
          // for table display
-         accessor: "department",
-         title: "Department",
+         accessor: "description",
+         title: "Description",
          noWrap: true,
          // visibleMediaQuery: aboveXs,
-         render: ({ department }) => department || "N/A",
+         render: ({ description }) => description || "N/A",
          // for export
-         key: "department",
+         key: "description",
       },
       {
          // for table display
-         accessor: "grade",
-         title: "Grade",
-         noWrap: true,
+         accessor: "date",
+         title: "Date",
          // visibleMediaQuery: aboveXs,
-         render: ({ grade }) => grade || "N/A",
+         sortable: true,
+         render: ({ date }) => (date ? getDate(date) : "N/A"),
          // for export
-         key: "grade",
+         key: "date",
       },
-
       {
          // for table display
          accessor: "actions",
@@ -174,16 +172,16 @@ const Index = () => {
          value: "na",
       },
       {
-         label: "Name",
-         value: "name",
+         label: "Title",
+         value: "title",
       },
       {
-         label: "Department",
-         value: "department",
+         label: "Description",
+         value: "description",
       },
       {
-         label: "Grade",
-         value: "grade",
+         label: "Date",
+         value: "date",
       },
       {
          label: "Actions",
@@ -193,15 +191,15 @@ const Index = () => {
 
    const [selectedOptions, setSelectedOptions] = useState([
       "na",
-      "name",
-      "department",
-      "grade",
+      "title",
+      "description",
+      "date",
       "actions",
    ]);
 
    const handleChange = (keys) => {
       const updatedKeys = [
-         ...new Set(["na", "name", "department", "actions", ...keys]),
+         ...new Set(["na", "title", "leave_type", "actions", ...keys]),
       ];
 
       const reorderedOptions = visibleColumns.filter((column) =>
@@ -221,7 +219,7 @@ const Index = () => {
    // const [dataToExport, setDataToExport] = useState(null);
 
    const getExportDataUrl = () => {
-      let url = `/api/department/get-dsignation/?column_accessor=${
+      let url = `/api/leave/get-leavepolicy/?column_accessor=${
          sortStatus?.direction === "desc" ? "-" : ""
       }${sortStatus.columnAccessor}`;
 
@@ -292,7 +290,7 @@ const Index = () => {
          });
 
          setTimeout(() => {
-            exportToPDF(headers, data, "Branches", "branches");
+            exportToPDF(headers, data, "Leave Policy", "leave-policy");
             setIsExportDataFetching((prev) => ({
                ...prev,
                pdf: false,
@@ -355,7 +353,7 @@ const Index = () => {
          });
 
          setTimeout(() => {
-            exportToCSV(data, "branches");
+            exportToCSV(data, "leave-policy");
             setIsExportDataFetching((prev) => ({
                ...prev,
                csv: false,
@@ -417,7 +415,7 @@ const Index = () => {
          });
 
          setTimeout(() => {
-            exportToExcel(data, "branches");
+            exportToExcel(data, "leave-policy");
             setIsExportDataFetching((prev) => ({
                ...prev,
                excel: false,
@@ -437,11 +435,7 @@ const Index = () => {
 
    return (
       <>
-         <Add
-            opened={addOpened} //
-            close={addClose}
-            mutate={mutate}
-         />
+         <Add opened={addOpened} close={addClose} />
 
          <Edit
             opened={editOpened}
@@ -460,30 +454,18 @@ const Index = () => {
 
          <div className="mb-4 d-flex justify-content-between align-items-end">
             <Breadcrumb
-               title="Designation"
+               title="Shift"
                items={[
                   { title: "Dashboard", href: "/dashboard" },
-                  { title: "Designation" },
+                  { title: "Shift" },
                ]}
             />
 
             <AddButton
-               label="Add Designation"
+               label="Add Shift"
                fontSize="16px"
                icon={<LuPlus className="fs-5 me-0 mr-0" />}
                handleClick={addOpen}
-            />
-         </div>
-         <div className="filterBox mb-4 d-flex align-items-center">
-            <Select
-               //  label="Your favorite library"
-               placeholder="Search Department"
-               data={[
-                  "Department-A",
-                  "Department-B",
-                  "Department-C",
-                  "Department-D",
-               ]}
             />
          </div>
 
@@ -503,7 +485,7 @@ const Index = () => {
                />
                <p className="mb-0 ms-2 me-2">Entries</p>
 
-               {/* <Popover
+               <Popover
                   classNames={{
                      dropdown: "column_visibility_dropdown",
                   }}
@@ -541,7 +523,7 @@ const Index = () => {
                         comboboxProps={{ withinPortal: false }}
                      />
                   </Popover.Dropdown>
-               </Popover> */}
+               </Popover>
             </div>
             <div className="downItem d-flex">
                <div className="me-2">

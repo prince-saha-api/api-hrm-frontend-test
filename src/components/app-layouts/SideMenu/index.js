@@ -63,14 +63,6 @@ const Page = () => {
                                  </li>
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
-                                       href="/designation"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Designation
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
                                        href="/employee-grade"
                                        className="text-decoration-none subMenu"
                                     >
@@ -79,7 +71,15 @@ const Page = () => {
                                  </li>
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
-                                       href="/#"
+                                       href="/designation"
+                                       className="text-decoration-none subMenu"
+                                    >
+                                       Designation
+                                    </Link>
+                                 </li>
+                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                    <Link
+                                       href="/shift"
                                        className="text-decoration-none subMenu"
                                     >
                                        Shift

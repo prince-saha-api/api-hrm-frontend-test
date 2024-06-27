@@ -30,7 +30,7 @@ import {
 const PAGE_SIZES = [5, 10, 15, 20];
 const items = [
    { title: "Dashboard", href: "/" },
-   { title: "Leave Policy" },
+   { title: "Assign Allowance" },
 ].map((item, index) => (
    <Anchor href={item.href} key={index}>
       {item.title}
@@ -254,7 +254,7 @@ const Index = () => {
                      </div>
                   </Modal>
 
-                  <div className="d-flex align-items-center mt-4" >
+                  <div className="d-flex align-items-center mt-4">
                      <p className="cust_iputLabel mb-0">Employee</p>
                      <Button onClick={open}>Filter</Button>
                   </div>

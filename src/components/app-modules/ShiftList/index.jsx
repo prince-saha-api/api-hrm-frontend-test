@@ -127,6 +127,17 @@ const Index = () => {
       },
       {
          // for table display
+         accessor: "late Tolarence",
+         title: "Late Tolarence",
+         // visibleMediaQuery: aboveXs,
+         sortable: true,
+         render: ({ lateTolarence }) =>
+            lateTolarence ? getDate(lateTolarence) : "N/A",
+         // for export
+         key: "lateTolarence",
+      },
+      {
+         // for table display
          accessor: "actions",
          title: "Actions",
          width: 90,
@@ -184,6 +195,10 @@ const Index = () => {
          value: "date",
       },
       {
+         label: "Late Tolarence",
+         value: "lateTolarence",
+      },
+      {
          label: "Actions",
          value: "actions",
       },
@@ -194,6 +209,7 @@ const Index = () => {
       "title",
       "description",
       "date",
+      "lateTolarence",
       "actions",
    ]);
 
@@ -454,10 +470,10 @@ const Index = () => {
 
          <div className="mb-4 d-flex justify-content-between align-items-end">
             <Breadcrumb
-               title="Shift"
+               title="Shift List"
                items={[
                   { title: "Dashboard", href: "/dashboard" },
-                  { title: "Shift" },
+                  { title: "Shift List" },
                ]}
             />
 
@@ -485,7 +501,7 @@ const Index = () => {
                />
                <p className="mb-0 ms-2 me-2">Entries</p>
 
-               <Popover
+               {/* <Popover
                   classNames={{
                      dropdown: "column_visibility_dropdown",
                   }}
@@ -523,7 +539,7 @@ const Index = () => {
                         comboboxProps={{ withinPortal: false }}
                      />
                   </Popover.Dropdown>
-               </Popover>
+               </Popover> */}
             </div>
             <div className="downItem d-flex">
                <div className="me-2">

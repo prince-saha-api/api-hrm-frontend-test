@@ -8,19 +8,17 @@ const Index = ({ opened, close, item, mutate }) => {
     try {
       const response = await deleteItem(`/api/branch/delete-branch/${item.id}`);
 
-      // const response = await fetch(`/api/branch/delete-branch/${item.id}/`, {
-      //   method: "DELETE",
-      // });
-      console.log(response);
-      if (response.status === "success") {
+      const res = await response.json();
+
+      if (res?.status === "success") {
         toast.success("Item deleted successfully");
         mutate(); // Re-fetch the data
         close();
       } else {
-        console.log(response);
-        // toast.error(response.message[0]);
-        // mutate(); // Re-fetch the data
+        console.log(res);
+        toast.error(res.message[0]);
         close();
+        // mutate();
         // throw new Error("Failed to delete item");
       }
     } catch (error) {

@@ -21,7 +21,6 @@ import AddButton from "@/components/utils/AddButton";
 import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
-import { getDate } from "@/lib/helper";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -117,12 +116,14 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "email",
-      title: "Email",
+      accessor: "company",
+      title: "Company",
       // visibleMediaQuery: aboveXs,
-      render: ({ email }) => email || "N/A",
+      sortable: true,
+      render: ({ company }) => company?.basic_information?.name || "N/A",
+      modifier: ({ company }) => company?.basic_information?.name || "N/A",
       // for export
-      key: "email",
+      key: "company",
     },
     {
       // for table display
@@ -135,33 +136,46 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "company",
-      title: "Company",
+      accessor: "email",
+      title: "Email",
       // visibleMediaQuery: aboveXs,
-      sortable: true,
-      render: ({ company }) => company?.basic_information?.name || "N/A",
+      render: ({ email }) => email || "N/A",
       // for export
-      key: "company",
+      key: "email",
     },
     {
       // for table display
       accessor: "address",
       title: "Address",
       // visibleMediaQuery: aboveXs,
-      render: ({ address }) => `${address?.state_division}` || "N/A",
+      render: ({ address }) =>
+        `${address?.address ? address.address : ""}${
+          address?.city ? ", " + address.city : ""
+        }${address?.state_division ? ", " + address.state_division : ""}${
+          address?.post_zip_code ? " - " + address.post_zip_code : ""
+        }${address?.country ? ", " + address.country : ""}` || "N/A",
+
+      modifier: ({ address }) =>
+        `${address?.address ? address.address : ""}${
+          address?.city ? ", " + address.city : ""
+        }${address?.state_division ? ", " + address.state_division : ""}${
+          address?.post_zip_code ? " - " + address.post_zip_code : ""
+        }${address?.country ? ", " + address.country : ""}` || "N/A",
+
       // for export
       key: "address",
     },
-    {
-      // for table display
-      accessor: "operating_hour",
-      title: "Operating Hour",
-      // visibleMediaQuery: aboveXs,
-      render: ({ operating_hour }) =>
-        operating_hour?.operating_hour_from || "N/A",
-      // for export
-      key: "operating_hour",
-    },
+
+    // {
+    //   // for table display
+    //   accessor: "operating_hour",
+    //   title: "Operating Hour",
+    //   // visibleMediaQuery: aboveXs,
+    //   render: ({ operating_hour }) =>
+    //     operating_hour?.operating_hour_from || "N/A",
+    //   // for export
+    //   key: "operating_hour",
+    // },
     {
       // for table display
       accessor: "actions",
@@ -217,25 +231,25 @@ const Index = () => {
       value: "description",
     },
     {
-      label: "Email",
-      value: "email",
+      label: "Company",
+      value: "company",
     },
     {
       label: "Phone",
       value: "phone",
     },
     {
-      label: "Company",
-      value: "company",
+      label: "Email",
+      value: "email",
     },
     {
       label: "Address",
       value: "address",
     },
-    {
-      label: "Operating Hour",
-      value: "operating_hour",
-    },
+    // {
+    //   label: "Operating Hour",
+    //   value: "operating_hour",
+    // },
     {
       label: "Actions",
       value: "actions",
@@ -250,7 +264,7 @@ const Index = () => {
     "phone",
     "company",
     "address",
-    "operating_hour",
+    // "operating_hour",
     "actions",
   ]);
 
@@ -664,8 +678,8 @@ const Index = () => {
           recordsPerPage={pageSize}
           sortStatus={sortStatus}
           onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
+          // selectedRecords={selectedRecords}
+          // onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}

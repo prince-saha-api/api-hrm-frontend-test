@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import useSWR from "swr";
-// import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import {
   Modal,
@@ -25,8 +24,8 @@ const Index = ({ opened, close, mutate }) => {
       name: "",
       description: "",
       company: "",
-      email: "",
       phone: "",
+      email: "",
       fax: "",
       address: {
         city: "",
@@ -38,7 +37,41 @@ const Index = ({ opened, close, mutate }) => {
     },
     validate: {
       name: (value) =>
-        value.length < 2 ? "Name must have at least 2 letters" : null,
+        value.length < 5 ? "Name must have at least 5 letters" : null,
+      // description: (value) =>
+      //   value.length < 10
+      //     ? "Description must have at least 10 characters"
+      //     : null,
+      company: (value) => (!value ? "Select a company" : null),
+      phone: (value) => {
+        const phonePattern = /^01[0-9]{9}$/;
+        return !phonePattern.test(value) ? "Phone number is invalid" : null;
+      },
+      email: (value) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return !emailPattern.test(value) ? "Email is invalid" : null;
+      },
+      // fax: (value) => {
+      //   const faxPattern = /^[0-9]+$/;
+      //   return !faxPattern.test(value) ? "Fax number is invalid" : null;
+      // },
+      address: {
+        // city: (value) =>
+        //   value.length < 2 ? "City must have at least 2 letters" : null,
+        // state_division: (value) =>
+        //   value.length < 2
+        //     ? "State/Division must have at least 2 letters"
+        //     : null,
+        // post_zip_code: (value) => {
+        //   const zipCodePattern = /^[0-9]{5}(-[0-9]{4})?$/;
+        //   return !zipCodePattern.test(value)
+        //     ? "Postal/Zip code is invalid"
+        //     : null;
+        // },
+        country: (value) => (!value ? "Select a country" : null),
+        address: (value) =>
+          value.length < 5 ? "Address must have at least 5 characters" : null,
+      },
     },
   });
 
@@ -49,49 +82,39 @@ const Index = ({ opened, close, mutate }) => {
   } = useSWR(`/api/company/get-company/`, fetcher, {
     errorRetryCount: 2,
     keepPreviousData: true,
+    revalidateOnFocus: false,
   });
 
-  const companies = data?.data
-    ?.filter((item) => true)
-    .map((item) => ({
-      // name: "company",
-      label: item?.basic_information?.name?.toString() || "",
-      value: String(item?.basic_information?.id || ""),
-    }));
+  const companies = data?.data?.map((item) => ({
+    label: item?.basic_information?.name?.toString() || "",
+    value: item?.basic_information?.id.toString() || "",
+  }));
 
   const handleSubmit = async (values) => {
     // e.preventDefault();
     // console.log(values);
+    // return;
 
     setIsSubmitting(true);
 
     try {
       const response = await submit("/api/branch/add-branch/", values);
-      console.log(response);
-      // return;
 
-      // const response = res.json();
       if (response?.status === "success") {
-        console.log(response);
-        // setSuccess("Leave Policy created successfully");
-
-        // setErrors({});
-        // form.reset();
-        // close();
-        // setSuccess("Leave Policy created successfully");
-        toast.success("Leave Policy created successfully");
+        // console.log(response);
+        setIsSubmitting(false);
+        form.reset();
+        close();
         mutate();
+        toast.success("Branch created successfully");
       } else {
+        setIsSubmitting(false);
         toast.error(
-          response?.status === "error"
-            ? response?.message[0]
+          response?.status == "error"
+            ? response.message
             : "Error submitting form"
         );
       }
-      setTimeout(() => {
-        setIsSubmitting(false);
-        mutate();
-      }, 5000);
     } catch (error) {
       console.error("Error submitting form:", error);
       setTimeout(() => {
@@ -133,20 +156,21 @@ const Index = ({ opened, close, mutate }) => {
               />
               <TextInput
                 mb="sm"
-                label="Email"
-                placeholder="Email"
-                required={true}
-                disabled={isSubmitting}
-                {...form.getInputProps("email")}
-              />
-              <TextInput
-                mb="sm"
                 label="Phone"
                 placeholder="Phone"
                 required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("phone")}
               />
+              <TextInput
+                mb="sm"
+                label="Email"
+                placeholder="Email"
+                required={true}
+                disabled={isSubmitting}
+                {...form.getInputProps("email")}
+              />
+
               <TextInput
                 // mb="sm"
                 label="Fax"
@@ -206,7 +230,7 @@ const Index = ({ opened, close, mutate }) => {
                 mb="sm"
                 label="Description"
                 placeholder="Description"
-                required={true}
+                // required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("description")}
               />

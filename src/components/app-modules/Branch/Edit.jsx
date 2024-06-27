@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import useSWR from "swr";
-// import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import {
   Modal,
@@ -25,8 +24,8 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       name: "",
       description: "",
       company: "",
-      email: "",
       phone: "",
+      email: "",
       fax: "",
       address_id: "",
       address: {
@@ -39,7 +38,41 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
     },
     validate: {
       name: (value) =>
-        value.length < 2 ? "Name must have at least 2 letters" : null,
+        value.length < 5 ? "Name must have at least 5 letters" : null,
+      // description: (value) =>
+      //   value.length < 10
+      //     ? "Description must have at least 10 characters"
+      //     : null,
+      company: (value) => (!value ? "Select a company" : null),
+      phone: (value) => {
+        const phonePattern = /^01[0-9]{9}$/;
+        return !phonePattern.test(value) ? "Phone number is invalid" : null;
+      },
+      email: (value) => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return !emailPattern.test(value) ? "Email is invalid" : null;
+      },
+      // fax: (value) => {
+      //   const faxPattern = /^[0-9]+$/;
+      //   return !faxPattern.test(value) ? "Fax number is invalid" : null;
+      // },
+      address: {
+        // city: (value) =>
+        //   value.length < 2 ? "City must have at least 2 letters" : null,
+        // state_division: (value) =>
+        //   value.length < 2
+        //     ? "State/Division must have at least 2 letters"
+        //     : null,
+        // post_zip_code: (value) => {
+        //   const zipCodePattern = /^[0-9]{5}(-[0-9]{4})?$/;
+        //   return !zipCodePattern.test(value)
+        //     ? "Postal/Zip code is invalid"
+        //     : null;
+        // },
+        country: (value) => (!value ? "Select a country" : null),
+        address: (value) =>
+          value.length < 5 ? "Address must have at least 5 characters" : null,
+      },
     },
   });
 
@@ -50,8 +83,8 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
         name: item.name || "",
         description: item.description || "",
         company: item.company.id || "",
-        email: item.email || "",
         phone: item.phone || "",
+        email: item.email || "",
         fax: item.fax || "",
         address_id: item.address.id || "",
         address: {
@@ -74,13 +107,10 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
     keepPreviousData: true,
   });
 
-  const companies = data?.data
-    ?.filter((item) => true)
-    .map((item) => ({
-      // name: "company",
-      label: item?.basic_information?.name?.toString() || "",
-      value: String(item?.basic_information?.id || ""),
-    }));
+  const companies = data?.data?.map((item) => ({
+    label: item?.basic_information?.name?.toString() || "",
+    value: item?.basic_information?.id.toString() || "",
+  }));
 
   const handleSubmit = async (values) => {
     // e.preventDefault();
@@ -96,23 +126,19 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       // const response = res.json();
       console.log(response);
 
-      // if (response?.status === "success") {
-      //   console.log(response);
-      //   // setSuccess("Leave Policy created successfully");
-      //   setIsLoading(false);
-      //   // setErrors({});
-      //   // form.reset();
-      //   // close();
-      //   // setSuccess("Leave Policy created successfully");
-      //   toast.success("Leave Policy created successfully");
-      // } else {
-      //   toast.error(
-      //     response?.status === "error"
-      //       ? response?.message[0]
-      //       : "Error submitting form"
-      //   );
-      // }
-
+      if (response?.status === "success") {
+        // console.log(response);
+        setIsSubmitting(false);
+        close();
+        mutate();
+        toast.success("Branch updated successfully");
+      } else {
+        toast.error(
+          response?.status === "error"
+            ? response?.message[0]
+            : "Error submitting form"
+        );
+      }
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
@@ -162,14 +188,6 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
               />
               <TextInput
                 mb="sm"
-                label="Email"
-                placeholder="Email"
-                required={true}
-                disabled={isSubmitting}
-                {...form.getInputProps("email")}
-              />
-              <TextInput
-                mb="sm"
                 label="Phone"
                 placeholder="Phone"
                 required={true}
@@ -177,10 +195,18 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
                 {...form.getInputProps("phone")}
               />
               <TextInput
+                mb="sm"
+                label="Email"
+                placeholder="Email"
+                required={true}
+                disabled={isSubmitting}
+                {...form.getInputProps("email")}
+              />
+              <TextInput
                 // mb="sm"
                 label="Fax"
                 placeholder="Fax"
-                required={true}
+                // required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("fax")}
               />
@@ -236,7 +262,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
                 mb="sm"
                 label="Description"
                 placeholder="Description"
-                required={true}
+                // required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("description")}
               />

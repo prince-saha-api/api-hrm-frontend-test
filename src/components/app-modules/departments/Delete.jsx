@@ -10,11 +10,6 @@ const Index = ({ opened, close, item, mutate }) => {
         `/api/department/delete-department/${item.id}`
       );
 
-      // const response = await fetch(`/api/branch/delete-branch/${item.id}/`, {
-      //   method: "DELETE",
-      // });
-      // console.log(response?.data);
-
       const res = await response.json();
 
       if (res?.status === "success") {

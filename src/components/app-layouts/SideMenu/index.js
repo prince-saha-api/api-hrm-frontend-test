@@ -78,12 +78,39 @@ const Page = () => {
                                     </Link>
                                  </li>
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/shift"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Shift
-                                    </Link>
+                                    <Accordion>
+                                       <Accordion.Item
+                                          eventKey="0"
+                                          className="pt-0"
+                                       >
+                                          <Accordion.Header className=" p-0 m-0 text-capitalize subTab">
+                                             {/* <LuUser2 className="sideMenu menu_icon" /> */}
+                                             <span className="text-capitalize sideMenu">
+                                                Shift
+                                             </span>
+                                          </Accordion.Header>
+                                          <Accordion.Body>
+                                             <ul className="text-decoration-none mb-0 sidenav_submenu">
+                                                <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                                   <Link
+                                                      href="/shift-list"
+                                                      className="text-decoration-none subMenu"
+                                                   >
+                                                      Shift List
+                                                   </Link>
+                                                </li>
+                                                <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                                   <Link
+                                                      href="/assign-shift"
+                                                      className="text-decoration-none subMenu"
+                                                   >
+                                                      Assign Shift
+                                                   </Link>
+                                                </li>
+                                             </ul>
+                                          </Accordion.Body>
+                                       </Accordion.Item>
+                                    </Accordion>
                                  </li>
                               </ul>
                            </Accordion.Body>
@@ -431,6 +458,14 @@ const Page = () => {
                            </Accordion.Header>
                            <Accordion.Body>
                               <ul className="text-decoration-none mb-0 sidenav_submenu">
+                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                    <Link
+                                       href="/general-settings"
+                                       className="text-decoration-none subMenu"
+                                    >
+                                       General Settings
+                                    </Link>
+                                 </li>
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
                                        href="/add-employee"

@@ -30,7 +30,7 @@ import {
 const PAGE_SIZES = [5, 10, 15, 20];
 const items = [
    { title: "Dashboard", href: "/" },
-   { title: "Assign Deductions" },
+   { title: "Assign Shift" },
 ].map((item, index) => (
    <Anchor href={item.href} key={index}>
       {item.title}
@@ -198,32 +198,17 @@ const Index = () => {
    return (
       <>
          <div className="pageTop mb-4">
-            <h3>Assign Deductions</h3>
+            <h3>Assign Shift</h3>
             <Breadcrumbs>{items}</Breadcrumbs>
          </div>
 
          <div id="leavePolicy" className="itemCard">
             <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-               <Grid.Col span={5}>
-                  <MultiSelect
-                     classNames={{
-                        root: "cust_iputRoot",
-                        label: "cust_iputLabel",
-                        wrapper: "cust_iputWrapper",
-                     }}
-                     mb="md"
-                     label="Leave Policy"
-                     placeholder="Leave Policy"
-                     data={[
-                        "Policy-1",
-                        "Policy-2",
-                        "Policy-3",
-                        "Policy-4",
-                        "Policy-5",
-                        "Policy-6",
-                     ]}
-                     searchable
-                     // withAsterisk
+               <Grid.Col span={3}>
+                  <Select
+                     label="Shift"
+                     placeholder="Pick value"
+                     data={["Day", "Night"]}
                   />
                   {/* <MultiSelect
                      classNames={{
@@ -370,4 +355,3 @@ const Index = () => {
 };
 
 export default Index;
-

@@ -1,48 +1,94 @@
-import React from "react";
-import { DateInput } from "@mantine/dates";
-import {
-   Modal,
-   TextInput,
-   Textarea,
-   Button,
-   Select,
-   Group,
-   Grid,
-} from "@mantine/core";
-import { FiFile } from "react-icons/fi";
+import React, { useState } from "react";
+import { useForm } from "@mantine/form";
+import { Modal, TextInput, Button, Group, Grid } from "@mantine/core";
+import { toast } from "react-toastify";
+import { submit } from "@/lib/submit";
 
-const Index = ({ opened, close }) => {
-   return (
-      <>
-         <Modal
-            classNames={{
-               title: "modalTitle",
-            }}
-            opened={opened}
-            title="Employee Grade"
-            onClose={close}
-            centered
-         >
-            <form>
-               <Grid>
-                  <Grid.Col span={12}>
-                     <TextInput
-                        mb="sm"
-                        label="Employee Grade"
-                        placeholder="Employee Grade"
-                     />
-                  </Grid.Col>
-               </Grid>
+const Index = ({ opened, close, mutate }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-               <Group justify="flex-end">
-                  <Button variant="filled" mt="sm" size="sm">
-                     Save
-                  </Button>
-               </Group>
-            </form>
-         </Modal>
-      </>
-   );
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      name: "",
+    },
+    validate: {
+      name: (value) =>
+        value.length < 5 ? "Name must have at least 5 letters" : null,
+    },
+  });
+
+  const handleSubmit = async (values) => {
+    // e.preventDefault();
+    // console.log(values);
+    // return;
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await submit("/api/user/add-grade/", values);
+
+      if (response?.status === "success") {
+        // console.log(response);
+        setIsSubmitting(false);
+        form.reset();
+        close();
+        mutate();
+        toast.success("Grade created successfully");
+      } else {
+        setIsSubmitting(false);
+        toast.error(
+          response?.status == "error"
+            ? response.message
+            : "Error submitting form"
+        );
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 5000);
+    }
+  };
+
+  return (
+    <>
+      <Modal
+        classNames={{
+          title: "modalTitle",
+        }}
+        opened={opened}
+        title="Employee Grade"
+        onClose={close}
+        centered
+      >
+        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+          <Grid>
+            <Grid.Col span={12}>
+              <TextInput
+                mb="sm"
+                label="Employee Grade"
+                placeholder="Employee Grade"
+                required={true}
+                disabled={isSubmitting}
+                {...form.getInputProps("name")}
+              />
+            </Grid.Col>
+          </Grid>
+
+          <Group justify="flex-end" mt="sm">
+            <Button
+              type="submit"
+              loading={isSubmitting}
+              loaderProps={{ type: "dots" }}
+            >
+              Save
+            </Button>
+          </Group>
+        </form>
+      </Modal>
+    </>
+  );
 };
 
 export default Index;

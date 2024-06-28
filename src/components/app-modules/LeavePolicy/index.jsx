@@ -463,7 +463,11 @@ const Index = () => {
 
   return (
     <>
-      <Add opened={addOpened} close={addClose} />
+      <Add
+        opened={addOpened} //
+        close={addClose}
+        mutate={mutate}
+      />
 
       <Edit
         opened={editOpened}
@@ -631,8 +635,8 @@ const Index = () => {
           recordsPerPage={pageSize}
           sortStatus={sortStatus}
           onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
+          // selectedRecords={selectedRecords}
+          // onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}

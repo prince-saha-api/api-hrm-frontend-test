@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DateInput } from "@mantine/dates";
+import { useForm } from "@mantine/form";
 import { Checkbox } from "@mantine/core";
 import {
   Modal,
@@ -9,25 +9,23 @@ import {
   Select,
   Group,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { toast } from "react-toastify";
 import { submit } from "@/lib/submit";
 
-const Index = ({ opened, close }) => {
-  const [success, setSuccess] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+const Index = ({ opened, close, mutate }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
       name: "",
-      allocation_days: 15,
+      description: "",
+      allocation_days: 1,
+      max_consecutive_days: 1,
       leave_type: null,
-      max_consecutive_days: 3,
-      require_attachment: false,
       is_optional: false,
       is_calendar_day: false,
-      applicable_for: 1,
+      require_attachment: false,
     },
     validate: {
       name: (value) =>
@@ -36,32 +34,30 @@ const Index = ({ opened, close }) => {
   });
 
   const handleSubmit = async (values) => {
-    console.log(values);
-    // e.preventDefault();
-    setSuccess("");
+    setIsSubmitting(true);
 
     try {
-      setIsLoading(true);
       const response = await submit("/api/leave/add-leavepolicy/", values);
-      // const response = res.json();
+
       if (response?.status === "success") {
-        console.log(response);
-        // setSuccess("Leave Policy created successfully");
-        setIsLoading(false);
-        // setErrors({});
-        // form.reset();
-        // close();
-        // setSuccess("Leave Policy created successfully");
+        setIsSubmitting(false);
+        form.reset();
+        close();
+        mutate();
         toast.success("Leave Policy created successfully");
       } else {
+        setIsSubmitting(false);
         toast.error(
-          response?.status === "error"
-            ? response?.message[0]
+          response?.status == "error"
+            ? response.message
             : "Error submitting form"
         );
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 5000);
     }
   };
 
@@ -80,25 +76,41 @@ const Index = ({ opened, close }) => {
           <TextInput
             label="Name"
             placeholder="Name"
+            required={true}
+            disabled={isSubmitting}
             {...form.getInputProps("name")}
           />
           <Textarea
             mt="md"
             label="Description"
             placeholder="Description"
+            // required={true}
+            disabled={isSubmitting}
             {...form.getInputProps("description")}
           />
           <TextInput
             mt="md"
             label="Allocation Days"
             placeholder="Allocation Days"
+            required={true}
+            disabled={isSubmitting}
             {...form.getInputProps("allocation_days")}
+          />
+          <TextInput
+            mt="md"
+            label="Max Consecutive Days"
+            placeholder="max_consecutive_days"
+            required={true}
+            disabled={isSubmitting}
+            {...form.getInputProps("max_consecutive_days")}
           />
           <Select
             mt="md"
             label="Leave Type"
-            placeholder="Pick value"
-            data={["Paid", "Unpaid"]}
+            placeholder="Leave Type"
+            data={["Paid", "Non Paid"]}
+            required={true}
+            disabled={isSubmitting}
             {...form.getInputProps("leave_type")}
           />
 
@@ -106,23 +118,32 @@ const Index = ({ opened, close }) => {
             mt="md"
             label="Is Optional?"
             variant="outline"
+            disabled={isSubmitting}
             {...form.getInputProps("is_optional")}
           />
           <Checkbox
             mt="md"
             label="Is Calendar Day?"
             variant="outline"
+            disabled={isSubmitting}
             {...form.getInputProps("is_calendar_day")}
           />
           <Checkbox
             mt="md"
             label="Require Attachment?"
             variant="outline"
+            disabled={isSubmitting}
             {...form.getInputProps("require_attachment")}
           />
 
-          <Group justify="flex-end" mt="md">
-            <Button type="submit">Save</Button>
+          <Group justify="flex-end" mt="sm">
+            <Button
+              type="submit"
+              loading={isSubmitting}
+              loaderProps={{ type: "dots" }}
+            >
+              Save
+            </Button>
           </Group>
         </form>
       </Modal>

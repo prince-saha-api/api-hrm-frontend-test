@@ -1,22 +1,27 @@
 import React from "react";
 import { Modal, Button, Group } from "@mantine/core";
 import { toast } from "react-toastify";
+import { deleteItem } from "@/lib/submit";
 
 const Index = ({ opened, close, item, mutate }) => {
   const handleDelete = async () => {
     try {
-      const response = await fetch(
-        `/api/leave/delete-leavepolicy/${item.id}/`,
-        {
-          method: "DELETE",
-        }
+      const response = await deleteItem(
+        `/api/leave/delete-leavepolicy/${item.id}`
       );
-      if (response.ok) {
+
+      const res = await response.json();
+
+      if (res?.status === "success") {
         toast.success("Item deleted successfully");
         mutate(); // Re-fetch the data
         close();
       } else {
-        throw new Error("Failed to delete item");
+        console.log(res);
+        toast.error(res.message[0]);
+        close();
+        // mutate();
+        // throw new Error("Failed to delete item");
       }
     } catch (error) {
       toast.error(error.message);

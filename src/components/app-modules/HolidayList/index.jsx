@@ -15,13 +15,13 @@ import { BiMessageSquareEdit } from "react-icons/bi";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
-import Breadcrumb from "@/components/utils/Breadcrumb";
 import { constants } from "@/lib/config";
+import { getDate } from "@/lib/helper";
+import Breadcrumb from "@/components/utils/Breadcrumb";
 import AddButton from "@/components/utils/AddButton";
 import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
-import { getDate } from "@/lib/helper";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -127,6 +127,26 @@ const Index = () => {
     },
     {
       // for table display
+      accessor: "is_recuring",
+      title: "Is Recuring",
+      // visibleMediaQuery: aboveXs,
+      sortable: true,
+      render: ({ is_recuring }) => (is_recuring ? "Yes" : "No"),
+      // for export
+      key: "is_recuring",
+    },
+    {
+      // for table display
+      accessor: "employee_grade",
+      title: "Employee Grade",
+      // visibleMediaQuery: aboveXs,
+      sortable: true,
+      render: ({ employee_grade }) => employee_grade?.name || "",
+      // for export
+      key: "employee_grade",
+    },
+    {
+      // for table display
       accessor: "actions",
       title: "Actions",
       width: 90,
@@ -184,6 +204,14 @@ const Index = () => {
       value: "date",
     },
     {
+      label: "Is Recuring",
+      value: "is_recuring",
+    },
+    {
+      label: "Employee Grade",
+      value: "employee_grade",
+    },
+    {
       label: "Actions",
       value: "actions",
     },
@@ -194,6 +222,8 @@ const Index = () => {
     "title",
     "description",
     "date",
+    "is_recuring",
+    "employee_grade",
     "actions",
   ]);
 
@@ -435,7 +465,11 @@ const Index = () => {
 
   return (
     <>
-      <Add opened={addOpened} close={addClose} />
+      <Add
+        opened={addOpened} //
+        close={addClose}
+        mutate={mutate}
+      />
 
       <Edit
         opened={editOpened}

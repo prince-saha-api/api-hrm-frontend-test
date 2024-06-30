@@ -1,447 +1,814 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
-import Edit from "./Edit";
-import Delete from "./Delete";
-import Add from "./Add";
-import AddButton from "@/components/utils/AddButton";
 import { toast } from "react-toastify";
+import { Button, Select, Menu, MultiSelect, Popover } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
-import { submit } from "../../../lib/submit";
-import { fetcher } from "../../../lib/fetch";
-import { AiOutlineFilePdf } from "react-icons/ai";
+import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
 import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
-import { AiOutlineDelete } from "react-icons/ai";
 import { BiMessageSquareEdit } from "react-icons/bi";
-import { Button, Select, Menu, Breadcrumbs, Anchor } from "@mantine/core";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { fetcher, getData } from "@/lib/fetch";
+import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
+import Breadcrumb from "@/components/utils/Breadcrumb";
+import { constants } from "@/lib/config";
+import AddButton from "@/components/utils/AddButton";
+import Add from "./Add";
+import Edit from "./Edit";
+import Delete from "./Delete";
 
-import { CiSearch } from "react-icons/ci";
-
-import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
-
-const PAGE_SIZES = [10, 20, 30, 40];
+const PAGE_SIZES = constants.PAGE_SIZES;
 
 const index = () => {
-   const [currentPage, setCurrentPage] = useState(1);
-   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-   const [sortStatus, setSortStatus] = useState({
-      columnAccessor: "username",
-      direction: "asc", // desc
-   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
+  const [sortStatus, setSortStatus] = useState({
+    columnAccessor: "user",
+    direction: "asc", // desc
+  });
 
-   const {
-      data: apiData,
-      error,
-      isValidating,
-      isLoading,
-      mutate,
-   } = useSWR(
-      `/employee/?page=${currentPage}&page_size=${pageSize}&column_accessor=${sortStatus.columnAccessor}&direction=${sortStatus.direction}`,
-      fetcher,
-      {
-         errorRetryCount: 2,
-         keepPreviousData: true,
+  let apiUrl = `/api/leave/get-leaverequest/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+    sortStatus?.direction === "desc" ? "-" : ""
+  }${sortStatus.columnAccessor}`;
+
+  const {
+    data: apiData,
+    error,
+    isValidating,
+    isLoading,
+    mutate,
+  } = useSWR(apiUrl, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+    revalidateOnFocus: false,
+  });
+
+  const [selectedRecords, setSelectedRecords] = useState([]);
+
+  const handleSortStatusChange = (status) => {
+    console.log(status);
+    setSortStatus(status);
+    setCurrentPage(1);
+  };
+
+  const handlePageSizeChange = (newPageSize) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1);
+    // mutate();
+  };
+
+  // for Modal
+  const [addOpened, { open: addOpen, close: addClose }] = useDisclosure(false);
+  const [editOpened, { open: editOpen, close: editClose }] =
+    useDisclosure(false);
+  const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
+    useDisclosure(false);
+
+  const [selectedEditItem, setSelectedEditItem] = useState(null);
+  const [selectedDeleteItem, setSelectedDeleteItem] = useState(null);
+
+  useEffect(() => {
+    if (selectedEditItem) {
+      editOpen();
+    }
+  }, [selectedEditItem]);
+
+  const columns = [
+    {
+      // for table display
+      accessor: "na",
+      title: "#",
+      noWrap: true,
+      sortable: false,
+      width: 90,
+      render: (_, index) => (currentPage - 1) * pageSize + index + 1,
+      // for export
+      key: "na",
+      modifier: (_, index) => index + 1,
+      // pdfModifier: ({ na }) =>
+      //   na > 0 ? "is_text_danger_" + getTime(InTime) : getTime(InTime),
+    },
+    {
+      // for table display
+      accessor: "name",
+      title: "Name",
+      noWrap: true,
+      sortable: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ name }) => name || "N/A",
+      // for export
+      key: "name",
+    },
+    {
+      // for table display
+      accessor: "description",
+      title: "Description",
+      noWrap: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ description }) => description || "N/A",
+      // for export
+      key: "description",
+    },
+    {
+      // for table display
+      accessor: "company",
+      title: "Company",
+      // visibleMediaQuery: aboveXs,
+      sortable: true,
+      render: ({ company }) => company?.basic_information?.name || "N/A",
+      modifier: ({ company }) => company?.basic_information?.name || "N/A",
+      // for export
+      key: "company",
+    },
+    {
+      // for table display
+      accessor: "phone",
+      title: "Phone",
+      // visibleMediaQuery: aboveXs,
+      render: ({ phone }) => phone || "N/A",
+      // for export
+      key: "phone",
+    },
+    {
+      // for table display
+      accessor: "email",
+      title: "Email",
+      // visibleMediaQuery: aboveXs,
+      render: ({ email }) => email || "N/A",
+      // for export
+      key: "email",
+    },
+    {
+      // for table display
+      accessor: "address",
+      title: "Address",
+      // visibleMediaQuery: aboveXs,
+      render: ({ address }) =>
+        `${address?.address ? address.address : ""}${
+          address?.city ? ", " + address.city : ""
+        }${address?.state_division ? ", " + address.state_division : ""}${
+          address?.post_zip_code ? " - " + address.post_zip_code : ""
+        }${address?.country ? ", " + address.country : ""}` || "N/A",
+
+      modifier: ({ address }) =>
+        `${address?.address ? address.address : ""}${
+          address?.city ? ", " + address.city : ""
+        }${address?.state_division ? ", " + address.state_division : ""}${
+          address?.post_zip_code ? " - " + address.post_zip_code : ""
+        }${address?.country ? ", " + address.country : ""}` || "N/A",
+
+      // for export
+      key: "address",
+    },
+
+    // {
+    //   // for table display
+    //   accessor: "operating_hour",
+    //   title: "Operating Hour",
+    //   // visibleMediaQuery: aboveXs,
+    //   render: ({ operating_hour }) =>
+    //     operating_hour?.operating_hour_from || "N/A",
+    //   // for export
+    //   key: "operating_hour",
+    // },
+    {
+      // for table display
+      accessor: "actions",
+      title: "Actions",
+      width: 90,
+      textAlign: "center",
+      // width: "0%",
+      render: (item) => (
+        <Menu shadow="md" width={150} position="bottom-end">
+          <Menu.Target>
+            <button className="border-0 bg-transparent">
+              <HiDotsVertical />
+            </button>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Item
+              leftSection={<BiMessageSquareEdit className="fs-6" />}
+              onClick={() => {
+                setSelectedEditItem(item);
+              }}
+            >
+              Edit
+            </Menu.Item>
+            <Menu.Item
+              leftSection={<AiOutlineDelete className="fs-6" />}
+              onClick={() => {
+                setSelectedDeleteItem(item);
+                deleteOpen();
+              }}
+            >
+              Delete
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      ),
+      // for export
+      key: "actions",
+    },
+  ];
+
+  const visibleColumns = [
+    {
+      label: "Serial",
+      value: "na",
+    },
+    {
+      label: "Name",
+      value: "name",
+    },
+    {
+      label: "Description",
+      value: "description",
+    },
+    {
+      label: "Company",
+      value: "company",
+    },
+    {
+      label: "Phone",
+      value: "phone",
+    },
+    {
+      label: "Email",
+      value: "email",
+    },
+    {
+      label: "Address",
+      value: "address",
+    },
+    // {
+    //   label: "Operating Hour",
+    //   value: "operating_hour",
+    // },
+    {
+      label: "Actions",
+      value: "actions",
+    },
+  ];
+
+  const [selectedOptions, setSelectedOptions] = useState([
+    "na",
+    "name",
+    "description",
+    "email",
+    "phone",
+    "company",
+    "address",
+    // "operating_hour",
+    "actions",
+  ]);
+
+  const handleChange = (keys) => {
+    const updatedKeys = [
+      ...new Set(["na", "name", "description", "actions", ...keys]),
+    ];
+
+    const reorderedOptions = visibleColumns.filter((column) =>
+      updatedKeys.includes(column.value)
+    );
+
+    setSelectedOptions(reorderedOptions.map((column) => column.value));
+  };
+
+  // file export
+  const [isExportDataFetching, setIsExportDataFetching] = useState({
+    pdf: false,
+    csv: false,
+    excel: false,
+  });
+
+  // const [dataToExport, setDataToExport] = useState(null);
+
+  const getExportDataUrl = () => {
+    let url = `/api/branch/get-branch/?column_accessor=${
+      sortStatus?.direction === "desc" ? "-" : ""
+    }${sortStatus.columnAccessor}`;
+
+    return url;
+  };
+
+  const handleExportToPDF = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      pdf: true,
+    }));
+
+    try {
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
+
+      if (!exportedData) {
+        const url = getExportDataUrl();
+        const response = await getData(url);
+        exportedData = response?.data?.data?.result;
+        // Cache the data
+        // setDataToExport(exportedData);
       }
-   );
 
-   const [selectedRecords, setSelectedRecords] = useState([]);
+      // const headers = [
+      //   "Employee ID",
+      //   "Employee Name",
+      //   "In Time",
+      //   "Out Time",
+      //   "Date",
+      // ];
 
-   const handleSortStatusChange = (status) => {
-      console.log(status);
-      setCurrentPage(1);
-      setSortStatus(status);
-      console.log(sortStatus);
-   };
+      // const data = exportedData.map((item) => ({
+      //   ID: item.employee_id,
+      //   username: item.username,
+      //   InTime: getTime(item.InTime),
+      //   OutTime: getTime(item.OutTime),
+      //   Date: getDate(item.InTime),
+      // }));
 
-   const handlePageChange = (newPage) => {
-      if (newPage >= 1) {
-         setCurrentPage(newPage);
-      }
-   };
+      const headers = selectedOptions
+        .filter((key) => key !== "actions")
+        .map((columnKey) => {
+          const selectedColumn = columns.find(
+            (column) => column.key === columnKey
+          );
+          return selectedColumn ? selectedColumn.title : "";
+        });
 
-   const handlePageSizeChange = (newPageSize) => {
-      setPageSize(newPageSize);
-      setCurrentPage(1);
-      mutate();
-   };
+      const data = exportedData.map((item, index) => {
+        const rowData = {};
+        selectedOptions
+          .filter((key) => key !== "actions")
+          .forEach((columnKey) => {
+            const selectedColumn = columns.find(
+              (column) => column.key === columnKey
+            );
+            const pdfModifier = selectedColumn?.pdfModifier;
+            const columnModifier = selectedColumn?.modifier;
+            rowData[columnKey] = pdfModifier
+              ? pdfModifier(item, index)
+              : columnModifier
+              ? columnModifier(item, index)
+              : item[columnKey] ?? "";
+          });
+        return rowData;
+      });
 
-   const [displayedData, setDisplayedData] = useState([]);
+      setTimeout(() => {
+        exportToPDF(headers, data, "Branches", "branches");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          pdf: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to PDF:", error);
+      // Handle error
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          pdf: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
+  };
 
-   useEffect(() => {
-      if (!isLoading && !error) {
-         setDisplayedData(apiData?.results || []);
-         console.log(apiData?.results);
-      }
-   }, [isLoading, isValidating]);
+  const handleExportToCSV = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      csv: true,
+    }));
 
-   const [uploadedFiles, setUploadedFiles] = useState([]);
-   const [isUploading, setIsUploading] = useState(false);
-   const [uploadingSuccess, setUploadingSuccess] = useState("");
-   const [validationError, setValidationError] = useState(null);
+    try {
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
-   const handleFileChange = (event) => {
-      setValidationError(null);
-      const files = event.target.files;
-      // Convert files to an array
-      const filesArray = Array.from(files);
-      setUploadedFiles(filesArray);
-   };
-
-   const validateFiles = () => {
-      let valid = true;
-      const newErrors = {};
-
-      // Basic validation: Check if exactly two files are selected
-      if (uploadedFiles.length !== 2) {
-         setValidationError(
-            "Please select exactly two files: 'zip_file.zip' and 'csv_file.csv'."
-         );
-         valid = false;
-         return valid;
-      }
-
-      // Validate file names
-      const fileNames = uploadedFiles.map((file) => file.name);
-      const requiredFileNames = ["zip_file.zip", "csv_file.csv"];
-
-      for (const requiredFileName of requiredFileNames) {
-         if (!fileNames.includes(requiredFileName)) {
-            setValidationError(`Missing required file: ${requiredFileName}`);
-            valid = false;
-            break;
-
-            // return valid;
-         }
-      }
-
-      return valid;
-   };
-
-   const handleFileSubmit = async (e) => {
-      e.preventDefault();
-      setUploadingSuccess("");
-
-      const valid = validateFiles();
-
-      if (!valid) {
-         toast.error(validationError);
-         return;
+      if (!exportedData) {
+        const url = getExportDataUrl();
+        const response = await getData(url);
+        exportedData = response?.data?.data?.result;
+        // Cache the data
+        // setDataToExport(exportedData);
       }
 
-      if (valid) {
-         setIsUploading(true);
+      // const data = exportedData.map((item) => ({
+      //   "Employee ID": item.employee_id,
+      //   "Employee Name": item.username,
+      //   "In Time": getTime(item.InTime),
+      //   "Out Time": getTime(item.OutTime),
+      //   Date: getDate(item.date),
+      // }));
 
-         const formData = new FormData();
+      const data = exportedData.map((item, index) => {
+        const rowData = {};
+        selectedOptions
+          .filter((key) => key !== "actions")
+          .forEach((columnKey) => {
+            const selectedColumn = columns.find(
+              (column) => column.key === columnKey
+            );
+            const columnModifier = selectedColumn?.modifier;
+            rowData[selectedColumn.title] = columnModifier
+              ? columnModifier(item, index)
+              : item[columnKey] ?? "";
+          });
+        return rowData;
+      });
 
-         uploadedFiles.forEach((file) => {
-            const key = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension
-            formData.append(key, file);
-         });
+      setTimeout(() => {
+        exportToCSV(data, "branches");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          csv: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to CSV:", error);
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          csv: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
+  };
 
-         // console.log("Form data", formData);
+  const handleExportToExcel = async (e) => {
+    e.preventDefault();
+    setIsExportDataFetching((prev) => ({
+      ...prev,
+      excel: true,
+    }));
 
-         // return;
+    try {
+      // let exportedData = dataToExport; // Use cached data if available
+      let exportedData = null;
 
-         const response = await submit("/employee_csv/", formData, true);
-
-         console.log(response);
-         setIsUploading(false);
-         // return;
-
-         if (response?.uploaded) {
-            toast.success("CSV and ZIP uploaded successfully");
-            // setSuccess("Employee created successfully");
-            // setIsLoading(false);
-            // setErrors({});
-            // setFormValues(initialValues);
-         } else {
-            toast.error(response?.message || "Something went wrong!");
-            // setSuccess("Something went wrong!");
-            // setIsLoading(false);
-            // setErrors({});
-            // setFormValues(initialValues);
-         }
+      if (!exportedData) {
+        const url = getExportDataUrl();
+        const response = await getData(url);
+        exportedData = response?.data?.data?.result;
+        // Cache the data
+        // setDataToExport(exportedData);
       }
-   };
 
-   // file download
-   const handleExportToPDF = async () => {
-      // console.log(displayedData);
-      // return;
-      const headers = [
-         "Employee ID",
-         "Employee Name",
-         "Designation",
-         "Group",
-         "Department",
-         "Shift",
-         "Status",
-      ];
+      // const data = exportedData.map((item) => ({
+      //   "Employee ID": item.employee_id,
+      //   "Employee Name": item.username,
+      //   "In Time": getTime(item.InTime),
+      //   "Out Time": getTime(item.OutTime),
+      //   Date: getDate(item.InTime),
+      // }));
 
-      const data = displayedData.map((item) => ({
-         ID: item.employee_id,
-         username: item.username,
-         Designation: item?.designation_name || "N/A",
-         Group: item?.group_name || "N/A",
-         Department: item?.department_name || "N/A",
-         Shift: item?.shift_name || "N/A",
-         Status: item?.is_active ? "Active" : "Inactive",
-      }));
+      const data = exportedData.map((item, index) => {
+        const rowData = {};
+        selectedOptions
+          .filter((key) => key !== "actions")
+          .forEach((columnKey) => {
+            const selectedColumn = columns.find(
+              (column) => column.key === columnKey
+            );
+            const columnModifier = selectedColumn?.modifier;
+            rowData[selectedColumn.title] = columnModifier
+              ? columnModifier(item, index)
+              : item[columnKey] ?? "";
+          });
+        return rowData;
+      });
 
-      exportToPDF(headers, data, "employee");
-   };
+      setTimeout(() => {
+        exportToExcel(data, "branches");
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          excel: false,
+        }));
+      }, 1000);
+    } catch (error) {
+      console.error("Error exporting data to Excel:", error);
+      setTimeout(() => {
+        setIsExportDataFetching((prev) => ({
+          ...prev,
+          excel: false,
+        }));
+        toast.error("Failed to export!");
+      }, 1000);
+    }
+  };
 
-   const handleExportToCSV = () => {
-      const data = displayedData.map((item) => ({
-         "Employee ID": item.employee_id,
-         "Employee Name": item.username,
-         Designation: item?.designation_name || "N/A",
-         Group: item?.group_name || "N/A",
-         Department: item?.department_name || "N/A",
-         Shift: item?.shift_name || "N/A",
-         Status: item?.is_active ? "Active" : "Inactive",
-      }));
+  return (
+    <>
+      <Add
+        opened={addOpened} //
+        close={addClose}
+        mutate={mutate}
+      />
 
-      exportToCSV(data, "employee");
-   };
+      <Edit
+        opened={editOpened}
+        close={editClose}
+        item={selectedEditItem}
+        setItem={setSelectedEditItem}
+        mutate={mutate}
+      />
 
-   const handleExportToExcel = () => {
-      const data = displayedData.map((item) => ({
-         "Employee ID": item.employee_id,
-         "Employee Name": item.username,
-         Designation: item?.designation_name || "N/A",
-         Group: item?.group_name || "N/A",
-         Department: item?.department_name || "N/A",
-         Shift: item?.shift_name || "N/A",
-         Status: item?.is_active ? "Active" : "Inactive",
-      }));
+      <Delete
+        opened={deleteOpened}
+        close={deleteClose}
+        item={selectedDeleteItem}
+        mutate={mutate}
+      />
 
-      exportToExcel(data, "employee");
-   };
+      <div className="mb-4 d-flex justify-content-between align-items-end">
+        <Breadcrumb
+          title="Leave Request"
+          items={[
+            { title: "Dashboard", href: "/dashboard" },
+            { title: "Leave Request" },
+          ]}
+        />
 
-   const items = [
-      { title: "Dashboard", href: "/" },
-      { title: "Leave Request" },
-   ].map((item, index) => (
-      <Anchor href={item.href} key={index}>
-         {item.title}
-      </Anchor>
-   ));
+        <AddButton
+          label="Leave Request"
+          fontSize="16px"
+          icon={<LuPlus className="fs-5 me-0 mr-0" />}
+          handleClick={addOpen}
+        />
+      </div>
 
-   const [open1, setOpen1] = useState(false);
-   const [item1, setItem1] = useState("Designation");
+      <div className="d-flex justify-content-between mb-3">
+        <div className="showItem d-flex align-items-center justify-content-center">
+          <p className="mb-0 me-2">Show</p>
+          <Select
+            classNames={{
+              input: "showInput",
+            }}
+            withCheckIcon={false}
+            // placeholder=""
+            data={PAGE_SIZES.map((size) => size.toString())}
+            defaultValue={PAGE_SIZES[0].toString()}
+            value={pageSize.toString()}
+            onChange={(_value, option) => handlePageSizeChange(_value)}
+          />
+          <p className="mb-0 ms-2 me-2">Entries</p>
 
-   const [item2, setItem2] = useState("Group");
-   const [item3, setItem3] = useState("Department");
-   const [item4, setItem4] = useState("Shift");
-   const icon = <CiSearch />;
+          <Popover
+            classNames={{
+              dropdown: "column_visibility_dropdown",
+            }}
+            width={0}
+            shadow="md"
+            position="bottom-start"
+            offset={0}
+          >
+            <Popover.Target>
+              <Button
+                variant="default"
+                rightSection={<MdKeyboardArrowDown size={20} />}
+                classNames={{
+                  root: "column_visibility_btn",
+                  section: "column_visibility_btn_section",
+                }}
+              >
+                Visible Columns
+              </Button>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <MultiSelect
+                classNames={{
+                  root: "column_visibility_root",
+                  label: "column_visibility_label",
+                  input: "column_visibility_input",
+                }}
+                label=""
+                placeholder="Pick values"
+                rightSection={<></>}
+                data={visibleColumns}
+                value={selectedOptions}
+                onChange={handleChange}
+                dropdownOpened={true}
+                comboboxProps={{ withinPortal: false }}
+              />
+            </Popover.Dropdown>
+          </Popover>
+        </div>
+        <div className="downItem d-flex">
+          <div className="me-2">
+            <Button
+              variant="filled"
+              size="sm"
+              className="px-3"
+              onClick={(e) => handleExportToPDF(e)}
+              loading={isExportDataFetching?.pdf}
+              loaderProps={{ type: "dots" }}
+            >
+              <AiOutlineFilePdf className="me-1" />
+              PDF
+            </Button>
+          </div>
+          <div className="me-2">
+            <Button
+              variant="filled"
+              size="sm"
+              className="px-3"
+              onClick={(e) => handleExportToCSV(e)}
+              loading={isExportDataFetching?.csv}
+              loaderProps={{ type: "dots" }}
+            >
+              <FaRegFileAlt className="me-1" />
+              CSV
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="filled"
+              size="sm"
+              className="px-3"
+              onClick={(e) => handleExportToExcel(e)}
+              loading={isExportDataFetching?.excel}
+              loaderProps={{ type: "dots" }}
+            >
+              <RiFileExcel2Line className="me-1" />
+              Excel
+            </Button>
+          </div>
+        </div>
+      </div>
 
-   // for Modal
-   const [edit, { open, close }] = useDisclosure(false);
-   const [addOpened, { open: addOpen, close: addClose }] = useDisclosure(false);
-   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
-      useDisclosure(false);
+      <div className="itemCard p-0 datatable-wrapper">
+        <DataTable
+          style={{
+            height:
+              !apiData?.data.result || apiData.data.result.length === 0
+                ? "300px"
+                : "auto",
+          }}
+          classNames={{
+            root: "datatable",
+            table: "datatable_table",
+            header: "datatable_header",
+            pagination: "datatable_pagination",
+          }}
+          // borderColor="#e0e6ed66"
+          // rowBorderColor="#e0e6ed66"
+          // c={{ dark: "#ffffff", light: "#0E1726" }}
+          // highlightOnHover
+          horizontalSpacing="sm"
+          verticalSpacing="sm"
+          fz="sm"
+          verticalAlign="center"
+          striped
+          idAccessor="id"
+          columns={columns.filter((column) =>
+            selectedOptions.includes(column.key)
+          )}
+          fetching={isLoading}
+          records={apiData?.data.result || []}
+          page={currentPage}
+          onPageChange={setCurrentPage}
+          totalRecords={apiData?.data.count}
+          recordsPerPage={pageSize}
+          sortStatus={sortStatus}
+          onSortStatusChange={handleSortStatusChange}
+          // selectedRecords={selectedRecords}
+          // onSelectedRecordsChange={setSelectedRecords}
+          // recordsPerPageOptions={PAGE_SIZES}
+          // onRecordsPerPageChange={setPageSize}
+          // rowExpansion={rowExpansion}
+          // onRowContextMenu={handleContextMenu}
+          // onScroll={hideContextMenu}
+        />
+      </div>
 
-   return (
-      <>
-         <Edit opened={edit} close={close} />
-         <Delete opened={deleteOpened} close={deleteClose} />
-         <Add opened={addOpened} close={addClose} />
+      <div className="itemCard p-0 datatable-wrapper">
+        <DataTable
+          style={{
+            height: apiData?.results?.length === 0 ? "300px" : "auto",
+          }}
+          classNames={{
+            root: "datatable",
+            table: "datatable_table",
+            header: "datatable_header",
+            pagination: "datatable_pagination",
+          }}
+          // borderColor="#e0e6ed66"
+          // rowBorderColor="#e0e6ed66"
+          // c={{ dark: "#ffffff", light: "#0E1726" }}
+          // highlightOnHover
+          horizontalSpacing="sm"
+          verticalSpacing="sm"
+          fz="sm"
+          verticalAlign="center"
+          striped
+          columns={[
+            {
+              title: "#",
+              accessor: "na",
+              noWrap: true,
+              sortable: false,
+              width: 90,
+              render: (_, index) => (currentPage - 1) * pageSize + index + 1,
+            },
 
-         <div className="mb-4 d-flex justify-content-between align-items-end">
-            <div className="pageTop">
-               <h3>Leave Request</h3>
-               <Breadcrumbs>{items}</Breadcrumbs>
-            </div>
+            {
+              accessor: "designation_name",
+              title: "Leave Type",
+              noWrap: true,
+              // visibleMediaQuery: aboveXs,
+              render: ({ designation_name }) => designation_name || "N/A",
+            },
+            {
+              accessor: "department_name",
+              title: "From Date",
+              // visibleMediaQuery: aboveXs,
+              render: ({ department_name }) => department_name || "N/A",
+            },
+            {
+              accessor: "department_name",
+              title: "To Date",
+              // visibleMediaQuery: aboveXs,
+              render: ({ department_name }) => department_name || "N/A",
+            },
+            {
+              accessor: "department_name",
+              title: "Total Days",
+              // visibleMediaQuery: aboveXs,
+              render: ({ department_name }) => department_name || "N/A",
+            },
+            {
+              accessor: "department_name",
+              title: "Attachment",
+              // visibleMediaQuery: aboveXs,
+              render: ({ department_name }) => department_name || "N/A",
+            },
+            {
+              accessor: "department_name",
+              title: "Detail",
+              // visibleMediaQuery: aboveXs,
+              render: ({ department_name }) => department_name || "N/A",
+            },
 
-            <AddButton
-               label="Leave Request"
-               fontSize="16px"
-               icon={<LuPlus className="me-1 fs-5" />}
-               handleClick={addOpen}
-            />
-         </div>
+            {
+              accessor: "actions",
+              title: "Actions",
+              width: 90,
+              textAlign: "center",
+              // width: "0%",
+              render: (item) => (
+                <>
+                  <Menu shadow="md" width={150} position="bottom-end">
+                    <Menu.Target>
+                      <button className="border-0 bg-transparent">
+                        <HiDotsVertical />
+                      </button>
+                    </Menu.Target>
 
-         <div className="d-flex justify-content-between mb-3">
-            <div className="showItem d-flex align-items-center justify-content-center">
-               <p className="mb-0 me-2">Show</p>
-               <Select
-                  withCheckIcon={false}
-                  classNames={{
-                     input: "showInput",
-                  }}
-                  placeholder="Pick value"
-                  data={["10", "20", "30", "50"]}
-                  defaultValue="10"
-               />
-               <p className="mb-0 ms-2">Entries</p>
-            </div>
-            <div className="downItem d-flex">
-               <div className="me-2">
-                  <Button
-                     type="submit"
-                     className="rounded-1 px-3 btn btn-success border-0"
-                     onClick={() => handleExportToPDF()}
-                  >
-                     <AiOutlineFilePdf className="me-1" />
-                     PDF
-                  </Button>
-               </div>
-               <div className="me-2">
-                  <Button
-                     type="submit"
-                     className="rounded-1 px-3 btn btn-success border-0"
-                     onClick={() => handleExportToCSV()}
-                  >
-                     <FaRegFileAlt className="me-1" />
-                     CSV
-                  </Button>
-               </div>
-               <div>
-                  <Button
-                     variant="filled"
-                     size="sm"
-                     className="px-3"
-                     onClick={() => handleExportToExcel()}
-                  >
-                     <RiFileExcel2Line className="me-1" />
-                     Excel
-                  </Button>
-               </div>
-            </div>
-         </div>
-
-         <div className="itemCard p-0 datatable-wrapper">
-            <DataTable
-               style={{
-                  height: apiData?.results?.length === 0 ? "300px" : "auto",
-               }}
-               classNames={{
-                  root: "datatable",
-                  table: "datatable_table",
-                  header: "datatable_header",
-                  pagination: "datatable_pagination",
-               }}
-               // borderColor="#e0e6ed66"
-               // rowBorderColor="#e0e6ed66"
-               // c={{ dark: "#ffffff", light: "#0E1726" }}
-               // highlightOnHover
-               horizontalSpacing="sm"
-               verticalSpacing="sm"
-               fz="sm"
-               verticalAlign="center"
-               striped
-               columns={[
-                  {
-                     title: "#",
-                     accessor: "na",
-                     noWrap: true,
-                     sortable: false,
-                     width: 90,
-                     render: (_, index) =>
-                        (currentPage - 1) * pageSize + index + 1,
-                  },
-
-                  {
-                     accessor: "designation_name",
-                     title: "Leave Type",
-                     noWrap: true,
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ designation_name }) =>
-                        designation_name || "N/A",
-                  },
-                  {
-                     accessor: "department_name",
-                     title: "From Date",
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
-                  },
-                  {
-                     accessor: "department_name",
-                     title: "To Date",
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
-                  },
-                  {
-                     accessor: "department_name",
-                     title: "Total Days",
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
-                  },
-                  {
-                     accessor: "department_name",
-                     title: "Attachment",
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
-                  },
-                  {
-                     accessor: "department_name",
-                     title: "Detail",
-                     // visibleMediaQuery: aboveXs,
-                     render: ({ department_name }) => department_name || "N/A",
-                  },
-
-                  {
-                     accessor: "actions",
-                     title: "Actions",
-                     width: 90,
-                     textAlign: "center",
-                     // width: "0%",
-                     render: (item) => (
-                        <>
-                           <Menu shadow="md" width={150} position="bottom-end">
-                              <Menu.Target>
-                                 <button className="border-0 bg-transparent">
-                                    <HiDotsVertical />
-                                 </button>
-                              </Menu.Target>
-
-                              <Menu.Dropdown>
-                                 <Menu.Item
-                                    onClick={open}
-                                    leftSection={
-                                       <BiMessageSquareEdit className="fs-6" />
-                                    }
-                                 >
-                                    Edit
-                                 </Menu.Item>
-                                 <Menu.Item
-                                    onClick={deleteOpen}
-                                    leftSection={
-                                       <AiOutlineDelete className="fs-6" />
-                                    }
-                                 >
-                                    Delete
-                                 </Menu.Item>
-                              </Menu.Dropdown>
-                           </Menu>
-                        </>
-                     ),
-                  },
-               ]}
-               fetching={isLoading}
-               records={apiData?.results || []}
-               page={currentPage}
-               onPageChange={setCurrentPage}
-               totalRecords={apiData?.count}
-               recordsPerPage={pageSize}
-               sortStatus={sortStatus}
-               onSortStatusChange={handleSortStatusChange}
-               selectedRecords={selectedRecords}
-               onSelectedRecordsChange={setSelectedRecords}
-               // recordsPerPageOptions={PAGE_SIZES}
-               // onRecordsPerPageChange={setPageSize}
-               // rowExpansion={rowExpansion}
-               // onRowContextMenu={handleContextMenu}
-               // onScroll={hideContextMenu}
-            />
-         </div>
-      </>
-   );
+                    <Menu.Dropdown>
+                      <Menu.Item
+                        onClick={open}
+                        leftSection={<BiMessageSquareEdit className="fs-6" />}
+                      >
+                        Edit
+                      </Menu.Item>
+                      <Menu.Item
+                        onClick={deleteOpen}
+                        leftSection={<AiOutlineDelete className="fs-6" />}
+                      >
+                        Delete
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                </>
+              ),
+            },
+          ]}
+          fetching={isLoading}
+          records={apiData?.results || []}
+          page={currentPage}
+          onPageChange={setCurrentPage}
+          totalRecords={apiData?.count}
+          recordsPerPage={pageSize}
+          sortStatus={sortStatus}
+          onSortStatusChange={handleSortStatusChange}
+          selectedRecords={selectedRecords}
+          onSelectedRecordsChange={setSelectedRecords}
+          // recordsPerPageOptions={PAGE_SIZES}
+          // onRecordsPerPageChange={setPageSize}
+          // rowExpansion={rowExpansion}
+          // onRowContextMenu={handleContextMenu}
+          // onScroll={hideContextMenu}
+        />
+      </div>
+    </>
+  );
 };
 
 export default index;

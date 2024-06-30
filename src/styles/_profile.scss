@@ -1,0 +1,39 @@
+.profile img {
+   width: 130px;
+   height: 130px;
+   object-fit: cover;
+   border-radius: 100%;
+}
+.employeeName {
+   color: #373b3e;
+   font-size: 1.5rem;
+}
+.employeeDesig,
+.employeeJoin {
+   color: #7a7c7f;
+}
+
+.borderLeft {
+   border-left: 2px dashed #ddd;
+}
+.employeeInfo p {
+   color: #7a7c7f;
+   margin-bottom: 5px;
+}
+.employeeInfo span {
+   display: inline-block;
+   color: #373b3e;
+   font-weight: 600;
+   width: 200px;
+}
+.phnNumber,
+.email {
+   color: var(--main-color);
+   text-decoration: none;
+}
+.roundIcon {
+   font-size: 12px;
+   margin-bottom: 4px;
+   margin-right: 4px;
+   color: var(--main-color);
+}

@@ -8,12 +8,14 @@ import {
    NumberInput,
    ActionIcon,
    Checkbox,
+   Modal,
 } from "@mantine/core";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import { TimeInput } from "@mantine/dates";
 import { IoTimeOutline } from "react-icons/io5";
+import { useDisclosure } from "@mantine/hooks";
 
-const GeneralSettings = () => {
+const ProfileView = () => {
    const refTimeIn = useRef(null);
    const timeIn = (
       <ActionIcon
@@ -25,21 +27,29 @@ const GeneralSettings = () => {
       </ActionIcon>
    );
 
+   const [opened, { open, close }] = useDisclosure(false);
+
    return (
       <>
          <Breadcrumb
             classNames={{
                root: "mb-4",
             }}
-            title="General Settings"
+            title="Profile"
             items={[
                { title: "Dashboard", href: "/dashboard" },
-               { title: "General Settings" },
+               { title: "Profile" },
             ]}
          />
 
+         <Modal opened={opened} onClose={close} title="Authentication" centered>
+            <p>Modal content</p>
+         </Modal>
+
+         <Button onClick={open}>Open centered Modal</Button>
+
          <div className="itemCard">
-            <form>
+            {/* <form>
                <Grid>
                   <Grid.Col span={3}>
                      <Select
@@ -98,10 +108,10 @@ const GeneralSettings = () => {
                      Save
                   </Button>
                </Group>
-            </form>
+            </form> */}
          </div>
       </>
    );
 };
 
-export default GeneralSettings;
+export default ProfileView;

@@ -468,7 +468,7 @@ const Page = () => {
                                  </li>
                                  <li className="text-capitalize text-decoration-none sidenav_sub_item">
                                     <Link
-                                       href="/add-employee"
+                                       href="/profile-view"
                                        className="text-decoration-none subMenu"
                                     >
                                        User role

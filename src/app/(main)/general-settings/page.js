@@ -1,8 +1,8 @@
-// import React from "react";
-// import GeneralSettings from "@/components/app-modules/GeneralSettings";
+import React from "react";
+import GeneralSettings from "@/components/app-modules/GeneralSettings";
 
-// const Page = () => {
-//    return <GeneralSettings />;
-// };
+const Page = () => {
+   return <GeneralSettings />;
+};
 
-// export default Page;
+export default Page;

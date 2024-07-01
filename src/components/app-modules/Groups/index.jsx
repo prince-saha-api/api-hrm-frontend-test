@@ -32,7 +32,7 @@ const Index = () => {
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/device/get-devicegroup/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let apiUrl = `/api/device/get-group/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -95,45 +95,24 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "group_title",
-      title: "Group Title",
+      accessor: "title",
+      title: "Title",
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ group_title }) => group_title || "N/A",
+      render: ({ title }) => title || "N/A",
       // for export
-      key: "group_title",
+      key: "title",
     },
     {
       // for table display
-      accessor: "group_description",
-      title: "Group Description",
+      accessor: "description",
+      title: "Description",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ group_description }) => group_description || "N/A",
+      render: ({ description }) => description || "N/A",
       // for export
-      key: "group_description",
-    },
-    {
-      // for table display
-      accessor: "device_title",
-      title: "Device Title",
-      noWrap: true,
-      sortable: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ device_title }) => device_title || "N/A",
-      // for export
-      key: "device_title",
-    },
-    {
-      // for table display
-      accessor: "device_deviceip",
-      title: "Device IP",
-      noWrap: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ device_deviceip }) => device_deviceip || "N/A",
-      // for export
-      key: "device_deviceip",
+      key: "description",
     },
     {
       // for table display
@@ -182,20 +161,12 @@ const Index = () => {
       value: "na",
     },
     {
-      label: "Group Title",
-      value: "group_title",
+      label: "Title",
+      value: "title",
     },
     {
-      label: "Group Description",
-      value: "group_description",
-    },
-    {
-      label: "Device Title",
-      value: "device_title",
-    },
-    {
-      label: "Device IP",
-      value: "device_deviceip",
+      label: "Description",
+      value: "description",
     },
     {
       label: "Actions",
@@ -205,16 +176,14 @@ const Index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "group_title",
-    "group_description",
-    "device_title",
-    "device_deviceip",
+    "title",
+    "description",
     "actions",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set(["na", "group_title", "device_title", "actions", ...keys]),
+      ...new Set(["na", "title", "description", "actions", ...keys]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>
@@ -234,7 +203,7 @@ const Index = () => {
   // const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/api/leave/get-leavepolicy/?column_accessor=${
+    let url = `/api/device/get-devicegroup/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -305,7 +274,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "Leave Policy", "leave-policy");
+        exportToPDF(headers, data, "groups", "groups");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -368,7 +337,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "leave-policy");
+        exportToCSV(data, "groups");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -430,7 +399,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "leave-policy");
+        exportToExcel(data, "groups");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,
@@ -450,7 +419,11 @@ const Index = () => {
 
   return (
     <>
-      {/* <Add opened={addOpened} close={addClose} /> */}
+      <Add
+        opened={addOpened} //
+        close={addClose}
+        mutate={mutate}
+      />
 
       <Edit
         opened={editOpened}
@@ -467,13 +440,20 @@ const Index = () => {
         mutate={mutate}
       />
 
-      <div className="mb-4">
+      <div className="mb-4 d-flex justify-content-between align-items-end">
         <Breadcrumb
-          title="Assign To Group"
+          title="Groups"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Assign To Group" },
+            { title: "Groups" },
           ]}
+        />
+
+        <AddButton
+          label="Add Group"
+          fontSize="16px"
+          icon={<LuPlus className="fs-5 me-0 mr-0" />}
+          handleClick={addOpen}
         />
       </div>
 
@@ -493,7 +473,45 @@ const Index = () => {
           />
           <p className="mb-0 ms-2 me-2">Entries</p>
 
-          <Add mutate={mutate} />
+          <Popover
+            classNames={{
+              dropdown: "column_visibility_dropdown",
+            }}
+            width={0}
+            shadow="md"
+            position="bottom-start"
+            offset={0}
+          >
+            <Popover.Target>
+              <Button
+                variant="default"
+                rightSection={<MdKeyboardArrowDown size={20} />}
+                classNames={{
+                  root: "column_visibility_btn",
+                  section: "column_visibility_btn_section",
+                }}
+              >
+                Visible Columns
+              </Button>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <MultiSelect
+                classNames={{
+                  root: "column_visibility_root",
+                  label: "column_visibility_label",
+                  input: "column_visibility_input",
+                }}
+                label=""
+                placeholder="Pick values"
+                rightSection={<></>}
+                data={visibleColumns}
+                value={selectedOptions}
+                onChange={handleChange}
+                dropdownOpened={true}
+                comboboxProps={{ withinPortal: false }}
+              />
+            </Popover.Dropdown>
+          </Popover>
         </div>
         <div className="downItem d-flex">
           <div className="me-2">
@@ -573,8 +591,8 @@ const Index = () => {
           recordsPerPage={pageSize}
           sortStatus={sortStatus}
           onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
+          // selectedRecords={selectedRecords}
+          // onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}

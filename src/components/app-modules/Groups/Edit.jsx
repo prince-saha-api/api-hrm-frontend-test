@@ -8,11 +8,14 @@ import {
   Button,
   Select,
   Group,
+  Grid,
+  PasswordInput,
   Checkbox,
 } from "@mantine/core";
 import { toast } from "react-toastify";
 import { update } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
+import { countries } from "@/data/countries";
 
 const Index = ({ opened, close, item, setItem, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,73 +23,45 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      deviceid: "",
-      groupid: "",
+      title: "",
+      description: "",
     },
-    // validate: {
-    //   title: (value) =>
-    //     value.length < 5 ? "Name must have at least 5 letters" : null,
-    // },
+    validate: {
+      title: (value) =>
+        value.length < 5 ? "Name must have at least 5 letters" : null,
+    },
   });
 
   useEffect(() => {
+    console.log(item);
     if (item) {
       form.setValues({
-        deviceid: item.deviceid || "",
-        groupid: item.groupid || "",
+        title: item.title || "",
+        description: item.description || "",
       });
     }
   }, [item]);
 
-  const {
-    data: devicesData,
-    error: devicesError,
-    isLoading: devicesIsFetchLoading,
-  } = useSWR(`/api/device/get-device/`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-  });
-
-  const devices = devicesData?.data?.result?.map((item) => ({
-    label: item?.title?.toString() || "",
-    value: item?.id.toString() || "",
-  }));
-
-  const {
-    data: groupsData,
-    error: groupsError,
-    isLoading: groupsIsFetchLoading,
-  } = useSWR(`/api/device/get-group/`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-  });
-
-  const groups = groupsData?.data?.result?.map((item) => ({
-    label: item?.title?.toString() || "",
-    value: item?.id.toString() || "",
-  }));
-
   const handleSubmit = async (values) => {
-    const formattedValues = {
-      ...values,
-      deviceid: Number(values.deviceid),
-      groupid: Number(values.groupid),
-    };
+    // e.preventDefault();
+    // console.log(values);
 
     setIsSubmitting(true);
 
     try {
       const response = await update(
-        `/api/device/update-devicegroup/${item.id}`,
-        formattedValues
+        `/api/device/update-group/${item.id}`,
+        values
       );
+      // const response = res.json();
+      console.log(response);
 
       if (response?.status === "success") {
         // console.log(response);
         setIsSubmitting(false);
         close();
         mutate();
-        toast.success("Device group updated successfully");
+        toast.success("Group updated successfully");
       } else {
         toast.error(
           response?.status === "error"
@@ -114,7 +89,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
           title: "modalTitle",
         }}
         opened={opened}
-        title="Edit Assign To Group"
+        title="Edit Group"
         onClose={() => {
           setItem(null);
           close();
@@ -122,21 +97,26 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
         centered
       >
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-          <Select
-            // mt="sm"
-            label="Select Device"
-            placeholder="Select Device"
-            data={devices}
-            {...form.getInputProps("deviceid")}
-          />
-
-          <Select
-            // mt="sm"
-            label="Select Group"
-            placeholder="Select Group"
-            data={groups}
-            {...form.getInputProps("groupid")}
-          />
+          <Grid>
+            <Grid.Col span={12}>
+              <TextInput
+                mb="sm"
+                label="Group Title"
+                placeholder="Group Title"
+                required={true}
+                disabled={isSubmitting}
+                {...form.getInputProps("title")}
+              />
+              <TextInput
+                mb="sm"
+                label="Description"
+                placeholder="Description"
+                required={true}
+                disabled={isSubmitting}
+                {...form.getInputProps("description")}
+              />
+            </Grid.Col>
+          </Grid>
 
           <Group justify="flex-end" mt="sm">
             <Button

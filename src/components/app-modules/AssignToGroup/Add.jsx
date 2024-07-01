@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import useSWR from "swr";
 import { useForm } from "@mantine/form";
 import {
@@ -8,13 +8,16 @@ import {
   Button,
   Select,
   Group,
+  Grid,
+  PasswordInput,
   Checkbox,
 } from "@mantine/core";
 import { toast } from "react-toastify";
-import { update } from "@/lib/submit";
+import { submit } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
+import { countries } from "@/data/countries";
 
-const Index = ({ opened, close, item, setItem, mutate }) => {
+const Index = ({ mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm({
@@ -28,15 +31,6 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
     //     value.length < 5 ? "Name must have at least 5 letters" : null,
     // },
   });
-
-  useEffect(() => {
-    if (item) {
-      form.setValues({
-        deviceid: item.deviceid || "",
-        groupid: item.groupid || "",
-      });
-    }
-  }, [item]);
 
   const {
     data: devicesData,
@@ -67,6 +61,10 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
   }));
 
   const handleSubmit = async (values) => {
+    // e.preventDefault();
+    // console.log(values);
+    // return;
+
     const formattedValues = {
       ...values,
       deviceid: Number(values.deviceid),
@@ -76,79 +74,65 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await update(
-        `/api/device/update-devicegroup/${item.id}`,
+      const response = await submit(
+        "/api/device/add-devicegroup/",
         formattedValues
       );
 
       if (response?.status === "success") {
         // console.log(response);
         setIsSubmitting(false);
-        close();
+        form.reset();
         mutate();
-        toast.success("Device group updated successfully");
+        toast.success("Device assigned successfully");
       } else {
+        setIsSubmitting(false);
         toast.error(
-          response?.status === "error"
-            ? response?.message[0]
+          response?.status == "error"
+            ? response.message
             : "Error submitting form"
         );
       }
-      setTimeout(() => {
-        setIsSubmitting(false);
-        mutate();
-      }, 5000);
     } catch (error) {
       console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
-        mutate();
       }, 5000);
     }
   };
 
   return (
     <>
-      <Modal
-        classNames={{
-          title: "modalTitle",
-        }}
-        opened={opened}
-        title="Edit Assign To Group"
-        onClose={() => {
-          setItem(null);
-          close();
-        }}
-        centered
-      >
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+        <div className="d-flex align-items-center ms-4">
+          <div className="me-2">Select Device</div>
           <Select
             // mt="sm"
-            label="Select Device"
+            // label="Gender"
             placeholder="Select Device"
             data={devices}
             {...form.getInputProps("deviceid")}
           />
-
+          <div className="ms-3 me-2">Select Group</div>
           <Select
             // mt="sm"
-            label="Select Group"
+            // label="Gender"
             placeholder="Select Group"
             data={groups}
             {...form.getInputProps("groupid")}
           />
 
-          <Group justify="flex-end" mt="sm">
-            <Button
-              type="submit"
-              loading={isSubmitting}
-              loaderProps={{ type: "dots" }}
-            >
-              Update
-            </Button>
-          </Group>
-        </form>
-      </Modal>
+          <Button
+            type="submit"
+            className="ms-3"
+            variant="filled"
+            loading={isSubmitting}
+            loaderProps={{ type: "dots" }}
+          >
+            Submit
+          </Button>
+        </div>
+      </form>
     </>
   );
 };

@@ -95,20 +95,21 @@ const index = () => {
     },
     {
       // for table display
-      accessor: "name",
-      title: "Name",
+      accessor: "leavepolicy",
+      title: "Leave Type",
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ name }) => name || "N/A",
+      render: ({ leavepolicy }) => leavepolicy?.name || "N/A",
       // for export
-      key: "name",
+      key: "leavepolicy",
     },
     {
       // for table display
       accessor: "description",
       title: "Description",
       noWrap: true,
+      sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ description }) => description || "N/A",
       // for export
@@ -116,66 +117,44 @@ const index = () => {
     },
     {
       // for table display
-      accessor: "company",
-      title: "Company",
+      accessor: "from_date",
+      title: "From Date",
+      noWrap: true,
       // visibleMediaQuery: aboveXs,
-      sortable: true,
-      render: ({ company }) => company?.basic_information?.name || "N/A",
-      modifier: ({ company }) => company?.basic_information?.name || "N/A",
+      render: ({ from_date }) => from_date || "N/A",
       // for export
-      key: "company",
+      key: "from_date",
     },
     {
       // for table display
-      accessor: "phone",
-      title: "Phone",
+      accessor: "to_date",
+      title: "To Date",
+      noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ phone }) => phone || "N/A",
+      render: ({ to_date }) => to_date || "N/A",
       // for export
-      key: "phone",
+      key: "to_date",
     },
     {
       // for table display
-      accessor: "email",
-      title: "Email",
+      accessor: "total_leave",
+      title: "Total Leave",
+      noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ email }) => email || "N/A",
+      render: ({ total_leave }) => total_leave || "N/A",
       // for export
-      key: "email",
+      key: "total_leave",
     },
     {
       // for table display
-      accessor: "address",
-      title: "Address",
+      accessor: "Status",
+      title: "status",
+      noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ address }) =>
-        `${address?.address ? address.address : ""}${
-          address?.city ? ", " + address.city : ""
-        }${address?.state_division ? ", " + address.state_division : ""}${
-          address?.post_zip_code ? " - " + address.post_zip_code : ""
-        }${address?.country ? ", " + address.country : ""}` || "N/A",
-
-      modifier: ({ address }) =>
-        `${address?.address ? address.address : ""}${
-          address?.city ? ", " + address.city : ""
-        }${address?.state_division ? ", " + address.state_division : ""}${
-          address?.post_zip_code ? " - " + address.post_zip_code : ""
-        }${address?.country ? ", " + address.country : ""}` || "N/A",
-
+      render: ({ status }) => status || "N/A",
       // for export
-      key: "address",
+      key: "status",
     },
-
-    // {
-    //   // for table display
-    //   accessor: "operating_hour",
-    //   title: "Operating Hour",
-    //   // visibleMediaQuery: aboveXs,
-    //   render: ({ operating_hour }) =>
-    //     operating_hour?.operating_hour_from || "N/A",
-    //   // for export
-    //   key: "operating_hour",
-    // },
     {
       // for table display
       accessor: "actions",
@@ -223,33 +202,29 @@ const index = () => {
       value: "na",
     },
     {
-      label: "Name",
-      value: "name",
+      label: "Leave Type",
+      value: "leavepolicy",
     },
     {
       label: "Description",
       value: "description",
     },
     {
-      label: "Company",
-      value: "company",
+      label: "From Date",
+      value: "from_date",
     },
     {
-      label: "Phone",
-      value: "phone",
+      label: "To Date",
+      value: "to_date",
     },
     {
-      label: "Email",
-      value: "email",
+      label: "Total Leave",
+      value: "total_leave",
     },
     {
-      label: "Address",
-      value: "address",
+      label: "Status",
+      value: "status",
     },
-    // {
-    //   label: "Operating Hour",
-    //   value: "operating_hour",
-    // },
     {
       label: "Actions",
       value: "actions",
@@ -258,19 +233,18 @@ const index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "name",
+    "leavepolicy",
     "description",
-    "email",
-    "phone",
-    "company",
-    "address",
-    // "operating_hour",
+    "from_date",
+    "to_date",
+    "total_leave",
+    "status",
     "actions",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set(["na", "name", "description", "actions", ...keys]),
+      ...new Set(["na", "leavepolicy", "from_date", "to_date", ...keys]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>
@@ -290,7 +264,7 @@ const index = () => {
   // const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/api/branch/get-branch/?column_accessor=${
+    let url = `/api/leave/get-leaverequest/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -361,7 +335,7 @@ const index = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "Branches", "branches");
+        exportToPDF(headers, data, "Leave Requests/", "leave-requests");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -424,7 +398,7 @@ const index = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "branches");
+        exportToCSV(data, "leave-requests");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -486,7 +460,7 @@ const index = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "branches");
+        exportToExcel(data, "leave-requests");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,
@@ -680,126 +654,6 @@ const index = () => {
           onSortStatusChange={handleSortStatusChange}
           // selectedRecords={selectedRecords}
           // onSelectedRecordsChange={setSelectedRecords}
-          // recordsPerPageOptions={PAGE_SIZES}
-          // onRecordsPerPageChange={setPageSize}
-          // rowExpansion={rowExpansion}
-          // onRowContextMenu={handleContextMenu}
-          // onScroll={hideContextMenu}
-        />
-      </div>
-
-      <div className="itemCard p-0 datatable-wrapper">
-        <DataTable
-          style={{
-            height: apiData?.results?.length === 0 ? "300px" : "auto",
-          }}
-          classNames={{
-            root: "datatable",
-            table: "datatable_table",
-            header: "datatable_header",
-            pagination: "datatable_pagination",
-          }}
-          // borderColor="#e0e6ed66"
-          // rowBorderColor="#e0e6ed66"
-          // c={{ dark: "#ffffff", light: "#0E1726" }}
-          // highlightOnHover
-          horizontalSpacing="sm"
-          verticalSpacing="sm"
-          fz="sm"
-          verticalAlign="center"
-          striped
-          columns={[
-            {
-              title: "#",
-              accessor: "na",
-              noWrap: true,
-              sortable: false,
-              width: 90,
-              render: (_, index) => (currentPage - 1) * pageSize + index + 1,
-            },
-
-            {
-              accessor: "designation_name",
-              title: "Leave Type",
-              noWrap: true,
-              // visibleMediaQuery: aboveXs,
-              render: ({ designation_name }) => designation_name || "N/A",
-            },
-            {
-              accessor: "department_name",
-              title: "From Date",
-              // visibleMediaQuery: aboveXs,
-              render: ({ department_name }) => department_name || "N/A",
-            },
-            {
-              accessor: "department_name",
-              title: "To Date",
-              // visibleMediaQuery: aboveXs,
-              render: ({ department_name }) => department_name || "N/A",
-            },
-            {
-              accessor: "department_name",
-              title: "Total Days",
-              // visibleMediaQuery: aboveXs,
-              render: ({ department_name }) => department_name || "N/A",
-            },
-            {
-              accessor: "department_name",
-              title: "Attachment",
-              // visibleMediaQuery: aboveXs,
-              render: ({ department_name }) => department_name || "N/A",
-            },
-            {
-              accessor: "department_name",
-              title: "Detail",
-              // visibleMediaQuery: aboveXs,
-              render: ({ department_name }) => department_name || "N/A",
-            },
-
-            {
-              accessor: "actions",
-              title: "Actions",
-              width: 90,
-              textAlign: "center",
-              // width: "0%",
-              render: (item) => (
-                <>
-                  <Menu shadow="md" width={150} position="bottom-end">
-                    <Menu.Target>
-                      <button className="border-0 bg-transparent">
-                        <HiDotsVertical />
-                      </button>
-                    </Menu.Target>
-
-                    <Menu.Dropdown>
-                      <Menu.Item
-                        onClick={open}
-                        leftSection={<BiMessageSquareEdit className="fs-6" />}
-                      >
-                        Edit
-                      </Menu.Item>
-                      <Menu.Item
-                        onClick={deleteOpen}
-                        leftSection={<AiOutlineDelete className="fs-6" />}
-                      >
-                        Delete
-                      </Menu.Item>
-                    </Menu.Dropdown>
-                  </Menu>
-                </>
-              ),
-            },
-          ]}
-          fetching={isLoading}
-          records={apiData?.results || []}
-          page={currentPage}
-          onPageChange={setCurrentPage}
-          totalRecords={apiData?.count}
-          recordsPerPage={pageSize}
-          sortStatus={sortStatus}
-          onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}

@@ -19,479 +19,447 @@ import Logo from "../../../../public/logo.png";
 import { TbSettings } from "react-icons/tb";
 
 const Page = () => {
-   return (
-      <>
-         <div id="navigation_part" className="side_nav">
-            <div className="p-3">
-               <div className="accordion_part">
-                  <div className="pb-2">
-                     <Accordion>
-                        {/* manu item 0 */}
+  return (
+    <>
+      <div id="navigation_part" className="side_nav">
+        <div className="p-3">
+          <div className="accordion_part">
+            <div className="pb-2">
+              <Accordion>
+                {/* manu item 0 */}
+                <Accordion.Item eventKey="0" className="pt-0">
+                  <p className="menuTitle mb-0">Menu</p>
+                  <Accordion.Header className="p-0 m-0 text-capitalize">
+                    <PiBuildings className="sideMenu menu_icon" />
+                    <span className="text-capitalize sideMenu">Company</span>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <ul className="text-decoration-none mb-0 sidenav_submenu">
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/basic-info"
+                          className="text-decoration-none subMenu"
+                        >
+                          Basic info
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/branch"
+                          className="text-decoration-none subMenu"
+                        >
+                          Branches
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/departments"
+                          className="text-decoration-none subMenu"
+                        >
+                          Departments
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/employee-grade"
+                          className="text-decoration-none subMenu"
+                        >
+                          Employee Grades
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/designation"
+                          className="text-decoration-none subMenu"
+                        >
+                          Designations
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Accordion>
+                          <Accordion.Item eventKey="0" className="pt-0">
+                            <Accordion.Header className=" p-0 m-0 text-capitalize subTab">
+                              {/* <LuUser2 className="sideMenu menu_icon" /> */}
+                              <span className="text-capitalize sideMenu">
+                                Shifts
+                              </span>
+                            </Accordion.Header>
+                            <Accordion.Body>
+                              <ul className="text-decoration-none mb-0 sidenav_submenu">
+                                <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                  <Link
+                                    href="/shift-list"
+                                    className="text-decoration-none subMenu"
+                                  >
+                                    Shift List
+                                  </Link>
+                                </li>
+                                <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                  <Link
+                                    href="/assign-shift"
+                                    className="text-decoration-none subMenu"
+                                  >
+                                    Assign Shift
+                                  </Link>
+                                </li>
+                              </ul>
+                            </Accordion.Body>
+                          </Accordion.Item>
+                        </Accordion>
+                      </li>
+                    </ul>
+                  </Accordion.Body>
+                </Accordion.Item>
+
+                {/* manu item 1 */}
+                <Accordion.Item eventKey="1" className="pt-0">
+                  <Accordion.Header className="p-0 m-0 text-capitalize">
+                    <LuUser2 className="sideMenu menu_icon" />
+                    <span className="text-capitalize sideMenu">Employee</span>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <ul className="text-decoration-none mb-0 sidenav_submenu">
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/employees"
+                          className="text-decoration-none subMenu"
+                        >
+                          All employees
+                        </Link>
+                      </li>
+                    </ul>
+                  </Accordion.Body>
+                </Accordion.Item>
+
+                {/* manu item 2 */}
+                <Accordion.Item eventKey="2" className="pt-0">
+                  <Accordion.Header className="p-0 m-0 text-capitalize">
+                    <LuNewspaper className="sideMenu menu_icon" />
+                    <span className="text-capitalize sideMenu">Leave</span>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <ul className="text-decoration-none mb-0 sidenav_submenu">
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/holiday-list"
+                          className="text-decoration-none subMenu"
+                        >
+                          Holiday list
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/leave-policy"
+                          className="text-decoration-none subMenu"
+                        >
+                          Leave policy List
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/leave-policy-assign"
+                          className="text-decoration-none subMenu"
+                        >
+                          Leave Policy Assign
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/leave-allocation-request"
+                          className="text-decoration-none subMenu"
+                        >
+                          Leave Allocation Request
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/leave-request"
+                          className="text-decoration-none subMenu"
+                        >
+                          Leave Request
+                        </Link>
+                      </li>
+                    </ul>
+                  </Accordion.Body>
+                </Accordion.Item>
+
+                {/* manu item 3 */}
+                <Accordion.Item eventKey="3" className="pt-0">
+                  <Accordion.Header className="p-0 m-0 text-capitalize">
+                    <FaRegMoneyBillAlt className="sideMenu menu_icon" />
+                    <span className="text-capitalize sideMenu">Payroll</span>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <ul className="text-decoration-none mb-0 sidenav_submenu">
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/create-payroll"
+                          className="text-decoration-none subMenu"
+                        >
+                          Create Payroll
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/salary-slip-create"
+                          className="text-decoration-none subMenu"
+                        >
+                          Create Salary Slip
+                        </Link>
+                      </li>
+
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/payslip"
+                          className="text-decoration-none subMenu"
+                        >
+                          payslip
+                        </Link>
+                      </li>
+                      <Accordion>
                         <Accordion.Item eventKey="0" className="pt-0">
-                           <p className="menuTitle mb-0">Menu</p>
-                           <Accordion.Header className="p-0 m-0 text-capitalize">
-                              <PiBuildings className="sideMenu menu_icon" />
-                              <span className="text-capitalize sideMenu">
-                                 Company
-                              </span>
-                           </Accordion.Header>
-                           <Accordion.Body>
-                              <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/basic-info"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Basic info
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/branch"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Branch
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/departments"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Departments
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/employee-grade"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Employee Grade
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/designation"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Designation
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Accordion>
-                                       <Accordion.Item
-                                          eventKey="0"
-                                          className="pt-0"
-                                       >
-                                          <Accordion.Header className=" p-0 m-0 text-capitalize subTab">
-                                             {/* <LuUser2 className="sideMenu menu_icon" /> */}
-                                             <span className="text-capitalize sideMenu">
-                                                Shift
-                                             </span>
-                                          </Accordion.Header>
-                                          <Accordion.Body>
-                                             <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                                <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                                   <Link
-                                                      href="/shift-list"
-                                                      className="text-decoration-none subMenu"
-                                                   >
-                                                      Shift List
-                                                   </Link>
-                                                </li>
-                                                <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                                   <Link
-                                                      href="/assign-shift"
-                                                      className="text-decoration-none subMenu"
-                                                   >
-                                                      Assign Shift
-                                                   </Link>
-                                                </li>
-                                             </ul>
-                                          </Accordion.Body>
-                                       </Accordion.Item>
-                                    </Accordion>
-                                 </li>
-                              </ul>
-                           </Accordion.Body>
+                          <Accordion.Header className=" p-0 m-0 text-capitalize subTab">
+                            {/* <LuUser2 className="sideMenu menu_icon" /> */}
+                            <span className="text-capitalize sideMenu">
+                              Earnings
+                            </span>
+                          </Accordion.Header>
+                          <Accordion.Body>
+                            <ul className="text-decoration-none mb-0 sidenav_submenu">
+                              <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                <Link
+                                  href="/create-allowance"
+                                  className="text-decoration-none subMenu"
+                                >
+                                  Create Allowance
+                                </Link>
+                              </li>
+                              <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                <Link
+                                  href="/assign-allowance"
+                                  className="text-decoration-none subMenu"
+                                >
+                                  Assign Allowance
+                                </Link>
+                              </li>
+                            </ul>
+                          </Accordion.Body>
                         </Accordion.Item>
-
-                        {/* manu item 1 */}
                         <Accordion.Item eventKey="1" className="pt-0">
-                           <Accordion.Header className="p-0 m-0 text-capitalize">
-                              <LuUser2 className="sideMenu menu_icon" />
-                              <span className="text-capitalize sideMenu">
-                                 Employee
-                              </span>
-                           </Accordion.Header>
-                           <Accordion.Body>
-                              <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/employees"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       All employee
-                                    </Link>
-                                 </li>
-                              </ul>
-                           </Accordion.Body>
+                          <Accordion.Header className="p-0 m-0 text-capitalize subTab">
+                            {/* <LuUser2 className="sideMenu menu_icon" /> */}
+                            <span className="text-capitalize sideMenu">
+                              Deductions
+                            </span>
+                          </Accordion.Header>
+                          <Accordion.Body>
+                            <ul className="text-decoration-none mb-0 sidenav_submenu">
+                              <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                <Link
+                                  href="/create-deductions"
+                                  className="text-decoration-none subMenu"
+                                >
+                                  Create Deductions
+                                </Link>
+                              </li>
+                              <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                <Link
+                                  href="/assign-deductions"
+                                  className="text-decoration-none subMenu"
+                                >
+                                  Assign Deductions
+                                </Link>
+                              </li>
+                            </ul>
+                          </Accordion.Body>
                         </Accordion.Item>
-
-                        {/* manu item 2 */}
-                        <Accordion.Item eventKey="2" className="pt-0">
-                           <Accordion.Header className="p-0 m-0 text-capitalize">
-                              <LuNewspaper className="sideMenu menu_icon" />
-                              <span className="text-capitalize sideMenu">
-                                 Leave
-                              </span>
-                           </Accordion.Header>
-                           <Accordion.Body>
-                              <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/holiday-list"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Holiday list
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/leave-policy"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Leave policy List
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/leave-policy-assign"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Leave Policy Assign
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/leave-allocation-request"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Leave Allocation Request
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/leave-request"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Leave Request
-                                    </Link>
-                                 </li>
-                              </ul>
-                           </Accordion.Body>
+                      </Accordion>
+                    </ul>
+                    <ul className="text-decoration-none mb-0 sidenav_submenu">
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/income-tax"
+                          className="text-decoration-none subMenu"
+                        >
+                          Income Tax
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/incentives-and-bonuses"
+                          className="text-decoration-none subMenu"
+                        >
+                          Incentives And Bonuses
+                        </Link>
+                      </li>
+                    </ul>
+                    <ul className="text-decoration-none mb-0 sidenav_submenu">
+                      <Accordion>
+                        <Accordion.Item eventKey="0" className="pt-0">
+                          <Accordion.Header className=" p-0 m-0 text-capitalize subTab">
+                            {/* <LuUser2 className="sideMenu menu_icon" /> */}
+                            <span className="text-capitalize sideMenu">
+                              Loan / Fine
+                            </span>
+                          </Accordion.Header>
+                          <Accordion.Body>
+                            <ul className="text-decoration-none mb-0 sidenav_submenu">
+                              <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                <Link
+                                  href="/advance-salary"
+                                  className="text-decoration-none subMenu"
+                                >
+                                  Adv. Salary/Loan Request
+                                </Link>
+                              </li>
+                              <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                                <Link
+                                  href="/loan-management"
+                                  className="text-decoration-none subMenu"
+                                >
+                                  Adv. Salary/Loan Management
+                                </Link>
+                              </li>
+                            </ul>
+                          </Accordion.Body>
                         </Accordion.Item>
+                      </Accordion>
+                    </ul>
+                  </Accordion.Body>
+                </Accordion.Item>
 
-                        {/* manu item 3 */}
-                        <Accordion.Item eventKey="3" className="pt-0">
-                           <Accordion.Header className="p-0 m-0 text-capitalize">
-                              <FaRegMoneyBillAlt className="sideMenu menu_icon" />
-                              <span className="text-capitalize sideMenu">
-                                 Payroll
-                              </span>
-                           </Accordion.Header>
-                           <Accordion.Body>
-                              <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/create-payroll"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Create Payroll
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/salary-slip-create"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Create Salary Slip
-                                    </Link>
-                                 </li>
+                {/* manu item 4 */}
+                <Accordion.Item eventKey="4" className="pt-0">
+                  <Accordion.Header className="p-0 m-0 text-capitalize">
+                    <LuListChecks className="sideMenu menu_icon" />
+                    <span className="text-capitalize sideMenu">Attendance</span>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <ul className="text-decoration-none mb-0 sidenav_submenu">
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/manual-attendance"
+                          className="text-decoration-none subMenu"
+                        >
+                          Manual Attendance
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/remote-attendance"
+                          className="text-decoration-none subMenu"
+                        >
+                          Remote Attendance
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link href="/" className="text-decoration-none subMenu">
+                          Raw Data
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link href="/" className="text-decoration-none subMenu">
+                          Attendance Report
+                        </Link>
+                      </li>
+                    </ul>
+                  </Accordion.Body>
+                </Accordion.Item>
 
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/payslip"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       payslip
-                                    </Link>
-                                 </li>
-                                 <Accordion>
-                                    <Accordion.Item
-                                       eventKey="0"
-                                       className="pt-0"
-                                    >
-                                       <Accordion.Header className=" p-0 m-0 text-capitalize subTab">
-                                          {/* <LuUser2 className="sideMenu menu_icon" /> */}
-                                          <span className="text-capitalize sideMenu">
-                                             Earnings
-                                          </span>
-                                       </Accordion.Header>
-                                       <Accordion.Body>
-                                          <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                             <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                                <Link
-                                                   href="/create-allowance"
-                                                   className="text-decoration-none subMenu"
-                                                >
-                                                   Create Allowance
-                                                </Link>
-                                             </li>
-                                             <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                                <Link
-                                                   href="/assign-allowance"
-                                                   className="text-decoration-none subMenu"
-                                                >
-                                                   Assign Allowance
-                                                </Link>
-                                             </li>
-                                          </ul>
-                                       </Accordion.Body>
-                                    </Accordion.Item>
-                                    <Accordion.Item
-                                       eventKey="1"
-                                       className="pt-0"
-                                    >
-                                       <Accordion.Header className="p-0 m-0 text-capitalize subTab">
-                                          {/* <LuUser2 className="sideMenu menu_icon" /> */}
-                                          <span className="text-capitalize sideMenu">
-                                             Deductions
-                                          </span>
-                                       </Accordion.Header>
-                                       <Accordion.Body>
-                                          <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                             <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                                <Link
-                                                   href="/create-deductions"
-                                                   className="text-decoration-none subMenu"
-                                                >
-                                                   Create Deductions
-                                                </Link>
-                                             </li>
-                                             <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                                <Link
-                                                   href="/assign-deductions"
-                                                   className="text-decoration-none subMenu"
-                                                >
-                                                   Assign Deductions
-                                                </Link>
-                                             </li>
-                                          </ul>
-                                       </Accordion.Body>
-                                    </Accordion.Item>
-                                 </Accordion>
-                              </ul>
-                              <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/income-tax"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Income Tax
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/incentives-and-bonuses"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Incentives And Bonuses
-                                    </Link>
-                                 </li>
-                              </ul>
-                              <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                 <Accordion>
-                                    <Accordion.Item
-                                       eventKey="0"
-                                       className="pt-0"
-                                    >
-                                       <Accordion.Header className=" p-0 m-0 text-capitalize subTab">
-                                          {/* <LuUser2 className="sideMenu menu_icon" /> */}
-                                          <span className="text-capitalize sideMenu">
-                                             Loan / Fine
-                                          </span>
-                                       </Accordion.Header>
-                                       <Accordion.Body>
-                                          <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                             <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                                <Link
-                                                   href="/advance-salary"
-                                                   className="text-decoration-none subMenu"
-                                                >
-                                                   Adv. Salary/Loan Request
-                                                </Link>
-                                             </li>
-                                             <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                                <Link
-                                                   href="/loan-management"
-                                                   className="text-decoration-none subMenu"
-                                                >
-                                                   Adv. Salary/Loan Management
-                                                </Link>
-                                             </li>
-                                          </ul>
-                                       </Accordion.Body>
-                                    </Accordion.Item>
-                                 </Accordion>
-                              </ul>
-                           </Accordion.Body>
-                        </Accordion.Item>
+                {/* manu item 5 */}
+                <Accordion.Item eventKey="5" className="pt-0">
+                  <Accordion.Header className="p-0 m-0 text-capitalize">
+                    <BiDevices className="sideMenu menu_icon" />
+                    <span className="text-capitalize sideMenu">Device</span>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <ul className="text-decoration-none mb-0 sidenav_submenu">
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/devices"
+                          className="text-decoration-none subMenu"
+                        >
+                          Devices
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/groups"
+                          className="text-decoration-none subMenu"
+                        >
+                          Groups
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/assign-to-group"
+                          className="text-decoration-none subMenu"
+                        >
+                          Assign to Group
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/sync-log-data"
+                          className="text-decoration-none subMenu"
+                        >
+                          Sync Log Data
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/clear-raw-data"
+                          className="text-decoration-none subMenu"
+                        >
+                          Clear Raw Data
+                        </Link>
+                      </li>
+                    </ul>
+                  </Accordion.Body>
+                </Accordion.Item>
 
-                        {/* manu item 4 */}
-                        <Accordion.Item eventKey="4" className="pt-0">
-                           <Accordion.Header className="p-0 m-0 text-capitalize">
-                              <LuListChecks className="sideMenu menu_icon" />
-                              <span className="text-capitalize sideMenu">
-                                 Attendance
-                              </span>
-                           </Accordion.Header>
-                           <Accordion.Body>
-                              <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/manual-attendance"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Manual Attendance
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/remote-attendance"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Remote Attendance
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Raw Data
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Attendance Report
-                                    </Link>
-                                 </li>
-                              </ul>
-                           </Accordion.Body>
-                        </Accordion.Item>
+                {/* manu item 6 */}
+                <Accordion.Item eventKey="6" className="pt-0">
+                  <Accordion.Header className="p-0 m-0 text-capitalize">
+                    <TbSettings className="sideMenu menu_icon" />
+                    <span className="text-capitalize sideMenu">Settings</span>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <ul className="text-decoration-none mb-0 sidenav_submenu">
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/general-settings"
+                          className="text-decoration-none subMenu"
+                        >
+                          General Settings
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/profile-view"
+                          className="text-decoration-none subMenu"
+                        >
+                          User role
+                        </Link>
+                      </li>
+                    </ul>
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
 
-                        {/* manu item 5 */}
-                        <Accordion.Item eventKey="5" className="pt-0">
-                           <Accordion.Header className="p-0 m-0 text-capitalize">
-                              <BiDevices className="sideMenu menu_icon" />
-                              <span className="text-capitalize sideMenu">
-                                 Device
-                              </span>
-                           </Accordion.Header>
-                           <Accordion.Body>
-                              <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/add-device"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Add Device
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/add-group"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Add Group
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/assign-to-group"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Assign to Group
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/sync-log-data"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Sync Log Data
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/clear-raw-data"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       Clear Raw Data
-                                    </Link>
-                                 </li>
-                              </ul>
-                           </Accordion.Body>
-                        </Accordion.Item>
-
-                        {/* manu item 6 */}
-                        <Accordion.Item eventKey="6" className="pt-0">
-                           <Accordion.Header className="p-0 m-0 text-capitalize">
-                              <TbSettings className="sideMenu menu_icon" />
-                              <span className="text-capitalize sideMenu">
-                                 Settings
-                              </span>
-                           </Accordion.Header>
-                           <Accordion.Body>
-                              <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/general-settings"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       General Settings
-                                    </Link>
-                                 </li>
-                                 <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                    <Link
-                                       href="/profile-view"
-                                       className="text-decoration-none subMenu"
-                                    >
-                                       User role
-                                    </Link>
-                                 </li>
-                              </ul>
-                           </Accordion.Body>
-                        </Accordion.Item>
-                     </Accordion>
-
-                     {/* single menu */}
-                     {/* <Link href="/dashboard" className="p-0 m-0 text-capitalize">
+              {/* single menu */}
+              {/* <Link href="/dashboard" className="p-0 m-0 text-capitalize">
                      <PiBuildings className="sideMenu menu_icon" />
                      <span className="text-capitalize sideMenu ms-2">
                         single menu
                      </span>
                   </Link> */}
-                  </div>
-               </div>
             </div>
-         </div>
-      </>
-   );
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Page;

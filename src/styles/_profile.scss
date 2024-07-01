@@ -1,3 +1,16 @@
+.profileEditBtn {
+   position: absolute;
+   right: 20px;
+   top: 20px;
+   padding: 6px 10px;
+   border: 0px;
+   border-radius: 8px;
+   background-color: #eee;
+}
+.profileEditBtn .iconBtn {
+   font-size: 18px;
+   color: #666;
+}
 .profile img {
    width: 130px;
    height: 130px;
@@ -13,8 +26,8 @@
    color: #7a7c7f;
 }
 
-.borderLeft {
-   border-left: 2px dashed #ddd;
+.borderRight {
+   border-right: 2px dashed #ddd;
 }
 .employeeInfo p {
    color: #7a7c7f;
@@ -36,4 +49,11 @@
    margin-bottom: 4px;
    margin-right: 4px;
    color: var(--main-color);
+}
+.reportsImg {
+   width: 30px;
+   height: 30px;
+   object-fit: cover;
+   border-radius: 100px;
+   margin-right: 10px;
 }

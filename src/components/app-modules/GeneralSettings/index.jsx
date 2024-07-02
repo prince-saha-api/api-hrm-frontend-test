@@ -1,6 +1,8 @@
 "use client";
 import React, { useRef } from "react";
 import {
+   TextInput,
+   Input,
    Button,
    Group,
    Select,
@@ -67,6 +69,37 @@ const GeneralSettings = () => {
                         ref={refTimeIn}
                         rightSection={timeIn}
                      />
+                     <NumberInput
+                        mb="sm"
+                        label="Number of consecutive late attendance to fine"
+                        placeholder="default 3"
+                        hideControls
+                     />
+                     <NumberInput
+                        mb="sm"
+                        label="Consecutive late attendance fine amount against the fraction of daily salary"
+                        placeholder="default 100%"
+                        hideControls
+                     />
+                     <div className="holidayBox mb-3">
+                        <p className="mb-1">Weekly Holidays</p>
+                        <div className="d-flex flex-wrap">
+                           <Checkbox
+                              me="lg"
+                              mb="sm"
+                              defaultChecked
+                              label="Friday "
+                           />
+                           <Checkbox me="lg" mb="sm" label="Saturday" />
+                           <Checkbox me="lg" mb="sm" label="Sunday" />
+                           <Checkbox me="lg" mb="sm" label="Monday" />
+                           <Checkbox me="lg" mb="sm" label="Tuesday" />
+                           <Checkbox me="lg" mb="sm" label="Wednesday" />
+                           <Checkbox me="lg" mb="sm" label="Thursday" />
+                        </div>
+                     </div>
+                  </Grid.Col>
+                  <Grid.Col span={3}>
                      <NumberInput
                         mb="sm"
                         label="Fraction of Daily Salary for Half Day"

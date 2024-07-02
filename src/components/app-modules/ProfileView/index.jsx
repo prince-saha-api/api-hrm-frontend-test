@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import {
    Button,
@@ -12,12 +12,16 @@ import {
    Modal,
 } from "@mantine/core";
 import Breadcrumb from "@/components/utils/Breadcrumb";
+import { TbEyeClosed } from "react-icons/tb";
 import { TimeInput } from "@mantine/dates";
 import { IoTimeOutline } from "react-icons/io5";
 import { useDisclosure } from "@mantine/hooks";
 import Image from "next/image";
 import { TbSquareRoundedFilled } from "react-icons/tb";
 import { TbSquareRounded } from "react-icons/tb";
+import { RxPencil2 } from "react-icons/rx";
+import Delete from "./Delete";
+// import Add from "./Add";
 
 const ProfileView = () => {
    const refTimeIn = useRef(null);
@@ -31,10 +35,26 @@ const ProfileView = () => {
       </ActionIcon>
    );
 
-   const [opened, { open, close }] = useDisclosure(false);
+   // for Modal
+   // const [addOpened, { open: addOpen, close: addClose }] = useDisclosure(false);
+   // const [editOpened, { open: editOpen, close: editClose }] = useDisclosure(false);
+   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
+      useDisclosure(false);
+
+   // const [selectedEditItem, setSelectedEditItem] = useState(null);
+   const [selectedDeleteItem, setSelectedDeleteItem] = useState(null);
 
    return (
       <>
+         {/* <Add opened={addOpened} close={addClose} /> */}
+
+         <Delete
+            opened={deleteOpened}
+            close={deleteClose}
+            item={selectedDeleteItem}
+            // mutate={mutate}
+         />
+
          <Breadcrumb
             classNames={{
                root: "mb-4",
@@ -46,16 +66,21 @@ const ProfileView = () => {
             ]}
          />
 
-         <Modal opened={opened} onClose={close} title="Authentication" centered>
-            <p>Modal content</p>
-         </Modal>
+         <div className="itemCard position-relative">
+            <button
+               className="profileEditBtn"
+               onClick={() => {
+                  // setSelectedDeleteItem(item);
+                  deleteOpen();
+               }}
+               // handleClick={addOpen}
+            >
+               <RxPencil2 className="iconBtn" />
+            </button>
 
-         {/* <Button onClick={open}>Open centered Modal</Button> */}
-
-         <div className="itemCard p-5">
             <Grid>
                <Grid.Col span={6}>
-                  <div className="profileBox d-flex align-items-center">
+                  <div className="profileBox borderRight h-100 d-flex">
                      <div className="profile">
                         <Image
                            src="/profile03.jpg"
@@ -67,23 +92,47 @@ const ProfileView = () => {
                      <div className="proInfo ms-4">
                         <h3 className="employeeName mb-1">Jiaur Rahman</h3>
                         <h6 className="employeeDesig mb-1">
-                           Software Developer
+                           Software Engineer
                         </h6>
-                        <b className="employeeId mb-1">
-                           Employee ID : API2202016
-                        </b>
+
+                        <p className="employeeJoin mb-1">
+                           <b>Employee ID : API2202016</b>
+                        </p>
+                        <p className="employeeJoin mb-1">
+                           Department : Development
+                        </p>
                         <p className="employeeJoin mb-1">
                            Date of Join : 1st Jan 2021
                         </p>
+                        <p className="employeeJoin mb-1">
+                           Annual Leave : 16{" "}
+                           <span className="text-warning">
+                              (Remaining Leave: 4)
+                           </span>
+                        </p>
+                        <p className="employeeJoin">
+                        <span>Reset Password:</span>
+                        <button
+                           className="border-0 ms-2"
+                           onClick={() => {
+                              // setSelectedDeleteItem(item);
+                              deleteOpen();
+                           }}
+                           // handleClick={addOpen}
+                        >
+                           <TbEyeClosed className="iconBtn me-2" />
+                           Reset
+                        </button>
+                     </p>
                      </div>
                   </div>
                </Grid.Col>
                <Grid.Col span={6}>
-                  <div className="employeeInfo borderLeft ps-4">
+                  <div className="employeeInfo h-100 ps-3">
                      <p>
                         <span>Phone:</span>
-                        <Link className="phnNumber" href="tel:01786449007">
-                           01786449007
+                        <Link className="phnNumber" href="tel:01686449007">
+                           01686449007
                         </Link>
                      </p>
                      <p>
@@ -99,8 +148,8 @@ const ProfileView = () => {
                         <span>Date of Birth:</span>24-July-1996
                      </p>
                      <p>
-                        <span>Address:</span>1861 Bayonne Ave, Manchester
-                        Township, NJ, 08759
+                        <span>Address:</span>Bayonne Ave, Manchester Township,
+                        Nkgkgke, Mancheste Real Likebto power tomaar Fcace door
                      </p>
                      <p>
                         <span>Gender:</span>Male
@@ -110,6 +159,17 @@ const ProfileView = () => {
                      </p>
                      <p>
                         <span>Marital Status:</span> Married
+                     </p>
+                     <p>
+                        <span>Supervisor:</span>
+                        <Image
+                           className="reportsImg"
+                           src="/profile01.jpg"
+                           width={200}
+                           height={200}
+                           alt="profile_img"
+                        />
+                        Tanim Shahriar Abedin
                      </p>
                   </div>
                </Grid.Col>

@@ -12,8 +12,8 @@ import { getStoragePath } from "../../../lib/helper";
 import { authTokenKey, authUserKey } from "../../../lib/config";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "../../../../public/logo.png";
-import profileImg from "../../../../public/profile01.jpg";
+import Logo from "public/logo.png";
+import profileImg from "public/profile01.jpg";
 
 const Navbar = () => {
   // const { logout } = useAuth();

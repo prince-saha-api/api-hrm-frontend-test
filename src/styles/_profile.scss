@@ -1,59 +1,82 @@
 .profileEditBtn {
-   position: absolute;
-   right: 20px;
-   top: 20px;
-   padding: 6px 10px;
-   border: 0px;
-   border-radius: 8px;
-   background-color: #eee;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  padding: 6px 10px;
+  border: 0px;
+  border-radius: 8px;
+  background-color: #eee;
 }
 .profileEditBtn .iconBtn {
-   font-size: 18px;
-   color: #666;
+  font-size: 18px;
+  color: #666;
 }
 .profile img {
-   width: 130px;
-   height: 130px;
-   object-fit: cover;
-   border-radius: 100%;
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 100%;
 }
 .employeeName {
-   color: #373b3e;
-   font-size: 1.5rem;
+  color: #373b3e;
+  font-size: 1.5rem;
 }
 .employeeDesig,
 .employeeJoin {
-   color: #7a7c7f;
+  color: #7a7c7f;
 }
 
 .borderRight {
-   border-right: 2px dashed #ddd;
+  border-right: 2px dashed #ddd;
 }
 .employeeInfo p {
-   color: #7a7c7f;
-   margin-bottom: 5px;
+  color: #7a7c7f;
+  margin-bottom: 5px;
 }
 .employeeInfo span {
-   display: inline-block;
-   color: #373b3e;
-   font-weight: 600;
-   width: 200px;
+  display: inline-block;
+  color: #373b3e;
+  font-weight: 600;
+  width: 200px;
 }
 .phnNumber,
 .email {
-   color: var(--main-color);
-   text-decoration: none;
+  color: var(--main-color);
+  text-decoration: none;
 }
 .roundIcon {
-   font-size: 12px;
-   margin-bottom: 4px;
-   margin-right: 4px;
-   color: var(--main-color);
+  font-size: 12px;
+  margin-bottom: 4px;
+  margin-right: 10px;
+  color: var(--main-color);
 }
 .reportsImg {
-   width: 30px;
-   height: 30px;
-   object-fit: cover;
-   border-radius: 100px;
-   margin-right: 10px;
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 100px;
+  margin-right: 10px;
+}
+.docItem {
+  border: 0 !important;
+  padding: 25px 20px !important;
+  border-radius: 8px !important;
+  min-width: 180px;
+}
+.docBtn {
+  font-size: 33px;
+  margin-bottom: 5px;
+}
+.documentsImage {
+  width: 100%;
+  height: auto;
+}
+.borderLeft {
+  border-left: 2px dashed #ddd;
+  padding-left: 15px;
+  margin-bottom: 40px;
+}
+
+.borderLeft:nth-last-child(1) {
+   margin-bottom: 0px !important;
 }

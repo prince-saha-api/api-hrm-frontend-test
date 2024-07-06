@@ -6,9 +6,7 @@ import { deleteItem } from "@/lib/submit";
 const Index = ({ opened, close, item, mutate }) => {
   const handleDelete = async () => {
     try {
-      const response = await deleteItem(
-        `/api/device/delete-devicegroup/${item.id}`
-      );
+      const response = await deleteItem(`/api/device/delete-group/${item.id}`);
 
       const res = await response.json();
 

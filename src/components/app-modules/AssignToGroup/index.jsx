@@ -151,14 +151,14 @@ const Index = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item
+            {/* <Menu.Item
               leftSection={<BiMessageSquareEdit className="fs-6" />}
               onClick={() => {
                 setSelectedEditItem(item);
               }}
             >
               Edit
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item
               leftSection={<AiOutlineDelete className="fs-6" />}
               onClick={() => {
@@ -234,7 +234,7 @@ const Index = () => {
   // const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/api/leave/get-leavepolicy/?column_accessor=${
+    let url = `/api/device/get-devicegroup/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -305,7 +305,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "Leave Policy", "leave-policy");
+        exportToPDF(headers, data, "Device Groups", "device-groups");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -368,7 +368,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "leave-policy");
+        exportToCSV(data, "device-groups");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -430,7 +430,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "leave-policy");
+        exportToExcel(data, "device-groups");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,
@@ -477,6 +477,8 @@ const Index = () => {
         />
       </div>
 
+      <Add mutate={mutate} />
+
       <div className="d-flex justify-content-between mb-3">
         <div className="showItem d-flex align-items-center justify-content-center">
           <p className="mb-0 me-2">Show</p>
@@ -492,8 +494,6 @@ const Index = () => {
             onChange={(_value, option) => handlePageSizeChange(_value)}
           />
           <p className="mb-0 ms-2 me-2">Entries</p>
-
-          <Add mutate={mutate} />
         </div>
         <div className="downItem d-flex">
           <div className="me-2">
@@ -573,8 +573,8 @@ const Index = () => {
           recordsPerPage={pageSize}
           sortStatus={sortStatus}
           onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
+          // selectedRecords={selectedRecords}
+          // onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}

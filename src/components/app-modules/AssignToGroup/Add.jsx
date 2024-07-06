@@ -26,10 +26,10 @@ const Index = ({ mutate }) => {
       deviceid: "",
       groupid: "",
     },
-    // validate: {
-    //   title: (value) =>
-    //     value.length < 5 ? "Name must have at least 5 letters" : null,
-    // },
+    validate: {
+      deviceid: (value) => (value ? null : "Device is required"),
+      groupid: (value) => (value ? null : "Group is required"),
+    },
   });
 
   const {
@@ -67,8 +67,8 @@ const Index = ({ mutate }) => {
 
     const formattedValues = {
       ...values,
-      deviceid: Number(values.deviceid),
-      groupid: Number(values.groupid),
+      deviceid: values.deviceid ? Number(values.deviceid) : null,
+      groupid: values.groupid ? Number(values.groupid) : null,
     };
 
     setIsSubmitting(true);
@@ -104,27 +104,31 @@ const Index = ({ mutate }) => {
   return (
     <>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <div className="d-flex align-items-center ms-4">
-          <div className="me-2">Select Device</div>
+        <div className="d-flex justify-content-start align-items-end mb-4">
+          {/* <div className="me-2">Select Device</div> */}
           <Select
-            // mt="sm"
-            // label="Gender"
+            me="sm"
+            label="Device"
             placeholder="Select Device"
+            required={true}
+            disabled={isSubmitting}
             data={devices}
             {...form.getInputProps("deviceid")}
           />
-          <div className="ms-3 me-2">Select Group</div>
+          {/* <div className="ms-3 me-2">Select Group</div> */}
           <Select
             // mt="sm"
-            // label="Gender"
+            label="Group"
             placeholder="Select Group"
+            required={true}
+            disabled={isSubmitting}
             data={groups}
             {...form.getInputProps("groupid")}
           />
 
           <Button
             type="submit"
-            className="ms-3"
+            ms="sm"
             variant="filled"
             loading={isSubmitting}
             loaderProps={{ type: "dots" }}

@@ -406,14 +406,14 @@ const Page = () => {
                           Sync Log Data
                         </Link>
                       </li>
-                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                      {/* <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
                           href="/clear-raw-data"
                           className="text-decoration-none subMenu"
                         >
                           Clear Raw Data
                         </Link>
-                      </li>
+                      </li> */}
                     </ul>
                   </Accordion.Body>
                 </Accordion.Item>

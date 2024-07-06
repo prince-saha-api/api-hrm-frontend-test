@@ -60,7 +60,7 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const companies = companyData?.data?.map((item) => ({
+  const companies = companyData?.result?.map((item) => ({
     label: item?.basic_information?.name?.toString() || "",
     value: item?.basic_information?.id.toString() || "",
   }));

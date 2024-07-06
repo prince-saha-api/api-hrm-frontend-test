@@ -107,7 +107,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
     keepPreviousData: true,
   });
 
-  const companies = data?.data?.map((item) => ({
+  const companies = data?.result?.map((item) => ({
     label: item?.basic_information?.name?.toString() || "",
     value: item?.basic_information?.id.toString() || "",
   }));

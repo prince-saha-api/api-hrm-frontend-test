@@ -72,11 +72,23 @@
   height: auto;
 }
 .borderLeft {
+  position: relative;
   border-left: 2px dashed #ddd;
   padding-left: 15px;
   margin-bottom: 40px;
 }
+.borderLeft::after {
+  content: "";
+  width: 4px;
+  height: 20px;
+  border-radius: 100px;
+  position: absolute;
+  top: 0;
+  left: -3px;
+  background: #ccc;
+  // background: linear-gradient(180deg, rgba(255,155,69,1) 0%, rgba(0,212,255,0) 100%);
+}
 
 .borderLeft:nth-last-child(1) {
-   margin-bottom: 0px !important;
+  margin-bottom: 0px !important;
 }

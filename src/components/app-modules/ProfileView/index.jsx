@@ -91,11 +91,56 @@ const ProfileView = () => {
       jobStatus: "Probation",
       designation: "Front-End Developer",
       department: "Software Development",
+      joiningSalary: "40,000/-",
+      newSalary: "55,000/-",
+    },
+    {
+      transition: "Status Update",
+      date: "01/04/2022",
+      jobStatus: "Permanent",
+      designation: "UI/UX Designer",
+      department: "Software Development",
       joiningSalary: "30,000/-",
       newSalary: "35,000/-",
     },
+    {
+      transition: "Increment",
+      date: "01/04/2022",
+      jobStatus: "Probation",
+      designation: "Front-End Developer",
+      department: "Software Development",
+      joiningSalary: "44,000/-",
+      newSalary: "55,000/-",
+    },
+    {
+      transition: "Joining",
+      date: "01/04/2022",
+      jobStatus: "Probation",
+      designation: "Front-End Developer",
+      department: "Software Development",
+      joiningSalary: "40,000/-",
+      newSalary: "55,000/-",
+    },
+    {
+      transition: "Status Update",
+      date: "01/04/2022",
+      jobStatus: "Permanent",
+      designation: "UI/UX Designer",
+      department: "Software Development",
+      joiningSalary: "30,000/-",
+      newSalary: "35,000/-",
+    },
+    {
+      transition: "Increment",
+      date: "01/04/2022",
+      jobStatus: "Probation",
+      designation: "Front-End Developer",
+      department: "Software Development",
+      joiningSalary: "44,000/-",
+      newSalary: "55,000/-",
+    },
   ];
-  // Table
+  // Table Job History
   const rows = elements.map((element) => (
     <Table.Tr key={element.name}>
       <Table.Td>{element.transition}</Table.Td>
@@ -289,7 +334,7 @@ const ProfileView = () => {
       </div>
 
       <div className="itemCard">
-        <Tabs color="teal" defaultValue="2">
+        <Tabs color="teal" defaultValue="1">
           <Tabs.List mb="md">
             <Tabs.Tab value="1" color="orange">
               Personal Details
@@ -361,7 +406,7 @@ const ProfileView = () => {
           </Tabs.Panel>
           <Tabs.Panel value="2" pt="xs">
             <Grid>
-              <Grid.Col span={6}>
+              <Grid.Col span={5}>
                 <div className="position-relative">
                   <button
                     className="profileEditBtn top-0 end-3"
@@ -423,14 +468,14 @@ const ProfileView = () => {
                   </div>
                 </div>
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={7}>
                 <div className="position-relative">
                   <h4 className="mb-3">
                     <TbSquareRoundedFilled className="roundIcon" />
                     Job History
                   </h4>
                   <div className="jobHistoryBox">
-                    <Table withTableBorder withColumnBorders>
+                    <Table striped withTableBorder withColumnBorders>
                       <Table.Thead>
                         <Table.Tr>
                           <Table.Th>Transition Type</Table.Th>

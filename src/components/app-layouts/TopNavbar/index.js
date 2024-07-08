@@ -81,6 +81,9 @@ const Navbar = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="profile_item rounded-1">
+              <Dropdown.Item href="/profile-view">
+                Profile
+              </Dropdown.Item>
               <Dropdown.Item href="#" onClick={(e) => handleLogout(e)}>
                 Logout
               </Dropdown.Item>

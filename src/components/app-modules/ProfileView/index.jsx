@@ -27,7 +27,9 @@ import { PiIdentificationCardLight } from "react-icons/pi";
 import { HiOutlineDocumentText } from "react-icons/hi2";
 import { CiFileOn } from "react-icons/ci";
 import { CiImageOn } from "react-icons/ci";
+import { TbEdit } from "react-icons/tb";
 import ProfileEdit from "./ProfileEdit";
+import ProfileImage from "./ProfileImage";
 import NID from "./NID";
 import Resume from "./Resume";
 import Appointment from "./Appointment";
@@ -52,37 +54,41 @@ const ProfileView = () => {
   );
 
   // for Modal
-  const [profileOpened, { open: ProfileOpen, close: profileClose }] =
+  const [profileOpened, { open: profileOpen, close: profileClose }] =
     useDisclosure(false);
-  const [passwordOpened, { open: PasswordOpen, close: passwordClose }] =
+  const [passwordOpened, { open: passwordOpen, close: passwordClose }] =
     useDisclosure(false);
-  const [nidOpened, { open: NIDOpen, close: nidClose }] = useDisclosure(false);
-  const [resumeOpened, { open: ResumeOpen, close: resumeClose }] =
+  const [nidOpened, { open: nidOpen, close: nidClose }] = useDisclosure(false);
+  const [resumeOpened, { open: resumeOpen, close: resumeClose }] =
     useDisclosure(false);
   const [
     appointmentOpened,
-    { open: AppointmentOpen, close: appointmentClose },
+    { open: appointmentOpen, close: appointmentClose },
   ] = useDisclosure(false);
   const [
     personalDetailsOpened,
-    { open: PersonalDetailsOpen, close: personalDetailsClose },
+    { open: personalDetailsOpen, close: personalDetailsClose },
   ] = useDisclosure(false);
   const [
     officialDetailsOpened,
-    { open: OfficialDetailsOpen, close: officialDetailsClose },
+    { open: officialDetailsOpen, close: officialDetailsClose },
   ] = useDisclosure(false);
   const [
     salaryLeavesOpened,
-    { open: SalaryLeavesOpen, close: salaryLeavesClose },
+    { open: salaryLeavesOpen, close: salaryLeavesClose },
   ] = useDisclosure(false);
   const [
     emergencyContactOpened,
-    { open: EmergencyContactOpen, close: emergencyContactClose },
+    { open: emergencyContactOpen, close: emergencyContactClose },
   ] = useDisclosure(false);
-  const [educationOpened, { open: EducationOpen, close: educationClose }] =
+  const [educationOpened, { open: educationOpen, close: educationClose }] =
     useDisclosure(false);
-  const [experienceOpened, { open: ExperienceOpen, close: experienceClose }] =
+  const [experienceOpened, { open: experienceOpen, close: experienceClose }] =
     useDisclosure(false);
+  const [
+    profileImageOpened,
+    { open: profileImageOpen, close: profileImageClose },
+  ] = useDisclosure(false);
 
   const elements = [
     {
@@ -159,6 +165,12 @@ const ProfileView = () => {
       <ProfileEdit
         opened={profileOpened}
         close={profileClose}
+        // item={selectedDeleteItem}
+        // mutate={mutate}
+      />
+      <ProfileImage
+        opened={profileImageOpened}
+        close={profileImageClose}
         // item={selectedDeleteItem}
         // mutate={mutate}
       />
@@ -239,7 +251,7 @@ const ProfileView = () => {
           className="profileEditBtn"
           onClick={() => {
             // setSelectedDeleteItem(item);
-            ProfileOpen();
+            profileOpen();
           }}
           // handleClick={addOpen}
         >
@@ -249,13 +261,24 @@ const ProfileView = () => {
         <Grid>
           <Grid.Col span={6}>
             <div className="profileBox borderRight h-100 d-flex">
-              <div className="profile">
+              <div className="profile position-relative">
                 <Image
                   src="/profile03.jpg"
                   width={200}
                   height={200}
                   alt="profile_img"
                 />
+                <button
+                  className="border-0 proOverly"
+                  onClick={() => {
+                    // setSelectedDeleteItem(item);
+                    profileImageOpen();
+                  }}
+                  // handleClick={addOpen}
+                >
+                  <TbEdit className="iconBtn me-2 text-dark" />
+                  Edit
+                </button>
               </div>
               <div className="proInfo ms-4">
                 <h3 className="employeeName mb-1">Jiaur Rahman</h3>
@@ -273,10 +296,10 @@ const ProfileView = () => {
                 <p className="employeeJoin">
                   <span>Reset Password:</span>
                   <button
-                    className="border-0 ms-2 text-dark"
+                    className="border-0 ms-2 px-2 py-1 text-dark rounded-1"
                     onClick={() => {
                       // setSelectedDeleteItem(item);
-                      PasswordOpen();
+                      passwordOpen();
                     }}
                     // handleClick={addOpen}
                   >
@@ -361,7 +384,7 @@ const ProfileView = () => {
                 className="profileEditBtn top-0 end-0"
                 onClick={() => {
                   // setSelectedDeleteItem(item);
-                  PersonalDetailsOpen();
+                  personalDetailsOpen();
                 }}
                 // handleClick={addOpen}
               >
@@ -412,7 +435,7 @@ const ProfileView = () => {
                     className="profileEditBtn top-0 end-3"
                     onClick={() => {
                       // setSelectedDeleteItem(item);
-                      OfficialDetailsOpen();
+                      officialDetailsOpen();
                     }}
                     // handleClick={addOpen}
                   >
@@ -500,7 +523,7 @@ const ProfileView = () => {
                 className="profileEditBtn top-0 end-0"
                 onClick={() => {
                   // setSelectedDeleteItem(item);
-                  SalaryLeavesOpen();
+                  salaryLeavesOpen();
                 }}
                 // handleClick={addOpen}
               >
@@ -556,7 +579,7 @@ const ProfileView = () => {
                 className="profileEditBtn top-0 end-0"
                 onClick={() => {
                   // setSelectedDeleteItem(item);
-                  EmergencyContactOpen();
+                  emergencyContactOpen();
                 }}
                 // handleClick={addOpen}
               >
@@ -605,7 +628,7 @@ const ProfileView = () => {
                     className="profileEditBtn top-0 end-3"
                     onClick={() => {
                       // setSelectedDeleteItem(item);
-                      EducationOpen();
+                      educationOpen();
                     }}
                     // handleClick={addOpen}
                   >
@@ -657,7 +680,7 @@ const ProfileView = () => {
                     className="profileEditBtn top-0 end-0"
                     onClick={() => {
                       // setSelectedDeleteItem(item);
-                      ExperienceOpen();
+                      experienceOpen();
                     }}
                     // handleClick={addOpen}
                   >
@@ -715,7 +738,7 @@ const ProfileView = () => {
                 <button
                   className="docItem me-4"
                   onClick={() => {
-                    NIDOpen();
+                    nidOpen();
                   }}
                 >
                   <CiCreditCard2 className="docBtn" />
@@ -724,7 +747,7 @@ const ProfileView = () => {
                 <button
                   className="docItem me-4"
                   onClick={() => {
-                    ResumeOpen();
+                    resumeOpen();
                   }}
                 >
                   <PiIdentificationCardLight className="docBtn" />
@@ -733,7 +756,7 @@ const ProfileView = () => {
                 <button
                   className="docItem me-4"
                   onClick={() => {
-                    AppointmentOpen();
+                    appointmentOpen();
                   }}
                 >
                   <CiFileOn className="docBtn fs-2" />

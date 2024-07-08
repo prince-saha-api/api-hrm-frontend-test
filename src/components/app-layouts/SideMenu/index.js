@@ -121,10 +121,26 @@ const Page = () => {
                     <ul className="text-decoration-none mb-0 sidenav_submenu">
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
+                          href="/profile-view"
+                          className="text-decoration-none subMenu"
+                        >
+                          Profile
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
                           href="/employees"
                           className="text-decoration-none subMenu"
                         >
                           All employees
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/employee-transition"
+                          className="text-decoration-none subMenu"
+                        >
+                          Employee Transition
                         </Link>
                       </li>
                     </ul>

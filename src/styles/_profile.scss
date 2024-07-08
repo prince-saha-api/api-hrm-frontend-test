@@ -11,12 +11,51 @@
   font-size: 18px;
   color: #666;
 }
-.profile img {
-  width: 130px;
-  height: 130px;
-  object-fit: cover;
-  border-radius: 100%;
+.profile {
+  width: 200px;
+  height: 200px;
+  border-radius: 15px;
+  overflow: hidden;
 }
+.profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.proOverly {
+  text-align: center;
+  position: absolute;
+  bottom: -55px;
+  padding: 15px 20px;
+  left: 0;
+  width: 100%;
+  background-color: #ffffffcc;
+  transition: all 0.3s ease-in-out;
+}
+.proOverly svg {
+  font-size: 20px;
+  color: #888;
+}
+.profile:hover .proOverly {
+  bottom: 0px;
+}
+.profile.profileEdit {
+  margin: auto;
+  border-radius: 0px;
+}
+.profile.profileEdit .proOverly {
+  bottom: 0px;
+}
+.jiaur {
+  color: #333 !important;
+  width: 200px !important;
+  border-radius: 0 !important;
+  background-color: #ddd !important;
+}
+.jiaur:active {
+  transform: translateY(0) !important;
+}
+
 .employeeName {
   color: #373b3e;
   font-size: 1.5rem;

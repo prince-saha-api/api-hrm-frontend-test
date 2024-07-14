@@ -20,7 +20,7 @@ const Index = ({ opened, close, mutate }) => {
   const [branches, setBranches] = useState([]);
 
   const form = useForm({
-    mode: "uncontrolled",
+    // mode: "uncontrolled",
     initialValues: {
       name: "",
       description: "",

@@ -13,6 +13,7 @@ import { LuListChecks } from "react-icons/lu";
 import { FaRegMoneyBillAlt } from "react-icons/fa";
 import { LuUser2 } from "react-icons/lu";
 import { PiBuildings } from "react-icons/pi";
+import { AiOutlinePartition } from "react-icons/ai";
 import Accordion from "react-bootstrap/Accordion";
 import Image from "next/image";
 import Logo from "../../../../public/logo.png";
@@ -61,10 +62,26 @@ const Page = () => {
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
+                          href="/employee-group"
+                          className="text-decoration-none subMenu"
+                        >
+                          Employee Group
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
                           href="/employee-grade"
                           className="text-decoration-none subMenu"
                         >
                           Employee Grades
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/employee-group-and-grade"
+                          className="text-decoration-none subMenu"
+                        >
+                          Employee Grades & Group
                         </Link>
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
@@ -75,44 +92,40 @@ const Page = () => {
                           Designations
                         </Link>
                       </li>
-                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                        <Accordion>
-                          <Accordion.Item eventKey="0" className="pt-0">
-                            <Accordion.Header className=" p-0 m-0 text-capitalize subTab">
-                              {/* <LuUser2 className="sideMenu menu_icon" /> */}
-                              <span className="text-capitalize sideMenu">
-                                Shifts
-                              </span>
-                            </Accordion.Header>
-                            <Accordion.Body>
-                              <ul className="text-decoration-none mb-0 sidenav_submenu">
-                                <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                  <Link
-                                    href="/shift-list"
-                                    className="text-decoration-none subMenu"
-                                  >
-                                    Shift List
-                                  </Link>
-                                </li>
-                                <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                                  <Link
-                                    href="/assign-shift"
-                                    className="text-decoration-none subMenu"
-                                  >
-                                    Assign Shift
-                                  </Link>
-                                </li>
-                              </ul>
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        </Accordion>
-                      </li>
                     </ul>
                   </Accordion.Body>
                 </Accordion.Item>
 
                 {/* manu item 1 */}
                 <Accordion.Item eventKey="1" className="pt-0">
+                  <Accordion.Header className="p-0 m-0 text-capitalize">
+                    <AiOutlinePartition className="sideMenu menu_icon" />
+                    <span className="text-capitalize sideMenu">Shifts</span>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <ul className="text-decoration-none mb-0 sidenav_submenu">
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/shift-list"
+                          className="text-decoration-none subMenu"
+                        >
+                          Shift List
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/assign-shift"
+                          className="text-decoration-none subMenu"
+                        >
+                          Assign Shift
+                        </Link>
+                      </li>
+                    </ul>
+                  </Accordion.Body>
+                </Accordion.Item>
+
+                {/* manu item 1 */}
+                <Accordion.Item eventKey="2" className="pt-0">
                   <Accordion.Header className="p-0 m-0 text-capitalize">
                     <LuUser2 className="sideMenu menu_icon" />
                     <span className="text-capitalize sideMenu">Employee</span>
@@ -148,7 +161,7 @@ const Page = () => {
                 </Accordion.Item>
 
                 {/* manu item 2 */}
-                <Accordion.Item eventKey="2" className="pt-0">
+                <Accordion.Item eventKey="3" className="pt-0">
                   <Accordion.Header className="p-0 m-0 text-capitalize">
                     <LuNewspaper className="sideMenu menu_icon" />
                     <span className="text-capitalize sideMenu">Leave</span>
@@ -189,6 +202,14 @@ const Page = () => {
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
+                          href="/my-leave-request"
+                          className="text-decoration-none subMenu"
+                        >
+                          My Leave Request
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
                           href="/leave-request"
                           className="text-decoration-none subMenu"
                         >
@@ -200,7 +221,7 @@ const Page = () => {
                 </Accordion.Item>
 
                 {/* manu item 3 */}
-                <Accordion.Item eventKey="3" className="pt-0">
+                <Accordion.Item eventKey="4" className="pt-0">
                   <Accordion.Header className="p-0 m-0 text-capitalize">
                     <FaRegMoneyBillAlt className="sideMenu menu_icon" />
                     <span className="text-capitalize sideMenu">Payroll</span>
@@ -345,7 +366,7 @@ const Page = () => {
                 </Accordion.Item>
 
                 {/* manu item 4 */}
-                <Accordion.Item eventKey="4" className="pt-0">
+                <Accordion.Item eventKey="5" className="pt-0">
                   <Accordion.Header className="p-0 m-0 text-capitalize">
                     <LuListChecks className="sideMenu menu_icon" />
                     <span className="text-capitalize sideMenu">Attendance</span>
@@ -383,7 +404,7 @@ const Page = () => {
                 </Accordion.Item>
 
                 {/* manu item 5 */}
-                <Accordion.Item eventKey="5" className="pt-0">
+                <Accordion.Item eventKey="6" className="pt-0">
                   <Accordion.Header className="p-0 m-0 text-capitalize">
                     <BiDevices className="sideMenu menu_icon" />
                     <span className="text-capitalize sideMenu">Device</span>
@@ -435,7 +456,7 @@ const Page = () => {
                 </Accordion.Item>
 
                 {/* manu item 6 */}
-                <Accordion.Item eventKey="6" className="pt-0">
+                <Accordion.Item eventKey="7" className="pt-0">
                   <Accordion.Header className="p-0 m-0 text-capitalize">
                     <TbSettings className="sideMenu menu_icon" />
                     <span className="text-capitalize sideMenu">Settings</span>

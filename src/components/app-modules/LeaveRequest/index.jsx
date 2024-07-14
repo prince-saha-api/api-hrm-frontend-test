@@ -4,7 +4,14 @@ import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
-import { Button, Select, Menu, MultiSelect, Popover } from "@mantine/core";
+import {
+  Button,
+  Select,
+  Menu,
+  MultiSelect,
+  Popover,
+  Group,
+} from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
@@ -95,6 +102,17 @@ const index = () => {
     },
     {
       // for table display
+      accessor: "employee",
+      title: "Employee Name",
+      noWrap: true,
+      sortable: true,
+      // visibleMediaQuery: aboveXs,
+      // render: ({ employee }) => employee?.name || "N/A",
+      // for export
+      key: "employee",
+    },
+    {
+      // for table display
       accessor: "leavepolicy",
       title: "Leave Type",
       noWrap: true,
@@ -103,17 +121,6 @@ const index = () => {
       render: ({ leavepolicy }) => leavepolicy?.name || "N/A",
       // for export
       key: "leavepolicy",
-    },
-    {
-      // for table display
-      accessor: "description",
-      title: "Description",
-      noWrap: true,
-      sortable: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ description }) => description || "N/A",
-      // for export
-      key: "description",
     },
     {
       // for table display
@@ -137,13 +144,34 @@ const index = () => {
     },
     {
       // for table display
-      accessor: "total_leave",
-      title: "Total Leave",
+      accessor: "totalDays",
+      title: "Total Days",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ total_leave }) => total_leave || "N/A",
+      render: ({ totalDays }) => totalDays || "N/A",
       // for export
-      key: "total_leave",
+      key: "totalDays",
+    },
+    {
+      // for table display
+      accessor: "attachment",
+      title: "Attachment",
+      noWrap: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ totalDays }) => totalDays || "N/A",
+      // for export
+      key: "attachment",
+    },
+    {
+      // for table display
+      accessor: "detail",
+      title: "Detail",
+      noWrap: true,
+      sortable: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ detail }) => detail || "N/A",
+      // for export
+      key: "detail",
     },
     {
       // for table display
@@ -151,7 +179,16 @@ const index = () => {
       title: "status",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ status }) => status || "N/A",
+      render: () => (
+        <Group>
+          <Button size="compact-xs" color="teal">
+            Approve
+          </Button>
+          <Button variant="filled" size="compact-xs" color="red">
+            Reject
+          </Button>
+        </Group>
+      ),
       // for export
       key: "status",
     },
@@ -202,12 +239,12 @@ const index = () => {
       value: "na",
     },
     {
-      label: "Leave Type",
-      value: "leavepolicy",
+      label: "Employee",
+      value: "employee",
     },
     {
-      label: "Description",
-      value: "description",
+      label: "Leave Type",
+      value: "leavepolicy",
     },
     {
       label: "From Date",
@@ -218,12 +255,20 @@ const index = () => {
       value: "to_date",
     },
     {
-      label: "Total Leave",
-      value: "total_leave",
+      label: "Total Days",
+      value: "totaDays",
+    },
+    {
+      label: "Attachment",
+      value: "attachment",
     },
     {
       label: "Status",
       value: "status",
+    },
+    {
+      label: "Detail",
+      value: "detail",
     },
     {
       label: "Actions",
@@ -233,12 +278,14 @@ const index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
+    "employee",
     "leavepolicy",
-    "description",
     "from_date",
     "to_date",
-    "total_leave",
+    "totalDays",
+    "attachment",
     "status",
+    "detail",
     "actions",
   ]);
 

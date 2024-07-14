@@ -151,19 +151,6 @@ const Index = ({ opened, close, mutate }) => {
         centered
       >
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-          
-          <Select
-            mb="sm"
-            label="Employee"
-            placeholder="Employee"
-            required={true}
-            disabled={isSubmitting}
-            data={users}
-            searchable
-            limit={10}
-            nothingFoundMessage="Nothing found..."
-            {...form.getInputProps("user")}
-          />
           <Select
             mb="sm"
             label="Leave Type"

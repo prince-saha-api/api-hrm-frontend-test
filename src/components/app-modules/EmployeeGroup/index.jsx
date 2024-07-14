@@ -104,7 +104,6 @@ const Index = () => {
       // for export
       key: "title",
     },
-
     {
       // for table display
       accessor: "actions",
@@ -426,17 +425,17 @@ const Index = () => {
 
       <div className="mb-4 d-flex justify-content-between align-items-end">
         {/* <Breadcrumb
-          title="Employee Grade"
+          title="Employee Group"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Employee Grade" },
+            { title: "Employee Group" },
           ]}
         /> */}
 
-        <h5>Employee Grade</h5>
+        <h5>Employee Group</h5>
 
         <AddButton
-          label="Add Employee Grade"
+          label="Add Employee Group"
           fontSize="16px"
           icon={<LuPlus className="fs-5 me-0 mr-0" />}
           handleClick={addOpen}

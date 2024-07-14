@@ -20,7 +20,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
   const [branches, setBranches] = useState([]);
 
   const form = useForm({
-    // mode: "uncontrolled",
+    mode: "uncontrolled",
     initialValues: {
       name: "",
       description: "",
@@ -75,9 +75,9 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
     keepPreviousData: true,
   });
 
-  const companies = companyData?.result?.map((item) => ({
+  const companies = companyData?.data?.result?.map((item) => ({
     label: item?.basic_information?.name?.toString() || "",
-    value: item?.basic_information?.id.toString() || "",
+    value: item?.id.toString() || "",
   }));
 
   const fetchBranches = async (companyId) => {

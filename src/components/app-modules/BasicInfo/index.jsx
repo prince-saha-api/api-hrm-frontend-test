@@ -31,23 +31,27 @@ const BasicInfo = () => {
   const [basicInfo, setBasicInfo] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [shouldChange, setShouldChange] = useState(true);
 
   useEffect(() => {
-    const fetchBasicInfo = async () => {
-      try {
-        const response = await getData(`/api/company/get-basicinformation/`);
-        setBasicInfo(response?.data[0]);
-      } catch (error) {
-        console.error("Failed to fetch basic information:", error);
-      }
-    };
-
-    fetchBasicInfo();
-  }, []);
+    if (shouldChange) {
+      const fetchBasicInfo = async () => {
+        try {
+          const response = await getData(`/api/company/get-basicinformation/`);
+          // console.log(response);
+          setBasicInfo(response?.data?.data?.result[0]);
+        } catch (error) {
+          console.error("Failed to fetch basic information:", error);
+        }
+      };
+      fetchBasicInfo();
+      setShouldChange(false);
+    }
+  }, [shouldChange]);
 
   const form = useForm({
     mode: "uncontrolled",
-    initialValues: basicInfo || {
+    initialValues: {
       name: "",
       establishment_date: null,
       business_registration_number: "",
@@ -59,10 +63,11 @@ const BasicInfo = () => {
       primary_phone_number: null,
       fax: null,
       logo: null,
-      industry_type: {
-        id: "",
-        name: "",
-      },
+      industry_type: "",
+      // industry_type: {
+      //   id: "",
+      //   name: "",
+      // },
       address: {
         city: "",
         state_division: "",
@@ -87,19 +92,19 @@ const BasicInfo = () => {
     },
   });
 
-  const {
-    data,
-    error,
-    isLoading: isFetchLoading,
-  } = useSWR(`/api/company/get-companytype/`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-  });
+  // const {
+  //   data,
+  //   error,
+  //   isLoading: isFetchLoading,
+  // } = useSWR(`/api/company/get-companytype/`, fetcher, {
+  //   errorRetryCount: 2,
+  //   keepPreviousData: true,
+  // });
 
-  const company_types = data?.result?.map((item) => ({
-    label: item?.name?.toString() || "",
-    value: String(item?.id || ""),
-  }));
+  // const company_types = data?.result?.map((item) => ({
+  //   label: item?.name?.toString() || "",
+  //   value: String(item?.id || ""),
+  // }));
 
   // const company_types = [
   //   {
@@ -112,11 +117,14 @@ const BasicInfo = () => {
   //   },
   // ];
 
-  console.log(company_types);
+  // console.log(company_types);
 
   useEffect(() => {
     if (basicInfo) {
-      form.setValues(basicInfo);
+      form.setValues({
+        ...basicInfo,
+        establishment_date: new Date(basicInfo.establishment_date),
+      });
     }
   }, [basicInfo]);
 
@@ -125,19 +133,26 @@ const BasicInfo = () => {
   const [preview, setPreview] = useState(null);
 
   const handleSubmit = async (values) => {
-    // const formattedDate = values.establishment_date
+    const establishmentDate = values.establishment_date;
+    const formattedDate =
+      establishmentDate instanceof Date && !isNaN(establishmentDate)
+        ? establishmentDate.toISOString().split("T")[0]
+        : null;
+
+    // const formattedDate = values?.establishment_date
     //   ? values.establishment_date.toISOString().split("T")[0]
     //   : null;
 
     setIsSubmitting(true);
 
-    // const transformedValues = {
-    //   ...values,
-    //   industry_type: values.industry_type.id,
-    // };
+    const transformedValues = {
+      ...values,
+      establishment_date: formattedDate,
+      // industry_type: values.industry_type.id,
+    };
 
     // Remove the industry_type field completely
-    const { industry_type, ...transformedValues } = values; // temporary
+    // const { industry_type, ...transformedValues } = values; // temporary
 
     try {
       const formValues = new FormData();
@@ -162,37 +177,70 @@ const BasicInfo = () => {
       const method = basicInfo ? "PUT" : "POST";
       const endpoint = basicInfo
         ? `/api/company/update-basicinformation/${basicInfo.id}`
-        : `/api/company/add-basicinformation/`;
+        : `/api/company/add-company/`;
 
       const response = basicInfo
-        ? update(endpoint, formValues, true)
-        : submit(endpoint, formValues, true);
+        ? await update(endpoint, formValues, true)
+        : await submit(endpoint, formValues, true);
 
+      // console.log(response);
+
+      if (response?.status === "success") {
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setShouldChange(true);
+          notifications.show({
+            withCloseButton: true,
+            autoClose: 5000,
+            title: "Success!",
+            message: "Company information updated successfully.",
+            color: "green",
+            // icon: <></>,
+            className: "my-notification-class",
+            // style: { backgroundColor: "red" },
+            loading: false,
+          });
+        }, 500);
+      } else {
+        setTimeout(() => {
+          setIsSubmitting(false);
+          notifications.show({
+            withCloseButton: true,
+            autoClose: 5000,
+            title: "Error!",
+            message: "Something went wrong!",
+            color: "red",
+            // icon: <></>,
+            className: "my-notification-class",
+            // style: { backgroundColor: "red" },
+            loading: false,
+          });
+        }, 500);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
         notifications.show({
-          id: "hello-there",
           withCloseButton: true,
           autoClose: 5000,
-          title: "You've been compromised",
-          message: "Leave the building immediately",
+          title: "Error!",
+          message: "Something went wrong!",
           color: "red",
           // icon: <></>,
           className: "my-notification-class",
           // style: { backgroundColor: "red" },
           loading: false,
         });
-      }, 5000);
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setTimeout(() => {
-        setIsSubmitting(false);
-      }, 5000);
+      }, 500);
     }
   };
 
   const handleCancel = async () => {
-    form.setValues(basicInfo);
+    form.setValues({
+      ...basicInfo,
+      establishment_date: new Date(basicInfo.establishment_date),
+    });
     setIsEditing(false);
   };
 
@@ -298,17 +346,15 @@ const BasicInfo = () => {
                   {/* API Solutions Ltd. */}
                 </p>
               </div>
-              <div className="infoText">
+              {/* <div className="infoText">
                 <p className="color-light font_14 mb-1">Legal Name</p>
-                <p className="font_18">
-                  {basicInfo?.legal_name}
-                  {/* API Solutions Ltd. */}
-                </p>
-              </div>
+                <p className="font_18">{basicInfo?.legal_name}</p>
+              </div> */}
               <div className="infoText">
                 <p className="color-light font_14 mb-1">Company Type</p>
                 <p className="font_18">
-                  {basicInfo?.industry_type?.name}
+                  {/* {basicInfo?.industry_type?.name} */}
+                  {basicInfo?.industry_type || "N/A"}
                   {/* API Solutions Ltd. */}
                 </p>
               </div>
@@ -422,7 +468,23 @@ const BasicInfo = () => {
                         {...form.getInputProps("establishment_date")}
                       /> */}
 
-                      <Select
+                      <DateInput
+                        mt="sm"
+                        label="Establishment Date"
+                        placeholder="Establishment Date"
+                        {...form.getInputProps("establishment_date")}
+                        disabled={isSubmitting}
+                      />
+
+                      <TextInput
+                        mt="sm"
+                        label="Industry Type"
+                        placeholder="Industry Type"
+                        {...form.getInputProps("industry_type")}
+                        disabled={isSubmitting}
+                      />
+
+                      {/* <Select
                         mt="sm"
                         label="Industry Type"
                         placeholder="Select industry type"
@@ -435,7 +497,7 @@ const BasicInfo = () => {
                           });
                         }}
                         disabled={isSubmitting}
-                      />
+                      /> */}
 
                       <TextInput
                         mt="sm"
@@ -500,6 +562,17 @@ const BasicInfo = () => {
                         disabled={isSubmitting}
                       />
 
+                      <Textarea
+                        classNames={{
+                          root: "w-100",
+                        }}
+                        mt="sm"
+                        label="Address"
+                        placeholder="Address"
+                        {...form.getInputProps("address.address")}
+                        disabled={isSubmitting}
+                      />
+
                       <TextInput
                         classNames={{
                           root: "w-100",
@@ -543,17 +616,6 @@ const BasicInfo = () => {
                         searchable
                         data={countries}
                         {...form.getInputProps("address.country")}
-                        disabled={isSubmitting}
-                      />
-
-                      <Textarea
-                        classNames={{
-                          root: "w-100",
-                        }}
-                        mt="sm"
-                        label="Address"
-                        placeholder="Address"
-                        {...form.getInputProps("address.address")}
                         disabled={isSubmitting}
                       />
                     </Box>

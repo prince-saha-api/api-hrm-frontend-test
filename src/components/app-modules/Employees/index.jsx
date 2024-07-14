@@ -111,15 +111,22 @@ const Employees = () => {
       title: "Employee",
       sortable: false,
       render: ({ photo, first_name, last_name }) => (
-        <div className="text-center">
-          <img
-            src={getStoragePath(photo)}
-            alt="img"
-            className="table_user_img"
-          />
-          <span>
-            <Link href="/profile-view">{first_name + " " + last_name}</Link>
-          </span>
+        <div className="d-flex justify-content-start align-items-center">
+          {photo ? (
+            <img
+              src={getStoragePath(photo)}
+              alt="img"
+              className="table_user_img"
+            />
+          ) : (
+            ""
+          )}
+          <Link
+            href="/profile-view"
+            className="ms-2 text-decoration-none color-inherit"
+          >
+            {first_name + " " + last_name}
+          </Link>
         </div>
       ),
       // for export
@@ -138,7 +145,7 @@ const Employees = () => {
       accessor: "designation",
       title: "Designation",
       // visibleMediaQuery: aboveXs,
-      render: ({ designation }) => designation || "N/A",
+      render: ({ designation }) => designation?.name || "N/A",
     },
     {
       accessor: "group_name",

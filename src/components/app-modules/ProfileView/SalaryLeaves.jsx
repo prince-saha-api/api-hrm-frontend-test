@@ -10,6 +10,7 @@ import {
   Textarea,
   DateInput,
   Checkbox,
+  MultiSelect,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { toast } from "react-toastify";
@@ -33,125 +34,143 @@ const Index = ({ opened, close, item }) => {
         <form>
           <Grid>
             <Grid.Col span={6}>
-              <TextInput
+              <Select
                 mb="sm"
-                label="Official Email"
-                placeholder="Official Email"
-                // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
+                label="Payment In"
+                placeholder="Payment In"
+                data={["Cash", "Cheque", "Bank"]}
+                // {...form.getInputProps("payment_in")}
               />
               <NumberInput
+                rightSection={<></>}
+                rightSectionWidth={0}
                 mb="sm"
-                label="Official Phone"
-                placeholder="Official Phone"
-                hideControls
+                label="Monthly Gross Salary"
+                placeholder="Monthly Gross Salary"
+                // {...form.getInputProps("gross_salary")}
               />
-              <Select
+              <MultiSelect
                 mb="sm"
-                label="Employee Type"
-                placeholder="Employee Type"
-                // disabled={isSubmitting}
-                data={["Full-time", "Part-time"]}
-                // {...form.getInputProps("company")}
+                label="Leave Policy"
+                placeholder="Leave Policy"
+                data={[
+                  { value: "1", label: "Leave Policy 1" },
+                  { value: "2", label: "Leave Policy 2" },
+                  { value: "3", label: "Leave Policy 3" },
+                  { value: "4", label: "Leave Policy 4" },
+                ]}
+                searchable
+                withAsterisk
+                // {...form.getInputProps("leavepolicy")}
               />
+              <MultiSelect
+                mb="sm"
+                label="Earning Policy"
+                placeholder="Earning Policy"
+                data={[
+                  { value: "1", label: "Earning Policy 1" },
+                  { value: "2", label: "Earning Policy 2" },
+                  { value: "3", label: "Earning Policy 3" },
+                  { value: "4", label: "Earning Policy 4" },
+                ]}
+                searchable
+                withAsterisk
+                // {...form.getInputProps("payrollpolicy.earningpolicy")}
+              />
+
+              <MultiSelect
+                mb="sm"
+                label="Deduction Policy"
+                placeholder="Deduction Policy"
+                data={[
+                  { value: "1", label: "Deduction Policy 1" },
+                  { value: "2", label: "Deduction Policy 2" },
+                  { value: "3", label: "Deduction Policy 3" },
+                  { value: "4", label: "Deduction Policy 4" },
+                ]}
+                searchable
+                withAsterisk
+                // {...form.getInputProps("payrollpolicy.deductionpolicy")}
+              />
+
               <TextInput
                 mb="sm"
-                label="Company"
-                placeholder="Company"
-                // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
+                label="Bank Account Name"
+                placeholder="Bank Account Name"
+                // {...form.getInputProps("bank_account.bank_name")}
               />
-              <Select
+              <TextInput
                 mb="sm"
                 label="Branch"
                 placeholder="Branch"
-                // disabled={isSubmitting}
-                data={["Dhaka", "Rangpur"]}
-                // {...form.getInputProps("company")}
+                // {...form.getInputProps("bank_account.branch_name")}
               />
               <Select
-                mb="sm"
-                label="Default Shift"
-                placeholder="Default Shift"
-                // disabled={isSubmitting}
-                data={["Day", "Night"]}
-                // {...form.getInputProps("company")}
-              />
-              <Select
-                mb="sm"
-                label="Grade"
-                placeholder="Grade"
-                // disabled={isSubmitting}
-                data={["Grade-1", "Grade-2"]}
-                // {...form.getInputProps("company")}
+                label="Bank Account Type"
+                placeholder="Bank Account Type"
+                data={[
+                  { value: "1", label: "Current" },
+                  { value: "2", label: "Savings" },
+                  { value: "3", label: "Salary" },
+                  { value: "4", label: "Chequing" },
+                  { value: "5", label: "Business" },
+                ]}
+                // {...form.getInputProps("bank_account.account_type")}
               />
             </Grid.Col>
             <Grid.Col span={6}>
-              <Select
+              <NumberInput
                 mb="sm"
-                label="User Role"
-                placeholder="User Role"
-                // disabled={isSubmitting}
-                data={["User-Role-1", "User-Role-2"]}
-                // {...form.getInputProps("company")}
+                label="Account No."
+                placeholder="Account No."
+                rightSection={<></>}
+                rightSectionWidth={0}
+                // {...form.getInputProps("bank_account.account_no")}
+              />
+              <NumberInput
+                mb="sm"
+                label="Routing No."
+                rightSection={<></>}
+                rightSectionWidth={0}
+                placeholder="Routing No."
+                // {...form.getInputProps("bank_account.routing_no")}
               />
               <TextInput
                 mb="sm"
-                label="Official Note"
-                placeholder="Official Note"
-                // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
+                label="SWIFT"
+                placeholder="SWIFT"
+                // {...form.getInputProps("bank_account.swift_bic")}
+              />
+              <Textarea
+                mb="sm"
+                label="Bank Address"
+                placeholder="Address"
+                // {...form.getInputProps("bank_account.address.address")}
+              />
+              <TextInput
+                mb="sm"
+                label="City"
+                placeholder="City"
+                // {...form.getInputProps("bank_account.address.city")}
+              />
+              <TextInput
+                mb="sm"
+                label="Division"
+                placeholder="Division"
+                // {...form.getInputProps("bank_account.address.state_division")}
+              />
+              <TextInput
+                mb="sm"
+                label="ZIP / Postal Code"
+                placeholder="ZIP / Postal Code"
+                // {...form.getInputProps("bank_account.address.post_zip_code")}
               />
               <Select
-                mb="sm"
-                label="Group"
-                placeholder="Group"
-                // disabled={isSubmitting}
-                data={["Group-A", "Group-B"]}
-                // {...form.getInputProps("company")}
-              />
-              <DatePickerInput
-                mb="sm"
-                label="Joining Date"
-                placeholder="Pick date"
-                value={value}
-                onChange={setValue}
-              />
-              <Select
-                mb="sm"
-                label="Expense Approver"
-                placeholder="Expense Approver"
+                label="Country"
+                placeholder="Country"
                 searchable
-                data={[
-                  { value: "API230747", label: "G. M. Nazmul Hussain" },
-                  { value: "API230748", label: "Jiaur Rahman" },
-                  { value: "API230749", label: "Nayeem Hossain" },
-                ]}
-                // {...form.getInputProps("expense_approver")}
-              />
-              <Select
-                mb="sm"
-                label="Leave Approver"
-                placeholder="Leave Approver"
-                searchable
-                data={[
-                  { value: "API230747", label: "G. M. Nazmul Hussain" },
-                  { value: "API230748", label: "Jiaur Rahman" },
-                  { value: "API230749", label: "Nayeem Hossain" },
-                ]}
-                // {...form.getInputProps("leave_approver")}
-              />
-              <Select
-                mb="sm"
-                label="Shift Approver"
-                placeholder="Shift Approver"
-                searchable
-                data={[
-                  { value: "API230747", label: "G. M. Nazmul Hussain" },
-                  { value: "API230748", label: "Jiaur Rahman" },
-                  { value: "API230749", label: "Nayeem Hossain" },
-                ]}
-                // {...form.getInputProps("shift_request_approver")}
+                data={countries}
+                // {...form.getInputProps("bank_account.address.country")}
               />
             </Grid.Col>
           </Grid>

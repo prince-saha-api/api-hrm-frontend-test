@@ -1,38 +1,45 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
+import {
+  Button,
+  Select,
+  Menu,
+  MultiSelect,
+  Popover,
+  Group,
+} from "@mantine/core";
 import { DataTable } from "mantine-datatable";
-import { AiOutlineFilePdf } from "react-icons/ai";
+import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
 import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
-import { AiOutlineDelete } from "react-icons/ai";
 import { BiMessageSquareEdit } from "react-icons/bi";
-import { Button, Select, Menu } from "@mantine/core";
-import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
+import { MdKeyboardArrowDown } from "react-icons/md";
 import { fetcher, getData } from "@/lib/fetch";
+import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import { constants } from "@/lib/config";
 import AddButton from "@/components/utils/AddButton";
+import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
-import Add from "./Add";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
-const Index = () => {
+const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "name",
+    columnAccessor: "user",
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/user/get-grade/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let apiUrl = `/api/leave/get-leaverequest/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -48,7 +55,7 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  // const [selectedRecords, setSelectedRecords] = useState([]);
+  const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
     console.log(status);
@@ -95,16 +102,85 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "title",
-      title: "Title",
-      // noWrap: true,
-      // sortable: true,
+      accessor: "leavepolicy",
+      title: "Leave Type",
+      noWrap: true,
+      sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ title }) => title || "N/A",
+      render: ({ leavepolicy }) => leavepolicy?.name || "N/A",
       // for export
-      key: "title",
+      key: "leavepolicy",
     },
-
+    {
+      // for table display
+      accessor: "from_date",
+      title: "From Date",
+      noWrap: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ from_date }) => from_date || "N/A",
+      // for export
+      key: "from_date",
+    },
+    {
+      // for table display
+      accessor: "to_date",
+      title: "To Date",
+      noWrap: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ to_date }) => to_date || "N/A",
+      // for export
+      key: "to_date",
+    },
+    {
+      // for table display
+      accessor: "totalDays",
+      title: "Total Days",
+      noWrap: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ totalDays }) => totalDays || "N/A",
+      // for export
+      key: "totalDays",
+    },
+    {
+      // for table display
+      accessor: "attachment",
+      title: "Attachment",
+      noWrap: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ totalDays }) => totalDays || "N/A",
+      // for export
+      key: "attachment",
+    },
+    {
+      // for table display
+      accessor: "detail",
+      title: "Detail",
+      noWrap: true,
+      sortable: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ detail }) => detail || "N/A",
+      // for export
+      key: "detail",
+    },
+    {
+      // for table display
+      accessor: "Status",
+      title: "status",
+      noWrap: true,
+      // visibleMediaQuery: aboveXs,
+      render: () => (
+        <Group>
+          <Button variant="light" size="compact-xs" color="teal">
+            Approve
+          </Button>
+          <Button variant="light" size="compact-xs" color="red">
+            Reject
+          </Button>
+        </Group>
+      ),
+      // for export
+      key: "status",
+    },
     {
       // for table display
       accessor: "actions",
@@ -152,8 +228,32 @@ const Index = () => {
       value: "na",
     },
     {
-      label: "Title",
-      value: "title",
+      label: "Leave Type",
+      value: "leavepolicy",
+    },
+    {
+      label: "From Date",
+      value: "from_date",
+    },
+    {
+      label: "To Date",
+      value: "to_date",
+    },
+    {
+      label: "Total Days",
+      value: "totaDays",
+    },
+    {
+      label: "Attachment",
+      value: "attachment",
+    },
+    {
+      label: "Status",
+      value: "status",
+    },
+    {
+      label: "Detail",
+      value: "detail",
     },
     {
       label: "Actions",
@@ -163,12 +263,20 @@ const Index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "title",
+    "leavepolicy",
+    "from_date",
+    "to_date",
+    "totalDays",
+    "attachment",
+    "status",
+    "detail",
     "actions",
   ]);
 
   const handleChange = (keys) => {
-    const updatedKeys = [...new Set(["na", "title", "actions", ...keys])];
+    const updatedKeys = [
+      ...new Set(["na", "leavepolicy", "from_date", "to_date", ...keys]),
+    ];
 
     const reorderedOptions = visibleColumns.filter((column) =>
       updatedKeys.includes(column.value)
@@ -187,7 +295,7 @@ const Index = () => {
   // const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/api/user/get-grade/?column_accessor=${
+    let url = `/api/leave/get-leaverequest/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -258,7 +366,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "Employee Grades", "employee-grades");
+        exportToPDF(headers, data, "Leave Requests/", "leave-requests");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -321,7 +429,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "employee-grades");
+        exportToCSV(data, "leave-requests");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -383,7 +491,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "employee-grades");
+        exportToExcel(data, "leave-requests");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,
@@ -425,18 +533,16 @@ const Index = () => {
       />
 
       <div className="mb-4 d-flex justify-content-between align-items-end">
-        {/* <Breadcrumb
-          title="Employee Grade"
+        <Breadcrumb
+          title="My Leave Request"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Employee Grade" },
+            { title: "My Leave Request" },
           ]}
-        /> */}
-
-        <h5>Employee Grade</h5>
+        />
 
         <AddButton
-          label="Add Employee Grade"
+          label="My Leave Request"
           fontSize="16px"
           icon={<LuPlus className="fs-5 me-0 mr-0" />}
           handleClick={addOpen}
@@ -447,16 +553,57 @@ const Index = () => {
         <div className="showItem d-flex align-items-center justify-content-center">
           <p className="mb-0 me-2">Show</p>
           <Select
-            withCheckIcon={false}
             classNames={{
               input: "showInput",
             }}
+            withCheckIcon={false}
+            // placeholder=""
             data={PAGE_SIZES.map((size) => size.toString())}
             defaultValue={PAGE_SIZES[0].toString()}
             value={pageSize.toString()}
             onChange={(_value, option) => handlePageSizeChange(_value)}
           />
           <p className="mb-0 ms-2 me-2">Entries</p>
+
+          <Popover
+            classNames={{
+              dropdown: "column_visibility_dropdown",
+            }}
+            width={0}
+            shadow="md"
+            position="bottom-start"
+            offset={0}
+          >
+            <Popover.Target>
+              <Button
+                variant="default"
+                rightSection={<MdKeyboardArrowDown size={20} />}
+                classNames={{
+                  root: "column_visibility_btn",
+                  section: "column_visibility_btn_section",
+                }}
+              >
+                Visible Columns
+              </Button>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <MultiSelect
+                classNames={{
+                  root: "column_visibility_root",
+                  label: "column_visibility_label",
+                  input: "column_visibility_input",
+                }}
+                label=""
+                placeholder="Pick values"
+                rightSection={<></>}
+                data={visibleColumns}
+                value={selectedOptions}
+                onChange={handleChange}
+                dropdownOpened={true}
+                comboboxProps={{ withinPortal: false }}
+              />
+            </Popover.Dropdown>
+          </Popover>
         </div>
         <div className="downItem d-flex">
           <div className="me-2">
@@ -524,6 +671,7 @@ const Index = () => {
           fz="sm"
           verticalAlign="center"
           striped
+          idAccessor="id"
           columns={columns.filter((column) =>
             selectedOptions.includes(column.key)
           )}
@@ -548,4 +696,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default index;

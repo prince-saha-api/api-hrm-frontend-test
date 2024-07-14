@@ -197,7 +197,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
           <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Account No</div>
+                <div className="cust_iputLabel">Account No.</div>
                 <NumberInput
                   classNames={{
                     root: "w-100",
@@ -205,12 +205,12 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   }}
                   rightSection={<></>}
                   rightSectionWidth={0}
-                  placeholder="Account No"
+                  placeholder="Account No."
                   {...form.getInputProps("bank_account.account_no")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Routing No</div>
+                <div className="cust_iputLabel">Routing No.</div>
                 <NumberInput
                   classNames={{
                     root: "w-100",
@@ -220,7 +220,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   rightSectionWidth={0}
                   // mt="sm"
                   // label="Routing No"
-                  placeholder="Routing No"
+                  placeholder="Routing No."
                   {...form.getInputProps("bank_account.routing_no")}
                 />
               </div>

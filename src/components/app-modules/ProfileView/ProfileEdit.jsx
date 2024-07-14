@@ -32,8 +32,8 @@ const Index = ({ opened, close, item }) => {
             <Grid.Col span={6}>
               <TextInput
                 mb="sm"
-                label="Name"
-                placeholder="Name"
+                label="First Name"
+                placeholder="First Name"
                 required={true}
                 // disabled={isSubmitting}
                 // {...form.getInputProps("name")}
@@ -88,6 +88,14 @@ const Index = ({ opened, close, item }) => {
               />
             </Grid.Col>
             <Grid.Col span={6}>
+              <TextInput
+                mb="sm"
+                label="Last Name"
+                placeholder="Last Name"
+                required={true}
+                // disabled={isSubmitting}
+                // {...form.getInputProps("name")}
+              />
               <TextInput
                 mb="sm"
                 label="Email"
@@ -147,13 +155,6 @@ const Index = ({ opened, close, item }) => {
                 // disabled={isSubmitting}
                 data={["Tanim Shahriar Abedin", "Korim Hussain"]}
                 // {...form.getInputProps("company")}
-              />
-              <Textarea
-                // mb="sm"
-                label="Address"
-                placeholder="Address"
-                required={true}
-                //  {...form.getInputProps("present_address.address")}
               />
             </Grid.Col>
           </Grid>

@@ -95,14 +95,58 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "title",
-      title: "Title",
-      // noWrap: true,
-      // sortable: true,
+      accessor: "date",
+      title: "Date",
+      noWrap: true,
+      sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ title }) => title || "N/A",
+      render: ({ name }) => name || "N/A",
       // for export
-      key: "title",
+      key: "date",
+    },
+    {
+      // for table display
+      accessor: "inTime",
+      title: "In Time",
+      noWrap: true,
+      sortable: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ name }) => name || "N/A",
+      // for export
+      key: "inTime",
+    },
+    {
+      // for table display
+      accessor: "outTime",
+      title: "Out Time",
+      noWrap: true,
+      sortable: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ name }) => name || "N/A",
+      // for export
+      key: "outTime",
+    },
+    {
+      // for table display
+      accessor: "shift",
+      title: "Shift",
+      noWrap: true,
+      sortable: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ name }) => name || "N/A",
+      // for export
+      key: "shift",
+    },
+    {
+      // for table display
+      accessor: "adminNote",
+      title: "Admin Note",
+      noWrap: true,
+      sortable: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ name }) => name || "N/A",
+      // for export
+      key: "adminNote",
     },
 
     {
@@ -152,8 +196,24 @@ const Index = () => {
       value: "na",
     },
     {
-      label: "Title",
-      value: "title",
+      label: "Date",
+      value: "date",
+    },
+    {
+      label: "In Time",
+      value: "inTime",
+    },
+    {
+      label: "Out Time",
+      value: "outTime",
+    },
+    {
+      label: "Shift",
+      value: "shift",
+    },
+    {
+      label: "Admin Note",
+      value: "adminNote",
     },
     {
       label: "Actions",
@@ -163,12 +223,16 @@ const Index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "title",
+    "date",
+    "inTime",
+    "outTime",
+    "shift",
+    "adminNote",
     "actions",
   ]);
 
   const handleChange = (keys) => {
-    const updatedKeys = [...new Set(["na", "title", "actions", ...keys])];
+    const updatedKeys = [...new Set(["na", "name", "actions", ...keys])];
 
     const reorderedOptions = visibleColumns.filter((column) =>
       updatedKeys.includes(column.value)
@@ -425,18 +489,16 @@ const Index = () => {
       />
 
       <div className="mb-4 d-flex justify-content-between align-items-end">
-        {/* <Breadcrumb
-          title="Employee Grade"
+        <Breadcrumb
+          title="Employee Group"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Employee Grade" },
+            { title: "Employee Group" },
           ]}
-        /> */}
-
-        <h5>Employee Grade</h5>
+        />
 
         <AddButton
-          label="Add Employee Grade"
+          label="Add Employee Group"
           fontSize="16px"
           icon={<LuPlus className="fs-5 me-0 mr-0" />}
           handleClick={addOpen}

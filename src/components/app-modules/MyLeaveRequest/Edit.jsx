@@ -29,18 +29,6 @@ const Index = ({ opened, close, setItem }) => {
         <form>
           <Select
             mb="sm"
-            label="Employee"
-            placeholder="Employee"
-            required={true}
-            // // disabled={isSubmitting}
-            data={["jiaur rahman", "Nazmul"]}
-            searchable
-            limit={10}
-            nothingFoundMessage="Nothing found..."
-            // {...form.getInputProps("user")}
-          />
-          <Select
-            mb="sm"
             label="Leave Type"
             placeholder="Leave Type"
             required={true}

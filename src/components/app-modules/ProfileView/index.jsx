@@ -12,10 +12,13 @@ import {
   Modal,
   Tabs,
   Table,
+  Text,
+  Popover,
 } from "@mantine/core";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import { TbEyeClosed } from "react-icons/tb";
 import { CiCreditCard2 } from "react-icons/ci";
+import { FaInfoCircle } from "react-icons/fa";
 import { TimeInput } from "@mantine/dates";
 import { IoTimeOutline } from "react-icons/io5";
 import { useDisclosure } from "@mantine/hooks";
@@ -40,6 +43,7 @@ import SalaryLeaves from "./SalaryLeaves";
 import EmergencyContact from "./EmergencyContact";
 import Education from "./Education";
 import Experience from "./Experience";
+import Documents from "./Documents";
 
 const ProfileView = () => {
   const refTimeIn = useRef(null);
@@ -89,7 +93,10 @@ const ProfileView = () => {
     profileImageOpened,
     { open: profileImageOpen, close: profileImageClose },
   ] = useDisclosure(false);
+  const [documentsOpened, { open: documentsOpen, close: documentsClose }] =
+    useDisclosure(false);
 
+  // Data of Job History
   const elements = [
     {
       transition: "Joining",
@@ -146,9 +153,10 @@ const ProfileView = () => {
       newSalary: "55,000/-",
     },
   ];
-  // Table Job History
-  const rows = elements.map((element) => (
-    <Table.Tr key={element.name}>
+
+  // Table of Job History
+  const rows = elements.map((element, index) => (
+    <Table.Tr key={index}>
       <Table.Td>{element.transition}</Table.Td>
       <Table.Td>{element.date}</Table.Td>
       <Table.Td>{element.jobStatus}</Table.Td>
@@ -158,10 +166,95 @@ const ProfileView = () => {
       <Table.Td>{element.newSalary}</Table.Td>
     </Table.Tr>
   ));
+
+  // Data of Leave Policy
+  const elements2 = [
+    {
+      leaveType: "Sick",
+      allocationDays: "16",
+      consumedDays: "2",
+      left: "10",
+    },
+    {
+      leaveType: "Casual",
+      allocationDays: "16",
+      consumedDays: "3",
+      left: "5",
+    },
+    {
+      leaveType: "Sick",
+      allocationDays: "16",
+      consumedDays: "2",
+      left: "10",
+    },
+    {
+      leaveType: "Casual",
+      allocationDays: "16",
+      consumedDays: "5",
+      left: "8",
+    },
+  ];
+
+  // Table of Leave Policy
+  const leavePolicyRows = elements2.map((element2, index) => (
+    <Table.Tr key={index}>
+      <Table.Td>{element2.leaveType}</Table.Td>
+      <Table.Td>{element2.allocationDays}</Table.Td>
+      <Table.Td>{element2.consumedDays}</Table.Td>
+      <Table.Td>{element2.left}</Table.Td>
+    </Table.Tr>
+  ));
+
+  // Data of Earning Policy
+  const elements3 = [
+    {
+      earningComponent: "Basic",
+      amount: "25000",
+    },
+    {
+      earningComponent: "House Rent",
+      amount: "12000",
+    },
+    {
+      earningComponent: "Medical",
+      amount: "5000",
+    },
+  ];
+
+  // Table of Earning Policy
+  const earningPolicyRows = elements3.map((element3, index) => (
+    <Table.Tr key={index}>
+      <Table.Td>{element3.earningComponent}</Table.Td>
+      <Table.Td>{element3.amount}</Table.Td>
+    </Table.Tr>
+  ));
+
+  // Data of Deduction Policy
+  const elements4 = [
+    {
+      earningComponent: "Food",
+      amount: "25000",
+      consumedDays: "2",
+      left: "10",
+    },
+    {
+      earningComponent: "Absent",
+      amount: "25000",
+      consumedDays: "2",
+      left: "10",
+    },
+  ];
+
+  // Table of Deduction Policy
+  const deductionPolicyRows = elements4.map((element4, index) => (
+    <Table.Tr key={index}>
+      <Table.Td>{element4.earningComponent}</Table.Td>
+      <Table.Td>{element4.amount}</Table.Td>
+    </Table.Tr>
+  ));
+
   return (
     <>
-      {/* <Add opened={addOpened} close={addClose} /> */}
-
       <ProfileEdit
         opened={profileOpened}
         close={profileClose}
@@ -231,6 +324,12 @@ const ProfileView = () => {
       <Experience
         opened={experienceOpened}
         close={experienceClose}
+        // item={selectedDeleteItem}
+        // mutate={mutate}
+      />
+      <Documents
+        opened={documentsOpened}
+        close={documentsClose}
         // item={selectedDeleteItem}
         // mutate={mutate}
       />
@@ -529,48 +628,92 @@ const ProfileView = () => {
               >
                 <RxPencil2 className="iconBtn" />
               </button>
-              <h4 className="mb-3">
-                <TbSquareRoundedFilled className="roundIcon" />
-                Salary and Leaves
-              </h4>
-              <div className="employeeInfo">
-                <p>
-                  <span>Payment In:</span>12000
-                </p>
-                <p>
-                  <span>Monthly Gross Salary:</span>55000
-                </p>
-                <p>
-                  <span>Leave Policy:</span>Leave-Policy-1
-                </p>
-                <p>
-                  <span>Earning Policy:</span>Earning-Policy-1
-                </p>
-                <p>
-                  <span>Deduction Policy:</span>Deduction-Policy-1
-                </p>
-                <p>
-                  <span>Bank Name:</span>Dutch Bangla Bank
-                </p>
-                <p>
-                  <span>Branch:</span>Mohammadpur
-                </p>
-                <p>
-                  <span>Bank Account Type:</span>Business
-                </p>
-                <p>
-                  <span>Account No:</span>996222400001
-                </p>
-                <p>
-                  <span>Routing No:</span>33000
-                </p>
-                <p>
-                  <span>SWIFT:</span>ABC
-                </p>
-                <p>
-                  <span>Bank Address:</span>Banani Dhaka
-                </p>
-              </div>
+
+              <Grid>
+                <Grid.Col span={6}>
+                  <h4 className="mb-3">
+                    <TbSquareRoundedFilled className="roundIcon" />
+                    Salary and Leaves
+                  </h4>
+                  <div className="employeeInfo">
+                    <p>
+                      <span>Payment In:</span>Cash
+                    </p>
+                    <p>
+                      <span>Monthly Gross Salary:</span>55000
+                    </p>
+                    <p>
+                      <span>Bank Name:</span>Dutch Bangla Bank
+                    </p>
+                    <p>
+                      <span>Branch:</span>Mohammadpur
+                    </p>
+                    <p>
+                      <span>Bank Account Type:</span>Business
+                    </p>
+                    <p>
+                      <span>Account No:</span>996222400001
+                    </p>
+                    <p>
+                      <span>Routing No:</span>33000
+                    </p>
+                    <p>
+                      <span>SWIFT:</span>ABC
+                    </p>
+                    <p>
+                      <span>Bank Address:</span>Banani Dhaka Bangladesh
+                    </p>
+                  </div>
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <h4 className="mb-3">
+                    <TbSquareRoundedFilled className="roundIcon" />
+                    Leave Policy
+                  </h4>
+                  <div className="leavePolicyBox mb-3">
+                    <b className="mb-2 d-block text-dark">Leave Policy 1</b>
+                    <Table striped withTableBorder withColumnBorders>
+                      <Table.Thead>
+                        <Table.Tr>
+                          <Table.Th>Leave Type</Table.Th>
+                          <Table.Th>Allocation Days</Table.Th>
+                          <Table.Th>Consumed Days</Table.Th>
+                          <Table.Th>Left</Table.Th>
+                        </Table.Tr>
+                      </Table.Thead>
+                      <Table.Tbody>{leavePolicyRows}</Table.Tbody>
+                    </Table>
+                  </div>
+                  <div className="leavePolicyBox mb-3">
+                    <b className="mb-2 d-block text-dark">Earning Policy</b>
+                    <Table striped withTableBorder withColumnBorders>
+                      <Table.Thead>
+                        <Table.Tr>
+                          <Table.Th>Earning Component</Table.Th>
+                          <Table.Th>Amount</Table.Th>
+                          {/* <Table.Th>Consumed Days</Table.Th>
+                          <Table.Th>Left</Table.Th> */}
+                        </Table.Tr>
+                      </Table.Thead>
+                      <Table.Tbody>{earningPolicyRows}</Table.Tbody>
+                    </Table>
+                  </div>
+                  <div className="leavePolicyBox mb-3">
+                    <b className="mb-2 d-block text-dark">Deduction Policy</b>
+                    <Table striped withTableBorder withColumnBorders>
+                      <Table.Thead>
+                        <Table.Tr>
+                          <Table.Th>Deduction Component</Table.Th>
+                          <Table.Th>Amount</Table.Th>
+                          {/* <Table.Th>Consumed Days</Table.Th>
+                          <Table.Th>Left</Table.Th> */}
+                        </Table.Tr>
+                      </Table.Thead>
+                      <Table.Tbody>{deductionPolicyRows}</Table.Tbody>
+                    </Table>
+                  </div>
+                </Grid.Col>
+              </Grid>
             </div>
           </Tabs.Panel>
           <Tabs.Panel value="4" pt="xs">
@@ -589,35 +732,52 @@ const ProfileView = () => {
                 <TbSquareRoundedFilled className="roundIcon" />
                 Emergency Contact
               </h4>
-              <div className="employeeInfo">
-                <p>
-                  <span>Name:</span>Mr. Mijanur Rahman
-                </p>
-                <p>
-                  <span>Age:</span>28
-                </p>
-                <p>
-                  <span>Phone No:</span>01725357776
-                </p>
-                <p>
-                  <span>Email:</span>example@gmail.com
-                </p>
-                <p>
-                  <span>City:</span>Mohammadpur
-                </p>
-                <p>
-                  <span>State:</span>Dhaka
-                </p>
-                <p>
-                  <span>ZIP Code:</span>1207
-                </p>
-                <p>
-                  <span>Country:</span>Bangladesh
-                </p>
-                <p>
-                  <span>Address:</span>Mohammadpur, Dhaka 1207 Bangladesh
-                </p>
-              </div>
+              <Grid>
+                <Grid.Col span={6}>
+                  <div className="employeeInfo border p-3">
+                    <p>
+                      <span>Name:</span>Mr. Mijanur Rahman
+                    </p>
+                    <p>
+                      <span>Age:</span>28
+                    </p>
+                    <p>
+                      <span>Phone No:</span>01725357776
+                    </p>
+                    <p>
+                      <span>Email:</span>example@gmail.com
+                    </p>
+                    <p>
+                      <span>Relation:</span>Brother
+                    </p>
+                    <p>
+                      <span>Address:</span>Mohammadpur, Dhaka 1207 Bangladesh
+                    </p>
+                  </div>
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <div className="employeeInfo border p-3">
+                    <p>
+                      <span>Name:</span>Mr. Jamal Islam
+                    </p>
+                    <p>
+                      <span>Age:</span>28
+                    </p>
+                    <p>
+                      <span>Phone No:</span>0172535443
+                    </p>
+                    <p>
+                      <span>Email:</span>example@gmail.com
+                    </p>
+                    <p>
+                      <span>Relation:</span>Brother
+                    </p>
+                    <p>
+                      <span>Address:</span>Mohammadpur, Dhaka 1207 Bangladesh
+                    </p>
+                  </div>
+                </Grid.Col>
+              </Grid>
             </div>
           </Tabs.Panel>
           <Tabs.Panel value="5" pt="xs">
@@ -730,6 +890,16 @@ const ProfileView = () => {
           </Tabs.Panel>
           <Tabs.Panel value="6" pt="xs">
             <div className="position-relative">
+              <button
+                className="profileEditBtn top-0 end-0"
+                onClick={() => {
+                  // setSelectedDeleteItem(item);
+                  documentsOpen();
+                }}
+                // handleClick={addOpen}
+              >
+                <RxPencil2 className="iconBtn" />
+              </button>
               <h4 className="mb-3">
                 <TbSquareRoundedFilled className="roundIcon" />
                 Documents

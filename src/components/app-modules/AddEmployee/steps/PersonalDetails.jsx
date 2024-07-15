@@ -23,6 +23,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: { ...data, dob: data.dob ? new Date(data.dob) : null },
+    // onValuesChange: (values) => {
+    //   console.log(values);
+    // },
     // validate: {
     //   first_name: (value) =>
     //     value.length < 2 ? "First Name must have at least 2 letters" : null,

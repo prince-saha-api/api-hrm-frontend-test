@@ -59,6 +59,7 @@ const GeneralSettings = () => {
       weekly_holiday: [],
       fiscalyear_month: "",
       workingday_starts_at: "",
+      basic_salary_percentage: "",
       holiday_as_workingday: false,
       consecutive_days_late_attendance_to_fine: "",
       consecutive_late_attendance_to_fine: "",
@@ -84,6 +85,7 @@ const GeneralSettings = () => {
         weekly_holiday: data?.weekly_holiday?.day?.map((item) => item.id) || [],
         fiscalyear_month: data.fiscalyear_month || "",
         workingday_starts_at: data.workingday_starts_at || "",
+        basic_salary_percentage: data.basic_salary_percentage || "",
         holiday_as_workingday: data.holiday_as_workingday || false,
         consecutive_days_late_attendance_to_fine:
           data.consecutive_days_late_attendance_to_fine || "",
@@ -205,6 +207,15 @@ const GeneralSettings = () => {
                 required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("workingday_starts_at")}
+              />
+              <NumberInput
+                mb="sm"
+                label="Set the percentage(%) of the basic salary against the gross salary"
+                placeholder="default 60"
+                hideControls
+                required={true}
+                disabled={isSubmitting}
+                {...form.getInputProps("basic_salary_percentage")}
               />
               <NumberInput
                 mb="sm"

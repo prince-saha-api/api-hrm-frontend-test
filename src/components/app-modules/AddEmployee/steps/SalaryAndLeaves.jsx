@@ -89,6 +89,21 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
+                <div className="cust_iputLabel">Monthly Basic Salary</div>
+                <NumberInput
+                  classNames={{
+                    root: "w-100",
+                    wrapper: "cust_iputWrapper",
+                  }}
+                  rightSection={<></>}
+                  rightSectionWidth={0}
+                  // mt="sm"
+                  // label="Salary"
+                  placeholder="Monthly Basic Salary"
+                  {...form.getInputProps("basic_salary")}
+                />
+              </div>
+              <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Leave Policy</div>
                 <MultiSelect
                   classNames={{

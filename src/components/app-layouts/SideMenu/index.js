@@ -60,7 +60,7 @@ const Page = () => {
                           Departments
                         </Link>
                       </li>
-                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                      {/* <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
                           href="/employee-group"
                           className="text-decoration-none subMenu"
@@ -75,7 +75,7 @@ const Page = () => {
                         >
                           Employee Grades
                         </Link>
-                      </li>
+                      </li> */}
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
                           href="/employee-group-and-grade"
@@ -375,6 +375,14 @@ const Page = () => {
                     <ul className="text-decoration-none mb-0 sidenav_submenu">
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
+                          href="/my-attendance-request"
+                          className="text-decoration-none subMenu"
+                        >
+                          My Attendance Request
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
                           href="/manual-attendance"
                           className="text-decoration-none subMenu"
                         >
@@ -473,7 +481,7 @@ const Page = () => {
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
-                          href="/profile-view"
+                          href="/user-role"
                           className="text-decoration-none subMenu"
                         >
                           User role

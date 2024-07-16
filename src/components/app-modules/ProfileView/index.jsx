@@ -388,10 +388,6 @@ const ProfileView = () => {
                 </p>
                 <p className="employeeJoin mb-1">Department : Development</p>
                 <p className="employeeJoin mb-1">Date of Join : 1st Jan 2021</p>
-                <p className="employeeJoin mb-1">
-                  Annual Leave : 16{" "}
-                  <span className="text-warning">(Remaining Leave: 4)</span>
-                </p>
                 <p className="employeeJoin">
                   <span>Reset Password:</span>
                   <button
@@ -573,10 +569,7 @@ const ProfileView = () => {
                       <span>Official Note:</span>N/A
                     </p>
                     <p>
-                      <span>Group:</span>B
-                    </p>
-                    <p>
-                      <span>Joining Date:</span>01-Feb-2022
+                      <span>Group:</span>Xyz
                     </p>
                     <p>
                       <span>Expense Approver:</span>G. M. Nazmul Hussain

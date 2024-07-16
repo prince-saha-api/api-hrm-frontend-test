@@ -180,7 +180,7 @@ const index = () => {
       noWrap: true,
       // visibleMediaQuery: aboveXs,
       render: () => (
-        <Group>
+        <Group gap="xs">
           <Button size="compact-xs" color="teal">
             Approve
           </Button>

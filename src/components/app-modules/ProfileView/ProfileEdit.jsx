@@ -70,21 +70,21 @@ const Index = ({ opened, close, item }) => {
                 value={value}
                 onChange={setValue}
               />
-              <Select
-                mb="sm"
-                label="Department"
-                placeholder="Department"
-                required={true}
-                // disabled={isSubmitting}
-                data={["Leave-Policy-1", "Leave-Policy-2"]}
-                // {...form.getInputProps("company")}
-              />
               <NumberInput
-                // mb="sm"
+                mb="sm"
                 label="Phone"
                 placeholder="Phone"
                 required={true}
                 hideControls
+              />
+              <Select
+                mb="sm"
+                label="Supervisor"
+                placeholder="Supervisor"
+                required={true}
+                // disabled={isSubmitting}
+                data={["Tanim Shahriar Abedin", "Korim Hussain"]}
+                // {...form.getInputProps("company")}
               />
             </Grid.Col>
             <Grid.Col span={6}>
@@ -147,14 +147,13 @@ const Index = ({ opened, close, item }) => {
                 data={["Single", "Married", "Widowed", "Divorced", "Separated"]}
                 //  {...form.getInputProps("marital_status")}
               />
-              <Select
+              <TextInput
                 mb="sm"
-                label="Supervisor"
-                placeholder="Supervisor"
+                label="Spouse Name"
+                placeholder="Spouse Name"
                 required={true}
                 // disabled={isSubmitting}
-                data={["Tanim Shahriar Abedin", "Korim Hussain"]}
-                // {...form.getInputProps("company")}
+                // {...form.getInputProps("name")}
               />
             </Grid.Col>
           </Grid>

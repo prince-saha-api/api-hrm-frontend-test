@@ -95,25 +95,14 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "images",
-      title: "Images",
+      accessor: "employee",
+      title: "Employee",
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      // render: ({ images }) => images || "N/A",
+      render: ({ employee }) => employee || "N/A",
       // for export
-      key: "images",
-    },
-    {
-      // for table display
-      accessor: "name",
-      title: "Name",
-      noWrap: true,
-      sortable: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ name }) => name || "N/A",
-      // for export
-      key: "name",
+      key: "employee",
     },
     {
       // for table display
@@ -121,7 +110,7 @@ const Index = () => {
       title: "Transition Type",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      // render: ({ description }) => description || "N/A",
+      render: ({ transition }) => transition || "N/A",
       // for export
       key: "transition",
     },
@@ -131,7 +120,7 @@ const Index = () => {
       title: "Designation",
       // visibleMediaQuery: aboveXs,
       sortable: true,
-      // render: ({ company }) => company?.basic_information?.name || "N/A",
+      render: ({ designation }) => designation || "N/A",
       // modifier: ({ company }) => company?.basic_information?.name || "N/A",
       // for export
       key: "designation",
@@ -141,7 +130,7 @@ const Index = () => {
       accessor: "department",
       title: "Department",
       // visibleMediaQuery: aboveXs,
-      // render: ({ email }) => email || "N/A",
+      render: ({ department }) => department || "N/A",
       // for export
       key: "department",
     },
@@ -233,12 +222,8 @@ const Index = () => {
       value: "na",
     },
     {
-      label: "Images",
-      value: "images",
-    },
-    {
-      label: "Name",
-      value: "name",
+      label: "Employee",
+      value: "employee",
     },
     {
       label: "Transition Type",
@@ -276,8 +261,7 @@ const Index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "images",
-    "name",
+    "employee",
     "transition",
     "designation",
     "department",
@@ -290,7 +274,7 @@ const Index = () => {
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set(["na", "name", "description", "actions", ...keys]),
+      ...new Set(["na", "employee", "description", "actions", ...keys]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>

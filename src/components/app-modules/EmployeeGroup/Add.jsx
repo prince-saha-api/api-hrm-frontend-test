@@ -10,11 +10,11 @@ const Index = ({ opened, close, mutate }) => {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      name: "",
+      title: "",
     },
     validate: {
-      name: (value) =>
-        value.length < 5 ? "Name must have at least 5 letters" : null,
+      title: (value) =>
+        value.length < 5 ? "Title must have at least 5 letters" : null,
     },
   });
 
@@ -26,7 +26,7 @@ const Index = ({ opened, close, mutate }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await submit("/api/user/add-grade/", values);
+      const response = await submit("/api/device/add-group/", values);
 
       if (response?.status === "success") {
         // console.log(response);
@@ -34,7 +34,7 @@ const Index = ({ opened, close, mutate }) => {
         form.reset();
         close();
         mutate();
-        toast.success("Grade created successfully");
+        toast.success("Group created successfully");
       } else {
         setIsSubmitting(false);
         toast.error(
@@ -71,7 +71,7 @@ const Index = ({ opened, close, mutate }) => {
                 placeholder="Employee Group"
                 required={true}
                 disabled={isSubmitting}
-                {...form.getInputProps("name")}
+                {...form.getInputProps("title")}
               />
             </Grid.Col>
           </Grid>

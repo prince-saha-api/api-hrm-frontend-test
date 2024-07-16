@@ -93,6 +93,7 @@ const AddEmployee = () => {
         },
       },
       gross_salary: null,
+      basic_salary: null,
       leavepolicy: [],
       payrollpolicy: {
         earningpolicy: [],

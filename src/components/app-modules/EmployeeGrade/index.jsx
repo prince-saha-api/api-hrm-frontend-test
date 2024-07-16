@@ -95,14 +95,14 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "title",
+      accessor: "name",
       title: "Title",
       // noWrap: true,
       // sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ title }) => title || "N/A",
+      render: ({ name }) => name || "N/A",
       // for export
-      key: "title",
+      key: "name",
     },
 
     {
@@ -153,7 +153,7 @@ const Index = () => {
     },
     {
       label: "Title",
-      value: "title",
+      value: "name",
     },
     {
       label: "Actions",
@@ -163,12 +163,12 @@ const Index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "title",
+    "name",
     "actions",
   ]);
 
   const handleChange = (keys) => {
-    const updatedKeys = [...new Set(["na", "title", "actions", ...keys])];
+    const updatedKeys = [...new Set(["na", "name", "actions", ...keys])];
 
     const reorderedOptions = visibleColumns.filter((column) =>
       updatedKeys.includes(column.value)

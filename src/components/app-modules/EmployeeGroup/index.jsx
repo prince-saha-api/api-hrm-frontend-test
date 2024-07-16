@@ -28,11 +28,11 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "name",
+    columnAccessor: "title",
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/user/get-grade/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let apiUrl = `/api/device/get-group/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -186,7 +186,7 @@ const Index = () => {
   // const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/api/user/get-grade/?column_accessor=${
+    let url = `/api/device/get-group/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -257,7 +257,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "Employee Grades", "employee-grades");
+        exportToPDF(headers, data, "Employee Groups", "employee-groups");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -320,7 +320,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "employee-grades");
+        exportToCSV(data, "employee-groups");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -382,7 +382,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "employee-grades");
+        exportToExcel(data, "employee-groups");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,

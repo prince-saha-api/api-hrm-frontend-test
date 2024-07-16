@@ -10,18 +10,18 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      name: "",
+      title: "",
     },
     validate: {
-      name: (value) =>
-        value.length < 5 ? "Name must have at least 5 letters" : null,
+      title: (value) =>
+        value.length < 5 ? "Title must have at least 5 letters" : null,
     },
   });
 
   useEffect(() => {
     if (item) {
       form.setValues({
-        name: item.name || "",
+        title: item.title || "",
       });
     }
   }, [item]);
@@ -34,7 +34,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
 
     try {
       const response = await update(
-        `/api/user/update-grade/${item.id}`,
+        `/api/device/update-group/${item.id}`,
         values
       );
 
@@ -43,7 +43,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
         setIsSubmitting(false);
         close();
         mutate();
-        toast.success("Grade updated successfully");
+        toast.success("Group updated successfully");
       } else {
         toast.error(
           response?.status === "error"
@@ -84,7 +84,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
                 placeholder="Employee Group"
                 required={true}
                 disabled={isSubmitting}
-                {...form.getInputProps("name")}
+                {...form.getInputProps("title")}
               />
             </Grid.Col>
           </Grid>

@@ -1,5 +1,6 @@
-import React from "react";
-import { DateInput } from "@mantine/dates";
+"use client";
+import { useRef } from "react";
+import { DateInput, TimeInput } from "@mantine/dates";
 import {
   Modal,
   TextInput,
@@ -9,10 +10,35 @@ import {
   Group,
   Grid,
   NumberInput,
+  ActionIcon,
 } from "@mantine/core";
 import { FiFile } from "react-icons/fi";
+import { IoTimeOutline } from "react-icons/io5";
 
 const Index = ({ opened, close }) => {
+
+  // Time picker 
+  const refInTime = useRef(null);
+  const inTime = (
+    <ActionIcon
+      variant="subtle"
+      color="gray"
+      onClick={() => refInTime.current?.showPicker()}
+    >
+      <IoTimeOutline />
+    </ActionIcon>
+  );
+  const refOutTime = useRef(null);
+  const outTime = (
+    <ActionIcon
+      variant="subtle"
+      color="gray"
+      onClick={() => refOutTime.current?.showPicker()}
+    >
+      <IoTimeOutline />
+    </ActionIcon>
+  );
+// Time picker 
   return (
     <>
       <Modal
@@ -37,19 +63,17 @@ const Index = ({ opened, close }) => {
             label="Date"
             placeholder="DD MMM YYYY"
           />
-          <NumberInput
+          <TimeInput
             mb="sm"
             label="In Time"
-            rightSection={<></>}
-            rightSectionWidth={0}
-            placeholder="In Time"
+            ref={refInTime}
+            rightSection={inTime}
           />
-          <NumberInput
+          <TimeInput
             mb="sm"
             label="Out Time"
-            rightSection={<></>}
-            rightSectionWidth={0}
-            placeholder="Out Time"
+            ref={refOutTime}
+            rightSection={outTime}
           />
           <Select
             mb="sm"

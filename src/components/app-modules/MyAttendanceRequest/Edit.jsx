@@ -15,8 +15,8 @@ import {
 } from "@mantine/core";
 import { FiFile } from "react-icons/fi";
 import { IoTimeOutline } from "react-icons/io5";
-const Index = ({ opened, close }) => {
 
+const Index = ({ opened, close }) => {
   // Time picker
   const refInTime = useRef(null);
   const inTime = (
@@ -47,17 +47,11 @@ const Index = ({ opened, close }) => {
           title: "modalTitle",
         }}
         opened={opened}
-        title="Edit Attendance"
+        title="My Attendance"
         onClose={close}
         centered
       >
         <form>
-          <Select
-            mb="sm"
-            label="Employee"
-            placeholder="Employee"
-            data={["Jiaur Rahman", "Nazmul Hussain"]}
-          />
           <DateInput
             mb="sm"
             valueFormat="DD MMM YYYY"
@@ -76,9 +70,15 @@ const Index = ({ opened, close }) => {
             ref={refOutTime}
             rightSection={outTime}
           />
+          <Select
+            mb="sm"
+            label="Shift"
+            placeholder="Pick value"
+            data={["Day", "Night"]}
+          />
           <Textarea mb="sm" label="Admin Note" placeholder="Admin Note" />
           <Group justify="flex-end">
-            <Button type="submit">Update</Button>
+            <Button type="submit">Save</Button>
           </Group>
         </form>
       </Modal>

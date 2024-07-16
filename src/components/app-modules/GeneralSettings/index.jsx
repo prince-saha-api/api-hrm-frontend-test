@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect, useRef } from "react";
 import useSWR from "swr";
 import { useForm } from "@mantine/form";

@@ -9,10 +9,7 @@ import {
   Select,
   Group,
   Grid,
-  Checkbox,
-  NumberInput,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
 import { toast } from "react-toastify";
 import { submit } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
@@ -88,9 +85,9 @@ const Index = ({ opened, close, mutate }) => {
     revalidateOnFocus: false,
   });
 
-  const companies = data?.result?.map((item) => ({
+  const companies = data?.data?.result?.map((item) => ({
     label: item?.basic_information?.name?.toString() || "",
-    value: item?.basic_information?.id.toString() || "",
+    value: item?.id.toString() || "",
   }));
 
   const handleSubmit = async (values) => {
@@ -126,8 +123,6 @@ const Index = ({ opened, close, mutate }) => {
     }
   };
 
-  const [value, setValue] = useState(null);
-
   return (
     <>
       <Modal
@@ -135,114 +130,19 @@ const Index = ({ opened, close, mutate }) => {
           title: "modalTitle",
         }}
         opened={opened}
-        title="Employee Transition"
+        title="Create Role"
         onClose={close}
         centered
       >
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-          <Grid>
-            <Grid.Col span={6}>
-              <Select
-                mb="sm"
-                label="Employee"
-                placeholder="Employee"
-                // disabled={isSubmitting}
-                data={["Jiaur Rahman", "Nazmul"]}
-                // {...form.getInputProps("company")}
-              />
-              <p className="mb-1">Status Adjustment</p>
-              <div className="">
-                <Checkbox mb="xs" label="Promotion" />
-                <Checkbox mb="xs" label="Increment Salary" />
-                <Checkbox mb="xs" label="Transfer" />
-                <Checkbox mb="xs" label="Status Update" />
-              </div>
-              <Select
-                mb="sm"
-                label="New Company"
-                placeholder="New Company"
-                // disabled={isSubmitting}
-                data={["Abc Company", "Xyz Company"]}
-                // {...form.getInputProps("company")}
-              />
-              <Select
-                mb="sm"
-                label="New Branch"
-                placeholder="New Branch"
-                // disabled={isSubmitting}
-                data={["Abc Branch", "Xyz Branch"]}
-                // {...form.getInputProps("company")}
-              />
-              <Select
-                mb="sm"
-                label="New Department"
-                placeholder="New Department"
-                // disabled={isSubmitting}
-                data={["Abc Department", "Xyz Department"]}
-                // {...form.getInputProps("company")}
-              />
-              <Select
-                mb="sm"
-                label="New Designation"
-                placeholder="New Designation"
-                // disabled={isSubmitting}
-                data={["Abc Designation", "Xyz Designation"]}
-                // {...form.getInputProps("company")}
-              />
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Select
-                mb="sm"
-                label="Job Status Update"
-                placeholder="Job Status Update"
-                // disabled={isSubmitting}
-                data={["Trainee", "Intern", "Probation", "Permanent"]}
-                // {...form.getInputProps("company")}
-              />
-              <NumberInput
-                mb="sm"
-                label="Previous Salary"
-                placeholder="0"
-                disabled
-                hideControls
-                // required={true}
-                // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
-              />
-              <NumberInput
-                mb="sm"
-                label="New Salary"
-                placeholder="0"
-                hideControls
-                // required={true}
-                // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
-              />
-              <TextInput
-                mb="sm"
-                label="Incremented Amount"
-                placeholder="Incremented Amount"
-                // required={true}
-                // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
-              />
-              <TextInput
-                mb="sm"
-                label="Percentage"
-                placeholder="Percentage"
-                // required={true}
-                // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
-              />
-              <DatePickerInput
-                label="Effective From"
-                placeholder="Pick date"
-                mb="sm"
-                value={value}
-                onChange={setValue}
-              />
-            </Grid.Col>
-          </Grid>
+          <TextInput
+            mb="sm"
+            label="Role"
+            placeholder="Role"
+            required={true}
+            // disabled={isSubmitting}
+            // {...form.getInputProps("name")}
+          />
 
           <Group justify="flex-end" mt="sm">
             <Button

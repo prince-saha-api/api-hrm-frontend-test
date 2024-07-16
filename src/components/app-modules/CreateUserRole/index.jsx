@@ -11,6 +11,7 @@ import {
   MultiSelect,
   Popover,
   Group,
+  Accordion,
 } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
@@ -22,9 +23,8 @@ import { BiMessageSquareEdit } from "react-icons/bi";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
-import { constants } from "@/lib/config";
-import { getDate } from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
+import { constants } from "@/lib/config";
 import AddButton from "@/components/utils/AddButton";
 import Add from "./Add";
 import Edit from "./Edit";
@@ -36,11 +36,11 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "date",
+    columnAccessor: "name",
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/leave/get-holiday/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let apiUrl = `/api/branch/get-branch/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -103,123 +103,51 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "employee",
-      title: "Employee",
+      accessor: "role",
+      title: "Role",
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ employee }) => employee || "N/A",
+      render: ({ role }) => role || "N/A",
       // for export
-      key: "employee",
-    },
-    {
-      // for table display
-      accessor: "date",
-      title: "Date",
-      // visibleMediaQuery: aboveXs,
-      sortable: true,
-      render: ({ date }) => (date ? getDate(date) : "N/A"),
-      // for export
-      key: "date",
-    },
-    {
-      // for table display
-      accessor: "inTime",
-      title: "In Time",
-      // visibleMediaQuery: aboveXs,
-      sortable: true,
-      render: ({ inTime }) => (inTime ? "Yes" : "No"),
-      // for export
-      key: "inTime",
-    },
-    {
-      // for table display
-      accessor: "outTime",
-      title: "Out Time",
-      // visibleMediaQuery: aboveXs,
-      sortable: true,
-      render: ({ outTime }) => (outTime ? "Yes" : "No"),
-      // for export
-      key: "outTime",
-    },
-    {
-      // for table display
-      accessor: "shift",
-      title: "Shift",
-      // visibleMediaQuery: aboveXs,
-      sortable: true,
-      render: ({ shift }) => (shift ? "Yes" : "No"),
-      // for export
-      key: "shift",
-    },
-    {
-      // for table display
-      accessor: "adminNote",
-      title: "Admin Note",
-      // visibleMediaQuery: aboveXs,
-      sortable: true,
-      render: ({ adminNote }) => (adminNote ? "Yes" : "No"),
-      // for export
-      key: "adminNote",
-    },
-    {
-      // for table display
-      accessor: "status",
-      title: "Status",
-      // visibleMediaQuery: aboveXs,
-      sortable: true,
-      width: 250,
-      render: ({}) => (
-        <Group gap="xs">
-          <Button size="compact-xs" variant="light" color="teal">
-            Approved
-          </Button>
-          <Button size="compact-xs" variant="light" color="grape">
-            Pending
-          </Button>
-          <Button size="compact-xs" variant="light" color="red">
-            Rejected
-          </Button>
-        </Group>
-      ),
-      // for export
-      key: "status",
+      key: "role",
     },
     {
       // for table display
       accessor: "actions",
       title: "Actions",
-      width: 90,
-      textAlign: "center",
+      width: 210,
+      // textAlign: "center",
       // width: "0%",
       render: (item) => (
-        <Menu shadow="md" width={150} position="bottom-end">
-          <Menu.Target>
-            <button className="border-0 bg-transparent">
-              <HiDotsVertical />
-            </button>
-          </Menu.Target>
-
-          <Menu.Dropdown>
-            <Menu.Item
-              leftSection={<BiMessageSquareEdit className="fs-6" />}
+        <>
+          <Group gap="xs">
+            <Button variant="light" size="compact-xs">
+              Permission
+            </Button>
+            <Button
+              variant="light"
+              size="compact-xs"
+              color="violet"
               onClick={() => {
                 setSelectedEditItem(item);
               }}
             >
               Edit
-            </Menu.Item>
-            <Menu.Item
-              leftSection={<AiOutlineDelete className="fs-6" />}
+            </Button>
+            <Button
+              variant="light"
+              size="compact-xs"
+              color="red"
               onClick={() => {
                 setSelectedDeleteItem(item);
                 deleteOpen();
               }}
             >
               Delete
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+            </Button>
+          </Group>
+        </>
       ),
       // for export
       key: "actions",
@@ -232,32 +160,8 @@ const Index = () => {
       value: "na",
     },
     {
-      label: "Employee",
-      value: "employee",
-    },
-    {
-      label: "Date",
-      value: "date",
-    },
-    {
-      label: "In Time",
-      value: "inTime",
-    },
-    {
-      label: "Out Time",
-      value: "outTime",
-    },
-    {
-      label: "Shift",
-      value: "shift",
-    },
-    {
-      label: "Admin Note",
-      value: "adminNote",
-    },
-    {
-      label: "Status",
-      value: "status",
+      label: "Role",
+      value: "role",
     },
     {
       label: "Actions",
@@ -267,18 +171,12 @@ const Index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "employee",
-    "date",
-    "inTime",
-    "outTime",
-    "shift",
-    "adminNote",
-    "status",
+    "role",
     "actions",
   ]);
 
   const handleChange = (keys) => {
-    const updatedKeys = [...new Set(["na", "employee", "actions", ...keys])];
+    const updatedKeys = [...new Set(["na", "role", "actions", ...keys])];
 
     const reorderedOptions = visibleColumns.filter((column) =>
       updatedKeys.includes(column.value)
@@ -297,7 +195,7 @@ const Index = () => {
   // const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/api/leave/get-leavepolicy/?column_accessor=${
+    let url = `/api/branch/get-branch/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -368,7 +266,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "Leave Policy", "leave-policy");
+        exportToPDF(headers, data, "Branches", "branches");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -431,7 +329,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "leave-policy");
+        exportToCSV(data, "branches");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -493,7 +391,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "leave-policy");
+        exportToExcel(data, "branches");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,
@@ -534,17 +432,9 @@ const Index = () => {
         mutate={mutate}
       />
 
-      <div className="mb-4 d-flex justify-content-between align-items-end">
-        <Breadcrumb
-          title="Manual Attendance"
-          items={[
-            { title: "Dashboard", href: "/dashboard" },
-            { title: "Manual Attendance" },
-          ]}
-        />
-
+      <div className="mb-4 d-flex justify-content-end align-items-end">
         <AddButton
-          label="Add Manual Attendance"
+          label="Create Role"
           fontSize="16px"
           icon={<LuPlus className="fs-5 me-0 mr-0" />}
           handleClick={addOpen}
@@ -685,8 +575,8 @@ const Index = () => {
           recordsPerPage={pageSize}
           sortStatus={sortStatus}
           onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
+          // selectedRecords={selectedRecords}
+          // onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}

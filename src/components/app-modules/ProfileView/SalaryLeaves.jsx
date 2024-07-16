@@ -141,11 +141,11 @@ const Index = ({ opened, close, item }) => {
                 placeholder="SWIFT"
                 // {...form.getInputProps("bank_account.swift_bic")}
               />
-              <Textarea
+              <TextInput
                 mb="sm"
                 label="Bank Address"
-                placeholder="Address"
-                // {...form.getInputProps("bank_account.address.address")}
+                placeholder="Bank Address"
+                // {...form.getInputProps("bank_account.swift_bic")}
               />
               <TextInput
                 mb="sm"

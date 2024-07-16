@@ -103,17 +103,6 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "employee",
-      title: "Employee",
-      noWrap: true,
-      sortable: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ employee }) => employee || "N/A",
-      // for export
-      key: "employee",
-    },
-    {
-      // for table display
       accessor: "date",
       title: "Date",
       // visibleMediaQuery: aboveXs,
@@ -232,10 +221,6 @@ const Index = () => {
       value: "na",
     },
     {
-      label: "Employee",
-      value: "employee",
-    },
-    {
       label: "Date",
       value: "date",
     },
@@ -267,7 +252,6 @@ const Index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "employee",
     "date",
     "inTime",
     "outTime",
@@ -278,7 +262,7 @@ const Index = () => {
   ]);
 
   const handleChange = (keys) => {
-    const updatedKeys = [...new Set(["na", "employee", "actions", ...keys])];
+    const updatedKeys = [...new Set(["na", "title", "actions", ...keys])];
 
     const reorderedOptions = visibleColumns.filter((column) =>
       updatedKeys.includes(column.value)
@@ -536,15 +520,15 @@ const Index = () => {
 
       <div className="mb-4 d-flex justify-content-between align-items-end">
         <Breadcrumb
-          title="Manual Attendance"
+          title="My Attendance Request"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Manual Attendance" },
+            { title: "My Attendance Request" },
           ]}
         />
 
         <AddButton
-          label="Add Manual Attendance"
+          label="Add Attendance Request"
           fontSize="16px"
           icon={<LuPlus className="fs-5 me-0 mr-0" />}
           handleClick={addOpen}

@@ -351,3 +351,33 @@ employee manage css end
 .column_visibility_btn_section {
   --_button-section-margin-left: 5px !important;
 }
+
+// custom form error message
+.c_error_input {
+  margin-bottom: calc(var(--mantine-spacing-xs) / 2);
+}
+.c_error_input input,
+.c_error_input svg,
+.c_error_input input::placeholder,
+.c_error_msg {
+  color: var(--mantine-color-error);
+}
+.c_error_input input {
+  border-color: var(--mantine-color-error);
+}
+
+.disable_input_overlay {
+  position: relative;
+}
+
+.disable_input_overlay::after {
+  content: "";
+  position: absolute;
+  background-color: #f6f7f8;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  cursor: no-drop;
+  z-index: 9;
+}

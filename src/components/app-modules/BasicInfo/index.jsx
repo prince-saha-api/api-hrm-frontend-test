@@ -506,6 +506,51 @@ const BasicInfo = () => {
                         {...form.getInputProps("business_registration_number")}
                         disabled={isSubmitting}
                       />
+
+                      <TextInput
+                        mt="sm"
+                        label="TAX ID"
+                        placeholder="TAX ID"
+                        {...form.getInputProps("tax_id_number")}
+                        disabled={isSubmitting}
+                      />
+
+                      <TextInput
+                        mt="sm"
+                        label="BIN"
+                        placeholder="BIN"
+                        {...form.getInputProps("bin_no")}
+                        disabled={isSubmitting}
+                      />
+
+                      <TextInput
+                        mt="sm"
+                        label="Description"
+                        placeholder="Description"
+                        {...form.getInputProps("description")}
+                        disabled={isSubmitting}
+                      />
+
+                      <TextInput
+                        mt="sm"
+                        label="Website"
+                        placeholder="Website"
+                        {...form.getInputProps("website_url")}
+                        disabled={isSubmitting}
+                      />
+                    </Box>
+                  </Grid.Col>
+
+                  <Grid.Col span={6}>
+                    <Box>
+                      <TextInput
+                        // mt="sm"
+                        label="Email"
+                        placeholder="Email"
+                        {...form.getInputProps("primary_email")}
+                        disabled={isSubmitting}
+                      />
+
                       <TextInput
                         mt="sm"
                         label="Phone"
@@ -521,48 +566,6 @@ const BasicInfo = () => {
                         disabled={isSubmitting}
                       />
                       <TextInput
-                        mt="sm"
-                        label="Email"
-                        placeholder="Email"
-                        {...form.getInputProps("primary_email")}
-                        disabled={isSubmitting}
-                      />
-                      <TextInput
-                        mt="sm"
-                        label="Website"
-                        placeholder="Website"
-                        {...form.getInputProps("website_url")}
-                        disabled={isSubmitting}
-                      />
-                      <TextInput
-                        mt="sm"
-                        label="TAX ID"
-                        placeholder="TAX ID"
-                        {...form.getInputProps("tax_id_number")}
-                        disabled={isSubmitting}
-                      />
-                    </Box>
-                  </Grid.Col>
-
-                  <Grid.Col span={6}>
-                    <Box>
-                      <TextInput
-                        // mt="sm"
-                        label="BIN"
-                        placeholder="BIN"
-                        {...form.getInputProps("bin_no")}
-                        disabled={isSubmitting}
-                      />
-
-                      <TextInput
-                        mt="sm"
-                        label="Description"
-                        placeholder="Description"
-                        {...form.getInputProps("description")}
-                        disabled={isSubmitting}
-                      />
-
-                      <Textarea
                         classNames={{
                           root: "w-100",
                         }}
@@ -600,8 +603,8 @@ const BasicInfo = () => {
                           root: "w-100",
                         }}
                         mt="sm"
-                        label="ZIP Code"
-                        placeholder="ZIP Code"
+                        label="Postal / ZIP Code"
+                        placeholder="Postal / ZIP Code"
                         {...form.getInputProps(`address.post_zip_code`)}
                         disabled={isSubmitting}
                       />

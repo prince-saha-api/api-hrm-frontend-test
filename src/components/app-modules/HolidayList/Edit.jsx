@@ -40,7 +40,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
         title: item.title || "",
         description: item.description || "",
         date: item.date ? new Date(item.date) : null,
-        employee_grade: item.employee_grade || "",
+        employee_grade: item.employee_grade.id || "",
         is_recuring: item.is_recuring || true,
       });
     }

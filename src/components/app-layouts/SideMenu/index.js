@@ -375,10 +375,10 @@ const Page = () => {
                     <ul className="text-decoration-none mb-0 sidenav_submenu">
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
-                          href="/my-attendance-request"
+                          href="/my-attendance"
                           className="text-decoration-none subMenu"
                         >
-                          My Attendance Request
+                          My Attendance
                         </Link>
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
@@ -395,6 +395,14 @@ const Page = () => {
                           className="text-decoration-none subMenu"
                         >
                           Remote Attendance
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/work-record"
+                          className="text-decoration-none subMenu"
+                        >
+                          Work Record
                         </Link>
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">

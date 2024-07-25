@@ -276,7 +276,7 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
                     <div className="cust_iputLabel">Address</div>
-                    <Textarea
+                    <TextInput
                       classNames={{
                         root: "w-100",
                         wrapper: "cust_iputWrapper",

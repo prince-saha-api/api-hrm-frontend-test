@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, forwardRef, useImperativeHandle } from "react";
+import useSWR from "swr";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import {
@@ -15,6 +16,7 @@ import {
   Checkbox,
 } from "@mantine/core";
 import classEase from "classease";
+import { fetcher } from "@/lib/fetch";
 import { countries } from "@/data/countries";
 
 const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
@@ -72,6 +74,22 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
       //   value ? null : "Country is required",
     },
   });
+
+  const {
+    data: religionsData,
+    error: religionsError,
+    isLoading: religionsIsFetchLoading,
+  } = useSWR(`/api/user/get-religion/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  console.log(religionsData);
+
+  const religions = religionsData?.data?.result?.map((item) => ({
+    value: item?.id.toString() || "",
+    label: item?.name?.toString() || "",
+  }));
 
   const [isMarried, setIsMarried] = useState(false);
 
@@ -352,16 +370,17 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   // mt="sm"
                   // label="Religion"
                   placeholder="Religion"
-                  data={[
-                    { value: "1", label: "Islam" },
-                    { value: "2", label: "Hinduism" },
-                    { value: "3", label: "Christianity" },
-                    { value: "4", label: "Buddhism" },
-                    { value: "5", label: "Sikhism" },
-                    { value: "6", label: "Judaism" },
-                    { value: "7", label: "Jainism" },
-                    { value: "8", label: "Others" },
-                  ]}
+                  // data={[
+                  //   { value: "1", label: "Islam" },
+                  //   { value: "2", label: "Hinduism" },
+                  //   { value: "3", label: "Christianity" },
+                  //   { value: "4", label: "Buddhism" },
+                  //   { value: "5", label: "Sikhism" },
+                  //   { value: "6", label: "Judaism" },
+                  //   { value: "7", label: "Jainism" },
+                  //   { value: "8", label: "Others" },
+                  // ]}
+                  data={religions}
                   {...form.getInputProps("religion")}
                 />
               </div>

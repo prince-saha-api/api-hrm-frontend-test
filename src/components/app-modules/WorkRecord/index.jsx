@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
@@ -11,7 +10,9 @@ import {
   MultiSelect,
   Popover,
   Group,
+  Grid,
 } from "@mantine/core";
+import { MonthPickerInput } from "@mantine/dates";
 import { DataTable } from "mantine-datatable";
 import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
@@ -21,6 +22,7 @@ import { HiDotsVertical } from "react-icons/hi";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { fetcher, getData } from "@/lib/fetch";
+import { MdOutlineCalendarMonth } from "react-icons/md";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { constants } from "@/lib/config";
 import { getDate } from "@/lib/helper";
@@ -495,6 +497,9 @@ const Index = () => {
     }
   };
 
+  const dateIcon = <MdOutlineCalendarMonth />;
+  const [value, setValue] = useState(null);
+
   return (
     <>
       <Add
@@ -518,165 +523,244 @@ const Index = () => {
         mutate={mutate}
       />
 
-      <div className="mb-4 d-flex justify-content-between align-items-end">
+      <div className="mb-3">
         <Breadcrumb
-          title="My Attendance Request"
+          title="Work Record"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "My Attendance Request" },
+            { title: "Work Record" },
           ]}
         />
-
-        <AddButton
-          label="Add Attendance Request"
-          fontSize="16px"
-          icon={<LuPlus className="fs-5 me-0 mr-0" />}
-          handleClick={addOpen}
-        />
       </div>
 
-      <div className="d-flex justify-content-between mb-3">
-        <div className="showItem d-flex align-items-center justify-content-center">
-          <p className="mb-0 me-2">Show</p>
-          <Select
-            classNames={{
-              input: "showInput",
+      <div className="itemCard">
+        <div className="mb-3 d-flex align-items-center justify-content-end">
+          <p className="mb-0 me-3">Select Month</p>
+          <MonthPickerInput
+            rightSection={dateIcon}
+            styles={{
+              root: { width: "200px" },
             }}
-            withCheckIcon={false}
-            // placeholder=""
-            data={PAGE_SIZES.map((size) => size.toString())}
-            defaultValue={PAGE_SIZES[0].toString()}
-            value={pageSize.toString()}
-            onChange={(_value, option) => handlePageSizeChange(_value)}
+            // label="Pick date"
+            placeholder="Pick date"
+            value={value}
+            onChange={setValue}
           />
-          <p className="mb-0 ms-2 me-2">Entries</p>
-
-          {/* <Popover
-            classNames={{
-              dropdown: "column_visibility_dropdown",
-            }}
-            width={0}
-            shadow="md"
-            position="bottom-start"
-            offset={0}
-          >
-            <Popover.Target>
-              <Button
-                variant="default"
-                rightSection={<MdKeyboardArrowDown size={20} />}
-                classNames={{
-                  root: "column_visibility_btn",
-                  section: "column_visibility_btn_section",
-                }}
-              >
-                Visible Columns
-              </Button>
-            </Popover.Target>
-            <Popover.Dropdown>
-              <MultiSelect
-                classNames={{
-                  root: "column_visibility_root",
-                  label: "column_visibility_label",
-                  input: "column_visibility_input",
-                }}
-                label=""
-                placeholder="Pick values"
-                rightSection={<></>}
-                data={visibleColumns}
-                value={selectedOptions}
-                onChange={handleChange}
-                dropdownOpened={true}
-                comboboxProps={{ withinPortal: false }}
-              />
-            </Popover.Dropdown>
-          </Popover> */}
         </div>
-        <div className="downItem d-flex">
-          <div className="me-2">
-            <Button
-              variant="filled"
-              size="sm"
-              className="px-3"
-              onClick={(e) => handleExportToPDF(e)}
-              loading={isExportDataFetching?.pdf}
-              loaderProps={{ type: "dots" }}
-            >
-              <AiOutlineFilePdf className="me-1" />
-              PDF
-            </Button>
+        <div className="calenderBox">
+          <div className="d-flex">
+            <div className="day">Work Records</div>
+            <div className="day">1</div>
+            <div className="day">2</div>
+            <div className="day">3</div>
+            <div className="day">4</div>
+            <div className="day">5</div>
+            <div className="day">6</div>
+            <div className="day">7</div>
+            <div className="day">8</div>
+            <div className="day">9</div>
+            <div className="day">10</div>
+            <div className="day">11</div>
+            <div className="day">12</div>
+            <div className="day">13</div>
+            <div className="day">14</div>
+            <div className="day">15</div>
+            <div className="day">16</div>
+            <div className="day">17</div>
+            <div className="day">18</div>
+            <div className="day">19</div>
+            <div className="day">20</div>
+            <div className="day">21</div>
+            <div className="day">22</div>
+            <div className="day">23</div>
+            <div className="day">24</div>
+            <div className="day">25</div>
+            <div className="day">26</div>
+            <div className="day">27</div>
+            <div className="day">28</div>
+            <div className="day">29</div>
+            <div className="day">30</div>
+            <div className="day">31</div>
           </div>
-          <div className="me-2">
-            <Button
-              variant="filled"
-              size="sm"
-              className="px-3"
-              onClick={(e) => handleExportToCSV(e)}
-              loading={isExportDataFetching?.csv}
-              loaderProps={{ type: "dots" }}
-            >
-              <FaRegFileAlt className="me-1" />
-              CSV
-            </Button>
+          <div className="d-flex">
+            <div className="day">Jiaur Rahman</div>
+            <div className="day">1</div>
+            <div className="day">2</div>
+            <div className="day">3</div>
+            <div className="day">4</div>
+            <div className="day">5</div>
+            <div className="day">6</div>
+            <div className="day">7</div>
+            <div className="day">8</div>
+            <div className="day">9</div>
+            <div className="day">10</div>
+            <div className="day">11</div>
+            <div className="day">12</div>
+            <div className="day">13</div>
+            <div className="day">14</div>
+            <div className="day">15</div>
+            <div className="day">16</div>
+            <div className="day">17</div>
+            <div className="day">18</div>
+            <div className="day">19</div>
+            <div className="day">20</div>
+            <div className="day">21</div>
+            <div className="day">22</div>
+            <div className="day">23</div>
+            <div className="day">24</div>
+            <div className="day">25</div>
+            <div className="day">26</div>
+            <div className="day">27</div>
+            <div className="day">28</div>
+            <div className="day">29</div>
+            <div className="day">30</div>
+            <div className="day">31</div>
           </div>
-          <div>
-            <Button
-              variant="filled"
-              size="sm"
-              className="px-3"
-              onClick={(e) => handleExportToExcel(e)}
-              loading={isExportDataFetching?.excel}
-              loaderProps={{ type: "dots" }}
-            >
-              <RiFileExcel2Line className="me-1" />
-              Excel
-            </Button>
+          <div className="d-flex">
+            <div className="day">Jiaur Rahman</div>
+            <div className="day">1</div>
+            <div className="day">2</div>
+            <div className="day">3</div>
+            <div className="day">4</div>
+            <div className="day">5</div>
+            <div className="day">6</div>
+            <div className="day">7</div>
+            <div className="day">8</div>
+            <div className="day">9</div>
+            <div className="day">10</div>
+            <div className="day">11</div>
+            <div className="day">12</div>
+            <div className="day">13</div>
+            <div className="day">14</div>
+            <div className="day">15</div>
+            <div className="day">16</div>
+            <div className="day">17</div>
+            <div className="day">18</div>
+            <div className="day">19</div>
+            <div className="day">20</div>
+            <div className="day">21</div>
+            <div className="day">22</div>
+            <div className="day">23</div>
+            <div className="day">24</div>
+            <div className="day">25</div>
+            <div className="day">26</div>
+            <div className="day">27</div>
+            <div className="day">28</div>
+            <div className="day">29</div>
+            <div className="day">30</div>
+            <div className="day">31</div>
           </div>
-        </div>
-      </div>
+          <div className="d-flex">
+            <div className="day">Jiaur Rahman</div>
+            <div className="day">1</div>
+            <div className="day">2</div>
+            <div className="day">3</div>
+            <div className="day">4</div>
+            <div className="day">5</div>
+            <div className="day">6</div>
+            <div className="day">7</div>
+            <div className="day">8</div>
+            <div className="day">9</div>
+            <div className="day">10</div>
+            <div className="day">11</div>
+            <div className="day">12</div>
+            <div className="day">13</div>
+            <div className="day">14</div>
+            <div className="day">15</div>
+            <div className="day">16</div>
+            <div className="day">17</div>
+            <div className="day">18</div>
+            <div className="day">19</div>
+            <div className="day">20</div>
+            <div className="day">21</div>
+            <div className="day">22</div>
+            <div className="day">23</div>
+            <div className="day">24</div>
+            <div className="day">25</div>
+            <div className="day">26</div>
+            <div className="day">27</div>
+            <div className="day">28</div>
+            <div className="day">29</div>
+            <div className="day">30</div>
+            <div className="day">31</div>
+          </div>
+          <div className="d-flex">
+            <div className="day">Jiaur Rahman</div>
+            <div className="day">1</div>
+            <div className="day">2</div>
+            <div className="day">3</div>
+            <div className="day">4</div>
+            <div className="day">5</div>
+            <div className="day">6</div>
+            <div className="day">7</div>
+            <div className="day">8</div>
+            <div className="day">9</div>
+            <div className="day">10</div>
+            <div className="day">11</div>
+            <div className="day">12</div>
+            <div className="day">13</div>
+            <div className="day">14</div>
+            <div className="day">15</div>
+            <div className="day">16</div>
+            <div className="day">17</div>
+            <div className="day">18</div>
+            <div className="day">19</div>
+            <div className="day">20</div>
+            <div className="day">21</div>
+            <div className="day">22</div>
+            <div className="day">23</div>
+            <div className="day">24</div>
+            <div className="day">25</div>
+            <div className="day">26</div>
+            <div className="day">27</div>
+            <div className="day">28</div>
+            <div className="day">29</div>
+            <div className="day">30</div>
+            <div className="day">31</div>
+          </div>
+          <div className="d-flex">
+            <div className="day">Jiaur Rahman</div>
+            <div className="day">1</div>
+            <div className="day">2</div>
+            <div className="day">3</div>
+            <div className="day">4</div>
+            <div className="day">5</div>
+            <div className="day">6</div>
+            <div className="day">7</div>
+            <div className="day">8</div>
+            <div className="day">9</div>
+            <div className="day">10</div>
+            <div className="day">11</div>
+            <div className="day">12</div>
+            <div className="day">13</div>
+            <div className="day">14</div>
+            <div className="day">15</div>
+            <div className="day">16</div>
+            <div className="day">17</div>
+            <div className="day">18</div>
+            <div className="day">19</div>
+            <div className="day">20</div>
+            <div className="day">21</div>
+            <div className="day">22</div>
+            <div className="day">23</div>
+            <div className="day">24</div>
+            <div className="day">25</div>
+            <div className="day">26</div>
+            <div className="day">27</div>
+            <div className="day">28</div>
+            <div className="day">29</div>
+            <div className="day">30</div>
+            <div className="day">31</div>
+          </div>
 
-      <div className="itemCard p-0 datatable-wrapper">
-        <DataTable
-          style={{
-            height:
-              !apiData?.data.result || apiData.data.result.length === 0
-                ? "300px"
-                : "auto",
-          }}
-          classNames={{
-            root: "datatable",
-            table: "datatable_table",
-            header: "datatable_header",
-            pagination: "datatable_pagination",
-          }}
-          // borderColor="#e0e6ed66"
-          // rowBorderColor="#e0e6ed66"
-          // c={{ dark: "#ffffff", light: "#0E1726" }}
-          // highlightOnHover
-          horizontalSpacing="sm"
-          verticalSpacing="sm"
-          fz="sm"
-          verticalAlign="center"
-          striped
-          idAccessor="id"
-          columns={columns.filter((column) =>
-            selectedOptions.includes(column.key)
-          )}
-          fetching={isLoading}
-          records={apiData?.data.result || []}
-          page={currentPage}
-          onPageChange={setCurrentPage}
-          totalRecords={apiData?.data.count}
-          recordsPerPage={pageSize}
-          sortStatus={sortStatus}
-          onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
-          // recordsPerPageOptions={PAGE_SIZES}
-          // onRecordsPerPageChange={setPageSize}
-          // rowExpansion={rowExpansion}
-          // onRowContextMenu={handleContextMenu}
-          // onScroll={hideContextMenu}
-        />
+          {/* <div className="kjhgfkdjhghfdkjhfdkjgjkfgnbkfjhf">
+            <div className="jiaurDemoo bg_Present">
+              <p className="date">1</p>
+              <b>P</b>
+            </div>
+            
+          </div> */}
+        </div>
       </div>
     </>
   );

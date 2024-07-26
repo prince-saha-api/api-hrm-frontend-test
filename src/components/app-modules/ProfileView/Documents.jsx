@@ -59,14 +59,6 @@ const Index = ({ opened, close, item }) => {
             leftSectionPointerEvents="none"
             // {...form.getInputProps("appointmentLetter")}
           />
-          <FileInput
-            mb="sm"
-            leftSection={<TbPhotoFilled className="fileIcon" />}
-            label="Photo"
-            placeholder="Photo"
-            leftSectionPointerEvents="none"
-            // {...form.getInputProps("photo")}
-          />
 
           <Group justify="flex-end" mt="md">
             <Button variant="filled">Update</Button>

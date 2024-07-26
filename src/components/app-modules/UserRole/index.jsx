@@ -8,6 +8,7 @@ import {
   Switch,
   Avatar,
   Group,
+  Button,
 } from "@mantine/core";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import CreateUserRole from "../CreateUserRole";
@@ -1032,20 +1033,6 @@ const index = () => {
         />
       </div>
 
-      <div>
-        <button onClick={toggleDiv}>
-          {isDivVisible ? "Remove Div" : "Add Div"}
-        </button>
-
-        {/* <style jsx>{`
-          .toggle-div {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: lightblue;
-          }
-        `}</style> */}
-      </div>
-
       <Grid gutter="xl">
         <Grid.Col span={6}>
           <div className="itemCard">
@@ -1054,20 +1041,21 @@ const index = () => {
         </Grid.Col>
 
         <Grid.Col span={6}>
-          {isDivVisible && (
-            <div className="itemCard">
-              <Accordion
-                defaultValue="Employee"
-                classNames={{
-                  root: "accordionRoot",
-                  item: "accordionActive",
-                  chevron: "accordionIcon",
-                }}
-              >
-                {items}
-              </Accordion>
+          <div className="itemCard">
+            <Accordion
+              defaultValue="Employee"
+              classNames={{
+                root: "accordionRoot",
+                item: "accordionActive",
+                chevron: "accordionIcon",
+              }}
+            >
+              {items}
+            </Accordion>
+            <div className="mt-3">
+              <Button variant="filled">Assign</Button>
             </div>
-          )}
+          </div>
         </Grid.Col>
       </Grid>
     </>

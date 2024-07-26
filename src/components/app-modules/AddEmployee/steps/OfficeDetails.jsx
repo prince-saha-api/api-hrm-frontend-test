@@ -1,5 +1,12 @@
 "use client";
-import React, { forwardRef, useImperativeHandle } from "react";
+
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+import useSWR from "swr";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import {
@@ -12,15 +19,20 @@ import {
   MultiSelect,
   Grid,
 } from "@mantine/core";
-import { FcAcceptDatabase } from "react-icons/fc";
-import Image from "next/image";
-import compmanyLogo from "public/full_logo.png";
-import uploadImg from "public/profile01.jpg";
-import { FcAddImage } from "react-icons/fc";
+// import { FcAcceptDatabase } from "react-icons/fc";
+// import Image from "next/image";
+// import compmanyLogo from "public/full_logo.png";
+// import uploadImg from "public/profile01.jpg";
+// import { FcAddImage } from "react-icons/fc";
+import { toast } from "react-toastify";
+import { fetcher, getData } from "@/lib/fetch";
 
 const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
+  const [branches, setBranches] = useState([]);
+  const [departments, setDepartments] = useState([]);
+
   const form = useForm({
-    mode: "uncontrolled",
+    // mode: "uncontrolled",
     initialValues: {
       ...data,
       joining_date: data.joining_date ? new Date(data.joining_date) : null,
@@ -30,6 +42,158 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
     //     value.length < 2 ? "Official Id must have at least 2 letters" : null,
     // },
   });
+
+  const {
+    data: companyData,
+    error: companyError,
+    isLoading: isCompanyLoading,
+  } = useSWR(`/api/company/get-company/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const companies = companyData?.data?.result?.map((item) => ({
+    label: item?.basic_information?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: shiftsData,
+    error: shiftsError,
+    isLoading: isShiftsLoading,
+  } = useSWR(`/api/user/get-shift/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const shifts = shiftsData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: gradesData,
+    error: gradesError,
+    isLoading: isGradesLoading,
+  } = useSWR(`/api/user/get-grade/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const grades = gradesData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: rolesData,
+    error: rolesError,
+    isLoading: isRolesLoading,
+  } = useSWR(`/api/user/get-rolepermission/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const roles = rolesData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: groupsData,
+    error: groupsError,
+    isLoading: isGroupsLoading,
+  } = useSWR(`/api/device/get-group/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const groups = groupsData?.data?.result?.map((item) => ({
+    label: item?.title?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: employeesData,
+    error: employeesError,
+    isLoading: isEmployeesLoading,
+  } = useSWR(`/api/user/get-employee/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const employees = employeesData?.data?.result?.map((item) => ({
+    label:
+      item?.first_name?.toString() + " " + item?.last_name?.toString() || "",
+    value: item?.username.toString() || "",
+  }));
+
+  const {
+    data: designationsData,
+    error: designationsError,
+    isLoading: isDesignationsLoading,
+  } = useSWR(`/api/user/get-dsignation/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const designations = designationsData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const fetchBranches = async (companyId) => {
+    try {
+      const response = await getData(
+        `/api/branch/get-branch/?company=${companyId}`
+      );
+      console.log(response);
+      const branchData = response?.data?.data?.result.map((branch) => ({
+        label: branch?.name?.toString() || "",
+        value: branch?.id.toString() || "",
+      }));
+      setBranches(branchData);
+    } catch (error) {
+      console.error("Error fetching branches:", error);
+      toast.error("Error fetching branches");
+    }
+  };
+
+  useEffect(() => {
+    if (form.values.company) {
+      fetchBranches(form.values.company);
+    } else {
+      form.setFieldValue("branch", null);
+      setBranches([]);
+    }
+  }, [form.values.company]);
+
+  const fetchDepartments = async (companyId, branchId) => {
+    try {
+      const response = await getData(
+        `/api/department/get-department/?company=${companyId}&branch=${branchId}`
+      );
+      console.log(response);
+      const departmentData = response?.data?.data?.result.map((department) => ({
+        label: department?.name?.toString() || "",
+        value: department?.id.toString() || "",
+      }));
+      setDepartments(departmentData);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+      toast.error("Error fetching departments");
+    }
+  };
+
+  useEffect(() => {
+    if (form.values.branch) {
+      fetchDepartments(form.values.company, form.values.branch);
+      form.setFieldValue("department", null);
+    } else {
+      form.setFieldValue("department", null);
+      setDepartments([]);
+    }
+  }, [form.values.company, form.values.branch]);
 
   useImperativeHandle(ref, () => ({
     validateStep: (updateFormData, key) => {
@@ -118,6 +282,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   placeholder="Employee Type"
                   data={[
                     "Trainee",
+                    "Apprentice",
                     "Intern",
                     "Probation",
                     "Permanent",
@@ -139,11 +304,12 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // mt="sm"
                   // label="Company"
                   placeholder="Company"
-                  data={[
-                    { value: "1", label: "API Solutions Ltd." },
-                    { value: "2", label: "Google" },
-                    { value: "3", label: "Microsoft" },
-                  ]}
+                  // data={[
+                  //   { value: "1", label: "API Solutions Ltd." },
+                  //   { value: "2", label: "Google" },
+                  //   { value: "3", label: "Microsoft" },
+                  // ]}
+                  data={companies}
                   {...form.getInputProps("company")}
                 />
               </div>
@@ -157,12 +323,13 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // mt="sm"
                   // label="Branch"
                   placeholder="Branch"
-                  data={[
-                    { value: "1", label: "Banani" },
-                    { value: "2", label: "Dhanmondi" },
-                    { value: "3", label: "Chattogram" },
-                    { value: "4", label: "Khulna" },
-                  ]}
+                  // data={[
+                  //   { value: "1", label: "Banani" },
+                  //   { value: "2", label: "Dhanmondi" },
+                  //   { value: "3", label: "Chattogram" },
+                  //   { value: "4", label: "Khulna" },
+                  // ]}
+                  data={branches}
                   {...form.getInputProps("branch")}
                 />
               </div>
@@ -176,11 +343,12 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // mt="sm"
                   // label="Department"
                   placeholder="Department"
-                  data={[
-                    { value: "1", label: "Development" },
-                    { value: "2", label: "Marketing" },
-                    { value: "3", label: "HR" },
-                  ]}
+                  // data={[
+                  //   { value: "1", label: "Development" },
+                  //   { value: "2", label: "Marketing" },
+                  //   { value: "3", label: "HR" },
+                  // ]}
+                  data={departments}
                   {...form.getInputProps("department")}
                 />
               </div>
@@ -194,11 +362,12 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // mt="sm"
                   // label="Designation"
                   placeholder="Designation"
-                  data={[
-                    { value: "1", label: "FrontEnd Developer" },
-                    { value: "2", label: "BackEnd Developer" },
-                    { value: "3", label: "QA" },
-                  ]}
+                  // data={[
+                  //   { value: "1", label: "FrontEnd Developer" },
+                  //   { value: "2", label: "BackEnd Developer" },
+                  //   { value: "3", label: "QA" },
+                  // ]}
+                  data={designations}
                   {...form.getInputProps("designation")}
                 />
               </div>
@@ -216,11 +385,12 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // mt="sm"
                   // label="Default Shift"
                   placeholder="Default Shift"
-                  data={[
-                    { value: "1", label: "Morning" },
-                    { value: "2", label: "Day" },
-                    { value: "3", label: "Night" },
-                  ]}
+                  // data={[
+                  //   { value: "1", label: "Morning" },
+                  //   { value: "2", label: "Day" },
+                  //   { value: "3", label: "Night" },
+                  // ]}
+                  data={shifts}
                   {...form.getInputProps("shift")}
                 />
               </div>
@@ -233,11 +403,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   placeholder="Grade"
-                  data={[
-                    { value: "1", label: "Grade 1" },
-                    { value: "2", label: "Grade 2" },
-                    { value: "3", label: "Grade 3" },
-                  ]}
+                  data={grades}
                   {...form.getInputProps("grade")}
                 />
               </div>
@@ -250,11 +416,12 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   placeholder="User Role"
-                  data={[
-                    { value: "1", label: "Role 1" },
-                    { value: "2", label: "Role 2" },
-                    { value: "3", label: "Role 3" },
-                  ]}
+                  // data={[
+                  //   { value: "1", label: "Role 1" },
+                  //   { value: "2", label: "Role 2" },
+                  //   { value: "3", label: "Role 3" },
+                  // ]}
+                  data={roles}
                   {...form.getInputProps("role_permission")}
                 />
               </div>
@@ -279,11 +446,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   placeholder="Group"
-                  data={[
-                    { value: "1", label: "Group 1" },
-                    { value: "2", label: "Group 2" },
-                    { value: "3", label: "Group 3" },
-                  ]}
+                  data={groups}
                   {...form.getInputProps("ethnic_group")}
                 />
               </div>
@@ -314,11 +477,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // label="Supervisor"
                   placeholder="Supervisor"
                   searchable
-                  data={[
-                    { value: "API230747", label: "G. M. Nazmul Hussain" },
-                    { value: "API230748", label: "Jiaur Rahman" },
-                    { value: "API230749", label: "Nayeem Hossain" },
-                  ]}
+                  data={employees}
                   {...form.getInputProps("supervisor")}
                 />
               </div>
@@ -333,11 +492,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // label="Expense Approver"
                   placeholder="Expense Approver"
                   searchable
-                  data={[
-                    { value: "API230747", label: "G. M. Nazmul Hussain" },
-                    { value: "API230748", label: "Jiaur Rahman" },
-                    { value: "API230749", label: "Nayeem Hossain" },
-                  ]}
+                  data={employees}
                   {...form.getInputProps("expense_approver")}
                 />
               </div>
@@ -352,11 +507,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // label="Leave Approver"
                   placeholder="Leave Approver"
                   searchable
-                  data={[
-                    { value: "API230747", label: "G. M. Nazmul Hussain" },
-                    { value: "API230748", label: "Jiaur Rahman" },
-                    { value: "API230749", label: "Nayeem Hossain" },
-                  ]}
+                  data={employees}
                   {...form.getInputProps("leave_approver")}
                 />
               </div>
@@ -371,11 +522,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // label="Shift Approver"
                   placeholder="Shift Approver"
                   searchable
-                  data={[
-                    { value: "API230747", label: "G. M. Nazmul Hussain" },
-                    { value: "API230748", label: "Jiaur Rahman" },
-                    { value: "API230749", label: "Nayeem Hossain" },
-                  ]}
+                  data={employees}
                   {...form.getInputProps("shift_request_approver")}
                 />
               </div>

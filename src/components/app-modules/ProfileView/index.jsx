@@ -31,6 +31,13 @@ import { HiOutlineDocumentText } from "react-icons/hi2";
 import { CiFileOn } from "react-icons/ci";
 import { CiImageOn } from "react-icons/ci";
 import { TbEdit } from "react-icons/tb";
+import {
+  getStoragePath,
+  getFullName,
+  getDate,
+  generateAddressString,
+  formatCurrency,
+} from "@/lib/helper";
 import ProfileEdit from "./ProfileEdit";
 import ProfileImage from "./ProfileImage";
 import NID from "./NID";
@@ -44,8 +51,13 @@ import EmergencyContact from "./EmergencyContact";
 import Education from "./Education";
 import Experience from "./Experience";
 import Documents from "./Documents";
+import SingleDocument from "./SingleDocument";
 
-const ProfileView = () => {
+const ProfileView = ({ data }) => {
+  console.log(data);
+
+  const [singleDocument, setSingleDocument] = useState(null);
+
   const refTimeIn = useRef(null);
   const timeIn = (
     <ActionIcon
@@ -69,6 +81,12 @@ const ProfileView = () => {
     appointmentOpened,
     { open: appointmentOpen, close: appointmentClose },
   ] = useDisclosure(false);
+
+  const [
+    singleDocumentOpened,
+    { open: singleDocumentOpen, close: singleDocumentClose },
+  ] = useDisclosure(false);
+
   const [
     personalDetailsOpened,
     { open: personalDetailsOpen, close: personalDetailsClose },
@@ -95,77 +113,6 @@ const ProfileView = () => {
   ] = useDisclosure(false);
   const [documentsOpened, { open: documentsOpen, close: documentsClose }] =
     useDisclosure(false);
-
-  // Data of Job History
-  const elements = [
-    {
-      transition: "Joining",
-      date: "01/04/2022",
-      jobStatus: "Probation",
-      designation: "Front-End Developer",
-      department: "Software Development",
-      joiningSalary: "40,000/-",
-      newSalary: "55,000/-",
-    },
-    {
-      transition: "Status Update",
-      date: "01/04/2022",
-      jobStatus: "Permanent",
-      designation: "UI/UX Designer",
-      department: "Software Development",
-      joiningSalary: "30,000/-",
-      newSalary: "35,000/-",
-    },
-    {
-      transition: "Increment",
-      date: "01/04/2022",
-      jobStatus: "Probation",
-      designation: "Front-End Developer",
-      department: "Software Development",
-      joiningSalary: "44,000/-",
-      newSalary: "55,000/-",
-    },
-    {
-      transition: "Joining",
-      date: "01/04/2022",
-      jobStatus: "Probation",
-      designation: "Front-End Developer",
-      department: "Software Development",
-      joiningSalary: "40,000/-",
-      newSalary: "55,000/-",
-    },
-    {
-      transition: "Status Update",
-      date: "01/04/2022",
-      jobStatus: "Permanent",
-      designation: "UI/UX Designer",
-      department: "Software Development",
-      joiningSalary: "30,000/-",
-      newSalary: "35,000/-",
-    },
-    {
-      transition: "Increment",
-      date: "01/04/2022",
-      jobStatus: "Probation",
-      designation: "Front-End Developer",
-      department: "Software Development",
-      joiningSalary: "44,000/-",
-      newSalary: "55,000/-",
-    },
-  ];
-
-  // Table of Job History
-  const rows = elements.map((element, index) => (
-    <Table.Tr key={index}>
-      <Table.Td>{element.transition}</Table.Td>
-      <Table.Td>{element.date}</Table.Td>
-      <Table.Td>{element.jobStatus}</Table.Td>
-      <Table.Td>{element.designation}</Table.Td>
-      <Table.Td>{element.department}</Table.Td>
-      <Table.Td>{element.joiningSalary}</Table.Td>
-      <Table.Td>{element.newSalary}</Table.Td>
-    </Table.Tr>
-  ));
 
   // Data of Leave Policy
   const elements2 = [
@@ -279,6 +226,13 @@ const ProfileView = () => {
         // item={selectedDeleteItem}
         // mutate={mutate}
       />
+      <SingleDocument
+        opened={singleDocumentOpened}
+        close={singleDocumentClose}
+        document={singleDocument}
+        // item={selectedDeleteItem}
+        // mutate={mutate}
+      />
       <Resume
         opened={resumeOpened}
         close={resumeClose}
@@ -362,7 +316,8 @@ const ProfileView = () => {
             <div className="profileBox borderRight h-100 d-flex">
               <div className="profile position-relative">
                 <Image
-                  src="/profile03.jpg"
+                  // src="/profile03.jpg"
+                  src={getStoragePath(data?.photo)}
                   width={200}
                   height={200}
                   alt="profile_img"
@@ -380,14 +335,22 @@ const ProfileView = () => {
                 </button>
               </div>
               <div className="proInfo ms-4">
-                <h3 className="employeeName mb-1">Jiaur Rahman</h3>
-                <h6 className="employeeDesig mb-1">Software Engineer</h6>
+                <h3 className="employeeName mb-1">
+                  {getFullName(data?.first_name, data?.last_name)}
+                </h3>
+                <h6 className="employeeDesig mb-1">
+                  {data?.designation?.name || ""}
+                </h6>
 
                 <p className="employeeJoin mb-1">
-                  <b>Employee ID : API2202016</b>
+                  <b>Employee ID : {data?.official_id || ""}</b>
                 </p>
-                <p className="employeeJoin mb-1">Department : Development</p>
-                <p className="employeeJoin mb-1">Date of Join : 1st Jan 2021</p>
+                <p className="employeeJoin mb-1">
+                  Department: {data?.departmenttwo[0]?.name || "N/A"}
+                </p>
+                <p className="employeeJoin mb-1">
+                  Date of Join : {getDate(data?.date_joined)}
+                </p>
                 <p className="employeeJoin">
                   <span>Reset Password:</span>
                   <button
@@ -409,31 +372,38 @@ const ProfileView = () => {
             <div className="employeeInfo h-100 ps-3">
               <p>
                 <span>Phone:</span>
-                <Link className="phnNumber" href="tel:01686449007">
-                  01686449007
+                <Link
+                  className="phnNumber"
+                  href={`tel:${data?.official_phone}`}
+                >
+                  {data?.official_phone || "N/A"}
                 </Link>
               </p>
               <p>
                 <span>Email:</span>
-                <Link className="email" href="mailto:jiaur883@gmail.com">
-                  jiaur883@gmail.com
+                <Link className="email" href={`mailto:${data?.official_email}`}>
+                  {data?.official_email || "N/A"}
                 </Link>
               </p>
               <p>
-                <span>Date of Birth:</span>24-July-1996
+                <span>Date of Birth:</span>
+                {getDate(data?.dob)}
               </p>
               {/* <p>
                         <span>Address:</span>Bayonne Ave, Manchester Township,
                         Nkgkgke, Mancheste Real Likebto power tomaar Fcace door
                      </p> */}
               <p>
-                <span>Gender:</span>Male
+                <span>Gender:</span>
+                {data?.gender || "N/A"}
               </p>
               <p>
-                <span>Blood Group:</span> A+
+                <span>Blood Group:</span>
+                {data?.blood_group || ""}
               </p>
               <p>
-                <span>Marital Status:</span> Married
+                <span>Marital Status:</span>
+                {data?.marital_status || ""}
               </p>
               <p>
                 <span>Supervisor:</span>
@@ -491,33 +461,40 @@ const ProfileView = () => {
               </h4>
               <div className="employeeInfo">
                 <p>
-                  <span>Fathers Name:</span>Afiz Uddin
+                  <span>Fathers Name:</span>
+                  {data?.fathers_name || ""}
                 </p>
                 <p>
-                  <span>Mothers Name:</span>Jamila Begum
+                  <span>Mothers Name:</span>
+                  {data?.mothers_name || ""}
                 </p>
                 <p>
-                  <span>Spouse Name:</span>N/A
+                  <span>Spouse Name:</span>
+                  {data?.spouse_name || "N/A"}
                 </p>
                 <p>
-                  <span>Nationality:</span>Bangladeshi
+                  <span>Nationality:</span>
+                  {data?.nationality || "N/A"}
                 </p>
                 <p>
-                  <span>Religion:</span>Islam
+                  <span>Religion:</span>
+                  {data?.religion?.name || "N/A"}
                 </p>
                 <p>
-                  <span>NID / Passport:</span>199523400099
+                  <span>NID / Passport:</span>
+                  {data?.nid_passport_no || "N/A"}
                 </p>
                 <p>
-                  <span>TIN No:</span>99622240
+                  <span>TIN No:</span>
+                  {data?.tin_no || "N/A"}
                 </p>
                 <p>
-                  <span>Present Address:</span>Mohammadpur, Dhaka 1207
-                  Bangladesh
+                  <span>Present Address:</span>
+                  {generateAddressString(data?.present_address)}
                 </p>
                 <p>
-                  <span>Permanent Address:</span>Mohammadpur, Dhaka 1207
-                  Bangladesh
+                  <span>Permanent Address:</span>
+                  {generateAddressString(data?.permanent_address)}
                 </p>
               </div>
             </div>
@@ -542,43 +519,55 @@ const ProfileView = () => {
                   </h4>
                   <div className="employeeInfo">
                     <p>
-                      <span>Official Email:</span>example@gmail.com
+                      <span>Official Email:</span>
+                      {data?.official_email || "N/A"}
                     </p>
                     <p>
-                      <span>Official Phone:</span>01725235883
+                      <span>Official Phone:</span>
+                      {data?.official_phone || "N/A"}
                     </p>
                     <p>
-                      <span>Employee Type:</span>Full-time
+                      <span>Employee Type:</span>
+                      {data?.employee_type || "N/A"}
                     </p>
                     <p>
-                      <span>Company:</span>API Solution Ltd.
+                      <span>Company:</span>
+                      {data?.departmenttwo[0]?.branch?.company
+                        ?.basic_information?.name || "N/A"}
                     </p>
                     <p>
                       <span>Branch:</span>Banani
                     </p>
                     <p>
-                      <span>Default Shift:</span>Day
+                      <span>Default Shift:</span>
+                      {data?.shift || "N/A"}
                     </p>
                     <p>
-                      <span>Grade:</span>A
+                      <span>Grade:</span>
+                      {data?.grade?.name || "N/A"}
                     </p>
                     <p>
-                      <span>User Role:</span>User
+                      <span>User Role:</span>
+                      {data?.role?.name || "N/A"}
                     </p>
                     <p>
-                      <span>Official Note:</span>N/A
+                      <span>Official Note:</span>
+                      {data?.official_note || "N/A"}
                     </p>
                     <p>
                       <span>Group:</span>Xyz
                     </p>
                     <p>
-                      <span>Expense Approver:</span>G. M. Nazmul Hussain
+                      <span>Expense Approver:</span>
+                      {data?.expense_approver?.name || "N/A"}
                     </p>
                     <p>
-                      <span>Leave Approver:</span>G. M. Nazmul Hussain
+                      <span>Leave Approver:</span>
+                      {data?.leave_approver?.name || "N/A"}
                     </p>
                     <p>
-                      <span>Shift Approver:</span>G. M. Nazmul Hussain
+                      <span>Shift Approver:</span>
+                      {data?.shift_request_approver?.name || "N/A"}
                     </p>
                   </div>
                 </div>
@@ -602,7 +591,29 @@ const ProfileView = () => {
                           <Table.Th>New Salary</Table.Th>
                         </Table.Tr>
                       </Table.Thead>
-                      <Table.Tbody>{rows}</Table.Tbody>
+                      {data?.employeejobhistoryone?.length ? (
+                        <Table.Tbody>
+                          {data.employeejobhistoryone.map((item, index) => (
+                            <Table.Tr key={index}>
+                              <Table.Td>{item?.status_adjustment}</Table.Td>
+                              <Table.Td>
+                                {getDate(item?.effective_from)}
+                              </Table.Td>
+                              <Table.Td>{item?.status_adjustment}</Table.Td>
+                              <Table.Td>{item?.designation || "N/A"}</Table.Td>
+                              <Table.Td>{item?.department || "N/A"}</Table.Td>
+                              <Table.Td>
+                                {formatCurrency(item?.new_salary)}
+                              </Table.Td>
+                              <Table.Td>
+                                {formatCurrency(item?.new_salary)}
+                              </Table.Td>
+                            </Table.Tr>
+                          ))}
+                        </Table.Tbody>
+                      ) : (
+                        ""
+                      )}
                     </Table>
                   </div>
                 </div>
@@ -630,31 +641,40 @@ const ProfileView = () => {
                   </h4>
                   <div className="employeeInfo">
                     <p>
-                      <span>Payment In:</span>Cash
+                      <span>Payment In:</span>
+                      {data?.payment_in || "N/A"}
                     </p>
                     <p>
-                      <span>Monthly Gross Salary:</span>55000
+                      <span>Monthly Gross Salary:</span>
+                      {formatCurrency(data?.gross_salary)}
                     </p>
                     <p>
-                      <span>Bank Name:</span>Dutch Bangla Bank
+                      <span>Bank Name:</span>
+                      {data?.bank_account?.bank_name || "N/A"}
                     </p>
                     <p>
-                      <span>Branch:</span>Mohammadpur
+                      <span>Branch:</span>
+                      {data?.bank_account?.branch_name || "N/A"}
                     </p>
                     <p>
-                      <span>Bank Account Type:</span>Business
+                      <span>Bank Account Type:</span>
+                      {data?.bank_account?.account_type?.name || "N/A"}
                     </p>
                     <p>
-                      <span>Account No:</span>996222400001
+                      <span>Account No:</span>
+                      {data?.bank_account?.account_no || "N/A"}
                     </p>
                     <p>
-                      <span>Routing No:</span>33000
+                      <span>Routing No:</span>
+                      {data?.bank_account?.routing_no || "N/A"}
                     </p>
                     <p>
-                      <span>SWIFT:</span>ABC
+                      <span>SWIFT:</span>
+                      {data?.bank_account?.swift_bic || "N/A"}
                     </p>
                     <p>
-                      <span>Bank Address:</span>Banani Dhaka Bangladesh
+                      <span>Bank Address:</span>
+                      {generateAddressString(data?.bank_account?.address)}
                     </p>
                   </div>
                 </Grid.Col>
@@ -725,52 +745,42 @@ const ProfileView = () => {
                 <TbSquareRoundedFilled className="roundIcon" />
                 Emergency Contact
               </h4>
-              <Grid>
-                <Grid.Col span={6}>
-                  <div className="employeeInfo border p-3">
-                    <p>
-                      <span>Name:</span>Mr. Mijanur Rahman
-                    </p>
-                    <p>
-                      <span>Age:</span>28
-                    </p>
-                    <p>
-                      <span>Phone No:</span>01725357776
-                    </p>
-                    <p>
-                      <span>Email:</span>example@gmail.com
-                    </p>
-                    <p>
-                      <span>Relation:</span>Brother
-                    </p>
-                    <p>
-                      <span>Address:</span>Mohammadpur, Dhaka 1207 Bangladesh
-                    </p>
-                  </div>
-                </Grid.Col>
-                <Grid.Col span={6}>
-                  <div className="employeeInfo border p-3">
-                    <p>
-                      <span>Name:</span>Mr. Jamal Islam
-                    </p>
-                    <p>
-                      <span>Age:</span>28
-                    </p>
-                    <p>
-                      <span>Phone No:</span>0172535443
-                    </p>
-                    <p>
-                      <span>Email:</span>example@gmail.com
-                    </p>
-                    <p>
-                      <span>Relation:</span>Brother
-                    </p>
-                    <p>
-                      <span>Address:</span>Mohammadpur, Dhaka 1207 Bangladesh
-                    </p>
-                  </div>
-                </Grid.Col>
-              </Grid>
+              {data?.employee_contact?.length ? (
+                <Grid>
+                  {data.employee_contact.map((contact, index) => (
+                    <Grid.Col span={6} key={index}>
+                      <div className="employeeInfo border p-3">
+                        <p>
+                          <span>Name:</span>
+                          {contact?.name || ""}
+                        </p>
+                        <p>
+                          <span>Age:</span>
+                          {contact?.age || ""}
+                        </p>
+                        <p>
+                          <span>Phone No:</span>
+                          {contact?.phone_no || ""}
+                        </p>
+                        <p>
+                          <span>Email:</span>
+                          {contact?.email || ""}
+                        </p>
+                        <p>
+                          <span>Relation:</span>
+                          {contact?.relation || ""}
+                        </p>
+                        <p>
+                          <span>Address:</span>
+                          {generateAddressString(contact?.address)}
+                        </p>
+                      </div>
+                    </Grid.Col>
+                  ))}
+                </Grid>
+              ) : (
+                ""
+              )}
             </div>
           </Tabs.Panel>
           <Tabs.Panel value="5" pt="xs">
@@ -791,40 +801,33 @@ const ProfileView = () => {
                     <TbSquareRoundedFilled className="roundIcon" />
                     Education
                   </h4>
-                  <div className="employeeInfo borderLeft">
-                    <p>
-                      <span>Certification:</span>SSC
-                    </p>
-                    <p>
-                      <span>Institute:</span>ML Heigh School
-                    </p>
-                    <p>
-                      <span>Level:</span>2
-                    </p>
-                    <p>
-                      <span>Grade:</span>A
-                    </p>
-                    <p>
-                      <span>Passing Year:</span>2018
-                    </p>
-                  </div>
-                  <div className="employeeInfo borderLeft">
-                    <p>
-                      <span>Certification:</span>SSC
-                    </p>
-                    <p>
-                      <span>Institute:</span>ML Heigh School
-                    </p>
-                    <p>
-                      <span>Level:</span>2
-                    </p>
-                    <p>
-                      <span>Grade:</span>A
-                    </p>
-                    <p>
-                      <span>Passing Year:</span>2018
-                    </p>
-                  </div>
+
+                  {data?.employee_academichistory?.length
+                    ? data.employee_academichistory.map((item, index) => (
+                        <div className="employeeInfo borderLeft" key={index}>
+                          <p>
+                            <span>Certification:</span>
+                            {item?.certification || ""}
+                          </p>
+                          <p>
+                            <span>Institute:</span>
+                            {item?.board_institute_name || ""}
+                          </p>
+                          <p>
+                            <span>Level:</span>
+                            {item?.level || ""}
+                          </p>
+                          <p>
+                            <span>Grade:</span>
+                            {item?.score_grade || ""}
+                          </p>
+                          <p>
+                            <span>Passing Year:</span>
+                            {item?.year_of_passing || ""}
+                          </p>
+                        </div>
+                      ))
+                    : ""}
                 </div>
               </Grid.Col>
               <Grid.Col span={6}>
@@ -843,40 +846,28 @@ const ProfileView = () => {
                     <TbSquareRoundedFilled className="roundIcon" />
                     Experience
                   </h4>
-                  <div className="employeeInfo borderLeft">
-                    <p>
-                      <span>Company Name:</span>Xyz Conpany
-                    </p>
-                    <p>
-                      <span>Designation:</span>UI/UX Designer
-                    </p>
-                    <p>
-                      <span>Address:</span>Mirpur
-                    </p>
-                    <p>
-                      <span>From:</span>03-Jun-2022
-                    </p>
-                    <p>
-                      <span>To:</span>05-Feb-2023
-                    </p>
-                  </div>
-                  <div className="employeeInfo borderLeft">
-                    <p>
-                      <span>Company Name:</span>Xyz Conpany
-                    </p>
-                    <p>
-                      <span>Designation:</span>UI/UX Designer
-                    </p>
-                    <p>
-                      <span>Address:</span>Mirpur
-                    </p>
-                    <p>
-                      <span>From:</span>03-Jun-2022
-                    </p>
-                    <p>
-                      <span>To:</span>05-Feb-2023
-                    </p>
-                  </div>
+
+                  {data?.employee_experiencehistory?.length
+                    ? data.employee_experiencehistory.map((item, index) => (
+                        <div className="employeeInfo borderLeft">
+                          <p>
+                            <span>Company Name:</span>Xyz Conpany
+                          </p>
+                          <p>
+                            <span>Designation:</span>UI/UX Designer
+                          </p>
+                          <p>
+                            <span>Address:</span>Mirpur
+                          </p>
+                          <p>
+                            <span>From:</span>03-Jun-2022
+                          </p>
+                          <p>
+                            <span>To:</span>05-Feb-2023
+                          </p>
+                        </div>
+                      ))
+                    : ""}
                 </div>
               </Grid.Col>
             </Grid>
@@ -897,7 +888,34 @@ const ProfileView = () => {
                 <TbSquareRoundedFilled className="roundIcon" />
                 Documents
               </h4>
-              <div className="d-flex">
+              <div className="d-flex flex-wrap">
+                {data?.employee_docs?.length
+                  ? data?.employee_docs.map((doc, index) => (
+                      <button
+                        className="docItem me-4 mb-4"
+                        onClick={() => {
+                          setSingleDocument({
+                            title: doc?.title,
+                            attachment: doc?.attachment,
+                          });
+                          singleDocumentOpen();
+                        }}
+                      >
+                        {doc?.title === "NID/Passport" ? (
+                          <CiCreditCard2 className="docBtn" />
+                        ) : doc?.title === "Resume" ? (
+                          <PiIdentificationCardLight className="docBtn" />
+                        ) : doc?.title === "Appointment Letter" ? (
+                          <CiFileOn className="docBtn fs-2" />
+                        ) : (
+                          <CiFileOn className="docBtn fs-2" />
+                        )}
+
+                        <h6>{doc?.title || "N/A"}</h6>
+                      </button>
+                    ))
+                  : ""}
+
                 <button
                   className="docItem me-4"
                   onClick={() => {

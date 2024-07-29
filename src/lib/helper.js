@@ -77,6 +77,43 @@ export const getStoragePath = (path) => {
   return apiBaseUrl + path;
 };
 
+export const getFullName = (first_name, last_name) => {
+  if (!first_name && !last_name) {
+    return ""; // If both are missing, return an empty string
+  }
+
+  return [first_name, last_name].filter(Boolean).join(" ");
+};
+
+export const generateAddressString = (addressObj = {}) => {
+  const { address, city, state_division, post_zip_code, country } = addressObj;
+  let addressParts;
+  if (state_division && post_zip_code) {
+    addressParts = [
+      address,
+      city,
+      `${state_division} - ${post_zip_code}`,
+      country,
+    ];
+  } else {
+    addressParts = [address, city, state_division, post_zip_code, country];
+  }
+
+  // Filter out null, undefined, and empty strings
+  let filteredAddressParts = addressParts.filter((part) => part);
+
+  return filteredAddressParts.join(", ");
+};
+
+export const formatCurrency = (value) => {
+  if (isNaN(value)) {
+    return "";
+  }
+
+  const formattedValue = new Intl.NumberFormat("en-IN").format(value);
+  return `${formattedValue}/-`;
+};
+
 export const convertMinutesToHoursAndMinutes = (minutes) => {
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;

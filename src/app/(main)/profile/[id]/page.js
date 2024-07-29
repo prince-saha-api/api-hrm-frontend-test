@@ -2,8 +2,8 @@ import React from "react";
 import { fetchData } from "@/lib/get";
 import ProfileView from "@/components/app-modules/ProfileView";
 
-async function getData() {
-  const res = await fetchData("/api/user/get-profiledetails/14");
+async function getData(id) {
+  const res = await fetchData(`/api/user/get-profiledetails/${id}`);
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -18,8 +18,17 @@ async function getData() {
   return res?.data;
 }
 
-const Page = async () => {
-  const data = await getData();
+// export async function generateStaticParams() {
+//   const res = await fetchData("/api/user/get-employee/");
+//   const employees = (await res?.data?.result) || [];
+
+//   return employees.map((employee) => ({
+//     id: employee.id,
+//   }));
+// }
+
+const Page = async ({ params }) => {
+  const data = await getData(params.id);
 
   return <ProfileView data={data} />;
 };

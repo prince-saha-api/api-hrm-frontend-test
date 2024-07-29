@@ -1,5 +1,5 @@
 import React from "react";
-import AttendanceReport from "@/components/app-modules/attendance/DDD";
+import AttendanceReport from "@/components/app-modules/AttendanceReport";
 
 const Page = () => {
   return <AttendanceReport />;

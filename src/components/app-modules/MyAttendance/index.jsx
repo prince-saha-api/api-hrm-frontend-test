@@ -694,6 +694,7 @@ const Index = () => {
               <p className="mb-0 me-3">Select Month</p>
               <MonthPickerInput
                 rightSection={dateIcon}
+                rightSectionPointerEvents="none"
                 styles={{
                   root: { width: "200px" },
                 }}

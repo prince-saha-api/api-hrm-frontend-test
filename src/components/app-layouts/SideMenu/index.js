@@ -192,14 +192,14 @@ const Page = () => {
                           Leave Policy Assign
                         </Link>
                       </li>
-                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                      {/* <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
                           href="/leave-allocation-request"
                           className="text-decoration-none subMenu"
                         >
                           Leave Allocation Request
                         </Link>
-                      </li>
+                      </li> */}
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
                           href="/my-leave-request"
@@ -411,7 +411,10 @@ const Page = () => {
                         </Link>
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                        <Link href="/" className="text-decoration-none subMenu">
+                        <Link
+                          href="/attendance-report"
+                          className="text-decoration-none subMenu"
+                        >
                           Attendance Report
                         </Link>
                       </li>

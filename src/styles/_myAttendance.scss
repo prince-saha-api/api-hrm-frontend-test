@@ -2,18 +2,14 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
-  // border-radius: 5px;
-  // background-color: #fff4e6;
   background-color: #ebdbc9;
   margin-bottom: 10px;
 }
 .name {
-  // border: 1px solid #fad4ac;
   border-radius: 4px;
   padding: 10px;
   color: #333;
   font-weight: 600;
-  // background-color: #fde8ce;
   aspect-ratio: 10/3;
   display: flex;
   align-items: center;
@@ -52,8 +48,6 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
-  // border-radius: 5px;
-  // background-color: #fff4e6;
   background-color: #fbf5ee;
 }
 .day .date {
@@ -68,45 +62,36 @@
 .bg_Present {
   background-color: #50b498;
   color: #fff;
-  font-size: 18px;
 }
 .bg_Absent {
   background-color: #ff4c4c;
   color: #fff;
-  font-size: 18px;
 }
 .bg_Leave {
   background-color: #3fa2f6;
   color: #fff;
-  font-size: 18px;
 }
 .bg_LateAttendance {
   background-color: #ffa823;
   color: #fff;
-  font-size: 18px;
 }
 .bg_HalfPresent {
   background-color: #e68369;
   color: #fff;
-  font-size: 18px;
 }
 .bg_EarlyLeave {
   background-color: #f9e2af;
-  color: #fff;
-  font-size: 18px;
+  color: #333;
 }
 .bg_Running {
   background-color: #b6c7aa;
   color: #fff;
-  font-size: 18px;
 }
 .bg_Overtime {
   background-color: #088395;
   color: #fff;
-  font-size: 18px;
 }
 .bg_HollyDay {
   background-color: #ad88c6;
   color: #fff;
-  font-size: 18px;
 }

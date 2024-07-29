@@ -1,0 +1,68 @@
+.workRecordBox {
+  overflow-x: auto;
+  padding-bottom: 25px;
+}
+.workRecord {
+  display: grid;
+  grid-template-columns: repeat(32, 1fr);
+  gap: 2px;
+}
+.dayItem {
+  position: relative;
+  border: 1px solid #fad4ac;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+}
+.dayItem.employeeNames {
+  height: 35px;
+  width: 230px;
+  margin-right: 5px;
+}
+.dateItem {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-bottom: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 12px !important;
+}
+
+.bg_Present {
+  background-color: #50b498;
+  color: #fff;
+}
+.bg_Absent {
+  background-color: #ff4c4c;
+  color: #fff;
+}
+.bg_Leave {
+  background-color: #3fa2f6;
+  color: #fff;
+}
+.bg_LateAttendance {
+  background-color: #ffa823;
+  color: #fff;
+}
+.bg_HalfPresent {
+  background-color: #e68369;
+  color: #fff;
+}
+.bg_EarlyLeave {
+  background-color: #f9e2af;
+  color: #333;
+}
+.bg_Running {
+  background-color: #b6c7aa;
+  color: #fff;
+}
+.bg_Overtime {
+  background-color: #088395;
+  color: #fff;
+}
+.bg_HollyDay {
+  background-color: #ad88c6;
+  color: #fff;
+}

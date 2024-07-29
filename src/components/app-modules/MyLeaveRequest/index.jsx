@@ -102,6 +102,17 @@ const index = () => {
     },
     {
       // for table display
+      accessor: "requestType",
+      title: "Request Type",
+      noWrap: true,
+      sortable: true,
+      // visibleMediaQuery: aboveXs,
+      render: ({ leavepolicy }) => leavepolicy?.name || "N/A",
+      // for export
+      key: "requestType",
+    },
+    {
+      // for table display
       accessor: "leavepolicy",
       title: "Leave Type",
       noWrap: true,
@@ -228,6 +239,10 @@ const index = () => {
       value: "na",
     },
     {
+      label: "Request Type",
+      value: "requestType",
+    },
+    {
       label: "Leave Type",
       value: "leavepolicy",
     },
@@ -263,6 +278,7 @@ const index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
+    "requestType",
     "leavepolicy",
     "from_date",
     "to_date",
@@ -547,6 +563,49 @@ const index = () => {
           icon={<LuPlus className="fs-5 me-0 mr-0" />}
           handleClick={addOpen}
         />
+      </div>
+
+      <div className="mb-4 d-flex flex-wrap">
+        <div className="cardBox">
+          <h5 className="leaveTitle text-center">Casual Leave</h5>
+          <div className="d-flex justify-content-center">
+            <p className="mb-0">Allowcation: 8</p>
+            <p className="mb-0 ms-3">Consumed: 3</p>
+          </div>
+          <b className="mb-0 text-center d-block leaveLeft">Remaining: 5</b>
+        </div>
+        <div className="cardBox">
+          <h5 className="leaveTitle text-center">Sick Leave</h5>
+          <div className="d-flex justify-content-center">
+            <p className="mb-0">Allowcation: 8</p>
+            <p className="mb-0 ms-3">Consumed: 6</p>
+          </div>
+          <b className="mb-0 text-center d-block leaveLeft">Remaining: 2</b>
+        </div>
+        <div className="cardBox">
+          <h5 className="leaveTitle text-center">Casual Leave</h5>
+          <div className="d-flex justify-content-center">
+            <p className="mb-0">Allowcation: 8</p>
+            <p className="mb-0 ms-3">Consumed: 3</p>
+          </div>
+          <b className="mb-0 text-center d-block leaveLeft">Remaining: 5</b>
+        </div>
+        <div className="cardBox">
+          <h5 className="leaveTitle text-center">Sick Leave</h5>
+          <div className="d-flex justify-content-center">
+            <p className="mb-0">Allowcation: 8</p>
+            <p className="mb-0 ms-3">Consumed: 6</p>
+          </div>
+          <b className="mb-0 text-center d-block leaveLeft">Remaining: 2</b>
+        </div>
+        <div className="cardBox">
+          <h5 className="leaveTitle text-center">Casual Leave</h5>
+          <div className="d-flex justify-content-center">
+            <p className="mb-0">Allowcation: 8</p>
+            <p className="mb-0 ms-3">Consumed: 3</p>
+          </div>
+          <b className="mb-0 text-center d-block leaveLeft">Remaining: 5</b>
+        </div>
       </div>
 
       <div className="d-flex justify-content-between mb-3">

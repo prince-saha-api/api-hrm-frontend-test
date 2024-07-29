@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
@@ -10,9 +11,10 @@ import {
   Menu,
   MultiSelect,
   Popover,
-  Group,
+  Input,
 } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
+import classEase from "classease";
 import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
@@ -20,26 +22,29 @@ import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { IoIosArrowDown } from "react-icons/io";
+import { CiSearch } from "react-icons/ci";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
-import Breadcrumb from "@/components/utils/Breadcrumb";
 import { constants } from "@/lib/config";
+import { getStoragePath } from "@/lib/helper";
+import Breadcrumb from "@/components/utils/Breadcrumb";
 import AddButton from "@/components/utils/AddButton";
-import Add from "./Add";
-import Edit from "./Edit";
-import Delete from "./Delete";
+import Edit from "./EditEmployee";
+import FilterModal from "./FilterModal";
+// import Delete from "./Delete";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
-const index = () => {
+const Employees = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "user",
+    columnAccessor: "username",
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/leave/get-leaverequest/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let apiUrl = `/api/user/get-employee/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -102,107 +107,105 @@ const index = () => {
     },
     {
       // for table display
-      accessor: "employee",
-      title: "Employee Name",
-      noWrap: true,
-      sortable: true,
-      // visibleMediaQuery: aboveXs,
-      // render: ({ employee }) => employee?.name || "N/A",
-      // for export
-      key: "employee",
-    },
-    {
-      // for table display
-      accessor: "requestType",
-      title: "Request Type",
-      noWrap: true,
-      sortable: true,
-      // visibleMediaQuery: aboveXs,
-      // render: ({ employee }) => employee?.name || "N/A",
-      // for export
-      key: "requestType",
-    },
-    {
-      // for table display
-      accessor: "leavepolicy",
-      title: "Leave Type",
-      noWrap: true,
-      sortable: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ leavepolicy }) => leavepolicy?.name || "N/A",
-      // for export
-      key: "leavepolicy",
-    },
-    {
-      // for table display
-      accessor: "from_date",
-      title: "From Date",
-      noWrap: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ from_date }) => from_date || "N/A",
-      // for export
-      key: "from_date",
-    },
-    {
-      // for table display
-      accessor: "to_date",
-      title: "To Date",
-      noWrap: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ to_date }) => to_date || "N/A",
-      // for export
-      key: "to_date",
-    },
-    {
-      // for table display
-      accessor: "totalDays",
-      title: "Total Days",
-      noWrap: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ totalDays }) => totalDays || "N/A",
-      // for export
-      key: "totalDays",
-    },
-    {
-      // for table display
-      accessor: "attachment",
-      title: "Attachment",
-      noWrap: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ totalDays }) => totalDays || "N/A",
-      // for export
-      key: "attachment",
-    },
-    {
-      // for table display
-      accessor: "detail",
-      title: "Detail",
-      noWrap: true,
-      sortable: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ detail }) => detail || "N/A",
-      // for export
-      key: "detail",
-    },
-    {
-      // for table display
-      accessor: "Status",
-      title: "status",
-      noWrap: true,
-      // visibleMediaQuery: aboveXs,
-      render: () => (
-        <Group gap="xs">
-          <Button size="compact-xs" color="teal">
-            Approve
-          </Button>
-          <Button variant="filled" size="compact-xs" color="red">
-            Reject
-          </Button>
-        </Group>
+      accessor: "photo",
+      title: "Employee",
+      sortable: false,
+      render: ({ photo, first_name, last_name }) => (
+        <div className="d-flex justify-content-start align-items-center">
+          {photo ? (
+            <img
+              src={getStoragePath(photo)}
+              alt="img"
+              className="table_user_img"
+            />
+          ) : (
+            ""
+          )}
+          <Link
+            href="/profile-view"
+            className="ms-2 text-decoration-none color-inherit"
+          >
+            {first_name + " " + last_name}
+          </Link>
+        </div>
       ),
       // for export
-      key: "status",
+      key: "image",
     },
+    {
+      // for table display
+      accessor: "official_id",
+      title: "Employee ID",
+      noWrap: true,
+      sortable: true,
+      // for export
+      key: "official_id",
+    },
+    {
+      accessor: "designation",
+      title: "Designation",
+      // visibleMediaQuery: aboveXs,
+      render: ({ designation }) => designation?.name || "N/A",
+    },
+    {
+      accessor: "group_name",
+      title: "Group",
+      // visibleMediaQuery: aboveXs,
+      render: ({ group_name }) => group_name || "N/A",
+    },
+    {
+      accessor: "department_name",
+      title: "Department",
+      // visibleMediaQuery: aboveXs,
+      render: ({ department_name }) => department_name || "N/A",
+    },
+    {
+      accessor: "shift_name",
+      title: "Shift",
+      // visibleMediaQuery: aboveXs,
+      render: ({ shift_name }) => shift_name || "N/A",
+    },
+
+    {
+      // for table display
+      accessor: "personal_phone",
+      title: "Personal Phone",
+      // visibleMediaQuery: aboveXs,
+      render: ({ personal_phone }) => personal_phone || "N/A",
+      // for export
+      key: "personal_phone",
+    },
+    {
+      // for table display
+      accessor: "personal_email",
+      title: "Personal Email",
+      // visibleMediaQuery: aboveXs,
+      render: ({ personal_email }) => personal_email || "N/A",
+      // for export
+      key: "personal_email",
+    },
+    // {
+    //   // for table display
+    //   accessor: "address",
+    //   title: "Address",
+    //   // visibleMediaQuery: aboveXs,
+    //   render: ({ address }) =>
+    //     `${address?.address ? address.address : ""}${
+    //       address?.city ? ", " + address.city : ""
+    //     }${address?.state_division ? ", " + address.state_division : ""}${
+    //       address?.post_zip_code ? " - " + address.post_zip_code : ""
+    //     }${address?.country ? ", " + address.country : ""}` || "N/A",
+
+    //   modifier: ({ address }) =>
+    //     `${address?.address ? address.address : ""}${
+    //       address?.city ? ", " + address.city : ""
+    //     }${address?.state_division ? ", " + address.state_division : ""}${
+    //       address?.post_zip_code ? " - " + address.post_zip_code : ""
+    //     }${address?.country ? ", " + address.country : ""}` || "N/A",
+
+    //   // for export
+    //   key: "address",
+    // },
     {
       // for table display
       accessor: "actions",
@@ -250,41 +253,33 @@ const index = () => {
       value: "na",
     },
     {
-      label: "Employee",
-      value: "employee",
+      label: "Name",
+      value: "name",
     },
     {
-      label: "Request Type",
-      value: "requestType",
+      label: "Description",
+      value: "description",
     },
     {
-      label: "Leave Type",
-      value: "leavepolicy",
+      label: "Company",
+      value: "company",
     },
     {
-      label: "From Date",
-      value: "from_date",
+      label: "Phone",
+      value: "phone",
     },
     {
-      label: "To Date",
-      value: "to_date",
+      label: "Email",
+      value: "email",
     },
     {
-      label: "Total Days",
-      value: "totaDays",
+      label: "Address",
+      value: "address",
     },
-    {
-      label: "Attachment",
-      value: "attachment",
-    },
-    {
-      label: "Status",
-      value: "status",
-    },
-    {
-      label: "Detail",
-      value: "detail",
-    },
+    // {
+    //   label: "Operating Hour",
+    //   value: "operating_hour",
+    // },
     {
       label: "Actions",
       value: "actions",
@@ -293,21 +288,19 @@ const index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "employee",
-    "requestType",
-    "leavepolicy",
-    "from_date",
-    "to_date",
-    "totalDays",
-    "attachment",
-    "status",
-    "detail",
+    "name",
+    "description",
+    "email",
+    "phone",
+    "company",
+    "address",
+    // "operating_hour",
     "actions",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set(["na", "leavepolicy", "from_date", "to_date", ...keys]),
+      ...new Set(["na", "name", "description", "actions", ...keys]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>
@@ -327,7 +320,7 @@ const index = () => {
   // const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/api/leave/get-leaverequest/?column_accessor=${
+    let url = `/api/branch/get-branch/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -398,7 +391,7 @@ const index = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "Leave Requests/", "leave-requests");
+        exportToPDF(headers, data, "Branches", "branches");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -461,7 +454,7 @@ const index = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "leave-requests");
+        exportToCSV(data, "branches");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -523,7 +516,7 @@ const index = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "leave-requests");
+        exportToExcel(data, "branches");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,
@@ -541,45 +534,48 @@ const index = () => {
     }
   };
 
+  const [open1, setOpen1] = useState(false);
+  const [item1, setItem1] = useState("Designation");
+
+  const [item2, setItem2] = useState("Group");
+  const [item3, setItem3] = useState("Department");
+  const [item4, setItem4] = useState("Shift");
+  const icon = <CiSearch />;
+
+  const [filterOpened, { open: filterOpen, close: filterClose }] =
+    useDisclosure(false);
+
   return (
     <>
-      <Add
-        opened={addOpened} //
-        close={addClose}
-        mutate={mutate}
-      />
-
-      <Edit
-        opened={editOpened}
-        close={editClose}
-        item={selectedEditItem}
-        setItem={setSelectedEditItem}
-        mutate={mutate}
-      />
-
-      <Delete
-        opened={deleteOpened}
-        close={deleteClose}
-        item={selectedDeleteItem}
-        mutate={mutate}
-      />
-
+      <FilterModal opened={filterOpened} close={filterClose} />
       <div className="mb-4 d-flex justify-content-between align-items-end">
         <Breadcrumb
-          title="Leave Request"
+          title="Need Update this module"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Leave Request" },
+            { title: "Need Update this module" },
           ]}
         />
 
-        <AddButton
-          label="Leave Request"
+        <Link className="cusNav" href="/add-employee">
+          <LuPlus className="me-1" />
+          Add Employee
+        </Link>
+
+        {/* <AddButton
+          label="Add Branch"
           fontSize="16px"
           icon={<LuPlus className="fs-5 me-0 mr-0" />}
           handleClick={addOpen}
-        />
+        /> */}
       </div>
+
+      {/* <div className="mb-4 d-flex justify-content-between align-items-end">
+        <div className="pageTop">
+          <h3>Employees</h3>
+          <Breadcrumbs>{items}</Breadcrumbs>
+        </div>
+      </div> */}
 
       <div className="d-flex justify-content-between mb-3">
         <div className="showItem d-flex align-items-center justify-content-center">
@@ -636,6 +632,10 @@ const index = () => {
               />
             </Popover.Dropdown>
           </Popover>
+
+          <Button onClick={filterOpen} ms="sm">
+            Filter
+          </Button>
         </div>
         <div className="downItem d-flex">
           <div className="me-2">
@@ -704,9 +704,10 @@ const index = () => {
           verticalAlign="center"
           striped
           idAccessor="id"
-          columns={columns.filter((column) =>
-            selectedOptions.includes(column.key)
-          )}
+          //  columns={columns.filter((column) =>
+          //     selectedOptions.includes(column.key)
+          //  )}
+          columns={columns}
           fetching={isLoading}
           records={apiData?.data.result || []}
           page={currentPage}
@@ -715,8 +716,8 @@ const index = () => {
           recordsPerPage={pageSize}
           sortStatus={sortStatus}
           onSortStatusChange={handleSortStatusChange}
-          // selectedRecords={selectedRecords}
-          // onSelectedRecordsChange={setSelectedRecords}
+          selectedRecords={selectedRecords}
+          onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}
@@ -728,4 +729,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Employees;

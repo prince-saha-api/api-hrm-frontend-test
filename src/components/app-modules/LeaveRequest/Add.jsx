@@ -165,6 +165,12 @@ const Index = ({ opened, close, mutate }) => {
             {...form.getInputProps("user")}
           />
           <Select
+            label="Request Type"
+            mb="sm"
+            placeholder="Pick value"
+            data={["Regular Leave", "Extend Existing", "New Allocation"]}
+          />
+          <Select
             mb="sm"
             label="Leave Type"
             placeholder="Leave Type"
@@ -174,6 +180,13 @@ const Index = ({ opened, close, mutate }) => {
             searchable
             limit={10}
             nothingFoundMessage="Nothing found..."
+            {...form.getInputProps("leavepolicy")}
+          />
+          <Select
+            label="Exchange with (Optional)"
+            mb="sm"
+            placeholder="Pick value"
+            data={leavepolicies}
             {...form.getInputProps("leavepolicy")}
           />
           <DateInput

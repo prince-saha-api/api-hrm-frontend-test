@@ -1,13 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { TextInput, Textarea } from "@mantine/core";
 import useSWR from "swr";
-import { useDisclosure } from "@mantine/hooks";
-import Link from "next/link";
 // import Button from "react-bootstrap/Button";
-import EditBranch from "./EditBranch";
-import AddButton from "@/components/utils/AddButton";
+import EditEmployee from "./EditEmployee";
 import Spinner from "react-bootstrap/Spinner";
 import { Row, Col } from "react-bootstrap";
 import classEase from "classease";
@@ -18,7 +14,6 @@ import { fetcher } from "../../../lib/fetch";
 import { AiOutlineFilePdf } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
-import { LuPlus } from "react-icons/lu";
 import {
    formatDate,
    getDate,
@@ -26,19 +21,7 @@ import {
    getStoragePath,
 } from "../../../lib/helper";
 
-import {
-   Modal,
-   Popover,
-   Button,
-   Select,
-   Group,
-   Input,
-   Menu,
-   Breadcrumbs,
-   Anchor,
-   Badge,
-   NavLink,
-} from "@mantine/core";
+import { Popover, Button, Select, Input, Menu, Breadcrumbs, Anchor } from "@mantine/core";
 
 import { CiSearch } from "react-icons/ci";
 import { IoIosArrowDown } from "react-icons/io";
@@ -47,7 +30,7 @@ import { exportToPDF, exportToExcel, exportToCSV } from "../../../lib/export";
 
 const PAGE_SIZES = [10, 20, 30, 40];
 
-const index = () => {
+const Employees = () => {
    const [currentPage, setCurrentPage] = useState(1);
    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
    const [sortStatus, setSortStatus] = useState({
@@ -247,7 +230,7 @@ const index = () => {
 
    const items = [
       { title: "Dashboard", href: "/" },
-      { title: "Designation" },
+      { title: "Basic Setup", href: "#" },
    ].map((item, index) => (
       <Anchor href={item.href} key={index}>
          {item.title}
@@ -262,86 +245,118 @@ const index = () => {
    const [item4, setItem4] = useState("Shift");
    const icon = <CiSearch />;
 
-   // for Modal
-   const [opened, { open, close }] = useDisclosure(false);
-
    return (
       <>
-         <Modal
-            classNames={{
-               title: "modalTitle",
-            }}
-            opened={opened}
-            title="Add Designation"
-            onClose={close}
-            centered
-         >
-            <form>
-               <Select
-                  label="Designation"
-                  placeholder="Select Designation"
-                  data={[
-                     "Supervisor",
-                     "Team Leader",
-                     "Project Manager",
-                     "Developer",
-                  ]}
-               />
-
-               <Group justify="flex-end" mt="md">
-                  <Button type="submit">Submit</Button>
-               </Group>
-            </form>
-         </Modal>
-
-         <div className="mb-4 d-flex justify-content-between align-items-end">
-            <div className="pageTop">
-               <h3>Designation</h3>
-               <Breadcrumbs>{items}</Breadcrumbs>
-            </div>
-
-            {/* <Button
-               classNames={{
-                  root: "cusBtn"
-               }}
-               onClick={open}
-            >
-               Add Department
-            </Button> */}
-
-            <AddButton
-               label="Add Designation"
-               fontSize="16px"
-               icon={<LuPlus className="me-1 fs-5" />}
-               handleClick={open}
-            />
+      <div className="pageTop mb-4">
+            <h3>Basic info</h3>
+            <Breadcrumbs>{items}</Breadcrumbs>
          </div>
+         <div className="filterBox mb-3">
+            <Popover
+               classNames={{
+                  dropdown: "filterDropdown",
+               }}
+               width={400}
+               position="bottom-start"
+               offset={5}
+               shadow="md"
+               opened={open1}
+            >
+               <Popover.Target onClick={() => setOpen1((prev) => !prev)}>
+                  <Button
+                     classNames={{
+                        root: "filterNav",
+                     }}
+                  >
+                     {item1} <IoIosArrowDown className="ms-1" />
+                  </Button>
+               </Popover.Target>
+               <Popover.Dropdown>
+                  <p className="p-2 mb-0">Designation</p>
+                  <Select
+                     leftSectionPointerEvents="none"
+                     leftSection={icon}
+                     nothingFoundMessage="Nothing found..."
+                     classNames={{
+                        dropdown: "selectFilter",
+                     }}
+                     onChange={(value, option) => {
+                        console.log(value);
+                        setItem1(value);
+                        setOpen1(false);
+                     }}
+                     clearable={true}
+                     dropdownOpened={open}
+                     withScrollArea={true}
+                     searchable
+                     placeholder="Search"
+                     data={[
+                        "React",
+                        "Angular",
+                        "Vue",
+                        "Svelte",
+                        "Reactg",
+                        "Ankgular",
+                        "Vjue",
+                        "Other-1",
+                        "Other-2",
+                        "Other-3",
+                        "Some text here",
+                     ]}
+                     comboboxProps={{
+                        withinPortal: false,
+                     }}
+                  />
+               </Popover.Dropdown>
+            </Popover>
 
-         {/* <div className="search_part mb-3">
-            <div className="d-flex justify-content-between">
-               <form className="" onSubmit={handleFileSubmit}>
-                  <div className="d-flex align-items-center">
-                     
-                     <div className="ms-2 d-flex align-items-center">
-                           <a
-                              className="me-2"
-                              href="/csv_file.csv"
-                              download="csv_file.csv"
-                           >
-                              Sample CSV
-                           </a>
-                           <a href="/zip_file.zip" download="zip_file.zip">
-                              Sample ZIP
-                           </a>
-                        </div>
-                  </div>
-               </form>
+            <Menu width={200} shadow="md" position="bottom-start" offset={5}>
+               <Menu.Target>
+                  <Button
+                     classNames={{
+                        root: "filterNav",
+                     }}
+                  >
+                     {item2} <IoIosArrowDown className="ms-1" />
+                  </Button>
+               </Menu.Target>
 
-               
-            </div>
-         </div> */}
-
-         <div className="filterBox mb-4 d-flex align-items-center">
+               <Menu.Dropdown className="p-2">
+                  <p className="p-2 mb-0 border-bottom mb-1">Group</p>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem2("Group_01");
+                     }}
+                  >
+                     Group_01
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem2("Group_02");
+                     }}
+                  >
+                     Group_02
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem2("Group_03");
+                     }}
+                  >
+                     Group_03
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem2("Group_04");
+                     }}
+                  >
+                     Group_04
+                  </Menu.Item>
+               </Menu.Dropdown>
+            </Menu>
             <Menu width={200} shadow="md" position="bottom-start" offset={5}>
                <Menu.Target>
                   <Button
@@ -381,111 +396,200 @@ const index = () => {
                   </Menu.Item>
                </Menu.Dropdown>
             </Menu>
+            <Menu width={200} shadow="md" position="bottom-start" offset={5}>
+               <Menu.Target>
+                  <Button
+                     classNames={{
+                        root: "filterNav",
+                     }}
+                  >
+                     {item4} <IoIosArrowDown className="ms-1" />
+                  </Button>
+               </Menu.Target>
+
+               <Menu.Dropdown className="p-2">
+                  <p className="p-2 mb-0 border-bottom mb-1">Shift</p>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem4("Shift_01");
+                     }}
+                  >
+                     Shift_01
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem4("Shift_02");
+                     }}
+                  >
+                     Shift_02
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem4("Shift_03");
+                     }}
+                  >
+                     Shift_03
+                  </Menu.Item>
+                  <Menu.Item
+                     onClick={(e) => {
+                        e.preventDefault();
+                        setItem4("Shift_04");
+                     }}
+                  >
+                     Shift_04
+                  </Menu.Item>
+               </Menu.Dropdown>
+            </Menu>
+            <Button variant="filled" size="md">
+               Search
+            </Button>
+         </div>
+         <div className="search_part mb-3">
+            <div className="d-flex justify-content-between">
+               <form className="" onSubmit={handleFileSubmit}>
+                  <div className="d-flex align-items-center">
+                     <Input leftSection={icon} size="md" placeholder="Search" />
+                     {/* <div className="ms-2 d-flex align-items-center">
+                           <a
+                              className="me-2"
+                              href="/csv_file.csv"
+                              download="csv_file.csv"
+                           >
+                              Sample CSV
+                           </a>
+                           <a href="/zip_file.zip" download="zip_file.zip">
+                              Sample ZIP
+                           </a>
+                        </div> */}
+                  </div>
+               </form>
+
+               <div className="d-flex justify-content-between">
+                  <div className="me-2">
+                     <Button
+                        type="submit"
+                        className="rounded-1 px-3 btn btn-success border-0"
+                        onClick={() => handleExportToPDF()}
+                     >
+                        <AiOutlineFilePdf className="me-1" />
+                        PDF
+                     </Button>
+                  </div>
+                  <div className="me-2">
+                     <Button
+                        type="submit"
+                        className="rounded-1 px-3 btn btn-success border-0"
+                        onClick={() => handleExportToCSV()}
+                     >
+                        <FaRegFileAlt className="me-1" />
+                        CSV
+                     </Button>
+                  </div>
+                  <div>
+                     <Button
+                        type="submit"
+                        className="rounded-1 px-3 btn btn-success border-0"
+                        onClick={() => handleExportToExcel()}
+                     >
+                        <RiFileExcel2Line className="me-1" />
+                        Excel
+                     </Button>
+                  </div>
+               </div>
+            </div>
          </div>
 
-         <div className="d-flex justify-content-between mb-3">
-            <div className="showItem d-flex align-items-center justify-content-center">
-               <p className="mb-0 me-2">Show</p>
-               <Select
-                  withCheckIcon={false}
-                  classNames={{
-                     input: "showInput",
-                  }}
-                  placeholder="Pick value"
-                  data={["10", "20", "30", "50"]}
-                  defaultValue="10"
-               />
-               <p className="mb-0 ms-2">Entries</p>
-            </div>
-            <div className="downItem d-flex">
-               <div className="me-2">
-                  <Button
-                     type="submit"
-                     className="rounded-1 px-3 btn btn-success border-0"
-                     onClick={() => handleExportToPDF()}
-                  >
-                     <AiOutlineFilePdf className="me-1" />
-                     PDF
-                  </Button>
-               </div>
-               <div className="me-2">
-                  <Button
-                     type="submit"
-                     className="rounded-1 px-3 btn btn-success border-0"
-                     onClick={() => handleExportToCSV()}
-                  >
-                     <FaRegFileAlt className="me-1" />
-                     CSV
-                  </Button>
-               </div>
-               <div>
-                  <Button
-                     variant="filled"
-                     size="sm"
-                     className="px-3"
-                     onClick={() => handleExportToExcel()}
-                  >
-                     <RiFileExcel2Line className="me-1" />
-                     Excel
-                  </Button>
-               </div>
-            </div>
-         </div>
-
-         <div className="itemCard p-0 datatable-wrapper">
+         <div className="itemCard datatable-wrapper">
             <DataTable
                style={{
                   height: apiData?.results?.length === 0 ? "300px" : "auto",
                }}
-               classNames={{
-                  root: "datatable",
-                  table: "datatable_table",
-                  header: "datatable_header",
-                  pagination: "datatable_pagination",
-               }}
-               // borderColor="#e0e6ed66"
-               // rowBorderColor="#e0e6ed66"
-               // c={{ dark: "#ffffff", light: "#0E1726" }}
-               // highlightOnHover
+               className="datatable"
+               // withTableBorder
+               // withColumnBorders
+               // striped
+               highlightOnHover
                horizontalSpacing="sm"
                verticalSpacing="sm"
                fz="sm"
                verticalAlign="center"
-               striped
                columns={[
                   {
-                     title: "#",
+                     title: "SL",
                      accessor: "na",
                      noWrap: true,
                      sortable: false,
-                     width: 90,
                      render: (_, index) =>
                         (currentPage - 1) * pageSize + index + 1,
                   },
-
+                  {
+                     accessor: "image",
+                     title: "Image",
+                     sortable: false,
+                     render: ({ image }) => (
+                        <div className="text-center">
+                           <img
+                              src={getStoragePath(image)}
+                              alt=""
+                              className="table_user_img"
+                           />
+                        </div>
+                     ),
+                  },
+                  {
+                     accessor: "employee_id",
+                     title: "Employee ID",
+                     noWrap: true,
+                     sortable: true,
+                  },
+                  {
+                     accessor: "username",
+                     title: "Employee Name",
+                     sortable: true,
+                     // visibleMediaQuery: aboveXs,
+                  },
                   {
                      accessor: "designation_name",
-                     title: "Department Name",
+                     title: "Designation",
                      noWrap: true,
                      // visibleMediaQuery: aboveXs,
                      render: ({ designation_name }) =>
                         designation_name || "N/A",
                   },
                   {
+                     accessor: "group_name",
+                     title: "Group",
+                     // visibleMediaQuery: aboveXs,
+                     render: ({ group_name }) => group_name || "N/A",
+                  },
+                  {
                      accessor: "department_name",
-                     title: "Department Details",
+                     title: "Department",
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
-
+                  {
+                     accessor: "shift_name",
+                     title: "Shift",
+                     // visibleMediaQuery: aboveXs,
+                     render: ({ shift_name }) => shift_name || "N/A",
+                  },
+                  {
+                     accessor: "is_active",
+                     title: "Status",
+                     // visibleMediaQuery: aboveXs,
+                     render: ({ is_active }) =>
+                        is_active ? "Active" : "Inactive",
+                  },
                   {
                      accessor: "actions",
                      title: "Actions",
-                     width: 90,
-                     textAlign: "center",
                      // width: "0%",
                      render: (item) => (
-                        <EditBranch
+                        <EditEmployee
                            employee={item}
                            setData={setDisplayedData}
                         />
@@ -502,8 +606,8 @@ const index = () => {
                onSortStatusChange={handleSortStatusChange}
                selectedRecords={selectedRecords}
                onSelectedRecordsChange={setSelectedRecords}
-               // recordsPerPageOptions={PAGE_SIZES}
-               // onRecordsPerPageChange={setPageSize}
+               recordsPerPageOptions={PAGE_SIZES}
+               onRecordsPerPageChange={setPageSize}
                // rowExpansion={rowExpansion}
                // onRowContextMenu={handleContextMenu}
                // onScroll={hideContextMenu}
@@ -513,4 +617,4 @@ const index = () => {
    );
 };
 
-export default index;
+export default Employees;

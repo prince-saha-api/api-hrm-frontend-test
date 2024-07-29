@@ -1,0 +1,18 @@
+.cardBox {
+  min-width: 300px;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  background-color: #fff;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.leaveTitle {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.leaveLeft {
+  color: var(--main-color) !important;
+}

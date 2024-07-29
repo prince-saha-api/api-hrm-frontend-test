@@ -1,58 +1,112 @@
 import React, { useState } from "react";
-import {
-   Modal,
-   Button,
-   Group,
-   PasswordInput,
-   Grid,
-   TextInput,
-   Select,
-   NumberInput,
-   Textarea,
-} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { Modal, Button, Group, PasswordInput } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { toast } from "react-toastify";
 import { deleteItem } from "@/lib/submit";
+import { update, submit } from "@/lib/submit";
 
 const Index = ({ opened, close, item }) => {
-   const [value, setValue] = useState(null);
-   const [value2, setValue2] = useState(null);
-   return (
-      <>
-         <Modal
-            classNames={{
-               title: "modalTitle",
-            }}
-            opened={opened}
-            title="Reset Password"
-            onClose={close}
-            centered
-         >
-            <form>
-               <PasswordInput
-                  mb="sm"
-                  label="New Password"
-                  placeholder="New Password"
-                  required={true}
-                  // disabled={isSubmitting}
-                  // {...form.getInputProps("name")}
-               />
-               <PasswordInput
-                  mb="sm"
-                  label="Confirm Password"
-                  placeholder="Confirm Password"
-                  required={true}
-                  // disabled={isSubmitting}
-                  // {...form.getInputProps("name")}
-               />
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-               <Group justify="flex-end" mt="md">
-                  <Button variant="filled">Update</Button>
-               </Group>
-            </form>
-         </Modal>
-      </>
-   );
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      new_password: "",
+      confirm_password: "",
+    },
+    validate: {
+      new_password: (value) =>
+        value.length < 5
+          ? "Password must have at least 5 characters"
+          : !/[!@#$%^&*(),.?":{}|<>]/.test(value)
+          ? "Password must contain at least one special character"
+          : null,
+      confirm_password: (value, values) =>
+        value !== values.new_password ? "Passwords did not match" : null,
+    },
+  });
+
+  const handleSubmit = async (values) => {
+    // e.preventDefault();
+    // console.log(values);
+
+    setIsSubmitting(true);
+    const updatedValues = { ...values, user: 14 };
+
+    try {
+      const response = await update(`/auth/reset-password/`, updatedValues);
+      // const response = res.json();
+      console.log(response);
+
+      if (response?.status === "success") {
+        // console.log(response);
+        setIsSubmitting(false);
+        close();
+        // mutate();
+        toast.success("Password changed successfully");
+      } else {
+        toast.error(
+          response?.status === "error"
+            ? response?.message[0]
+            : "Error submitting form"
+        );
+      }
+      setTimeout(() => {
+        setIsSubmitting(false);
+        // mutate();
+      }, 5000);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        mutate();
+      }, 5000);
+    }
+  };
+
+  return (
+    <>
+      <Modal
+        classNames={{
+          title: "modalTitle",
+        }}
+        opened={opened}
+        title="Reset Password"
+        onClose={close}
+        centered
+      >
+        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+          <PasswordInput
+            mb="sm"
+            label="New Password"
+            placeholder="New Password"
+            // required={true}
+            disabled={isSubmitting}
+            {...form.getInputProps("new_password")}
+          />
+          <PasswordInput
+            mb="sm"
+            label="Confirm Password"
+            placeholder="Confirm Password"
+            // required={true}
+            disabled={isSubmitting}
+            {...form.getInputProps("confirm_password")}
+          />
+
+          <Group justify="flex-end" mt="sm">
+            <Button
+              type="submit"
+              loading={isSubmitting}
+              loaderProps={{ type: "dots" }}
+            >
+              Update
+            </Button>
+          </Group>
+        </form>
+      </Modal>
+    </>
+  );
 };
 
 export default Index;

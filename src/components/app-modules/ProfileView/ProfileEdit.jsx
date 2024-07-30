@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import useSWR from "swr";
+import { useForm } from "@mantine/form";
 import {
   Modal,
   Button,
@@ -7,15 +9,39 @@ import {
   TextInput,
   Select,
   NumberInput,
-  Textarea,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { toast } from "react-toastify";
-import { deleteItem } from "@/lib/submit";
+import { update } from "@/lib/submit";
+import { fetcher, getData } from "@/lib/fetch";
 
-const Index = ({ opened, close, item }) => {
+const Index = ({ opened, close, item, setItem }) => {
   const [value, setValue] = useState(null);
   const [value2, setValue2] = useState(null);
+
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      first_name: null,
+      last_name: null,
+    },
+    // validate: {},
+  });
+
+  const {
+    data: designationsData,
+    error: designationsError,
+    isLoading: isDesignationsLoading,
+  } = useSWR(`/api/user/get-dsignation/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const designations = designationsData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
   return (
     <>
       <Modal
@@ -37,15 +63,19 @@ const Index = ({ opened, close, item }) => {
                 required={true}
                 // disabled={isSubmitting}
                 // {...form.getInputProps("name")}
+                defaultValue={item?.first_name || ""}
               />
-              <TextInput
+
+              <Select
                 mb="sm"
                 label="Designation"
                 placeholder="Designation"
                 required={true}
                 // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
+                data={designations}
+                defaultValue={String(item?.designation?.id)}
               />
+
               <TextInput
                 mb="sm"
                 label="Employee ID"
@@ -93,6 +123,7 @@ const Index = ({ opened, close, item }) => {
                 label="Last Name"
                 placeholder="Last Name"
                 required={true}
+                defaultValue={item?.last_name || ""}
                 // disabled={isSubmitting}
                 // {...form.getInputProps("name")}
               />

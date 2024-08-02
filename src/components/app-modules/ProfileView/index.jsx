@@ -55,6 +55,12 @@ import SingleDocument from "./SingleDocument";
 
 const ProfileView = ({ data }) => {
   console.log(data);
+  const [profilePhoto, setProfilePhoto] = useState({
+    user: data?.id,
+    photo: data?.photo,
+  });
+
+  const [profile, setProfile] = useState(data);
 
   const [singleDocument, setSingleDocument] = useState(null);
 
@@ -205,12 +211,15 @@ const ProfileView = ({ data }) => {
       <ProfileEdit
         opened={profileOpened}
         close={profileClose}
-        // item={selectedDeleteItem}
+        item={profile}
+        setItem={setProfile}
         // mutate={mutate}
       />
       <ProfileImage
         opened={profileImageOpened}
         close={profileImageClose}
+        item={profilePhoto}
+        setItem={setProfilePhoto}
         // item={selectedDeleteItem}
         // mutate={mutate}
       />
@@ -317,7 +326,7 @@ const ProfileView = ({ data }) => {
               <div className="profile position-relative">
                 <Image
                   // src="/profile03.jpg"
-                  src={getStoragePath(data?.photo)}
+                  src={getStoragePath(profilePhoto?.photo)}
                   width={200}
                   height={200}
                   alt="profile_img"
@@ -336,17 +345,17 @@ const ProfileView = ({ data }) => {
               </div>
               <div className="proInfo ms-4">
                 <h3 className="employeeName mb-1">
-                  {getFullName(data?.first_name, data?.last_name)}
+                  {getFullName(profile?.first_name, profile?.last_name)}
                 </h3>
                 <h6 className="employeeDesig mb-1">
-                  {data?.designation?.name || ""}
+                  {profile?.designation?.name || ""}
                 </h6>
 
                 <p className="employeeJoin mb-1">
                   <b>Employee ID : {data?.official_id || ""}</b>
                 </p>
                 <p className="employeeJoin mb-1">
-                  Department: {data?.departmenttwo[0]?.name || "N/A"}
+                  Department: {data?.departmenttwo?.[0]?.name || "N/A"}
                 </p>
                 <p className="employeeJoin mb-1">
                   Date of Join : {getDate(data?.date_joined)}
@@ -490,11 +499,11 @@ const ProfileView = ({ data }) => {
                 </p>
                 <p>
                   <span>Present Address:</span>
-                  {generateAddressString(data?.present_address)}
+                  {generateAddressString(data?.present_address || {})}
                 </p>
                 <p>
                   <span>Permanent Address:</span>
-                  {generateAddressString(data?.permanent_address)}
+                  {generateAddressString(data?.permanent_address || {})}
                 </p>
               </div>
             </div>
@@ -532,7 +541,7 @@ const ProfileView = ({ data }) => {
                     </p>
                     <p>
                       <span>Company:</span>
-                      {data?.departmenttwo[0]?.branch?.company
+                      {data?.departmenttwo?.[0]?.branch?.company
                         ?.basic_information?.name || "N/A"}
                     </p>
                     <p>
@@ -540,7 +549,7 @@ const ProfileView = ({ data }) => {
                     </p>
                     <p>
                       <span>Default Shift:</span>
-                      {data?.shift || "N/A"}
+                      {data?.shift?.name || "N/A"}
                     </p>
                     <p>
                       <span>Grade:</span>

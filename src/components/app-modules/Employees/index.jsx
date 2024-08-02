@@ -110,7 +110,7 @@ const Employees = () => {
       accessor: "photo",
       title: "Employee",
       sortable: false,
-      render: ({ photo, first_name, last_name }) => (
+      render: ({ id, photo, first_name, last_name }) => (
         <div className="d-flex justify-content-start align-items-center">
           {photo ? (
             <img
@@ -122,7 +122,7 @@ const Employees = () => {
             ""
           )}
           <Link
-            href="/profile-view"
+            href={`/profile/${id}`}
             className="ms-2 text-decoration-none color-inherit"
           >
             {first_name + " " + last_name}
@@ -163,7 +163,7 @@ const Employees = () => {
       accessor: "shift_name",
       title: "Shift",
       // visibleMediaQuery: aboveXs,
-      render: ({ shift_name }) => shift_name || "N/A",
+      render: ({ shift }) => shift?.name || "N/A",
     },
 
     {

@@ -74,7 +74,7 @@ export const getDate = (dateString) => {
 };
 
 export const getStoragePath = (path) => {
-  return apiBaseUrl + path;
+  return path ? apiBaseUrl + path : "";
 };
 
 export const getFullName = (first_name, last_name) => {

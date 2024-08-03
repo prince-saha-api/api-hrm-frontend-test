@@ -12,7 +12,7 @@ import "../styles/globals.scss";
 
 export const metadata = {
   title: "Root",
-  description: "HRM PAYROLL",
+  description: "API HRM",
 };
 
 export default function RootLayout({ children }) {

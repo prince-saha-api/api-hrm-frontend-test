@@ -11,7 +11,7 @@ import { checkIsAuthenticated } from "../../lib/check";
 
 export const metadata = {
   title: "Dashboard",
-  description: "HRM Payroll",
+  description: "API HRM",
 };
 
 export default async function RootLayout({ children }) {

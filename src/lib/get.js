@@ -57,6 +57,7 @@ export const fetchData = async (url, retries = MAX_RETRIES, options = {}) => {
       ...authOptions,
       ...options,
       signal: controller.signal,
+      // next: { revalidate: 2000 },
     });
     clearTimeout(timeoutId);
 

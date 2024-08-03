@@ -352,13 +352,13 @@ const ProfileView = ({ data }) => {
                 </h6>
 
                 <p className="employeeJoin mb-1">
-                  <b>Employee ID : {data?.official_id || ""}</b>
+                  <b>Employee ID : {profile?.official_id || ""}</b>
                 </p>
                 <p className="employeeJoin mb-1">
-                  Department: {data?.departmenttwo?.[0]?.name || "N/A"}
+                  Department: {profile?.departmenttwo?.[0]?.name || "N/A"}
                 </p>
                 <p className="employeeJoin mb-1">
-                  Date of Join : {getDate(data?.date_joined)}
+                  Date of Join : {getDate(profile?.date_joined)}
                 </p>
                 <p className="employeeJoin">
                   <span>Reset Password:</span>
@@ -383,20 +383,23 @@ const ProfileView = ({ data }) => {
                 <span>Phone:</span>
                 <Link
                   className="phnNumber"
-                  href={`tel:${data?.official_phone}`}
+                  href={`tel:${profile?.official_phone}`}
                 >
-                  {data?.official_phone || "N/A"}
+                  {profile?.official_phone || "N/A"}
                 </Link>
               </p>
               <p>
                 <span>Email:</span>
-                <Link className="email" href={`mailto:${data?.official_email}`}>
-                  {data?.official_email || "N/A"}
+                <Link
+                  className="email"
+                  href={`mailto:${profile?.official_email}`}
+                >
+                  {profile?.official_email || "N/A"}
                 </Link>
               </p>
               <p>
                 <span>Date of Birth:</span>
-                {getDate(data?.dob)}
+                {getDate(profile?.dob)}
               </p>
               {/* <p>
                         <span>Address:</span>Bayonne Ave, Manchester Township,
@@ -404,15 +407,15 @@ const ProfileView = ({ data }) => {
                      </p> */}
               <p>
                 <span>Gender:</span>
-                {data?.gender || "N/A"}
+                {profile?.gender || "N/A"}
               </p>
               <p>
                 <span>Blood Group:</span>
-                {data?.blood_group || ""}
+                {profile?.blood_group || ""}
               </p>
               <p>
                 <span>Marital Status:</span>
-                {data?.marital_status || ""}
+                {profile?.marital_status || ""}
               </p>
               <p>
                 <span>Supervisor:</span>
@@ -471,39 +474,39 @@ const ProfileView = ({ data }) => {
               <div className="employeeInfo">
                 <p>
                   <span>Fathers Name:</span>
-                  {data?.fathers_name || ""}
+                  {profile?.fathers_name || ""}
                 </p>
                 <p>
                   <span>Mothers Name:</span>
-                  {data?.mothers_name || ""}
+                  {profile?.mothers_name || ""}
                 </p>
                 <p>
                   <span>Spouse Name:</span>
-                  {data?.spouse_name || "N/A"}
+                  {profile?.spouse_name || "N/A"}
                 </p>
                 <p>
                   <span>Nationality:</span>
-                  {data?.nationality || "N/A"}
+                  {profile?.nationality || "N/A"}
                 </p>
                 <p>
                   <span>Religion:</span>
-                  {data?.religion?.name || "N/A"}
+                  {profile?.religion?.name || "N/A"}
                 </p>
                 <p>
                   <span>NID / Passport:</span>
-                  {data?.nid_passport_no || "N/A"}
+                  {profile?.nid_passport_no || "N/A"}
                 </p>
                 <p>
                   <span>TIN No:</span>
-                  {data?.tin_no || "N/A"}
+                  {profile?.tin_no || "N/A"}
                 </p>
                 <p>
                   <span>Present Address:</span>
-                  {generateAddressString(data?.present_address || {})}
+                  {generateAddressString(profile?.present_address || {})}
                 </p>
                 <p>
                   <span>Permanent Address:</span>
-                  {generateAddressString(data?.permanent_address || {})}
+                  {generateAddressString(profile?.permanent_address || {})}
                 </p>
               </div>
             </div>
@@ -529,19 +532,19 @@ const ProfileView = ({ data }) => {
                   <div className="employeeInfo">
                     <p>
                       <span>Official Email:</span>
-                      {data?.official_email || "N/A"}
+                      {profile?.official_email || "N/A"}
                     </p>
                     <p>
                       <span>Official Phone:</span>
-                      {data?.official_phone || "N/A"}
+                      {profile?.official_phone || "N/A"}
                     </p>
                     <p>
                       <span>Employee Type:</span>
-                      {data?.employee_type || "N/A"}
+                      {profile?.employee_type || "N/A"}
                     </p>
                     <p>
                       <span>Company:</span>
-                      {data?.departmenttwo?.[0]?.branch?.company
+                      {profile?.departmenttwo?.[0]?.branch?.company
                         ?.basic_information?.name || "N/A"}
                     </p>
                     <p>
@@ -549,34 +552,34 @@ const ProfileView = ({ data }) => {
                     </p>
                     <p>
                       <span>Default Shift:</span>
-                      {data?.shift?.name || "N/A"}
+                      {profile?.shift?.name || "N/A"}
                     </p>
                     <p>
                       <span>Grade:</span>
-                      {data?.grade?.name || "N/A"}
+                      {profile?.grade?.name || "N/A"}
                     </p>
                     <p>
                       <span>User Role:</span>
-                      {data?.role?.name || "N/A"}
+                      {profile?.role?.name || "N/A"}
                     </p>
                     <p>
                       <span>Official Note:</span>
-                      {data?.official_note || "N/A"}
+                      {profile?.official_note || "N/A"}
                     </p>
                     <p>
                       <span>Group:</span>Xyz
                     </p>
                     <p>
                       <span>Expense Approver:</span>
-                      {data?.expense_approver?.name || "N/A"}
+                      {profile?.expense_approver?.name || "N/A"}
                     </p>
                     <p>
                       <span>Leave Approver:</span>
-                      {data?.leave_approver?.name || "N/A"}
+                      {profile?.leave_approver?.name || "N/A"}
                     </p>
                     <p>
                       <span>Shift Approver:</span>
-                      {data?.shift_request_approver?.name || "N/A"}
+                      {profile?.shift_request_approver?.name || "N/A"}
                     </p>
                   </div>
                 </div>
@@ -600,9 +603,9 @@ const ProfileView = ({ data }) => {
                           <Table.Th>New Salary</Table.Th>
                         </Table.Tr>
                       </Table.Thead>
-                      {data?.employeejobhistoryone?.length ? (
+                      {profile?.employeejobhistoryone?.length ? (
                         <Table.Tbody>
-                          {data.employeejobhistoryone.map((item, index) => (
+                          {profile.employeejobhistoryone.map((item, index) => (
                             <Table.Tr key={index}>
                               <Table.Td>{item?.status_adjustment}</Table.Td>
                               <Table.Td>
@@ -651,39 +654,39 @@ const ProfileView = ({ data }) => {
                   <div className="employeeInfo">
                     <p>
                       <span>Payment In:</span>
-                      {data?.payment_in || "N/A"}
+                      {profile?.payment_in || "N/A"}
                     </p>
                     <p>
                       <span>Monthly Gross Salary:</span>
-                      {formatCurrency(data?.gross_salary)}
+                      {formatCurrency(profile?.gross_salary)}
                     </p>
                     <p>
                       <span>Bank Name:</span>
-                      {data?.bank_account?.bank_name || "N/A"}
+                      {profile?.bank_account?.bank_name || "N/A"}
                     </p>
                     <p>
                       <span>Branch:</span>
-                      {data?.bank_account?.branch_name || "N/A"}
+                      {profile?.bank_account?.branch_name || "N/A"}
                     </p>
                     <p>
                       <span>Bank Account Type:</span>
-                      {data?.bank_account?.account_type?.name || "N/A"}
+                      {profile?.bank_account?.account_type?.name || "N/A"}
                     </p>
                     <p>
                       <span>Account No:</span>
-                      {data?.bank_account?.account_no || "N/A"}
+                      {profile?.bank_account?.account_no || "N/A"}
                     </p>
                     <p>
                       <span>Routing No:</span>
-                      {data?.bank_account?.routing_no || "N/A"}
+                      {profile?.bank_account?.routing_no || "N/A"}
                     </p>
                     <p>
                       <span>SWIFT:</span>
-                      {data?.bank_account?.swift_bic || "N/A"}
+                      {profile?.bank_account?.swift_bic || "N/A"}
                     </p>
                     <p>
                       <span>Bank Address:</span>
-                      {generateAddressString(data?.bank_account?.address)}
+                      {generateAddressString(profile?.bank_account?.address)}
                     </p>
                   </div>
                 </Grid.Col>
@@ -754,9 +757,9 @@ const ProfileView = ({ data }) => {
                 <TbSquareRoundedFilled className="roundIcon" />
                 Emergency Contact
               </h4>
-              {data?.employee_contact?.length ? (
+              {profile?.employee_contact?.length ? (
                 <Grid>
-                  {data.employee_contact.map((contact, index) => (
+                  {profile.employee_contact.map((contact, index) => (
                     <Grid.Col span={6} key={index}>
                       <div className="employeeInfo border p-3">
                         <p>
@@ -811,8 +814,8 @@ const ProfileView = ({ data }) => {
                     Education
                   </h4>
 
-                  {data?.employee_academichistory?.length
-                    ? data.employee_academichistory.map((item, index) => (
+                  {profile?.employee_academichistory?.length
+                    ? profile.employee_academichistory.map((item, index) => (
                         <div className="employeeInfo borderLeft" key={index}>
                           <p>
                             <span>Certification:</span>
@@ -856,8 +859,8 @@ const ProfileView = ({ data }) => {
                     Experience
                   </h4>
 
-                  {data?.employee_experiencehistory?.length
-                    ? data.employee_experiencehistory.map((item, index) => (
+                  {profile?.employee_experiencehistory?.length
+                    ? profile.employee_experiencehistory.map((item, index) => (
                         <div className="employeeInfo borderLeft">
                           <p>
                             <span>Company Name:</span>Xyz Conpany
@@ -898,8 +901,8 @@ const ProfileView = ({ data }) => {
                 Documents
               </h4>
               <div className="d-flex flex-wrap">
-                {data?.employee_docs?.length
-                  ? data?.employee_docs.map((doc, index) => (
+                {profile?.employee_docs?.length
+                  ? profile?.employee_docs.map((doc, index) => (
                       <button
                         className="docItem me-4 mb-4"
                         onClick={() => {

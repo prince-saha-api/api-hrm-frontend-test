@@ -1,9 +1,8 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
+import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 import useSWR from "swr";
-import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
 import {
   Button,
@@ -12,6 +11,8 @@ import {
   MultiSelect,
   Popover,
   Input,
+  Modal,
+  Group,
 } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import classEase from "classease";
@@ -21,13 +22,13 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
+import { FiTrash2 } from "react-icons/fi";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { constants } from "@/lib/config";
 import { getStoragePath } from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import FilterModal from "./FilterModal";
-
 const PAGE_SIZES = constants.PAGE_SIZES;
 
 const Index = () => {
@@ -113,10 +114,10 @@ const Index = () => {
       key: "employee",
     },
     {
-      accessor: "designation",
-      title: "Designation",
+      accessor: "device",
+      title: "Device",
       // visibleMediaQuery: aboveXs,
-      render: ({ designation }) => designation?.name || "N/A",
+      render: ({ device }) => device?.name || "N/A",
     },
     {
       accessor: "date",
@@ -125,28 +126,10 @@ const Index = () => {
       render: ({ date }) => date || "N/A",
     },
     {
-      accessor: "inTime",
-      title: "In Time",
+      accessor: "logTime",
+      title: "Log Time",
       // visibleMediaQuery: aboveXs,
       render: ({ inTime }) => inTime || "N/A",
-    },
-    {
-      accessor: "outTime",
-      title: "Out Time",
-      // visibleMediaQuery: aboveXs,
-      render: ({ outTime }) => outTime || "N/A",
-    },
-    {
-      accessor: "status",
-      title: "Status",
-      // visibleMediaQuery: aboveXs,
-      render: ({ status }) => status || "N/A",
-    },
-    {
-      accessor: "attendanceMode",
-      title: "Attendance Mode",
-      // visibleMediaQuery: aboveXs,
-      render: ({ attendanceMode }) => attendanceMode || "N/A",
     },
   ];
 
@@ -156,69 +139,29 @@ const Index = () => {
       value: "employee",
     },
     {
-      label: "Department",
-      value: "department",
-    },
-    {
-      label: "Designation",
-      value: "designation",
+      label: "Device",
+      value: "device",
     },
     {
       label: "Date",
       value: "date",
     },
     {
-      label: "In Time",
-      value: "inTime",
-    },
-    {
-      label: "Out Time",
-      value: "outTime",
-    },
-    {
-      label: "Status",
-      value: "status",
-    },
-    {
-      label: "Attendance Mode",
-      value: "attendanceMode",
-    },
-    {
-      label: "Late Time (Mins)",
-      value: "lateTime",
-    },
-    {
-      label: "Early Leave (Mins)",
-      value: "earlyLeave",
-    },
-    {
-      label: "Overtime (Mins)",
-      value: "overtime",
+      label: "Log Time",
+      value: "logTime",
     },
   ];
 
   const [selectedOptions, setSelectedOptions] = useState([
     "employee",
-    "designation",
+    "device",
     "date",
-    "inTime",
-    "outTime",
-    "status",
-    "attendanceMode",
+    "logTime",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set([
-        "employee",
-        "designation",
-        "date",
-        "inTime",
-        "outTime",
-        "status",
-        "attendanceMode",
-        ...keys,
-      ]),
+      ...new Set(["employee", "device", "date", "logTime", ...keys]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>
@@ -461,18 +404,41 @@ const Index = () => {
 
   const [filterOpened, { open: filterOpen, close: filterClose }] =
     useDisclosure(false);
-
+  const [opened, { open, close }] = useDisclosure(false);
   return (
     <>
       <FilterModal opened={filterOpened} close={filterClose} />
-      <div className="mb-4">
+      <div className="mb-4 d-flex justify-content-between">
         <Breadcrumb
-          title="Attendance Report"
+          title="Raw Data"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Attendance Report" },
+            { title: "Raw Data" },
           ]}
         />
+        <Modal opened={opened} onClose={close} title="Clear Raw data" centered>
+          <form>
+            <p>Are you sure want to Clear Raw data ?</p>
+
+            <Group justify="flex-end" mt="md">
+              <Button onClick={close} variant="filled">
+                No
+              </Button>
+              <Button variant="filled" color="red">
+                Yes
+              </Button>
+            </Group>
+          </form>
+        </Modal>
+        <Button
+          color="red"
+          size="lg"
+          onClick={open}
+          className="d-flex align-items-center rounded"
+        >
+          <FiTrash2 className="me-2" />
+          Clear Raw data
+        </Button>
       </div>
 
       <div className="d-flex justify-content-between mb-3">
@@ -491,7 +457,7 @@ const Index = () => {
           />
           <p className="mb-0 ms-2 me-2">Entries</p>
 
-          <Popover
+          {/* <Popover
             classNames={{
               dropdown: "column_visibility_dropdown",
             }}
@@ -529,7 +495,7 @@ const Index = () => {
                 comboboxProps={{ withinPortal: false }}
               />
             </Popover.Dropdown>
-          </Popover>
+          </Popover> */}
 
           <Button onClick={filterOpen} ms="sm">
             Filter

@@ -406,7 +406,10 @@ const Page = () => {
                         </Link>
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
-                        <Link href="/" className="text-decoration-none subMenu">
+                        <Link
+                          href="/raw-data"
+                          className="text-decoration-none subMenu"
+                        >
                           Raw Data
                         </Link>
                       </li>
@@ -443,7 +446,7 @@ const Page = () => {
                           href="/groups"
                           className="text-decoration-none subMenu"
                         >
-                          Groups
+                          Device Groups
                         </Link>
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
@@ -451,7 +454,7 @@ const Page = () => {
                           href="/assign-to-group"
                           className="text-decoration-none subMenu"
                         >
-                          Assign to Group
+                          Assign to Device Group
                         </Link>
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">

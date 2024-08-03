@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import { Burger } from "@mantine/core";
+import { Burger, Avatar, Indicator } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -75,15 +75,28 @@ const Navbar = () => {
         </div>
         <div className="profileBox">
           <Dropdown>
-            <Dropdown.Toggle className="border-0 me-4 pro_img_bg">
-              <Image src={profileImg} alt="img" className="profile_img" />
-              <span className="ms-1">Admin</span>
+            <Dropdown.Toggle className="border-0 me-4 d-flex align-items-center">
+              {/* <Image src={profileImg} alt="img" className="profile_img" /> */}
+              <Indicator
+                // inline
+                withBorder
+                size={12}
+                // processing
+                offset={5}
+                position="bottom-end"
+                color="green"
+              >
+                <Avatar
+                  size="37"
+                  radius="xl"
+                  src="https://media.licdn.com/dms/image/D5603AQHVDYHwJOCMMg/profile-displayphoto-shrink_200_200/0/1689354777920?e=2147483647&v=beta&t=GcBRig8My5RTMDsCxXcE4YC1DSOEi35O9-17P3HZsiE"
+                />
+              </Indicator>
+              <span className="ms-2">Admin</span>
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="profile_item rounded-1">
-              <Dropdown.Item href="/profile-view">
-                Profile
-              </Dropdown.Item>
+              <Dropdown.Item href="/profile-view">Profile</Dropdown.Item>
               <Dropdown.Item href="#" onClick={(e) => handleLogout(e)}>
                 Logout
               </Dropdown.Item>

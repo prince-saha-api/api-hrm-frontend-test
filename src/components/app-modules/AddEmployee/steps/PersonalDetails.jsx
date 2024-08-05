@@ -22,58 +22,70 @@ import { countries } from "@/data/countries";
 const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
   const form = useForm({
     mode: "uncontrolled",
-    initialValues: { ...data, dob: data.dob ? new Date(data.dob) : null },
-    validate: {
-      first_name: (value) => (!value ? "First Name is required" : null),
-      // last_name: (value) =>
-      //   value.length < 2 ? "Last Name must have at least 2 letters" : null,
-      gender: (value) => (value ? null : "Gender is required"),
-      dob: (value) => (value ? null : "Date of Birth is required"),
-      // blood_group: (value) => (value ? null : "Blood Group is required"),
-      // fathers_name: (value) =>
-      //   value.length < 2 ? "Father's Name must have at least 2 letters" : null,
-      // mothers_name: (value) =>
-      //   value.length < 2 ? "Mother's Name must have at least 2 letters" : null,
-      marital_status: (value) => (value ? null : "Marital Status is required"),
-      spouse_name: (value, values) =>
-        values?.marital_status === "Married" && !value
-          ? "Spouse name is required"
-          : null,
-      personal_email: (value) =>
-        value && /^\S+@\S+$/.test(value) ? null : "Invalid email",
-      personal_phone: (value) =>
-        value && value.toString().length < 11
-          ? "Contact No must have at least 11 digits"
-          : null,
-      // nid_passport_no: (value) =>
-      //   value.toString().length < 10
-      //     ? "NID / Passport must have at least 10 digits"
-      //     : null,
-      // tin_no: (value) => (value ? null : "TIN No is required"),
-      // "present_address.address": (value) =>
-      //   value.length < 5 ? "Address must have at least 5 characters" : null,
-      "present_address.city": (value) => (value ? null : "City is required"),
-      "present_address.state_division": (value) =>
-        value ? null : "State is required",
-      "present_address.post_zip_code": (value) =>
-        value ? null : "Zip code is required",
-      // "present_address.country": (value) =>
-      //   value ? null : "Country is required",
-
-      // "permanent_address.address": (value) =>
-      //   value.length < 5 ? "Address must have at least 5 characters" : null,
-      // "permanent_address.city": (value, values) =>
-      //   values.permanentAddressSameAsPresent && !value
-      //     ? "City is required"
-      //     : null,
-      // "permanent_address.state_division": (value) =>
-      //   value.length < 2 ? "State must have at least 2 letters" : null,
-      // "permanent_address.post_zip_code": (value) =>
-      //   value.length < 4 ? "ZIP Code must have at least 4 characters" : null,
-      // "permanent_address.country": (value) =>
-      //   value ? null : "Country is required",
+    initialValues: {
+      ...data,
+      dob: data?.dob ? new Date(data.dob) : null,
+      permanent_address: data?.permanentAddressSameAsPresent
+        ? data?.present_address
+        : data?.permanent_address,
     },
+    // validate: {
+    //   first_name: (value) => (!value ? "First Name is required" : null),
+    //   // last_name: (value) => (!value ? "Last Name is required" : null),
+    //   gender: (value) => (value ? null : "Gender is required"),
+    //   dob: (value) => (value ? null : "Date of Birth is required"),
+    //   blood_group: (value) => (value ? null : "Blood Group is required"),
+    //   fathers_name: (value) => (!value ? "Father's Name is required" : null),
+    //   mothers_name: (value) => (!value ? "Mother's Name is required" : null),
+    //   marital_status: (value) => (value ? null : "Marital Status is required"),
+    //   spouse_name: (value, values) =>
+    //     values?.marital_status === "Married" && !value
+    //       ? "Spouse name is required"
+    //       : null,
+    //   personal_email: (value) =>
+    //     value && /^\S+@\S+$/.test(value) ? null : "Invalid email",
+    //   personal_phone: (value) =>
+    //     value && value.toString().length < 11
+    //       ? "Contact No must have at least 11 digits"
+    //       : null,
+    //   // nid_passport_no: (value) =>
+    //   //   value.toString().length < 10
+    //   //     ? "NID / Passport must have at least 10 digits"
+    //   //     : null,
+    //   // tin_no: (value) => (value ? null : "TIN No is required"),
+    //   "present_address.address": (value) =>
+    //     !value ? "Address is required" : null,
+    //   "present_address.city": (value) => (value ? null : "City is required"),
+    //   "present_address.state_division": (value) =>
+    //     value ? null : "State is required",
+    //   "present_address.post_zip_code": (value) =>
+    //     value ? null : "Zip code is required",
+    //   "present_address.country": (value) =>
+    //     value ? null : "Country is required",
+    //   "permanent_address.address": (value, values) =>
+    //     !values.permanentAddressSameAsPresent && !value
+    //       ? "Address is required"
+    //       : null,
+    //   "permanent_address.city": (value, values) =>
+    //     !values.permanentAddressSameAsPresent && !value
+    //       ? "City is required"
+    //       : null,
+    //   "permanent_address.state_division": (value, values) =>
+    //     !values.permanentAddressSameAsPresent && !value
+    //       ? "State is required"
+    //       : null,
+    //   "permanent_address.post_zip_code": (value, values) =>
+    //     !values.permanentAddressSameAsPresent && !value
+    //       ? "ZIP Code is required"
+    //       : null,
+    //   "permanent_address.country": (value, values) =>
+    //     !values.permanentAddressSameAsPresent && !value
+    //       ? "Country is required"
+    //       : null,
+    // },
   });
+
+  // console.log(form.values);
 
   const {
     data: religionsData,
@@ -84,7 +96,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
     keepPreviousData: true,
   });
 
-  console.log(religionsData);
+  // console.log(religionsData);
 
   const religions = religionsData?.data?.result?.map((item) => ({
     value: item?.id.toString() || "",
@@ -93,7 +105,10 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
 
   const [isMarried, setIsMarried] = useState(false);
 
-  const sameAsPresent = form.getValues().permanentAddressSameAsPresent;
+  // const sameAsPresent = form.getValues().permanentAddressSameAsPresent;
+  const [sameAsPresent, setSameAsPresent] = useState(
+    data?.permanentAddressSameAsPresent
+  );
 
   useImperativeHandle(ref, () => ({
     validateStep: (updateFormData, key) => {
@@ -106,46 +121,44 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
     },
   }));
 
-  const handleSameAsPresentChange = (event) => {
-    const isChecked = event.currentTarget.checked;
-    form.setFieldValue("permanentAddressSameAsPresent", isChecked);
+  form.watch(
+    "permanentAddressSameAsPresent",
+    ({ previousValue, value, touched, dirty }) => {
+      const { city, state_division, post_zip_code, country, address } =
+        form.getValues().present_address;
 
-    // const currentValues = form.getValues();
+      console.log(country);
 
-    // const updatedValues = {
-    //   ...currentValues,
-    //   permanentAddressSameAsPresent: isChecked,
-    // };
+      if (value) {
+        form.setFieldValue("permanent_address.city", city);
+        form.setFieldValue("permanent_address.state_division", state_division);
+        form.setFieldValue("permanent_address.post_zip_code", post_zip_code);
+        form.setFieldValue("permanent_address.country", country);
+        form.setFieldValue("permanent_address.address", address);
 
-    isChecked &&
-      form.setFieldValue("permanent_address", {
-        city: "",
-        state_division: "",
-        post_zip_code: "",
-        country: "",
-        address: "",
-      });
+        // form.setValues({
+        //   permanent_address: {
+        //     city,
+        //     state_division,
+        //     post_zip_code,
+        //     country,
+        //     address,
+        //   },
+        // });
+        setSameAsPresent(true);
+      } else {
+        setSameAsPresent(false);
+      }
+    }
+  );
 
-    // if (isChecked) {
-    //   updatedValues.permanent_address = { ...currentValues.present_address };
-    // }
-
-    // form.setValues(updatedValues);
-
-    // console.log(updatedValues, form);
-  };
-
-  const handleControlledChange = (value) => {
-    form.setFieldValue("marital_status", value);
-
-    value !== "Married" && form.setFieldValue("spouse_name", "");
-
+  form.watch("marital_status", ({ previousValue, value, touched, dirty }) => {
+    console.log({ previousValue, value, touched, dirty });
+    dirty && value !== "Married" && form.setFieldValue("spouse_name", "");
     setIsMarried(value === "Married");
-  };
+  });
 
   const handleSubmit = (values) => {
-    const isChecked = values.permanentAddressSameAsPresent;
-
     const formattedDOB = values.dob
       ? values.dob.toISOString().split("T")[0]
       : null;
@@ -153,7 +166,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
     onNext({
       ...values,
       dob: formattedDOB,
-      ...(isChecked && { permanent_address: values.present_address }),
+      ...(values.permanentAddressSameAsPresent && {
+        permanent_address: values.present_address,
+      }),
     });
   };
 
@@ -304,7 +319,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     // mt="sm"
                     // label="Marital Status"
                     placeholder="Marital Status"
-                    value={form.getValues().marital_status}
+                    // value={form.getValues().marital_status}
                     data={[
                       "Single",
                       "Married",
@@ -312,8 +327,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                       "Divorced",
                       "Separated",
                     ]}
-                    // {...form.getInputProps("marital_status")}
-                    onChange={(value) => handleControlledChange(value)}
+                    {...form.getInputProps("marital_status")}
                   />
                   {form?.errors?.marital_status && (
                     <p className="c_error_msg">
@@ -553,18 +567,19 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 <p className="fw-bold mb-0">Permanent Address</p>
                 <Checkbox
                   label="Same as Present Address"
-                  checked={sameAsPresent}
-                  onChange={handleSameAsPresentChange}
+                  checked={form.getValues().permanentAddressSameAsPresent}
+                  {...form.getInputProps("permanentAddressSameAsPresent")}
                 />
               </Group>
 
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Address</div>
+                {/* {console.log(sameAsPresent)} */}
                 <TextInput
                   classNames={{
                     root: classEase(
-                      "w-100",
-                      sameAsPresent && "disable_input_overlay"
+                      "w-100"
+                      // // sameAsPresent && "disable_input_overlay"
                     ),
                     // root: "cust_iputRoot",
                     // label: "cust_iputLabel",
@@ -575,6 +590,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   placeholder="Permanent Address"
                   {...form.getInputProps("permanent_address.address")}
                   disabled={sameAsPresent}
+                  key={form.key("permanent_address.address")}
                 />
               </div>
 
@@ -583,8 +599,8 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 <TextInput
                   classNames={{
                     root: classEase(
-                      "w-100",
-                      sameAsPresent && "disable_input_overlay"
+                      "w-100"
+                      // sameAsPresent && "disable_input_overlay"
                     ),
                     // root: "cust_iputRoot",
                     // label: "cust_iputLabel",
@@ -595,6 +611,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   placeholder="City"
                   {...form.getInputProps("permanent_address.city")}
                   disabled={sameAsPresent}
+                  key={form.key("permanent_address.city")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -602,8 +619,8 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 <TextInput
                   classNames={{
                     root: classEase(
-                      "w-100",
-                      sameAsPresent && "disable_input_overlay"
+                      "w-100"
+                      // sameAsPresent && "disable_input_overlay"
                     ),
                     // root: "cust_iputRoot",
                     // label: "cust_iputLabel",
@@ -614,6 +631,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   placeholder="State"
                   {...form.getInputProps("permanent_address.state_division")}
                   disabled={sameAsPresent}
+                  key={form.key("permanent_address.state_division")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -621,8 +639,8 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 <TextInput
                   classNames={{
                     root: classEase(
-                      "w-100",
-                      sameAsPresent && "disable_input_overlay"
+                      "w-100"
+                      // sameAsPresent && "disable_input_overlay"
                     ),
                     // root: "cust_iputRoot",
                     // label: "cust_iputLabel",
@@ -634,6 +652,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   {...form.getInputProps("permanent_address.post_zip_code")}
                   disabled={sameAsPresent}
                   // value={form.getValues().permanent_address.post_zip_code}
+                  key={form.key("permanent_address.post_zip_code")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -641,8 +660,8 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 <Select
                   classNames={{
                     root: classEase(
-                      "w-100",
-                      sameAsPresent && "disable_input_overlay"
+                      "w-100"
+                      // sameAsPresent && "disable_input_overlay"
                     ),
                     // root: "cust_iputRoot",
                     // label: "cust_iputLabel",
@@ -656,6 +675,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   {...form.getInputProps("permanent_address.country")}
                   disabled={sameAsPresent}
                   // value={form.getValues().permanent_address.country}
+                  key={form.key("permanent_address.country")}
                 />
               </div>
             </Box>

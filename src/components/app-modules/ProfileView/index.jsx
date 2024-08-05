@@ -381,21 +381,29 @@ const ProfileView = ({ data }) => {
             <div className="employeeInfo h-100 ps-3">
               <p>
                 <span>Phone:</span>
-                <Link
-                  className="phnNumber"
-                  href={`tel:${profile?.official_phone}`}
-                >
-                  {profile?.official_phone || "N/A"}
-                </Link>
+                {profile?.official_phone ? (
+                  <Link
+                    className="phnNumber"
+                    href={`tel:${profile?.official_phone}`}
+                  >
+                    {profile?.official_phone}
+                  </Link>
+                ) : (
+                  "N/A"
+                )}
               </p>
               <p>
                 <span>Email:</span>
-                <Link
-                  className="email"
-                  href={`mailto:${profile?.official_email}`}
-                >
-                  {profile?.official_email || "N/A"}
-                </Link>
+                {profile?.official_email ? (
+                  <Link
+                    className="email"
+                    href={`mailto:${profile?.official_email}`}
+                  >
+                    {profile?.official_email}
+                  </Link>
+                ) : (
+                  "N/A"
+                )}
               </p>
               <p>
                 <span>Date of Birth:</span>

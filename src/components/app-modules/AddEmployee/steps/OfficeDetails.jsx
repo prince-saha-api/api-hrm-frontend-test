@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import useSWR from "swr";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -19,11 +14,6 @@ import {
   MultiSelect,
   Grid,
 } from "@mantine/core";
-// import { FcAcceptDatabase } from "react-icons/fc";
-// import Image from "next/image";
-// import compmanyLogo from "public/full_logo.png";
-// import uploadImg from "public/profile01.jpg";
-// import { FcAddImage } from "react-icons/fc";
 import { toast } from "react-toastify";
 import { fetcher, getData } from "@/lib/fetch";
 
@@ -32,7 +22,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
   const [departments, setDepartments] = useState([]);
 
   const form = useForm({
-    // mode: "uncontrolled",
+    mode: "uncontrolled",
     initialValues: {
       ...data,
       joining_date: data.joining_date ? new Date(data.joining_date) : null,
@@ -159,14 +149,23 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
     }
   };
 
-  useEffect(() => {
-    if (form.values.company) {
-      fetchBranches(form.values.company);
+  form.watch("company", ({ previousValue, value, touched, dirty }) => {
+    if (value) {
+      fetchBranches(value);
     } else {
       form.setFieldValue("branch", null);
       setBranches([]);
     }
-  }, [form.values.company]);
+  });
+
+  // useEffect(() => {
+  //   if (form.values.company) {
+  //     fetchBranches(form.values.company);
+  //   } else {
+  //     form.setFieldValue("branch", null);
+  //     setBranches([]);
+  //   }
+  // }, [form.values.company]);
 
   const fetchDepartments = async (companyId, branchId) => {
     try {
@@ -185,15 +184,26 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
     }
   };
 
-  useEffect(() => {
-    if (form.values.branch) {
-      fetchDepartments(form.values.company, form.values.branch);
+  form.watch("branch", ({ previousValue, value, touched, dirty }) => {
+    if (value) {
+      fetchDepartments(form.getValues().company, value);
       form.setFieldValue("department", null);
     } else {
-      form.setFieldValue("department", null);
+      console.log(value);
+      form.setFieldValue("department", "");
       setDepartments([]);
     }
-  }, [form.values.company, form.values.branch]);
+  });
+
+  // useEffect(() => {
+  //   if (form.values.branch) {
+  //     fetchDepartments(form.values.company, form.values.branch);
+  //     form.setFieldValue("department", null);
+  //   } else {
+  //     form.setFieldValue("department", null);
+  //     setDepartments([]);
+  //   }
+  // }, [form.values.company, form.values.branch]);
 
   useImperativeHandle(ref, () => ({
     validateStep: (updateFormData, key) => {
@@ -311,6 +321,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // ]}
                   data={companies}
                   {...form.getInputProps("company")}
+                  key={form.key("company")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -331,6 +342,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // ]}
                   data={branches}
                   {...form.getInputProps("branch")}
+                  key={form.key("branch")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -350,6 +362,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // ]}
                   data={departments}
                   {...form.getInputProps("department")}
+                  key={form.key("department")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -369,6 +382,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // ]}
                   data={designations}
                   {...form.getInputProps("designation")}
+                  key={form.key("designation")}
                 />
               </div>
             </Box>
@@ -392,6 +406,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // ]}
                   data={shifts}
                   {...form.getInputProps("shift")}
+                  key={form.key("shift")}
                 />
               </div>
 
@@ -405,6 +420,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   placeholder="Grade"
                   data={grades}
                   {...form.getInputProps("grade")}
+                  key={form.key("grade")}
                 />
               </div>
 
@@ -479,6 +495,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   searchable
                   data={employees}
                   {...form.getInputProps("supervisor")}
+                  key={form.key("supervisor")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -494,6 +511,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   searchable
                   data={employees}
                   {...form.getInputProps("expense_approver")}
+                  key={form.key("expense_approver")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -509,6 +527,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   searchable
                   data={employees}
                   {...form.getInputProps("leave_approver")}
+                  key={form.key("leave_approver")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
@@ -524,6 +543,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   searchable
                   data={employees}
                   {...form.getInputProps("shift_request_approver")}
+                  key={form.key("shift_request_approver")}
                 />
               </div>
             </Box>

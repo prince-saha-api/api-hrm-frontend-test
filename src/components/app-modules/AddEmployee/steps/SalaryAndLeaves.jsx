@@ -1,27 +1,17 @@
 "use client";
+
 import React, { forwardRef, useImperativeHandle } from "react";
 import { MultiSelect } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
-import { Breadcrumbs, Anchor } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
   NumberInput,
   TextInput,
-  Textarea,
   Box,
   Select,
   Button,
-  Flex,
-  FileButton,
   Group,
-  Text,
 } from "@mantine/core";
 import { Grid } from "@mantine/core";
-import { FcAcceptDatabase } from "react-icons/fc";
-import Image from "next/image";
-import compmanyLogo from "public/full_logo.png";
-import uploadImg from "public/profile01.jpg";
-import { FcAddImage } from "react-icons/fc";
 import { countries } from "@/data/countries";
 
 const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
@@ -313,6 +303,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   searchable
                   data={countries}
                   {...form.getInputProps("bank_account.address.country")}
+                  key={form.key("bank_account.address.country")}
                 />
               </div>
             </Box>

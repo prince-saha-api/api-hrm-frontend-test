@@ -271,6 +271,7 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
         ))}
 
         <Button
+          className="ps-0"
           justify="center"
           leftSection={<LuPlus className="me-0 fs-5" />}
           variant="transparent"

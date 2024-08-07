@@ -60,9 +60,9 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const companies = companyData?.result?.map((item) => ({
+  const companies = companyData?.data?.result?.map((item) => ({
     label: item?.basic_information?.name?.toString() || "",
-    value: item?.basic_information?.id.toString() || "",
+    value: item?.id.toString() || "",
   }));
 
   const [selectedRecords, setSelectedRecords] = useState([]);

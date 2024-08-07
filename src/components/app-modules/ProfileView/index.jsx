@@ -694,7 +694,9 @@ const ProfileView = ({ data }) => {
                     </p>
                     <p>
                       <span>Bank Address:</span>
-                      {generateAddressString(profile?.bank_account?.address)}
+                      {generateAddressString(
+                        profile?.bank_account?.address || {}
+                      )}
                     </p>
                   </div>
                 </Grid.Col>
@@ -792,7 +794,7 @@ const ProfileView = ({ data }) => {
                         </p>
                         <p>
                           <span>Address:</span>
-                          {generateAddressString(contact?.address)}
+                          {generateAddressString(contact?.address || {})}
                         </p>
                       </div>
                     </Grid.Col>

@@ -109,11 +109,18 @@ const Index = ({ opened, close, mutate }) => {
         toast.success("Branch created successfully");
       } else {
         setIsSubmitting(false);
-        toast.error(
-          response?.status == "error"
-            ? response.message
-            : "Error submitting form"
-        );
+        // toast.error(
+        //   response?.status === "error"
+        //     ? response?.message[0]
+        //     : "Error submitting form"
+        // );
+        if (response?.status === "error" && Array.isArray(response.message)) {
+          response.message.forEach((msg) => {
+            toast.error(msg);
+          });
+        } else {
+          toast.error("Error submitting form");
+        }
       }
     } catch (error) {
       console.error("Error submitting form:", error);

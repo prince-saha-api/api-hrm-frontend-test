@@ -82,7 +82,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       form.setValues({
         name: item.name || "",
         description: item.description || "",
-        company: item.company.id || "",
+        company: item.company.id.toString() || "",
         phone: item.phone || "",
         email: item.email || "",
         fax: item.fax || "",
@@ -185,6 +185,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
                 disabled={isSubmitting}
                 data={companies}
                 {...form.getInputProps("company")}
+                key={form.key("company")}
               />
               <TextInput
                 mb="sm"

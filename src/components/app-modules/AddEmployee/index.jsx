@@ -9,6 +9,7 @@ import EmergencyContact from "./steps/EmergencyContact";
 import EducationAndExperience from "./steps/EducationAndExperience";
 import UploadDocuments from "./steps/UploadDocuments";
 import SuccessCheckmarkAnimation from "./steps/SuccessCheckmarkAnimation";
+import { submit } from "@/lib/submit";
 
 const AddEmployee = () => {
   const items = [
@@ -272,12 +273,10 @@ const AddEmployee = () => {
 
       console.log(formValues);
 
-      const response = await fetch(
-        "http://10.10.23.64:8000/api/user/add-employee/",
-        {
-          method: "POST",
-          body: formValues,
-        }
+      const response = await submit(
+        "/api/user/add-employee/",
+        formValues,
+        true
       );
 
       const result = await response.json();
@@ -287,63 +286,6 @@ const AddEmployee = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
     }
-
-    // try {
-    //   const formValues = new FormData();
-
-    //   const flattenObject = (obj, prefix = "") => {
-    //     Object.keys(obj).forEach((key) => {
-    //       const value = obj[key];
-    //       const formKey = prefix ? `${prefix}[${key}]` : key;
-
-    //       if (value && typeof value === "object" && !(value instanceof File)) {
-    //         flattenObject(value, formKey);
-    //       } else {
-    //         formValues.append(formKey, value);
-    //       }
-    //     });
-    //   };
-
-    //   // Flatten and append form values
-    //   flattenObject(formData);
-
-    //   // Example of how to append a specific file (e.g., the "photo" field)
-    //   // formData.append('photo', formValues.personalDetails.photo);
-
-    //   // Append uploadDocuments separately if they contain files
-    //   formData.uploadDocuments.forEach((doc, index) => {
-    //     if (doc.attachment) {
-    //       formValues.append(`uploadDocuments[${index}][title]`, doc.title);
-    //       formValues.append(
-    //         `uploadDocuments[${index}][attachment]`,
-    //         doc.attachment
-    //       );
-    //     }
-    //   });
-
-    //   console.log(formValues);
-
-    //   // const response = await submit("/employee/", formData, true);
-
-    //   const response = await fetch(
-    //     "http://10.10.23.64:8000/api/user/add-employee/",
-    //     {
-    //       method: "POST",
-    //       // headers: {
-    //       //   // "Authorization": "Bearer token",
-    //       //   // "Content-Type": "multipart/form-data",
-    //       // },
-    //       body: formValues,
-    //     }
-    //   );
-
-    //   console.log(response);
-
-    //   return;
-
-    // } catch (error) {
-    //   console.error("Error submitting form:", error);
-    // }
   };
 
   return (

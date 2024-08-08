@@ -15,7 +15,6 @@ import { BiMessageSquareEdit } from "react-icons/bi";
 import { Button, Select, Menu } from "@mantine/core";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { fetcher, getData } from "@/lib/fetch";
-import Breadcrumb from "@/components/utils/Breadcrumb";
 import { constants } from "@/lib/config";
 import AddButton from "@/components/utils/AddButton";
 import Edit from "./Edit";
@@ -98,7 +97,7 @@ const Index = () => {
       accessor: "title",
       title: "Title",
       // noWrap: true,
-      // sortable: true,
+      sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ title }) => title || "N/A",
       // for export
@@ -451,8 +450,8 @@ const Index = () => {
               input: "showInput",
             }}
             data={PAGE_SIZES.map((size) => size.toString())}
-            defaultValue={PAGE_SIZES[0].toString()}
-            value={pageSize.toString()}
+            // defaultValue={PAGE_SIZES[0].toString()}
+            value={String(pageSize)}
             onChange={(_value, option) => handlePageSizeChange(_value)}
           />
           <p className="mb-0 ms-2 me-2">Entries</p>

@@ -14,13 +14,14 @@ import { toast } from "react-toastify";
 import { submit } from "@/lib/submit";
 import { fetcher, getData } from "@/lib/fetch";
 import { countries } from "@/data/countries";
+import { validateEmail, validatePhoneNumber } from "@/lib/validate";
 
 const Index = ({ opened, close, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [branches, setBranches] = useState([]);
 
   const form = useForm({
-    // mode: "uncontrolled",
+    mode: "uncontrolled",
     initialValues: {
       name: "",
       description: "",
@@ -38,8 +39,13 @@ const Index = ({ opened, close, mutate }) => {
       },
     },
     validate: {
-      name: (value) =>
-        value.length < 2 ? "Name must have at least 2 letters" : null,
+      name: (value) => (!value ? "Name is required" : null),
+      company: (value) => (!value ? "Select a company" : null),
+      branch: (value) => (!value ? "Select a branch" : null),
+      email: (value) =>
+        value && !validateEmail(value) ? "Invalid email" : null,
+      phone: (value) =>
+        value && !validatePhoneNumber(value) ? "Invalid phone number" : null,
     },
   });
 
@@ -74,15 +80,24 @@ const Index = ({ opened, close, mutate }) => {
     }
   };
 
-  useEffect(() => {
-    if (form.values.company) {
-      fetchBranches(form.values.company);
+  // useEffect(() => {
+  //   if (form.values.company) {
+  //     fetchBranches(form.values.company);
+  //   }
+  // }, [form.values.company]);
+
+  form.watch("company", ({ previousValue, value, touched, dirty }) => {
+    if (value) {
+      fetchBranches(value);
+    } else {
+      form.setFieldValue("branch", "");
+      setBranches([]);
     }
-  }, [form.values.company]);
+  });
 
   // console.log("Companies: ", companies);
   // console.log("Branches: ", branches);
-  console.log("company: ", form.values.company);
+  // console.log("company: ", form.values.company);
 
   const handleSubmit = async (values) => {
     // e.preventDefault();
@@ -111,13 +126,13 @@ const Index = ({ opened, close, mutate }) => {
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Error submitting form");
       setTimeout(() => {
         setIsSubmitting(false);
-      }, 5000);
+      }, 500);
     }
   };
 
@@ -159,6 +174,7 @@ const Index = ({ opened, close, mutate }) => {
                 disabled={isSubmitting}
                 data={companies}
                 {...form.getInputProps("company")}
+                key={form.key("company")}
               />
               <Select
                 mb="sm"
@@ -168,11 +184,13 @@ const Index = ({ opened, close, mutate }) => {
                 disabled={isSubmitting}
                 data={branches}
                 {...form.getInputProps("branch")}
+                key={form.key("branch")}
               />
               <TextInput
                 mb="sm"
                 label="Email"
                 placeholder="Email"
+                required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("email")}
               />
@@ -180,6 +198,7 @@ const Index = ({ opened, close, mutate }) => {
                 // mb="sm"
                 label="Phone"
                 placeholder="Phone"
+                required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("phone")}
               />
@@ -189,6 +208,7 @@ const Index = ({ opened, close, mutate }) => {
                 mb="sm"
                 label="Fax"
                 placeholder="Fax"
+                required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("fax")}
               />

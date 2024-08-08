@@ -26,6 +26,7 @@ import { getData } from "@/lib/fetch";
 import { update, submit } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
 import { formatDate, getStoragePath } from "@/lib/helper";
+import { validateEmail, validatePhoneNumber } from "@/lib/validate";
 
 const BasicInfo = () => {
   const [basicInfo, setBasicInfo] = useState(null);
@@ -80,11 +81,10 @@ const BasicInfo = () => {
       name: (value) =>
         value.length < 2 ? "Name must have at least 2 letters" : null,
       primary_phone_number: (value) =>
-        value?.length < 11 ? "Phone number must be at least 11 digits" : null,
+        validatePhoneNumber(value) ? null : "Invalid phone number",
       fax: (value) =>
         value?.length < 8 ? "Fax must be at least 8 digits" : null,
-      primary_email: (value) =>
-        /^\S+@\S+$/.test(value) ? null : "Invalid email",
+      primary_email: (value) => (validateEmail(value) ? null : "Invalid email"),
       website_url: (value) =>
         /^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$/.test(value)
           ? null
@@ -242,6 +242,7 @@ const BasicInfo = () => {
       establishment_date: new Date(basicInfo.establishment_date),
     });
     setIsEditing(false);
+    setPreview(null);
   };
 
   const handleFileChange = (file) => {

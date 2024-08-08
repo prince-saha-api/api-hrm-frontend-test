@@ -13,8 +13,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       name: "",
     },
     validate: {
-      name: (value) =>
-        value.length < 5 ? "Name must have at least 5 letters" : null,
+      name: (value) => (!value ? "Name is required" : null),
     },
   });
 
@@ -54,13 +53,13 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     } catch (error) {
       console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     }
   };
 

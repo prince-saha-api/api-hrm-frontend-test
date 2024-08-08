@@ -14,13 +14,14 @@ import { toast } from "react-toastify";
 import { update } from "@/lib/submit";
 import { fetcher, getData } from "@/lib/fetch";
 import { countries } from "@/data/countries";
+import { validateEmail, validatePhoneNumber } from "@/lib/validate";
 
 const Index = ({ opened, close, item, setItem, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [branches, setBranches] = useState([]);
 
   const form = useForm({
-    // mode: "uncontrolled",
+    mode: "uncontrolled",
     initialValues: {
       name: "",
       description: "",
@@ -38,8 +39,13 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       },
     },
     validate: {
-      name: (value) =>
-        value.length < 2 ? "Name must have at least 2 letters" : null,
+      name: (value) => (!value ? "Name is required" : null),
+      company: (value) => (!value ? "Select a company" : null),
+      branch: (value) => (!value ? "Select a branch" : null),
+      email: (value) =>
+        value && !validateEmail(value) ? "Invalid email" : null,
+      phone: (value) =>
+        value && !validatePhoneNumber(value) ? "Invalid phone number" : null,
     },
   });
 
@@ -49,8 +55,8 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       form.setValues({
         name: item.name || "",
         description: item.description || "",
-        company: item.company || "",
-        branch: item.branch || "",
+        company: item?.branch?.company?.id.toString() || "",
+        // branch: String(item?.branch?.id) || "",
         email: item.email || "",
         phone: item.phone || "",
         fax: item.fax || "",
@@ -63,6 +69,12 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
           address: item?.address?.address || "",
         },
       });
+
+      if (item?.branch?.company?.id) {
+        fetchBranches(item?.branch?.company?.id).then(() => {
+          form.setFieldValue("branch", String(item?.branch?.id));
+        });
+      }
     }
   }, [item]);
 
@@ -97,11 +109,20 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
     }
   };
 
-  useEffect(() => {
-    if (form.values.company) {
-      fetchBranches(form.values.company);
+  // useEffect(() => {
+  //   if (form.values.company) {
+  //     fetchBranches(form.values.company);
+  //   }
+  // }, [form.values.company]);
+
+  form.watch("company", ({ previousValue, value, touched, dirty }) => {
+    if (value) {
+      fetchBranches(value);
+    } else {
+      form.setFieldValue("branch", "");
+      setBranches([]);
     }
-  }, [form.values.company]);
+  });
 
   const handleSubmit = async (values) => {
     // e.preventDefault();
@@ -133,14 +154,14 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Error submitting form");
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     }
   };
 
@@ -185,6 +206,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
                 disabled={isSubmitting}
                 data={companies}
                 {...form.getInputProps("company")}
+                key={form.key("company")}
               />
               <Select
                 mb="sm"
@@ -194,6 +216,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
                 disabled={isSubmitting}
                 data={branches}
                 {...form.getInputProps("branch")}
+                key={form.key("branch")}
               />
               <TextInput
                 mb="sm"

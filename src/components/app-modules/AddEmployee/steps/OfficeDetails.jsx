@@ -16,6 +16,7 @@ import {
 } from "@mantine/core";
 import { toast } from "react-toastify";
 import { fetcher, getData } from "@/lib/fetch";
+import { getFullName } from "@/lib/helper";
 
 const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
   const [branches, setBranches] = useState([]);
@@ -113,9 +114,8 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
   });
 
   const employees = employeesData?.data?.result?.map((item) => ({
-    label:
-      item?.first_name?.toString() + " " + item?.last_name?.toString() || "",
-    value: item?.username.toString() || "",
+    label: getFullName(item?.first_name, item?.last_name),
+    value: item?.id.toString() || "",
   }));
 
   const {

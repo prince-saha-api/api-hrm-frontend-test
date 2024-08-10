@@ -14,6 +14,8 @@ import { DateInput } from "@mantine/dates";
 import { toast } from "react-toastify";
 import { update } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
+import { getFullName } from "@/lib/helper";
+import { validateEmail, validatePhoneNumber } from "@/lib/validate";
 
 const Index = ({ opened, close, item, setItem }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,7 +40,7 @@ const Index = ({ opened, close, item, setItem }) => {
       blood_group: item?.blood_group || "",
       marital_status: item?.marital_status || "",
       spouse_name: item?.spouse_name || "",
-      supervisor: item?.supervisor?.id || "",
+      supervisor: String(item?.supervisor?.id) || "",
     },
     validate: {
       first_name: (value) =>
@@ -48,18 +50,22 @@ const Index = ({ opened, close, item, setItem }) => {
       official_id: (value) => (!value ? "Employee ID is required" : null),
       // department: (value) => (!value ? "Department is required" : null),
       joining_date: (value) => (!value ? "Joining Date is required" : null),
-      personal_phone: (value) => (!value ? "Phone is required" : null),
+      personal_phone: (value) =>
+        !value
+          ? "Phone is required"
+          : !validatePhoneNumber(value)
+          ? "Invalid phone number"
+          : null,
       personal_email: (value) => {
         if (!value) return "Email is required";
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return !emailRegex.test(value) ? "Email is invalid" : null;
+        return !validateEmail(value) ? "Invalid Email" : null;
       },
       dob: (value) => (!value ? "Date of Birth is required" : null),
       gender: (value) => (!value ? "Gender is required" : null),
       blood_group: (value) => (!value ? "Blood Group is required" : null),
       marital_status: (value) => (!value ? "Marital Status is required" : null),
       spouse_name: (value, values) =>
-        values.marital_status === "Married" && value.length < 5
+        values.marital_status === "Married" && !value
           ? "Spouse Name is required"
           : null,
       // supervisor: (value) => (!value ? "Supervisor is required" : null),
@@ -96,12 +102,9 @@ const Index = ({ opened, close, item, setItem }) => {
   });
 
   const employees = employeesData?.data?.result?.map((item) => ({
-    label:
-      item?.first_name?.toString() + " " + item?.last_name?.toString() || "",
-    value: item?.username.toString() || "",
+    label: getFullName(item?.first_name, item?.last_name),
+    value: item?.id.toString() || "",
   }));
-
-  console.log("test");
 
   const handleSubmit = async (values) => {
     const formattedDOB = values.dob
@@ -134,7 +137,7 @@ const Index = ({ opened, close, item, setItem }) => {
           ...prev,
           first_name: response?.data?.first_name,
           last_name: response?.data?.last_name,
-          // designation: response?.data?.designation?.id.toString(),
+          designation: response?.data?.designation,
           official_id: response?.data?.official_id,
           // department: response?.data?.departmenttwo?.[0]?.id,
           joining_date: response?.data?.joining_date,
@@ -145,7 +148,7 @@ const Index = ({ opened, close, item, setItem }) => {
           blood_group: response?.data?.blood_group,
           marital_status: response?.data?.marital_status,
           spouse_name: response?.data?.spouse_name,
-          // supervisor: response?.data?.supervisor,
+          supervisor: response?.data?.supervisor,
         }));
         toast.success("Profile updated successfully");
       } else {
@@ -215,7 +218,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 label="Employee ID"
                 placeholder="Employee ID"
                 required={true}
-                disabled={isSubmitting}
+                disabled={true}
                 {...form.getInputProps("official_id")}
               />
 
@@ -227,13 +230,13 @@ const Index = ({ opened, close, item, setItem }) => {
                 disabled={isSubmitting}
                 {...form.getInputProps("joining_date")}
               />
-              <NumberInput
+              <TextInput
                 mb="sm"
                 label="Phone"
                 placeholder="Phone"
                 required={true}
                 disabled={isSubmitting}
-                hideControls
+                // hideControls
                 {...form.getInputProps("personal_phone")}
               />
               <Select
@@ -244,6 +247,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 disabled={isSubmitting}
                 data={employees}
                 {...form.getInputProps("supervisor")}
+                key={form.key("supervisor")}
               />
             </Grid.Col>
             <Grid.Col span={6}>

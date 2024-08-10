@@ -19,7 +19,7 @@ import { CiSearch } from "react-icons/ci";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { constants } from "@/lib/config";
-import { getStoragePath } from "@/lib/helper";
+import { getStoragePath, generateGroupString } from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import FilterModal from "./FilterModal";
 
@@ -141,14 +141,15 @@ const Employees = () => {
       accessor: "group_name",
       title: "Group",
       // visibleMediaQuery: aboveXs,
-      render: ({ group_name }) => group_name || "N/A",
+      render: ({ ethnicgroup_user }) =>
+        generateGroupString(ethnicgroup_user || []),
       key: "group_name",
     },
     {
       accessor: "department_name",
       title: "Department",
       // visibleMediaQuery: aboveXs,
-      render: ({ department_name }) => department_name || "N/A",
+      render: ({ departmenttwo }) => departmenttwo?.[0]?.name || "N/A",
       key: "department_name",
     },
     {

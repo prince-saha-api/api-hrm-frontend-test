@@ -257,6 +257,8 @@ const ProfileView = ({ data }) => {
       <PersonalDetails
         opened={personalDetailsOpened}
         close={personalDetailsClose}
+        item={profile}
+        setItem={setProfile}
         // item={selectedDeleteItem}
         // mutate={mutate}
       />
@@ -358,7 +360,7 @@ const ProfileView = ({ data }) => {
                   Department: {profile?.departmenttwo?.[0]?.name || "N/A"}
                 </p>
                 <p className="employeeJoin mb-1">
-                  Date of Join : {getDate(profile?.date_joined)}
+                  Date of Join : {getDate(profile?.joining_date)}
                 </p>
                 <p className="employeeJoin">
                   <span>Reset Password:</span>
@@ -381,12 +383,12 @@ const ProfileView = ({ data }) => {
             <div className="employeeInfo h-100 ps-3">
               <p>
                 <span>Phone:</span>
-                {profile?.official_phone ? (
+                {profile?.personal_phone ? (
                   <Link
                     className="phnNumber"
-                    href={`tel:${profile?.official_phone}`}
+                    href={`tel:${profile?.personal_phone}`}
                   >
-                    {profile?.official_phone}
+                    {profile?.personal_phone}
                   </Link>
                 ) : (
                   "N/A"
@@ -394,12 +396,12 @@ const ProfileView = ({ data }) => {
               </p>
               <p>
                 <span>Email:</span>
-                {profile?.official_email ? (
+                {profile?.personal_email ? (
                   <Link
                     className="email"
-                    href={`mailto:${profile?.official_email}`}
+                    href={`mailto:${profile?.personal_email}`}
                   >
-                    {profile?.official_email}
+                    {profile?.personal_email}
                   </Link>
                 ) : (
                   "N/A"
@@ -429,12 +431,16 @@ const ProfileView = ({ data }) => {
                 <span>Supervisor:</span>
                 <Image
                   className="reportsImg"
-                  src="/profile01.jpg"
+                  // src="/profile01.jpg"
+                  src={getStoragePath(profile?.supervisor?.photo || "")}
                   width={200}
                   height={200}
                   alt="profile_img"
                 />
-                Tanim Shahriar Abedin
+                {getFullName(
+                  profile?.supervisor?.first_name,
+                  profile?.supervisor?.last_name
+                )}
               </p>
             </div>
           </Grid.Col>
@@ -914,6 +920,7 @@ const ProfileView = ({ data }) => {
                 {profile?.employee_docs?.length
                   ? profile?.employee_docs.map((doc, index) => (
                       <button
+                        key={index}
                         className="docItem me-4 mb-4"
                         onClick={() => {
                           setSingleDocument({

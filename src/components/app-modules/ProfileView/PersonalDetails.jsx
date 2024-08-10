@@ -53,7 +53,7 @@ const Index = ({ opened, close, item, setItem }) => {
   }));
 
   const [sameAsPresent, setSameAsPresent] = useState(
-    item?.permanent_address?.id !== item?.present_address?.id
+    item?.permanent_address?.id === item?.present_address?.id
   );
 
   form.watch(

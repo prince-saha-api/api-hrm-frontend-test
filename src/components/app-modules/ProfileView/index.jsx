@@ -37,6 +37,7 @@ import {
   getDate,
   generateAddressString,
   formatCurrency,
+  generateGroupString,
 } from "@/lib/helper";
 import ProfileEdit from "./ProfileEdit";
 import ProfileImage from "./ProfileImage";
@@ -265,8 +266,8 @@ const ProfileView = ({ data }) => {
       <OfficialDetails
         opened={officialDetailsOpened}
         close={officialDetailsClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
       <SalaryLeaves
         opened={salaryLeavesOpened}
@@ -562,7 +563,8 @@ const ProfileView = ({ data }) => {
                         ?.basic_information?.name || "N/A"}
                     </p>
                     <p>
-                      <span>Branch:</span>Banani
+                      <span>Branch:</span>
+                      {profile?.departmenttwo?.[0]?.branch?.name || "N/A"}
                     </p>
                     <p>
                       <span>Default Shift:</span>
@@ -581,19 +583,29 @@ const ProfileView = ({ data }) => {
                       {profile?.official_note || "N/A"}
                     </p>
                     <p>
-                      <span>Group:</span>Xyz
+                      <span>Group:</span>
+                      {generateGroupString(profile?.ethnicgroup_user || [])}
                     </p>
                     <p>
                       <span>Expense Approver:</span>
-                      {profile?.expense_approver?.name || "N/A"}
+                      {getFullName(
+                        profile?.expense_approver?.first_name,
+                        profile?.expense_approver?.last_name
+                      )}
                     </p>
                     <p>
                       <span>Leave Approver:</span>
-                      {profile?.leave_approver?.name || "N/A"}
+                      {getFullName(
+                        profile?.leave_approver?.first_name,
+                        profile?.leave_approver?.last_name
+                      )}
                     </p>
                     <p>
                       <span>Shift Approver:</span>
-                      {profile?.shift_request_approver?.name || "N/A"}
+                      {getFullName(
+                        profile?.shift_request_approver?.first_name,
+                        profile?.shift_request_approver?.last_name
+                      )}
                     </p>
                   </div>
                 </div>

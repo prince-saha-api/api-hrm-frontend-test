@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import useSWR from "swr";
+import { useForm } from "@mantine/form";
 import {
   Modal,
   Button,
@@ -7,18 +9,237 @@ import {
   TextInput,
   Select,
   NumberInput,
-  Textarea,
-  DateInput,
-  Checkbox,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
+import { DateInput } from "@mantine/dates";
 import { toast } from "react-toastify";
-import { deleteItem } from "@/lib/submit";
-import { countries } from "@/data/countries";
+import { update } from "@/lib/submit";
+import { fetcher, getData } from "@/lib/fetch";
+import { getFullName } from "@/lib/helper";
 
-const Index = ({ opened, close, item }) => {
-  const [value, setValue] = useState(null);
-  const [value2, setValue2] = useState(null);
+const Index = ({ opened, close, item, setItem }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [branches, setBranches] = useState([]);
+  const [departments, setDepartments] = useState([]);
+
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      official_email: item?.official_email || "",
+      official_phone: item?.official_phone || "",
+      employee_type: item?.employee_type || "",
+      company: item?.departmenttwo?.[0]?.branch?.company?.id.toString() || null,
+      branch: item?.departmenttwo?.[0]?.branch?.id.toString() || null,
+      shift: String(item?.shift?.id) || null,
+      grade: String(item?.grade?.id) || null,
+      role_permission: [],
+      official_note: item?.official_note || "",
+      ethnic_group: item?.ethnicgroup_user || [],
+      joining_date: item?.joining_date ? new Date(item.joining_date) : null,
+      expense_approver: item?.expense_approver?.id.toString() || null,
+      leave_approver: item?.leave_approver?.id.toString() || null,
+      shift_request_approver: String(item?.shift_request_approver?.id) || null,
+    },
+    validate: {},
+  });
+
+  const {
+    data: companyData,
+    error: companyError,
+    isLoading: isCompanyLoading,
+  } = useSWR(`/api/company/get-company/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const companies = companyData?.data?.result?.map((item) => ({
+    label: item?.basic_information?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: shiftsData,
+    error: shiftsError,
+    isLoading: isShiftsLoading,
+  } = useSWR(`/api/user/get-shift/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const shifts = shiftsData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: gradesData,
+    error: gradesError,
+    isLoading: isGradesLoading,
+  } = useSWR(`/api/user/get-grade/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const grades = gradesData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: rolesData,
+    error: rolesError,
+    isLoading: isRolesLoading,
+  } = useSWR(`/api/user/get-rolepermission/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const roles = rolesData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: groupsData,
+    error: groupsError,
+    isLoading: isGroupsLoading,
+  } = useSWR(`/api/device/get-group/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const groups = groupsData?.data?.result?.map((item) => ({
+    label: item?.title?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: employeesData,
+    error: employeesError,
+    isLoading: isEmployeesLoading,
+  } = useSWR(`/api/user/get-employee/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const employees = employeesData?.data?.result?.map((item) => ({
+    label: getFullName(item?.first_name, item?.last_name),
+    value: item?.id.toString() || "",
+  }));
+
+  const fetchBranches = async (companyId) => {
+    try {
+      const response = await getData(
+        `/api/branch/get-branch/?company=${companyId}`
+      );
+      console.log(response);
+      const branchData = response?.data?.data?.result.map((branch) => ({
+        label: branch?.name?.toString() || "",
+        value: branch?.id.toString() || "",
+      }));
+      setBranches(branchData);
+    } catch (error) {
+      console.error("Error fetching branches:", error);
+      toast.error("Error fetching branches");
+    }
+  };
+
+  form.watch("company", ({ previousValue, value, touched, dirty }) => {
+    if (value) {
+      fetchBranches(value);
+    } else {
+      form.setFieldValue("branch", null);
+      setBranches([]);
+    }
+  });
+
+  useEffect(() => {
+    fetchBranches(item?.departmenttwo?.[0]?.branch?.company?.id.toString());
+  }, []);
+
+  const fetchDepartments = async (companyId, branchId) => {
+    try {
+      const response = await getData(
+        `/api/department/get-department/?company=${companyId}&branch=${branchId}`
+      );
+      console.log(response);
+      const departmentData = response?.data?.data?.result.map((department) => ({
+        label: department?.name?.toString() || "",
+        value: department?.id.toString() || "",
+      }));
+      setDepartments(departmentData);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+      toast.error("Error fetching departments");
+    }
+  };
+
+  form.watch("branch", ({ previousValue, value, touched, dirty }) => {
+    if (value) {
+      fetchDepartments(form.getValues().company, value);
+      form.setFieldValue("department", null);
+    } else {
+      console.log(value);
+      form.setFieldValue("department", "");
+      setDepartments([]);
+    }
+  });
+
+  const handleSubmit = async (values) => {
+    return;
+
+    const updatedValues = {
+      ...values,
+      ...(values.permanentAddressSameAsPresent && {
+        permanent_address: values.present_address,
+      }),
+    };
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await update(
+        `/api/user/update-personal-details/${item.id}`,
+        updatedValues
+      );
+
+      if (response?.status === "success") {
+        setIsSubmitting(false);
+        close();
+        // mutate();
+        setItem((prev) => ({
+          ...prev,
+          fathers_name: response?.data?.fathers_name,
+          mothers_name: response?.data?.mothers_name,
+          nationality: response?.data?.nationality,
+          nid_passport_no: response?.data?.nid_passport_no,
+          present_address: response?.data?.present_address,
+          permanent_address: response?.data?.permanent_address,
+        }));
+        toast.success("Profile updated successfully");
+      } else {
+        toast.error(
+          response?.status === "error"
+            ? response?.message[0]
+            : "Error submitting form"
+        );
+      }
+      setTimeout(() => {
+        setIsSubmitting(false);
+        // mutate();
+      }, 500);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        // mutate();
+      }, 500);
+    }
+  };
+
+  const handleError = (errors) => {
+    console.log(errors);
+  };
+
   return (
     <>
       <Modal
@@ -30,7 +251,12 @@ const Index = ({ opened, close, item }) => {
         onClose={close}
         centered
       >
-        <form>
+        <form
+          onSubmit={form.onSubmit(
+            (values) => handleSubmit(values),
+            handleError
+          )}
+        >
           <Grid>
             <Grid.Col span={6}>
               <TextInput
@@ -38,52 +264,68 @@ const Index = ({ opened, close, item }) => {
                 label="Official Email"
                 placeholder="Official Email"
                 // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
+                {...form.getInputProps("official_email")}
               />
-              <NumberInput
+              <TextInput
                 mb="sm"
                 label="Official Phone"
                 placeholder="Official Phone"
-                hideControls
+                // hideControls
+                {...form.getInputProps("official_phone")}
               />
               <Select
                 mb="sm"
                 label="Employee Type"
                 placeholder="Employee Type"
                 // disabled={isSubmitting}
-                data={["Full-time", "Part-time"]}
-                // {...form.getInputProps("company")}
+                data={[
+                  "Trainee",
+                  "Apprentice",
+                  "Intern",
+                  "Probation",
+                  "Permanent",
+                  "Temporary",
+                  "Contractual",
+                  "Commission",
+                  "Labour",
+                ]}
+                {...form.getInputProps("employee_type")}
               />
-              <TextInput
+              <Select
                 mb="sm"
                 label="Company"
                 placeholder="Company"
                 // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
+                data={companies}
+                {...form.getInputProps("company")}
+                key={form.key("company")}
               />
               <Select
                 mb="sm"
                 label="Branch"
                 placeholder="Branch"
                 // disabled={isSubmitting}
-                data={["Dhaka", "Rangpur"]}
-                // {...form.getInputProps("company")}
+                data={branches}
+                {...form.getInputProps("branch")}
+                key={form.key("branch")}
               />
               <Select
                 mb="sm"
                 label="Default Shift"
                 placeholder="Default Shift"
                 // disabled={isSubmitting}
-                data={["Day", "Night"]}
-                // {...form.getInputProps("company")}
+                data={shifts}
+                {...form.getInputProps("shift")}
+                key={form.key("shift")}
               />
               <Select
                 mb="sm"
                 label="Grade"
                 placeholder="Grade"
                 // disabled={isSubmitting}
-                data={["Grade-1", "Grade-2"]}
-                // {...form.getInputProps("company")}
+                data={grades}
+                {...form.getInputProps("grade")}
+                key={form.key("grade")}
               />
             </Grid.Col>
             <Grid.Col span={6}>
@@ -92,66 +334,58 @@ const Index = ({ opened, close, item }) => {
                 label="User Role"
                 placeholder="User Role"
                 // disabled={isSubmitting}
-                data={["User-Role-1", "User-Role-2"]}
-                // {...form.getInputProps("company")}
+                data={roles}
+                {...form.getInputProps("role_permission")}
+                key={form.key("role_permission")}
               />
               <TextInput
                 mb="sm"
                 label="Official Note"
                 placeholder="Official Note"
                 // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
+                {...form.getInputProps("official_note")}
               />
               <Select
                 mb="sm"
                 label="Group"
                 placeholder="Group"
                 // disabled={isSubmitting}
-                data={["Group-A", "Group-B"]}
-                // {...form.getInputProps("company")}
+                data={groups}
+                {...form.getInputProps("ethnic_group")}
+                key={form.key("ethnic_group")}
               />
-              <DatePickerInput
+              <DateInput
                 mb="sm"
                 label="Joining Date"
                 placeholder="Pick date"
-                value={value}
-                onChange={setValue}
+                {...form.getInputProps("joining_date")}
               />
               <Select
                 mb="sm"
                 label="Expense Approver"
                 placeholder="Expense Approver"
                 searchable
-                data={[
-                  { value: "API230747", label: "G. M. Nazmul Hussain" },
-                  { value: "API230748", label: "Jiaur Rahman" },
-                  { value: "API230749", label: "Nayeem Hossain" },
-                ]}
-                // {...form.getInputProps("expense_approver")}
+                data={employees}
+                {...form.getInputProps("expense_approver")}
+                key={form.key("expense_approver")}
               />
               <Select
                 mb="sm"
                 label="Leave Approver"
                 placeholder="Leave Approver"
                 searchable
-                data={[
-                  { value: "API230747", label: "G. M. Nazmul Hussain" },
-                  { value: "API230748", label: "Jiaur Rahman" },
-                  { value: "API230749", label: "Nayeem Hossain" },
-                ]}
-                // {...form.getInputProps("leave_approver")}
+                data={employees}
+                {...form.getInputProps("leave_approver")}
+                key={form.key("leave_approver")}
               />
               <Select
                 mb="sm"
                 label="Shift Approver"
                 placeholder="Shift Approver"
                 searchable
-                data={[
-                  { value: "API230747", label: "G. M. Nazmul Hussain" },
-                  { value: "API230748", label: "Jiaur Rahman" },
-                  { value: "API230749", label: "Nayeem Hossain" },
-                ]}
-                // {...form.getInputProps("shift_request_approver")}
+                data={employees}
+                {...form.getInputProps("shift_request_approver")}
+                key={form.key("shift_request_approver")}
               />
             </Grid.Col>
           </Grid>

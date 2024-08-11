@@ -2,10 +2,10 @@
 
 import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { useForm } from "@mantine/form";
+import { randomId } from "@mantine/hooks";
 import {
   NumberInput,
   TextInput,
-  Textarea,
   Box,
   Select,
   Button,
@@ -18,13 +18,14 @@ import { countries } from "@/data/countries";
 
 const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
-    mode: "controlled",
+    mode: "uncontrolled",
     initialValues: {
       emergencyContacts:
         data && data.length
-          ? data
+          ? data.map((contact) => ({ ...contact, key: randomId() }))
           : [
               {
+                key: randomId(),
                 name: "",
                 age: "",
                 phone_no: "",
@@ -40,36 +41,36 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
               },
             ],
     },
-    // validate: {
-    //   emergencyContacts: {
-    //     name: (value) =>
-    //       value?.length < 2 ? "Name must have at least 2 letters" : null,
-    //     age: (value) => (value < 1 ? "Age must be a positive number" : null),
-    //     phone_no: (value) =>
-    //       value?.length < 10
-    //         ? "Phone number must have at least 10 digits"
-    //         : null,
-    //     email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-    //     relation: (value) =>
-    //       value?.length < 2 ? "Relation must have at least 2 letters" : null,
-    //     address: {
-    //       city: (value) =>
-    //         value?.length < 2 ? "City must have at least 2 letters" : null,
-    //       state_division: (value) =>
-    //         value?.length < 2 ? "State must have at least 2 letters" : null,
-    //       post_zip_code: (value) =>
-    //         value?.length < 4 ? "ZIP Code must have at least 4 digits" : null,
-    //       country: (value) => (value ? null : "Country is required"),
-    //       address: (value) =>
-    //         value?.length < 5 ? "Address must have at least 5 letters" : null,
-    //     },
-    //   },
-    // },
+    validate: {
+      emergencyContacts: {
+        name: (value) =>
+          value?.length < 2 ? "Name must have at least 2 letters" : null,
+        age: (value) => (value < 1 ? "Age must be a positive number" : null),
+        phone_no: (value) =>
+          value?.length < 10
+            ? "Phone number must have at least 10 digits"
+            : null,
+        email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+        relation: (value) =>
+          value?.length < 2 ? "Relation must have at least 2 letters" : null,
+        address: {
+          city: (value) =>
+            value?.length < 2 ? "City must have at least 2 letters" : null,
+          state_division: (value) =>
+            value?.length < 2 ? "State must have at least 2 letters" : null,
+          post_zip_code: (value) =>
+            value?.length < 4 ? "ZIP Code must have at least 4 digits" : null,
+          country: (value) => (value ? null : "Country is required"),
+          address: (value) =>
+            value?.length < 5 ? "Address must have at least 5 letters" : null,
+        },
+      },
+    },
   });
 
   useImperativeHandle(ref, () => ({
     validateStep: (updateFormData, key) => {
-      const values = form.values.emergencyContacts;
+      const values = form.getValues().emergencyContacts;
       updateFormData(key, values);
       return form.isValid();
     },
@@ -80,6 +81,7 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
 
   const addMoreEmergencyContact = () => {
     const newContact = {
+      key: randomId(),
       name: "",
       age: "",
       phone_no: "",
@@ -98,9 +100,10 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
   };
 
   const removeEmergencyContact = (index) => {
-    if (form.values.emergencyContacts.length > 1) {
-      form.removeListItem("emergencyContacts", index);
-    }
+    // if (form.getValues().emergencyContacts.length > 1) {
+    //   form.removeListItem("emergencyContacts", index);
+    // }
+    form.removeListItem("emergencyContacts", index);
   };
 
   const handleSubmit = (values) => {
@@ -111,9 +114,9 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
   return (
     <>
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        {form.values.emergencyContacts.map((contact, index) => (
-          <div key={index}>
-            {form.values.emergencyContacts.length > 1 && (
+        {form.getValues().emergencyContacts.map((contact, index) => (
+          <div key={contact.key}>
+            {form.getValues().emergencyContacts.length > 1 && (
               <div className="d-flex align-items-start w-100 cust_mt">
                 <Button
                   color="red"

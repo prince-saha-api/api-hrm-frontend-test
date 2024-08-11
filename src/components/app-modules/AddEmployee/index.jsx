@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { Breadcrumbs, Anchor, Stepper } from "@mantine/core";
+import { toast } from "react-toastify";
 import PersonalDetails from "./steps/PersonalDetails";
 import OfficeDetails from "./steps/OfficeDetails";
 import SalaryAndLeaves from "./steps/SalaryAndLeaves";
@@ -9,8 +10,146 @@ import EmergencyContact from "./steps/EmergencyContact";
 import EducationAndExperience from "./steps/EducationAndExperience";
 import UploadDocuments from "./steps/UploadDocuments";
 import SuccessCheckmarkAnimation from "./steps/SuccessCheckmarkAnimation";
+import { submit } from "@/lib/submit";
+
+const initialData = {
+  personalDetails: {
+    first_name: "",
+    last_name: "",
+    gender: "",
+    dob: null,
+    blood_group: "",
+    fathers_name: "",
+    mothers_name: "",
+    marital_status: "",
+    spouse_name: "",
+    nationality: "",
+    religion: null,
+    personal_email: "",
+    personal_phone: "",
+    nid_passport_no: "",
+    tin_no: null,
+    // photo: "",
+    present_address: {
+      city: "",
+      state_division: "",
+      post_zip_code: "",
+      country: "",
+      address: "",
+    },
+    permanent_address: {
+      city: "",
+      state_division: "",
+      post_zip_code: "",
+      country: "",
+      address: "",
+    },
+    permanentAddressSameAsPresent: false,
+  },
+  officialDetails: {
+    official_id: "",
+    official_email: "",
+    official_phone: "",
+    password: "",
+    employee_type: "",
+    company: null,
+    branch: null,
+    department: null,
+    designation: null,
+    shift: null,
+    grade: null,
+    role_permission: [],
+    official_note: "",
+    ethnic_group: [],
+    joining_date: null,
+    supervisor: "",
+    expense_approver: null,
+    leave_approver: null,
+    shift_request_approver: null,
+  },
+  salaryAndLeaves: {
+    payment_in: "",
+    bank_account: {
+      bank_name: "",
+      branch_name: "",
+      account_type: null,
+      account_no: "",
+      routing_no: "",
+      swift_bic: "",
+      address: {
+        city: "",
+        state_division: "",
+        post_zip_code: "",
+        country: "",
+        address: "",
+      },
+    },
+    gross_salary: null,
+    basic_salary: null,
+    leavepolicy: [],
+    payrollpolicy: {
+      earningpolicy: [],
+      deductionpolicy: [],
+    },
+  },
+  emergencyContact: [
+    // {
+    //   name: "",
+    //   age: "",
+    //   phone_no: "",
+    //   email: "",
+    //   address: {
+    //     city: "",
+    //     state_division: "",
+    //     post_zip_code: "",
+    //     country: "",
+    //     address: "",
+    //   },
+    //   relation: "",
+    // },
+  ],
+  academicRecord: [
+    // {
+    //   certification: "",
+    //   board_institute_name: "",
+    //   level: "",
+    //   score_grade: "",
+    //   year_of_passing: null,
+    // },
+  ],
+  previousExperience: [
+    // {
+    //   company_name: "",
+    //   designation: "",
+    //   address: "",
+    //   from_date: null,
+    //   to_date: null,
+    // },
+  ],
+  uploadDocuments: [
+    // {
+    //   title: "",
+    //   attachment: null,
+    // },
+    // {
+    //   title: "",
+    //   attachment: null,
+    // },
+    // {
+    //   title: "",
+    //   attachment: null,
+    // },
+    // {
+    //   title: "",
+    //   attachment: null,
+    // },
+  ],
+}
 
 const AddEmployee = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCreated, setIsCreated] = useState(false);
+
   const items = [
     { title: "Employees", href: "/" },
     { title: "Add Employee", href: "#" },
@@ -20,139 +159,7 @@ const AddEmployee = () => {
     </Anchor>
   ));
 
-  const [formData, setFormData] = useState({
-    personalDetails: {
-      first_name: "",
-      last_name: "",
-      gender: "",
-      dob: null,
-      blood_group: "",
-      fathers_name: "",
-      mothers_name: "",
-      marital_status: "",
-      spouse_name: "",
-      nationality: "",
-      religion: null,
-      personal_email: "",
-      personal_phone: "",
-      nid_passport_no: "",
-      tin_no: null,
-      // photo: "",
-      present_address: {
-        city: "",
-        state_division: "",
-        post_zip_code: "",
-        country: "",
-        address: "",
-      },
-      permanent_address: {
-        city: "",
-        state_division: "",
-        post_zip_code: "",
-        country: "",
-        address: "",
-      },
-      permanentAddressSameAsPresent: false,
-    },
-    officialDetails: {
-      official_id: "",
-      official_email: "",
-      official_phone: "",
-      password: "",
-      employee_type: "",
-      company: null,
-      branch: null,
-      department: null,
-      designation: null,
-      shift: null,
-      grade: null,
-      role_permission: [],
-      official_note: "",
-      ethnic_group: [],
-      joining_date: null,
-      supervisor: "",
-      expense_approver: null,
-      leave_approver: null,
-      shift_request_approver: null,
-    },
-    salaryAndLeaves: {
-      payment_in: "",
-      bank_account: {
-        bank_name: "",
-        branch_name: "",
-        account_type: null,
-        account_no: "",
-        routing_no: "",
-        swift_bic: "",
-        address: {
-          city: "",
-          state_division: "",
-          post_zip_code: "",
-          country: "",
-          address: "",
-        },
-      },
-      gross_salary: null,
-      basic_salary: null,
-      leavepolicy: [],
-      payrollpolicy: {
-        earningpolicy: [],
-        deductionpolicy: [],
-      },
-    },
-    emergencyContact: [
-      // {
-      //   name: "",
-      //   age: "",
-      //   phone_no: "",
-      //   email: "",
-      //   address: {
-      //     city: "",
-      //     state_division: "",
-      //     post_zip_code: "",
-      //     country: "",
-      //     address: "",
-      //   },
-      //   relation: "",
-      // },
-    ],
-    academicRecord: [
-      // {
-      //   certification: "",
-      //   board_institute_name: "",
-      //   level: "",
-      //   score_grade: "",
-      //   year_of_passing: null,
-      // },
-    ],
-    previousExperience: [
-      // {
-      //   company_name: "",
-      //   designation: "",
-      //   address: "",
-      //   from_date: null,
-      //   to_date: null,
-      // },
-    ],
-    uploadDocuments: [
-      // {
-      //   title: "",
-      //   attachment: null,
-      // },
-      // {
-      //   title: "",
-      //   attachment: null,
-      // },
-      // {
-      //   title: "",
-      //   attachment: null,
-      // },
-      // {
-      //   title: "",
-      //   attachment: null,
-      // },
-    ],
-  });
+  const [formData, setFormData] = useState(initialData);
 
   const [active, setActive] = useState(0);
   const stepRefs = useRef([]);
@@ -236,7 +243,7 @@ const AddEmployee = () => {
     handleFormDataChange(stepKeys[active + 1], currentStepData);
     console.log(formData);
     // return;
-
+    setIsSubmitting(true);
     try {
       const formValues = new FormData();
 
@@ -272,78 +279,45 @@ const AddEmployee = () => {
 
       console.log(formValues);
 
-      const response = await fetch(
-        "http://10.10.23.64:8000/api/user/add-employee/",
-        {
-          method: "POST",
-          body: formValues,
-        }
+      const response = await submit(
+        "/api/user/add-employee/",
+        formValues,
+        true
       );
 
-      const result = await response.json();
-      console.log(result);
+      if (response?.status === "success") {
+        // console.log(response);
+        setIsSubmitting(false);
+        setIsCreated(true)
+        // form.reset();
+        // close();
+        // mutate();
+        setFormData(initialData)
+        toast.success("Employee created successfully");
+        // setActive(6)
+      } else {
+        setIsSubmitting(false);
+        // toast.error(
+        //   response?.status === "error"
+        //     ? response?.message[0]
+        //     : "Error submitting form"
+        // );
+        if (response?.status === "error" && Array.isArray(response.message)) {
+          response.message.forEach((msg) => {
+            toast.error(msg);
+          });
+        } else {
+          toast.error("Error submitting form");
+          setTimeout(() => {
+            setIsSubmitting(false);
+          }, 5000);
+        }
+      }
 
       return;
     } catch (error) {
       console.error("Error submitting form:", error);
     }
-
-    // try {
-    //   const formValues = new FormData();
-
-    //   const flattenObject = (obj, prefix = "") => {
-    //     Object.keys(obj).forEach((key) => {
-    //       const value = obj[key];
-    //       const formKey = prefix ? `${prefix}[${key}]` : key;
-
-    //       if (value && typeof value === "object" && !(value instanceof File)) {
-    //         flattenObject(value, formKey);
-    //       } else {
-    //         formValues.append(formKey, value);
-    //       }
-    //     });
-    //   };
-
-    //   // Flatten and append form values
-    //   flattenObject(formData);
-
-    //   // Example of how to append a specific file (e.g., the "photo" field)
-    //   // formData.append('photo', formValues.personalDetails.photo);
-
-    //   // Append uploadDocuments separately if they contain files
-    //   formData.uploadDocuments.forEach((doc, index) => {
-    //     if (doc.attachment) {
-    //       formValues.append(`uploadDocuments[${index}][title]`, doc.title);
-    //       formValues.append(
-    //         `uploadDocuments[${index}][attachment]`,
-    //         doc.attachment
-    //       );
-    //     }
-    //   });
-
-    //   console.log(formValues);
-
-    //   // const response = await submit("/employee/", formData, true);
-
-    //   const response = await fetch(
-    //     "http://10.10.23.64:8000/api/user/add-employee/",
-    //     {
-    //       method: "POST",
-    //       // headers: {
-    //       //   // "Authorization": "Bearer token",
-    //       //   // "Content-Type": "multipart/form-data",
-    //       // },
-    //       body: formValues,
-    //     }
-    //   );
-
-    //   console.log(response);
-
-    //   return;
-
-    // } catch (error) {
-    //   console.error("Error submitting form:", error);
-    // }
   };
 
   return (
@@ -354,6 +328,7 @@ const AddEmployee = () => {
       </div>
 
       <div className="itemCard">
+        {!isCreated ? (
         <Stepper active={active} onStepClick={handleStepClick}>
           <Stepper.Step label="Personal Details" description="Step 1">
             <PersonalDetails
@@ -421,11 +396,14 @@ const AddEmployee = () => {
             />
           </Stepper.Step>
 
-          <Stepper.Completed>
+          {/* <Stepper.Completed>
             <SuccessCheckmarkAnimation />
-            {/* <Button onClick={handleSubmit}>Submit</Button> */}
-          </Stepper.Completed>
+
+          </Stepper.Completed> */}
         </Stepper>
+        ) : (
+          <SuccessCheckmarkAnimation />
+        )}
 
         {/* <Group justify="left" mt="xl">
           <Button variant="default" onClick={prevStep}>

@@ -22,26 +22,26 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      title: "",
-      description: "",
-      date: "",
-      is_recuring: true,
-      employee_grade: "",
+      title: item?.title || "",
+      description: item?.description || "",
+      date: item?.date ? new Date(item?.date) : null,
+      employee_grade: item?.employee_grade?.id.toString() || "",
+      is_recuring: item?.is_recuring ? item.is_recuring : false,
     },
     validate: {
-      title: (value) =>
-        value.length < 5 ? "Name must have at least 5 letters" : null,
+      title: (value) => (!value ? "Title is required" : null),
+      date: (value) => (!value ? "Date is required" : null),
     },
   });
 
   useEffect(() => {
     if (item) {
       form.setValues({
-        title: item.title || "",
-        description: item.description || "",
-        date: item.date ? new Date(item.date) : null,
-        employee_grade: item.employee_grade.id || "",
-        is_recuring: item.is_recuring || true,
+        title: item?.title || "",
+        description: item?.description || "",
+        date: item?.date ? new Date(item?.date) : null,
+        employee_grade: item?.employee_grade?.id.toString() || "",
+        is_recuring: item?.is_recuring ? item.is_recuring : false,
       });
     }
   }, [item]);
@@ -72,7 +72,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
 
     try {
       const response = await update(
-        `/api/leave/update-holiday/${item.id}`,
+        `/api/leave/update-holiday/${item?.id}`,
         formattedValues
       );
 
@@ -92,13 +92,13 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     } catch (error) {
       console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     }
   };
 
@@ -122,6 +122,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
               <TextInput
                 label="Title"
                 placeholder="Title"
+                required
                 disabled={isSubmitting}
                 {...form.getInputProps("title")}
               />
@@ -139,6 +140,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
                 valueFormat="DD MMM YYYY"
                 label="Date"
                 placeholder="DD MMM YYYY"
+                required
                 disabled={isSubmitting}
                 {...form.getInputProps("date")}
               />
@@ -150,13 +152,15 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
                 data={grades}
                 disabled={isSubmitting}
                 {...form.getInputProps("employee_grade")}
+                key={form.key("employee_grade")}
               />
 
               <Checkbox
                 mt="md"
                 label="Is Recurring?"
                 disabled={isSubmitting}
-                {...form.getInputProps("is_recuring")}
+                {...form.getInputProps("is_recuring", { type: "checkbox" })}
+                key={form.key("is_recuring")}
               />
             </Grid.Col>
           </Grid>

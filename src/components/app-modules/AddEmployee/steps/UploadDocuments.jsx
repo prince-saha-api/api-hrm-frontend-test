@@ -1,13 +1,11 @@
 "use client";
+
 import React, { forwardRef, useImperativeHandle } from "react";
 import { useForm } from "@mantine/form";
 import { Box, FileInput, Button, Group } from "@mantine/core";
 import { FaFile } from "react-icons/fa6";
 import { TbPhotoFilled } from "react-icons/tb";
 import { Grid } from "@mantine/core";
-import { FcAcceptDatabase } from "react-icons/fc";
-import uploadImg from "public/profile01.jpg";
-import { FcAddImage } from "react-icons/fc";
 
 const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
   const validateFile = (file, allowedTypes, maxSizeMb) => {

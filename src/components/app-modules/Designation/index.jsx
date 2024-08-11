@@ -12,7 +12,6 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
 import { BiMessageSquareEdit } from "react-icons/bi";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import Breadcrumb from "@/components/utils/Breadcrumb";
@@ -48,7 +47,7 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  // const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
     console.log(status);
@@ -457,18 +456,6 @@ const Index = () => {
           handleClick={addOpen}
         />
       </div>
-      <div className="filterBox mb-4 d-flex align-items-center">
-        <Select
-          //  label="Your favorite library"
-          placeholder="Search Department"
-          data={[
-            "Department-A",
-            "Department-B",
-            "Department-C",
-            "Department-D",
-          ]}
-        />
-      </div>
 
       <div className="d-flex justify-content-between mb-3">
         <div className="showItem d-flex align-items-center justify-content-center">
@@ -480,51 +467,11 @@ const Index = () => {
             withCheckIcon={false}
             // placeholder=""
             data={PAGE_SIZES.map((size) => size.toString())}
-            defaultValue={PAGE_SIZES[0].toString()}
-            value={pageSize.toString()}
+            // defaultValue={PAGE_SIZES[0].toString()}
+            value={String(pageSize)}
             onChange={(_value, option) => handlePageSizeChange(_value)}
           />
           <p className="mb-0 ms-2 me-2">Entries</p>
-
-          {/* <Popover
-            classNames={{
-              dropdown: "column_visibility_dropdown",
-            }}
-            width={0}
-            shadow="md"
-            position="bottom-start"
-            offset={0}
-          >
-            <Popover.Target>
-              <Button
-                variant="default"
-                rightSection={<MdKeyboardArrowDown size={20} />}
-                classNames={{
-                  root: "column_visibility_btn",
-                  section: "column_visibility_btn_section",
-                }}
-              >
-                Visible Columns
-              </Button>
-            </Popover.Target>
-            <Popover.Dropdown>
-              <MultiSelect
-                classNames={{
-                  root: "column_visibility_root",
-                  label: "column_visibility_label",
-                  input: "column_visibility_input",
-                }}
-                label=""
-                placeholder="Pick values"
-                rightSection={<></>}
-                data={visibleColumns}
-                value={selectedOptions}
-                onChange={handleChange}
-                dropdownOpened={true}
-                comboboxProps={{ withinPortal: false }}
-              />
-            </Popover.Dropdown>
-          </Popover> */}
         </div>
         <div className="downItem d-flex">
           <div className="me-2">

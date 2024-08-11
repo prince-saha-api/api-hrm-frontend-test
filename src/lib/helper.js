@@ -105,6 +105,12 @@ export const generateAddressString = (addressObj = {}) => {
   return filteredAddressParts.join(", ");
 };
 
+export const generateGroupString = (groups = []) => {
+  const filteredGroups = groups.map(({ name }) => name).filter(Boolean);
+
+  return filteredGroups.length ? filteredGroups.join(", ") : "N/A";
+};
+
 export const formatCurrency = (value) => {
   if (isNaN(value)) {
     return "";

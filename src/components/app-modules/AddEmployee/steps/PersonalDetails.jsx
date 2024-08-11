@@ -309,8 +309,8 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   <Select
                     classNames={{
                       root: classEase(
-                        "w-100",
-                        form?.errors?.marital_status && "c_error_input"
+                        "w-100"
+                        // form?.errors?.marital_status && "c_error_input"
                       ),
                       // root: "cust_iputRoot",
                       // label: "cust_iputLabel",
@@ -329,11 +329,6 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     ]}
                     {...form.getInputProps("marital_status")}
                   />
-                  {form?.errors?.marital_status && (
-                    <p className="c_error_msg">
-                      {form?.errors?.marital_status}
-                    </p>
-                  )}
                 </div>
               </div>
               {isMarried && (
@@ -534,7 +529,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   }}
                   // mt="sm"
                   // label="ZIP Code"
-                  placeholder="ZIP Code"
+                  placeholder="ZIP / Postal Code"
                   {...form.getInputProps("present_address.post_zip_code")}
                 />
               </div>
@@ -567,8 +562,10 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 <p className="fw-bold mb-0">Permanent Address</p>
                 <Checkbox
                   label="Same as Present Address"
-                  checked={form.getValues().permanentAddressSameAsPresent}
-                  {...form.getInputProps("permanentAddressSameAsPresent")}
+                  // checked={form.getValues().permanentAddressSameAsPresent}
+                  {...form.getInputProps("permanentAddressSameAsPresent", {
+                    type: "checkbox",
+                  })}
                 />
               </Group>
 

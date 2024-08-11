@@ -29,8 +29,8 @@ const Index = ({ opened, close, mutate }) => {
       employee_grade: "",
     },
     validate: {
-      title: (value) =>
-        value.length < 5 ? "Name must have at least 5 letters" : null,
+      title: (value) => (!value ? "Title is required" : null),
+      date: (value) => (!value ? "Date is required" : null),
     },
   });
 
@@ -101,6 +101,7 @@ const Index = ({ opened, close, mutate }) => {
               <TextInput
                 label="Title"
                 placeholder="Title"
+                required
                 disabled={isSubmitting}
                 {...form.getInputProps("title")}
               />
@@ -118,6 +119,7 @@ const Index = ({ opened, close, mutate }) => {
                 valueFormat="DD MMM YYYY"
                 label="Date"
                 placeholder="DD MMM YYYY"
+                required
                 disabled={isSubmitting}
                 {...form.getInputProps("date")}
               />
@@ -135,7 +137,7 @@ const Index = ({ opened, close, mutate }) => {
                 mt="md"
                 label="Is Recurring?"
                 disabled={isSubmitting}
-                {...form.getInputProps("is_recuring")}
+                {...form.getInputProps("is_recuring", { type: "checkbox" })}
               />
             </Grid.Col>
           </Grid>

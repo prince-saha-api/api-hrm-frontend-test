@@ -513,8 +513,8 @@ const Index = () => {
             withCheckIcon={false}
             // placeholder=""
             data={PAGE_SIZES.map((size) => size.toString())}
-            defaultValue={PAGE_SIZES[0].toString()}
-            value={pageSize.toString()}
+            // defaultValue={PAGE_SIZES[0].toString()}
+            value={String(pageSize)}
             onChange={(_value, option) => handlePageSizeChange(_value)}
           />
           <p className="mb-0 ms-2 me-2">Entries</p>
@@ -637,8 +637,8 @@ const Index = () => {
           recordsPerPage={pageSize}
           sortStatus={sortStatus}
           onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
+          // selectedRecords={selectedRecords}
+          // onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}

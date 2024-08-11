@@ -37,6 +37,7 @@ import {
   getDate,
   generateAddressString,
   formatCurrency,
+  generateGroupString,
 } from "@/lib/helper";
 import ProfileEdit from "./ProfileEdit";
 import ProfileImage from "./ProfileImage";
@@ -257,38 +258,40 @@ const ProfileView = ({ data }) => {
       <PersonalDetails
         opened={personalDetailsOpened}
         close={personalDetailsClose}
+        item={profile}
+        setItem={setProfile}
         // item={selectedDeleteItem}
         // mutate={mutate}
       />
       <OfficialDetails
         opened={officialDetailsOpened}
         close={officialDetailsClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
       <SalaryLeaves
         opened={salaryLeavesOpened}
         close={salaryLeavesClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
       <EmergencyContact
         opened={emergencyContactOpened}
         close={emergencyContactClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
       <Education
         opened={educationOpened}
         close={educationClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
       <Experience
         opened={experienceOpened}
         close={experienceClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
       <Documents
         opened={documentsOpened}
@@ -358,7 +361,7 @@ const ProfileView = ({ data }) => {
                   Department: {profile?.departmenttwo?.[0]?.name || "N/A"}
                 </p>
                 <p className="employeeJoin mb-1">
-                  Date of Join : {getDate(profile?.date_joined)}
+                  Date of Join : {getDate(profile?.joining_date)}
                 </p>
                 <p className="employeeJoin">
                   <span>Reset Password:</span>
@@ -381,12 +384,12 @@ const ProfileView = ({ data }) => {
             <div className="employeeInfo h-100 ps-3">
               <p>
                 <span>Phone:</span>
-                {profile?.official_phone ? (
+                {profile?.personal_phone ? (
                   <Link
                     className="phnNumber"
-                    href={`tel:${profile?.official_phone}`}
+                    href={`tel:${profile?.personal_phone}`}
                   >
-                    {profile?.official_phone}
+                    {profile?.personal_phone}
                   </Link>
                 ) : (
                   "N/A"
@@ -394,12 +397,12 @@ const ProfileView = ({ data }) => {
               </p>
               <p>
                 <span>Email:</span>
-                {profile?.official_email ? (
+                {profile?.personal_email ? (
                   <Link
                     className="email"
-                    href={`mailto:${profile?.official_email}`}
+                    href={`mailto:${profile?.personal_email}`}
                   >
-                    {profile?.official_email}
+                    {profile?.personal_email}
                   </Link>
                 ) : (
                   "N/A"
@@ -429,12 +432,16 @@ const ProfileView = ({ data }) => {
                 <span>Supervisor:</span>
                 <Image
                   className="reportsImg"
-                  src="/profile01.jpg"
+                  // src="/profile01.jpg"
+                  src={getStoragePath(profile?.supervisor?.photo || "")}
                   width={200}
                   height={200}
                   alt="profile_img"
                 />
-                Tanim Shahriar Abedin
+                {getFullName(
+                  profile?.supervisor?.first_name,
+                  profile?.supervisor?.last_name
+                )}
               </p>
             </div>
           </Grid.Col>
@@ -556,7 +563,8 @@ const ProfileView = ({ data }) => {
                         ?.basic_information?.name || "N/A"}
                     </p>
                     <p>
-                      <span>Branch:</span>Banani
+                      <span>Branch:</span>
+                      {profile?.departmenttwo?.[0]?.branch?.name || "N/A"}
                     </p>
                     <p>
                       <span>Default Shift:</span>
@@ -575,19 +583,29 @@ const ProfileView = ({ data }) => {
                       {profile?.official_note || "N/A"}
                     </p>
                     <p>
-                      <span>Group:</span>Xyz
+                      <span>Group:</span>
+                      {generateGroupString(profile?.ethnicgroup_user || [])}
                     </p>
                     <p>
                       <span>Expense Approver:</span>
-                      {profile?.expense_approver?.name || "N/A"}
+                      {getFullName(
+                        profile?.expense_approver?.first_name,
+                        profile?.expense_approver?.last_name
+                      )}
                     </p>
                     <p>
                       <span>Leave Approver:</span>
-                      {profile?.leave_approver?.name || "N/A"}
+                      {getFullName(
+                        profile?.leave_approver?.first_name,
+                        profile?.leave_approver?.last_name
+                      )}
                     </p>
                     <p>
                       <span>Shift Approver:</span>
-                      {profile?.shift_request_approver?.name || "N/A"}
+                      {getFullName(
+                        profile?.shift_request_approver?.first_name,
+                        profile?.shift_request_approver?.last_name
+                      )}
                     </p>
                   </div>
                 </div>
@@ -694,7 +712,9 @@ const ProfileView = ({ data }) => {
                     </p>
                     <p>
                       <span>Bank Address:</span>
-                      {generateAddressString(profile?.bank_account?.address)}
+                      {generateAddressString(
+                        profile?.bank_account?.address || {}
+                      )}
                     </p>
                   </div>
                 </Grid.Col>
@@ -792,7 +812,7 @@ const ProfileView = ({ data }) => {
                         </p>
                         <p>
                           <span>Address:</span>
-                          {generateAddressString(contact?.address)}
+                          {generateAddressString(contact?.address || {})}
                         </p>
                       </div>
                     </Grid.Col>
@@ -912,6 +932,7 @@ const ProfileView = ({ data }) => {
                 {profile?.employee_docs?.length
                   ? profile?.employee_docs.map((doc, index) => (
                       <button
+                        key={index}
                         className="docItem me-4 mb-4"
                         onClick={() => {
                           setSingleDocument({

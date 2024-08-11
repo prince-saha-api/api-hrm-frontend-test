@@ -10,14 +10,13 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm({
-    // mode: "uncontrolled",
+    mode: "uncontrolled",
     initialValues: {
       name: "",
       grade: "",
     },
     validate: {
-      name: (value) =>
-        value.length < 5 ? "Name must have at least 5 letters" : null,
+      name: (value) => (!value ? "Name is required" : null),
       grade: (value) => (!value ? "Select a grade" : null),
     },
   });
@@ -27,7 +26,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
     if (item) {
       form.setValues({
         name: item.name || "",
-        grade: item.grade?.id || "",
+        grade: item.grade?.id.toString() || "",
       });
     }
   }, [item]);
@@ -77,13 +76,13 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     } catch (error) {
       console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     }
   };
 
@@ -108,6 +107,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
                 mb="sm"
                 label="Name"
                 placeholder="Name"
+                required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("name")}
               />
@@ -115,9 +115,11 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
                 // mb="sm"
                 label="Grade"
                 placeholder="Grade"
+                required={true}
                 disabled={isSubmitting}
                 data={grades}
                 {...form.getInputProps("grade")}
+                key={form.key("grade")}
               />
             </Grid.Col>
           </Grid>

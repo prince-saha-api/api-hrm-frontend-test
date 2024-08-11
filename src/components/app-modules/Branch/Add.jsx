@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { submit } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
 import { countries } from "@/data/countries";
+import { validateEmail, validatePhoneNumber } from "@/lib/validate";
 
 const Index = ({ opened, close, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,14 +44,9 @@ const Index = ({ opened, close, mutate }) => {
       //     ? "Description must have at least 10 characters"
       //     : null,
       company: (value) => (!value ? "Select a company" : null),
-      phone: (value) => {
-        const phonePattern = /^01[0-9]{9}$/;
-        return !phonePattern.test(value) ? "Phone number is invalid" : null;
-      },
-      email: (value) => {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return !emailPattern.test(value) ? "Email is invalid" : null;
-      },
+      phone: (value) =>
+        validatePhoneNumber(value) ? null : "Invalid phone number",
+      email: (value) => (validateEmail(value) ? null : "Invalid email"),
       // fax: (value) => {
       //   const faxPattern = /^[0-9]+$/;
       //   return !faxPattern.test(value) ? "Fax number is invalid" : null;
@@ -109,11 +105,18 @@ const Index = ({ opened, close, mutate }) => {
         toast.success("Branch created successfully");
       } else {
         setIsSubmitting(false);
-        toast.error(
-          response?.status == "error"
-            ? response.message
-            : "Error submitting form"
-        );
+        // toast.error(
+        //   response?.status === "error"
+        //     ? response?.message[0]
+        //     : "Error submitting form"
+        // );
+        if (response?.status === "error" && Array.isArray(response.message)) {
+          response.message.forEach((msg) => {
+            toast.error(msg);
+          });
+        } else {
+          toast.error("Error submitting form");
+        }
       }
     } catch (error) {
       console.error("Error submitting form:", error);

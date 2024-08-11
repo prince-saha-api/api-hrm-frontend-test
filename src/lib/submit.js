@@ -30,15 +30,15 @@ export const submit = async (route, data, hasFile = false) => {
 
     // console.log(response);
 
-    if (!response.ok) {
-      console.error("Error");
-      // throw new Error("Failed to submit data");
+    // if (!response.ok) {
+    //   console.error("Error");
+    //   // throw new Error("Failed to submit data");
 
-      return {
-        error: true,
-        message: "Failed to submit data",
-      };
-    }
+    //   return {
+    //     error: true,
+    //     message: "Failed to submit data",
+    //   };
+    // }
 
     // console.log("Successful");
     // console.log(response.json());

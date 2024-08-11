@@ -1,38 +1,24 @@
 "use client";
+
 import React, { forwardRef, useImperativeHandle } from "react";
 import { DateInput } from "@mantine/dates";
-import { Breadcrumbs, Anchor } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import {
-  NumberInput,
-  TextInput,
-  Textarea,
-  Box,
-  Select,
-  Button,
-  Flex,
-  FileButton,
-  Group,
-  Text,
-} from "@mantine/core";
+import { randomId } from "@mantine/hooks";
+import { NumberInput, TextInput, Box, Button, Group } from "@mantine/core";
 import { Grid } from "@mantine/core";
-import { FcAcceptDatabase } from "react-icons/fc";
-import Image from "next/image";
-import compmanyLogo from "public/full_logo.png";
-import uploadImg from "public/profile01.jpg";
-import { FcAddImage } from "react-icons/fc";
 import { LuPlus } from "react-icons/lu";
 import { FaTrashAlt } from "react-icons/fa";
 
 const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
-    mode: "controlled",
+    mode: "uncontrolled",
     initialValues: {
       academicRecord:
         data.academicRecord && data.academicRecord.length
-          ? data.academicRecord
+          ? data.academicRecord.map((item) => ({ ...item, key: randomId() }))
           : [
               {
+                key: randomId(),
                 certification: "",
                 board_institute_name: "",
                 level: "",
@@ -42,9 +28,13 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
             ],
       previousExperience:
         data.previousExperience && data.previousExperience.length
-          ? data.previousExperience
+          ? data.previousExperience.map((item) => ({
+              ...item,
+              key: randomId(),
+            }))
           : [
               {
+                key: randomId(),
                 company_name: "",
                 designation: "",
                 address: "",
@@ -80,6 +70,7 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
 
   const addMoreAcademicRecord = () => {
     const newAcademicRecord = {
+      key: randomId(),
       certification: "",
       board_institute_name: "",
       level: "",
@@ -92,6 +83,7 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
 
   const addMorePreviousExperience = () => {
     const newPreviousExperience = {
+      key: randomId(),
       company_name: "",
       designation: "",
       address: "",
@@ -103,14 +95,17 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
   };
 
   const removeAcademicRecord = (index) => {
-    if (form.values.academicRecord.length > 1) {
-      form.removeListItem("academicRecord", index);
-    }
+    // if (form.values.academicRecord.length > 1) {
+    //   form.removeListItem("academicRecord", index);
+    // }
+    form.removeListItem("academicRecord", index);
   };
+
   const removePreviousExperience = (index) => {
-    if (form.values.previousExperience.length > 1) {
-      form.removeListItem("previousExperience", index);
-    }
+    // if (form.values.previousExperience.length > 1) {
+    //   form.removeListItem("previousExperience", index);
+    // }
+    form.removeListItem("previousExperience", index);
   };
 
   const handleSubmit = (values) => {
@@ -129,9 +124,9 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
             <Box className="stepBox">
               <h5 className="fw-bold mb-3">Educational Background</h5>
 
-              {form.values.academicRecord.map((contact, index) => (
-                <div key={index}>
-                  {form.values.academicRecord.length > 1 && (
+              {form.getValues().academicRecord.map((item, index) => (
+                <div key={item.key}>
+                  {form.getValues().academicRecord.length > 1 && (
                     <div className="d-flex align-items-start w-100 cust_mt">
                       <Button
                         color="red"
@@ -215,6 +210,7 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
               ))}
 
               <Button
+                className="ps-0"
                 justify="center"
                 leftSection={<LuPlus className="me-0 fs-5" />}
                 variant="transparent"
@@ -230,9 +226,9 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
             <Box className="stepBox">
               <h5 className="fw-bold mb-3">Experiences</h5>
 
-              {form.values.previousExperience.map((contact, index) => (
-                <div key={index}>
-                  {form.values.previousExperience.length > 1 && (
+              {form.getValues().previousExperience.map((item, index) => (
+                <div key={item.key}>
+                  {form.getValues().previousExperience.length > 1 && (
                     <div className="d-flex align-items-start w-100 cust_mt">
                       <Button
                         color="red"
@@ -327,6 +323,7 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
               ))}
 
               <Button
+                className="ps-0"
                 justify="center"
                 leftSection={<LuPlus className="me-0 fs-5" />}
                 variant="transparent"

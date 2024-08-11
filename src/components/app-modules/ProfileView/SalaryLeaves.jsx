@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import useSWR from "swr";
+import { useForm } from "@mantine/form";
 import {
   Modal,
   Button,
@@ -7,19 +9,90 @@ import {
   TextInput,
   Select,
   NumberInput,
-  Textarea,
-  DateInput,
-  Checkbox,
   MultiSelect,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
 import { toast } from "react-toastify";
-import { deleteItem } from "@/lib/submit";
+import { update } from "@/lib/submit";
+import { fetcher } from "@/lib/fetch";
 import { countries } from "@/data/countries";
 
-const Index = ({ opened, close, item }) => {
-  const [value, setValue] = useState(null);
-  const [value2, setValue2] = useState(null);
+const Index = ({ opened, close, item, setItem }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      payment_in: item?.payment_in || "",
+      gross_salary: item?.gross_salary || "",
+      leavepolicy: [],
+      earningpolicy: [],
+      deductionpolicy: [],
+      bankaccount: {
+        bank_name: item?.bank_account?.bank_name || "",
+        branch_name: item?.bank_account?.branch_name || "",
+        account_type: item?.bank_account?.account_type?.id.toString() || "",
+        account_no: item?.bank_account?.account_no || "",
+        routing_no: item?.bank_account?.routing_no || "",
+        swift_bic: item?.bank_account?.swift_bic || "",
+        address: {
+          address: item?.bank_account?.address?.address || "",
+          city: item?.bank_account?.address?.city || "",
+          state_division: item?.bank_account?.address?.state_division || "",
+          post_zip_code: item?.bank_account?.address?.post_zip_code || "",
+          country: item?.bank_account?.address?.country || "",
+        },
+      },
+    },
+    validate: {},
+  });
+
+  const handleSubmit = async (values) => {
+    setIsSubmitting(true);
+
+    try {
+      const response = await update(
+        `/api/user/update-salary-leaves/${item.id}`,
+        values
+      );
+
+      if (response?.status === "success") {
+        setIsSubmitting(false);
+        close();
+        // mutate();
+        // setItem((prev) => ({
+        //   ...prev,
+        //   fathers_name: response?.data?.fathers_name,
+        //   mothers_name: response?.data?.mothers_name,
+        //   nationality: response?.data?.nationality,
+        //   nid_passport_no: response?.data?.nid_passport_no,
+        //   present_address: response?.data?.present_address,
+        //   permanent_address: response?.data?.permanent_address,
+        // }));
+        toast.success("Profile updated successfully");
+      } else {
+        toast.error(
+          response?.status === "error"
+            ? response?.message[0]
+            : "Error submitting form"
+        );
+      }
+      setTimeout(() => {
+        setIsSubmitting(false);
+        // mutate();
+      }, 500);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        // mutate();
+      }, 500);
+    }
+  };
+
+  const handleError = (errors) => {
+    console.log(errors);
+  };
+
   return (
     <>
       <Modal
@@ -31,7 +104,12 @@ const Index = ({ opened, close, item }) => {
         onClose={close}
         centered
       >
-        <form>
+        <form
+          onSubmit={form.onSubmit(
+            (values) => handleSubmit(values),
+            handleError
+          )}
+        >
           <Grid>
             <Grid.Col span={6}>
               <Select
@@ -39,7 +117,7 @@ const Index = ({ opened, close, item }) => {
                 label="Payment In"
                 placeholder="Payment In"
                 data={["Cash", "Cheque", "Bank"]}
-                // {...form.getInputProps("payment_in")}
+                {...form.getInputProps("payment_in")}
               />
               <NumberInput
                 rightSection={<></>}
@@ -47,7 +125,7 @@ const Index = ({ opened, close, item }) => {
                 mb="sm"
                 label="Monthly Gross Salary"
                 placeholder="Monthly Gross Salary"
-                // {...form.getInputProps("gross_salary")}
+                {...form.getInputProps("gross_salary")}
               />
               <MultiSelect
                 mb="sm"
@@ -61,7 +139,7 @@ const Index = ({ opened, close, item }) => {
                 ]}
                 searchable
                 withAsterisk
-                // {...form.getInputProps("leavepolicy")}
+                {...form.getInputProps("leavepolicy")}
               />
               <MultiSelect
                 mb="sm"
@@ -75,7 +153,7 @@ const Index = ({ opened, close, item }) => {
                 ]}
                 searchable
                 withAsterisk
-                // {...form.getInputProps("payrollpolicy.earningpolicy")}
+                {...form.getInputProps("earningpolicy")}
               />
 
               <MultiSelect
@@ -90,20 +168,20 @@ const Index = ({ opened, close, item }) => {
                 ]}
                 searchable
                 withAsterisk
-                // {...form.getInputProps("payrollpolicy.deductionpolicy")}
+                {...form.getInputProps("deductionpolicy")}
               />
 
               <TextInput
                 mb="sm"
                 label="Bank Account Name"
                 placeholder="Bank Account Name"
-                // {...form.getInputProps("bank_account.bank_name")}
+                {...form.getInputProps("bankaccount.bank_name")}
               />
               <TextInput
                 mb="sm"
                 label="Branch"
                 placeholder="Branch"
-                // {...form.getInputProps("bank_account.branch_name")}
+                {...form.getInputProps("bankaccount.branch_name")}
               />
               <Select
                 label="Bank Account Type"
@@ -115,7 +193,7 @@ const Index = ({ opened, close, item }) => {
                   { value: "4", label: "Chequing" },
                   { value: "5", label: "Business" },
                 ]}
-                // {...form.getInputProps("bank_account.account_type")}
+                {...form.getInputProps("bankaccount.account_type")}
               />
             </Grid.Col>
             <Grid.Col span={6}>
@@ -125,7 +203,7 @@ const Index = ({ opened, close, item }) => {
                 placeholder="Account No."
                 rightSection={<></>}
                 rightSectionWidth={0}
-                // {...form.getInputProps("bank_account.account_no")}
+                {...form.getInputProps("bankaccount.account_no")}
               />
               <NumberInput
                 mb="sm"
@@ -133,50 +211,57 @@ const Index = ({ opened, close, item }) => {
                 rightSection={<></>}
                 rightSectionWidth={0}
                 placeholder="Routing No."
-                // {...form.getInputProps("bank_account.routing_no")}
+                {...form.getInputProps("bankaccount.routing_no")}
               />
               <TextInput
                 mb="sm"
                 label="SWIFT"
                 placeholder="SWIFT"
-                // {...form.getInputProps("bank_account.swift_bic")}
+                {...form.getInputProps("bankaccount.swift_bic")}
               />
               <TextInput
                 mb="sm"
                 label="Bank Address"
                 placeholder="Bank Address"
-                // {...form.getInputProps("bank_account.swift_bic")}
+                {...form.getInputProps("bankaccount.swift_bic")}
               />
               <TextInput
                 mb="sm"
                 label="City"
                 placeholder="City"
-                // {...form.getInputProps("bank_account.address.city")}
+                {...form.getInputProps("bankaccount.address.city")}
               />
               <TextInput
                 mb="sm"
                 label="Division"
                 placeholder="Division"
-                // {...form.getInputProps("bank_account.address.state_division")}
+                {...form.getInputProps("bankaccount.address.state_division")}
               />
               <TextInput
                 mb="sm"
                 label="ZIP / Postal Code"
                 placeholder="ZIP / Postal Code"
-                // {...form.getInputProps("bank_account.address.post_zip_code")}
+                {...form.getInputProps("bankaccount.address.post_zip_code")}
               />
               <Select
                 label="Country"
                 placeholder="Country"
                 searchable
                 data={countries}
-                // {...form.getInputProps("bank_account.address.country")}
+                {...form.getInputProps("bankaccount.address.country")}
               />
             </Grid.Col>
           </Grid>
 
           <Group justify="flex-end" mt="md">
-            <Button variant="filled">Update</Button>
+            <Button
+              type="submit"
+              variant="filled"
+              loading={isSubmitting}
+              loaderProps={{ type: "dots" }}
+            >
+              Update
+            </Button>
           </Group>
         </form>
       </Modal>

@@ -23,6 +23,7 @@ import Edit from "./Edit";
 import Delete from "./Delete";
 import { getDate } from "@/lib/helper";
 import { IoIosArrowDown } from "react-icons/io";
+import { generateAddressString } from "@/lib/helper";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -33,10 +34,11 @@ const Index = () => {
     columnAccessor: "name",
     direction: "asc", // desc
   });
+  const [company, setCompany] = useState("");
 
   let apiUrl = `/api/department/get-department/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
-  }${sortStatus.columnAccessor}`;
+  }${sortStatus.columnAccessor}${company ? `&company=${company}` : ""}`;
 
   const {
     data: apiData,
@@ -60,9 +62,9 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const companies = companyData?.result?.map((item) => ({
+  const companies = companyData?.data?.result?.map((item) => ({
     label: item?.basic_information?.name?.toString() || "",
-    value: item?.basic_information?.id.toString() || "",
+    value: item?.id.toString() || "",
   }));
 
   const [selectedRecords, setSelectedRecords] = useState([]);
@@ -137,7 +139,7 @@ const Index = () => {
       title: "Company",
       // visibleMediaQuery: aboveXs,
       sortable: true,
-      render: ({ company }) => company?.basic_information?.name || "N/A",
+      render: ({ branch }) => branch?.company?.basic_information?.name || "N/A",
       // for export
       key: "company",
     },
@@ -174,7 +176,7 @@ const Index = () => {
       accessor: "address",
       title: "Address",
       // visibleMediaQuery: aboveXs,
-      render: ({ address }) => `${address?.state_division}` || "N/A",
+      render: ({ address }) => generateAddressString(address || {}),
       // for export
       key: "address",
     },
@@ -549,6 +551,7 @@ const Index = () => {
         <Select
           placeholder="Select Company" //
           data={companies}
+          onChange={(_value, option) => setCompany(_value)}
         />
       </div>
 
@@ -562,8 +565,8 @@ const Index = () => {
             withCheckIcon={false}
             // placeholder=""
             data={PAGE_SIZES.map((size) => size.toString())}
-            defaultValue={PAGE_SIZES[0].toString()}
-            value={pageSize.toString()}
+            // defaultValue={PAGE_SIZES[0].toString()}
+            value={String(pageSize)}
             onChange={(_value, option) => handlePageSizeChange(_value)}
           />
           <p className="mb-0 ms-2 me-2">Entries</p>

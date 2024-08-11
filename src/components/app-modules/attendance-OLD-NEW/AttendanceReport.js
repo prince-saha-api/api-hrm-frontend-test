@@ -867,7 +867,7 @@ const AttendanceManage = () => {
               <MantineSelect
                 className="records_per_page"
                 data={["10", "20", "30", "40"]}
-                value={pageSize.toString()}
+                value={String(pageSize)}
                 onChange={(_value, option) => handlePageSizeChange(_value)}
                 withCheckIcon={false}
               />

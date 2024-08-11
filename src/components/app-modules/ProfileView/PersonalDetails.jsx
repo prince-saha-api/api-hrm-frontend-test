@@ -11,7 +11,6 @@ import {
   NumberInput,
   Checkbox,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
 import { toast } from "react-toastify";
 import { update } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
@@ -24,18 +23,15 @@ const Index = ({ opened, close, item, setItem }) => {
     mode: "uncontrolled",
     initialValues: {
       fathers_name: item?.fathers_name || "",
-      mothers_name: item?.last_name || "",
-      nationality: item?.designation?.id.toString() || "",
-      religion: item?.religion || null,
-      nid_passport_no: item?.departmenttwo?.[0]?.id || "",
-      tin_no: item?.joining_date ? new Date(item?.joining_date) : null,
-      address: {
-        city: "",
-        state_division: "",
-        post_zip_code: "",
-        country: "",
-        address: "",
-      },
+      mothers_name: item?.mothers_name || "",
+      nationality: item?.nationality || "",
+      religion: item?.religion?.id.toString() || null,
+      nid_passport_no: item?.nid_passport_no || "",
+      tin_no: item?.tin_no || "",
+      present_address: item?.present_address,
+      permanent_address: item?.permanent_address,
+      permanentAddressSameAsPresent:
+        item?.permanent_address?.id === item?.present_address?.id,
     },
     validate: {},
   });
@@ -57,7 +53,7 @@ const Index = ({ opened, close, item, setItem }) => {
   }));
 
   const [sameAsPresent, setSameAsPresent] = useState(
-    item?.permanentAddressSameAsPresent
+    item?.permanent_address?.id === item?.present_address?.id
   );
 
   form.watch(
@@ -66,17 +62,17 @@ const Index = ({ opened, close, item, setItem }) => {
       const { city, state_division, post_zip_code, country, address } =
         form.getValues().present_address;
 
-      console.log(country);
+      // console.log(country);
 
       if (value) {
-        form.setFieldValue("address.city", city);
-        form.setFieldValue("address.state_division", state_division);
-        form.setFieldValue("address.post_zip_code", post_zip_code);
-        form.setFieldValue("address.country", country);
-        form.setFieldValue("address.address", address);
+        form.setFieldValue("permanent_address.city", city);
+        form.setFieldValue("permanent_address.state_division", state_division);
+        form.setFieldValue("permanent_address.post_zip_code", post_zip_code);
+        form.setFieldValue("permanent_address.country", country);
+        form.setFieldValue("permanent_address.address", address);
 
         // form.setValues({
-        //   address: {
+        //   permanent_address: {
         //     city,
         //     state_division,
         //     post_zip_code,
@@ -92,26 +88,20 @@ const Index = ({ opened, close, item, setItem }) => {
   );
 
   const handleSubmit = async (values) => {
-    return;
-    const formattedDOB = values.dob
-      ? values.dob.toISOString().split("T")[0]
-      : null;
-
-    const formattedJoiningDate = values.joining_date
-      ? values.joining_date.toISOString().split("T")[0]
-      : null;
+    // return;
 
     const updatedValues = {
       ...values,
-      dob: formattedDOB,
-      joining_date: formattedJoiningDate,
+      ...(values.permanentAddressSameAsPresent && {
+        permanent_address: values.present_address,
+      }),
     };
 
     setIsSubmitting(true);
 
     try {
       const response = await update(
-        `/api/user/update-profile/${item.id}`,
+        `/api/user/update-personal-details/${item.id}`,
         updatedValues
       );
 
@@ -121,20 +111,12 @@ const Index = ({ opened, close, item, setItem }) => {
         // mutate();
         setItem((prev) => ({
           ...prev,
-          first_name: response?.data?.first_name,
-          last_name: response?.data?.last_name,
-          // designation: response?.data?.designation?.id.toString(),
-          official_id: response?.data?.official_id,
-          // department: response?.data?.departmenttwo?.[0]?.id,
-          joining_date: response?.data?.joining_date,
-          personal_phone: response?.data?.personal_phone,
-          personal_email: response?.data?.personal_email,
-          dob: response?.data?.dob,
-          gender: response?.data?.gender,
-          blood_group: response?.data?.blood_group,
-          marital_status: response?.data?.marital_status,
-          spouse_name: response?.data?.spouse_name,
-          // supervisor: response?.data?.supervisor,
+          fathers_name: response?.data?.fathers_name,
+          mothers_name: response?.data?.mothers_name,
+          nationality: response?.data?.nationality,
+          nid_passport_no: response?.data?.nid_passport_no,
+          present_address: response?.data?.present_address,
+          permanent_address: response?.data?.permanent_address,
         }));
         toast.success("Profile updated successfully");
       } else {
@@ -147,13 +129,13 @@ const Index = ({ opened, close, item, setItem }) => {
       setTimeout(() => {
         setIsSubmitting(false);
         // mutate();
-      }, 5000);
+      }, 500);
     } catch (error) {
       console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
         // mutate();
-      }, 5000);
+      }, 500);
     }
   };
 
@@ -246,33 +228,34 @@ const Index = ({ opened, close, item, setItem }) => {
                   mb="sm"
                   // label="Address"
                   placeholder="Address"
+                  {...form.getInputProps("present_address.address")}
                   // {...form.getInputProps("bank_account.address.city")}
                 />
                 <TextInput
                   mb="sm"
                   // label="City"
                   placeholder="City"
-                  // {...form.getInputProps("bank_account.address.city")}
+                  {...form.getInputProps("present_address.city")}
                 />
                 <TextInput
                   mb="sm"
                   // label="Division"
                   placeholder="Division"
-                  // {...form.getInputProps("bank_account.address.state_division")}
+                  {...form.getInputProps("present_address.state_division")}
                 />
                 <TextInput
                   mb="sm"
                   // label="ZIP / Postal Code"
                   placeholder="ZIP / Postal Code"
-                  // {...form.getInputProps("bank_account.address.post_zip_code")}
+                  {...form.getInputProps("present_address.post_zip_code")}
                 />
                 <Select
                   // label="Country"
-                  mb="sm"
+                  // mb="sm"
                   placeholder="Country"
                   searchable
                   data={countries}
-                  // {...form.getInputProps("bank_account.address.country")}
+                  {...form.getInputProps("present_address.country")}
                 />
               </div>
             </Grid.Col>
@@ -283,45 +266,67 @@ const Index = ({ opened, close, item, setItem }) => {
                     label: { fontSize: 12 },
                   }}
                   label="Same as Present Address"
+                  // checked={form.getValues().permanentAddressSameAsPresent}
+                  {...form.getInputProps("permanentAddressSameAsPresent", {
+                    type: "checkbox",
+                  })}
                 />
                 <p className="mb-0 mt-1">Permanent Address</p>
                 <TextInput
                   mb="sm"
                   // label="Address"
                   placeholder="Address"
-                  // {...form.getInputProps("bank_account.address.city")}
+                  disabled={sameAsPresent}
+                  {...form.getInputProps("permanent_address.address")}
+                  key={form.key("permanent_address.address")}
                 />
                 <TextInput
                   mb="sm"
                   // label="City"
                   placeholder="City"
-                  // {...form.getInputProps("bank_account.address.city")}
+                  disabled={sameAsPresent}
+                  {...form.getInputProps("permanent_address.city")}
+                  key={form.key("permanent_address.city")}
                 />
                 <TextInput
                   mb="sm"
                   // label="Division"
                   placeholder="Division"
-                  // {...form.getInputProps("bank_account.address.state_division")}
+                  disabled={sameAsPresent}
+                  {...form.getInputProps("permanent_address.state_division")}
+                  key={form.key("permanent_address.state_division")}
                 />
                 <TextInput
                   mb="sm"
                   // label="ZIP / Postal Code"
                   placeholder="ZIP / Postal Code"
-                  // {...form.getInputProps("bank_account.address.post_zip_code")}
+                  disabled={sameAsPresent}
+                  {...form.getInputProps("permanent_address.post_zip_code")}
+                  key={form.key("permanent_address.post_zip_code")}
                 />
                 <Select
                   // label="Country"
+                  // mb="sm"
                   placeholder="Country"
                   searchable
+                  disabled={sameAsPresent}
                   data={countries}
-                  // {...form.getInputProps("bank_account.address.country")}
+                  {...form.getInputProps("permanent_address.country")}
+                  key={form.key("permanent_address.country")}
                 />
               </div>
             </Grid.Col>
           </Grid>
 
           <Group justify="flex-end" mt="md">
-            <Button variant="filled">Update</Button>
+            <Button
+              type="submit"
+              variant="filled"
+              loading={isSubmitting}
+              loaderProps={{ type: "dots" }}
+            >
+              Update
+            </Button>
           </Group>
         </form>
       </Modal>

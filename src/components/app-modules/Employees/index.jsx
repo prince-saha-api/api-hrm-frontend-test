@@ -5,14 +5,7 @@ import Link from "next/link";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
-import {
-  Button,
-  Select,
-  Menu,
-  MultiSelect,
-  Popover,
-  Input,
-} from "@mantine/core";
+import { Button, Select, Menu, MultiSelect, Popover } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import classEase from "classease";
 import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
@@ -22,17 +15,13 @@ import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { constants } from "@/lib/config";
-import { getStoragePath } from "@/lib/helper";
+import { getStoragePath, generateGroupString } from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
-import AddButton from "@/components/utils/AddButton";
-import Edit from "./EditEmployee";
 import FilterModal from "./FilterModal";
-// import Delete from "./Delete";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -60,7 +49,7 @@ const Employees = () => {
     revalidateOnFocus: false,
   });
 
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  // const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
     console.log(status);
@@ -75,20 +64,20 @@ const Employees = () => {
   };
 
   // for Modal
-  const [addOpened, { open: addOpen, close: addClose }] = useDisclosure(false);
-  const [editOpened, { open: editOpen, close: editClose }] =
-    useDisclosure(false);
-  const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
-    useDisclosure(false);
+  // const [addOpened, { open: addOpen, close: addClose }] = useDisclosure(false);
+  // const [editOpened, { open: editOpen, close: editClose }] =
+  //   useDisclosure(false);
+  // const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
+  //   useDisclosure(false);
 
-  const [selectedEditItem, setSelectedEditItem] = useState(null);
-  const [selectedDeleteItem, setSelectedDeleteItem] = useState(null);
+  // const [selectedEditItem, setSelectedEditItem] = useState(null);
+  // const [selectedDeleteItem, setSelectedDeleteItem] = useState(null);
 
-  useEffect(() => {
-    if (selectedEditItem) {
-      editOpen();
-    }
-  }, [selectedEditItem]);
+  // useEffect(() => {
+  //   if (selectedEditItem) {
+  //     editOpen();
+  //   }
+  // }, [selectedEditItem]);
 
   const columns = [
     {
@@ -130,7 +119,7 @@ const Employees = () => {
         </div>
       ),
       // for export
-      key: "image",
+      key: "photo",
     },
     {
       // for table display
@@ -146,24 +135,29 @@ const Employees = () => {
       title: "Designation",
       // visibleMediaQuery: aboveXs,
       render: ({ designation }) => designation?.name || "N/A",
+      key: "designation",
     },
     {
       accessor: "group_name",
       title: "Group",
       // visibleMediaQuery: aboveXs,
-      render: ({ group_name }) => group_name || "N/A",
+      render: ({ ethnicgroup_user }) =>
+        generateGroupString(ethnicgroup_user || []),
+      key: "group_name",
     },
     {
       accessor: "department_name",
       title: "Department",
       // visibleMediaQuery: aboveXs,
-      render: ({ department_name }) => department_name || "N/A",
+      render: ({ departmenttwo }) => departmenttwo?.[0]?.name || "N/A",
+      key: "department_name",
     },
     {
       accessor: "shift_name",
       title: "Shift",
       // visibleMediaQuery: aboveXs,
       render: ({ shift }) => shift?.name || "N/A",
+      key: "shift_name",
     },
 
     {
@@ -224,13 +218,15 @@ const Employees = () => {
           <Menu.Dropdown>
             <Menu.Item
               leftSection={<BiMessageSquareEdit className="fs-6" />}
-              onClick={() => {
-                setSelectedEditItem(item);
-              }}
+              // onClick={() => {
+              //   setSelectedEditItem(item);
+              // }}
+              href={`/profile/${item?.id}`}
+              component={Link}
             >
-              Edit
+              View
             </Menu.Item>
-            <Menu.Item
+            {/* <Menu.Item
               leftSection={<AiOutlineDelete className="fs-6" />}
               onClick={() => {
                 setSelectedDeleteItem(item);
@@ -238,7 +234,7 @@ const Employees = () => {
               }}
             >
               Delete
-            </Menu.Item>
+            </Menu.Item> */}
           </Menu.Dropdown>
         </Menu>
       ),
@@ -253,28 +249,36 @@ const Employees = () => {
       value: "na",
     },
     {
-      label: "Name",
-      value: "name",
+      label: "Employee",
+      value: "photo",
     },
     {
-      label: "Description",
-      value: "description",
+      label: "Employee ID",
+      value: "official_id",
     },
     {
-      label: "Company",
-      value: "company",
+      label: "Designation",
+      value: "designation",
     },
     {
-      label: "Phone",
-      value: "phone",
+      label: "Group",
+      value: "group_name",
     },
     {
-      label: "Email",
-      value: "email",
+      label: "Department",
+      value: "department_name",
     },
     {
-      label: "Address",
-      value: "address",
+      label: "Shift",
+      value: "shift_name",
+    },
+    {
+      label: "Personal Phone",
+      value: "personal_phone",
+    },
+    {
+      label: "Personal Email",
+      value: "personal_email",
     },
     // {
     //   label: "Operating Hour",
@@ -288,19 +292,20 @@ const Employees = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "name",
-    "description",
-    "email",
-    "phone",
-    "company",
-    "address",
-    // "operating_hour",
+    "photo",
+    "official_id",
+    "designation",
+    "group_name",
+    "department_name",
+    "shift_name",
+    "personal_phone",
+    "personal_email",
     "actions",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set(["na", "name", "description", "actions", ...keys]),
+      ...new Set(["na", "photo", "official_id", "actions", ...keys]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>
@@ -534,14 +539,6 @@ const Employees = () => {
     }
   };
 
-  const [open1, setOpen1] = useState(false);
-  const [item1, setItem1] = useState("Designation");
-
-  const [item2, setItem2] = useState("Group");
-  const [item3, setItem3] = useState("Department");
-  const [item4, setItem4] = useState("Shift");
-  const icon = <CiSearch />;
-
   const [filterOpened, { open: filterOpen, close: filterClose }] =
     useDisclosure(false);
 
@@ -587,8 +584,8 @@ const Employees = () => {
             withCheckIcon={false}
             // placeholder=""
             data={PAGE_SIZES.map((size) => size.toString())}
-            defaultValue={PAGE_SIZES[0].toString()}
-            value={pageSize.toString()}
+            // defaultValue={PAGE_SIZES[0].toString()}
+            value={String(pageSize)}
             onChange={(_value, option) => handlePageSizeChange(_value)}
           />
           <p className="mb-0 ms-2 me-2">Entries</p>
@@ -704,10 +701,9 @@ const Employees = () => {
           verticalAlign="center"
           striped
           idAccessor="id"
-          //  columns={columns.filter((column) =>
-          //     selectedOptions.includes(column.key)
-          //  )}
-          columns={columns}
+          columns={columns.filter((column) =>
+            selectedOptions.includes(column.key)
+          )}
           fetching={isLoading}
           records={apiData?.data.result || []}
           page={currentPage}
@@ -716,8 +712,8 @@ const Employees = () => {
           recordsPerPage={pageSize}
           sortStatus={sortStatus}
           onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
+          // selectedRecords={selectedRecords}
+          // onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}

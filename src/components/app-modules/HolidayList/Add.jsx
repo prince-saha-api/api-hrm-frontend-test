@@ -15,6 +15,7 @@ import {
 import { toast } from "react-toastify";
 import { submit } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
+import { formatDateToYYYYMMDD } from "@/lib/helper";
 
 const Index = ({ opened, close, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,9 +51,11 @@ const Index = ({ opened, close, mutate }) => {
   }));
 
   const handleSubmit = async (values) => {
-    const formattedDate = values.date
-      ? values.date.toISOString().split("T")[0]
-      : null;
+    // const formattedDate = values.date
+    //   ? values.date.toISOString().split("T")[0]
+    //   : null;
+
+    const formattedDate = formatDateToYYYYMMDD(values?.date);
 
     const formattedValues = { ...values, date: formattedDate };
 

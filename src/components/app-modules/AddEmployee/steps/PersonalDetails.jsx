@@ -562,8 +562,10 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 <p className="fw-bold mb-0">Permanent Address</p>
                 <Checkbox
                   label="Same as Present Address"
-                  checked={form.getValues().permanentAddressSameAsPresent}
-                  {...form.getInputProps("permanentAddressSameAsPresent")}
+                  // checked={form.getValues().permanentAddressSameAsPresent}
+                  {...form.getInputProps("permanentAddressSameAsPresent", {
+                    type: "checkbox",
+                  })}
                 />
               </Group>
 

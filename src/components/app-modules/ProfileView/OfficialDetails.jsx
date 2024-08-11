@@ -8,7 +8,7 @@ import {
   Grid,
   TextInput,
   Select,
-  NumberInput,
+  MultiSelect,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { toast } from "react-toastify";
@@ -26,14 +26,15 @@ const Index = ({ opened, close, item, setItem }) => {
     initialValues: {
       official_email: item?.official_email || "",
       official_phone: item?.official_phone || "",
-      employee_type: item?.employee_type || "",
+      employee_type: item?.employee_type || null,
       company: item?.departmenttwo?.[0]?.branch?.company?.id.toString() || null,
       branch: item?.departmenttwo?.[0]?.branch?.id.toString() || null,
       shift: String(item?.shift?.id) || null,
       grade: String(item?.grade?.id) || null,
       role_permission: [],
       official_note: item?.official_note || "",
-      ethnic_group: item?.ethnicgroup_user || [],
+      ethnic_group:
+        item?.ethnicgroup_user?.map((item) => item?.id.toString()) || [],
       joining_date: item?.joining_date ? new Date(item.joining_date) : null,
       expense_approver: item?.expense_approver?.id.toString() || null,
       leave_approver: item?.leave_approver?.id.toString() || null,
@@ -185,20 +186,23 @@ const Index = ({ opened, close, item, setItem }) => {
   });
 
   const handleSubmit = async (values) => {
-    return;
+    // return;
+
+    const formattedDate = values.joining_date
+      ? values.joining_date.toISOString().split("T")[0]
+      : null;
 
     const updatedValues = {
       ...values,
-      ...(values.permanentAddressSameAsPresent && {
-        permanent_address: values.present_address,
-      }),
+      joining_date: formattedDate,
+      // ethnic_group: values.ethnic_group.map((id) => Number(id)),
     };
 
     setIsSubmitting(true);
 
     try {
       const response = await update(
-        `/api/user/update-personal-details/${item.id}`,
+        `/api/user/update-official-details/${item.id}`,
         updatedValues
       );
 
@@ -206,15 +210,15 @@ const Index = ({ opened, close, item, setItem }) => {
         setIsSubmitting(false);
         close();
         // mutate();
-        setItem((prev) => ({
-          ...prev,
-          fathers_name: response?.data?.fathers_name,
-          mothers_name: response?.data?.mothers_name,
-          nationality: response?.data?.nationality,
-          nid_passport_no: response?.data?.nid_passport_no,
-          present_address: response?.data?.present_address,
-          permanent_address: response?.data?.permanent_address,
-        }));
+        // setItem((prev) => ({
+        //   ...prev,
+        //   fathers_name: response?.data?.fathers_name,
+        //   mothers_name: response?.data?.mothers_name,
+        //   nationality: response?.data?.nationality,
+        //   nid_passport_no: response?.data?.nid_passport_no,
+        //   present_address: response?.data?.present_address,
+        //   permanent_address: response?.data?.permanent_address,
+        // }));
         toast.success("Profile updated successfully");
       } else {
         toast.error(
@@ -329,7 +333,7 @@ const Index = ({ opened, close, item, setItem }) => {
               />
             </Grid.Col>
             <Grid.Col span={6}>
-              <Select
+              <MultiSelect
                 mb="sm"
                 label="User Role"
                 placeholder="User Role"
@@ -345,7 +349,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 // disabled={isSubmitting}
                 {...form.getInputProps("official_note")}
               />
-              <Select
+              <MultiSelect
                 mb="sm"
                 label="Group"
                 placeholder="Group"
@@ -391,7 +395,14 @@ const Index = ({ opened, close, item, setItem }) => {
           </Grid>
 
           <Group justify="flex-end" mt="md">
-            <Button variant="filled">Update</Button>
+            <Button
+              type="submit"
+              variant="filled"
+              loading={isSubmitting}
+              loaderProps={{ type: "dots" }}
+            >
+              Update
+            </Button>
           </Group>
         </form>
       </Modal>

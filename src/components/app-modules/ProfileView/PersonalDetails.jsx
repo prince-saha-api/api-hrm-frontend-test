@@ -266,8 +266,10 @@ const Index = ({ opened, close, item, setItem }) => {
                     label: { fontSize: 12 },
                   }}
                   label="Same as Present Address"
-                  checked={form.getValues().permanentAddressSameAsPresent}
-                  {...form.getInputProps("permanentAddressSameAsPresent")}
+                  // checked={form.getValues().permanentAddressSameAsPresent}
+                  {...form.getInputProps("permanentAddressSameAsPresent", {
+                    type: "checkbox",
+                  })}
                 />
                 <p className="mb-0 mt-1">Permanent Address</p>
                 <TextInput

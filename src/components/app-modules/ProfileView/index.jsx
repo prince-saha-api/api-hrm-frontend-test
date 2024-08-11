@@ -272,26 +272,26 @@ const ProfileView = ({ data }) => {
       <SalaryLeaves
         opened={salaryLeavesOpened}
         close={salaryLeavesClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
       <EmergencyContact
         opened={emergencyContactOpened}
         close={emergencyContactClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
       <Education
         opened={educationOpened}
         close={educationClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
       <Experience
         opened={experienceOpened}
         close={experienceClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
       <Documents
         opened={documentsOpened}

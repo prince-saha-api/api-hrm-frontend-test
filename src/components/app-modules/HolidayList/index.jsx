@@ -637,8 +637,8 @@ const Index = () => {
           recordsPerPage={pageSize}
           sortStatus={sortStatus}
           onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
+          // selectedRecords={selectedRecords}
+          // onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}

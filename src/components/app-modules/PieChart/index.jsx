@@ -25,7 +25,7 @@ function index() {
           "#ff4c4c",
           "#ffa823",
         ],
-        hoverOffset: 4,
+        hoverOffset: 2,
         borderWidth: [2],
       },
     ],

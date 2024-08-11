@@ -24,29 +24,93 @@
 .screen_one svg {
   color: var(--hrm-text-color-primary) !important;
 }
-
+.noticeCardBox {
+  min-width: 300px;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  background-color: #fff;
+  margin-bottom: 20px;
+  padding-top: 30px !important;
+  padding-bottom: 20px !important;
+}
+.noticeCardBox:nth-last-child(1) {
+  margin-bottom: 0 !important;
+}
 .mantine-Carousel-controls {
   flex-direction: row !important;
   position: absolute !important;
-  bottom: -40px !important;
-  right: 0 !important;
+  bottom: -45px !important;
+  right: 30px !important;
   inset-inline-start: initial !important;
   align-items: flex-end !important;
+  gap: 5px;
 }
-
-.noticeButton {
+.mantine-Carousel-slide {
+  margin-right: 30px;
+  margin-left: 30px;
+  // margin-top: 30px !important;
+  // padding-top: 10px;
+}
+.viewBtnBox {
+  padding: 30px 30px 15px 30px;
+}
+.rootBtn {
+  height: auto !important;
   width: 100% !important;
-  border: 1px solid #aaa !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  margin-top: 5px;
+  background: transparent !important;
+  color: #333 !important;
+  box-shadow: rgba(99, 99, 99, 0.15) 0px 2px 8px 0px;
 }
 
+.labelBtn {
+  display: initial !important;
+}
+.innerBtn {
+  display: initial !important;
+}
+
+.buttonItem {
+  padding-left: 40px;
+}
 .noticeIcon {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 10px;
+  font-size: 20px;
+  color: var(--main-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  padding: 10px;
+  background-color: rgba(255, 155, 69, 0.15);
 }
 .noticTitle {
+  color: #000;
+  padding-top: 10px;
   width: 100%;
+  display: block;
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
+  font-weight: normal;
+}
+.noticDate {
+  font-weight: normal;
+  font-size: 14px !important;
+  color: #666;
+}
+
+.noticeAction {
+  width: 85px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 7px;
+  right: 0px;
 }

@@ -565,7 +565,7 @@ const index = () => {
         />
       </div>
 
-      <div className="mb-4 d-flex flex-wrap">
+      <div className="mb-4 d-flex flex-wrap gap-3">
         <div className="cardBox">
           <h5 className="leaveTitle text-center">Casual Leave</h5>
           <div className="d-flex justify-content-center">

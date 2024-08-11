@@ -1,6 +1,11 @@
 "use client";
 import React, { useEffect } from "react";
-import { Grid, Modal, Button } from "@mantine/core";
+import Link from "next/link";
+import { data } from "./data";
+import { data2 } from "./data2";
+import "@mantine/charts/styles.css";
+import { Tabs, Grid, Modal, Button } from "@mantine/core";
+import { BarChart } from "@mantine/charts";
 import PieChart from "../PieChart/index";
 import { useRef } from "react";
 import Autoplay from "embla-carousel-autoplay";
@@ -8,13 +13,15 @@ import { Carousel } from "@mantine/carousel";
 import "@mantine/carousel/styles.css";
 import { useDisclosure } from "@mantine/hooks";
 import { HiArrowLongRight } from "react-icons/hi2";
-import { FaRegFileAlt } from "react-icons/fa";
+import { CgFileDocument } from "react-icons/cg";
+import { FcDocument } from "react-icons/fc";
+import BarChartNew from "@/components/app-modules/BarChartNew";
 
 const arrowIcon = <HiArrowLongRight />;
 
 const index = () => {
   const [opened, { open, close }] = useDisclosure(false);
-  const autoplay = useRef(Autoplay({ delay: 4000 }));
+  const autoplay = useRef(Autoplay({ delay: 2000 }));
 
   return (
     <>
@@ -35,61 +42,179 @@ const index = () => {
         </p>
       </Modal>
       <Grid>
-        {/* <Grid.Col span={3}>
+        <Grid.Col span={3}>
           <div className="itemCard h-100">
             <h5 className="mb-3 ">Notice Title Here</h5>
-            <div className="cardBox">
+            <div className="noticeCardBox">
               <h5 className="leaveTitle text-center">Total Employee</h5>
               <h1 className="mb-0 text-center d-block leaveLeft">35</h1>
             </div>
-            <div className="cardBox">
+            <div className="noticeCardBox">
               <h5 className="leaveTitle text-center">New Joined</h5>
               <h1 className="mb-0 text-center d-block leaveLeft">3</h1>
             </div>
-            <div className="cardBox">
+            <div className="noticeCardBox">
               <h5 className="leaveTitle text-center">Resigned/Terminated</h5>
               <h1 className="mb-0 text-center d-block leaveLeft">2</h1>
             </div>
           </div>
-        </Grid.Col> */}
-        {/* <Grid.Col span={6}>
+        </Grid.Col>
+        <Grid.Col span={6}>
           <div className="itemCard h-100">
             <h5 className="mb-3 text-center">Employee Attendance Summary</h5>
             <PieChart />
           </div>
-        </Grid.Col> */}
+        </Grid.Col>
         <Grid.Col span={3}>
-          <div className="itemCard h-100">
-            <div className="mb-3 d-flex justify-content-between align-items-center">
+          <div className="itemCard h-100 p-0 pb-5">
+            <div className="viewBtnBox d-flex justify-content-between align-items-center">
               <h5 className="mb-0">Notice Board</h5>
-              <Button size="sm" variant="light" rightSection={arrowIcon}>
+              <Button
+                component={Link}
+                href="/notices"
+                size="sm"
+                variant="light"
+                rightSection={arrowIcon}
+              >
                 View All
               </Button>
             </div>
             <Carousel
               // withIndicators
-              height={300}
+              height={400}
               slideSize="20%"
-              slideGap="md"
+              slideGap={0}
               loop
               align="start"
               slidesToScroll={1}
-              plugins={[autoplay.current]}
-              onMouseEnter={autoplay.current.stop}
-              onMouseLeave={autoplay.current.play}
+              // plugins={[autoplay.current]}
+              // onMouseEnter={autoplay.current.stop}
+              // onMouseLeave={autoplay.current.play}
               orientation="vertical"
             >
               <Carousel.Slide>
                 <Button
                   onClick={open}
-                  className="noticeButton text-dark position-relative bg-light"
+                  classNames={{
+                    root: "rootBtn",
+                    label: "labelBtn",
+                    inner: "innerBtn",
+                  }}
                 >
                   <div className="buttonItem">
-                    {/* <FaRegFileAlt className="noticeIcon" /> */}
-                    <p className="noticTitle d-block w-100 mb-0">
-                      Lorem ipsum dolor
+                    <CgFileDocument className="noticeIcon" />
+                    <p className="noticTitle mb-0 text-start">
+                      1. Lorem ipsum dolor sit amet, adipisicing elirdwe sit
+                      amet, adipisicing elirdwe
                     </p>
-                    {/* <p className="mb-0 d-block">02:10 PM | 21 Apr 2024</p> */}
+                    <p className="noticDate mb-0 d-block text-start py-2">
+                      02:10 PM | 21 Apr 2024
+                    </p>
+                  </div>
+                </Button>
+              </Carousel.Slide>
+              <Carousel.Slide>
+                <Button
+                  onClick={open}
+                  classNames={{
+                    root: "rootBtn",
+                    label: "labelBtn",
+                    inner: "innerBtn",
+                  }}
+                >
+                  <div className="buttonItem">
+                    <CgFileDocument className="noticeIcon" />
+                    <p className="noticTitle mb-0 text-start">
+                      2. Lorem ipsum dolor sit amet, adipisicing elirdwe sit
+                      amet, adipisicing elirdwe
+                    </p>
+                    <p className="noticDate mb-0 d-block text-start py-2">
+                      02:10 PM | 21 Apr 2024
+                    </p>
+                  </div>
+                </Button>
+              </Carousel.Slide>
+              <Carousel.Slide>
+                <Button
+                  onClick={open}
+                  classNames={{
+                    root: "rootBtn",
+                    label: "labelBtn",
+                    inner: "innerBtn",
+                  }}
+                >
+                  <div className="buttonItem">
+                    <CgFileDocument className="noticeIcon" />
+                    <p className="noticTitle mb-0 text-start">
+                      3. Lorem ipsum dolor sit amet, adipisicing elirdwe sit
+                      amet, adipisicing elirdwe
+                    </p>
+                    <p className="noticDate mb-0 d-block text-start py-2">
+                      02:10 PM | 21 Apr 2024
+                    </p>
+                  </div>
+                </Button>
+              </Carousel.Slide>
+              <Carousel.Slide>
+                <Button
+                  onClick={open}
+                  classNames={{
+                    root: "rootBtn",
+                    label: "labelBtn",
+                    inner: "innerBtn",
+                  }}
+                >
+                  <div className="buttonItem">
+                    <CgFileDocument className="noticeIcon" />
+                    <p className="noticTitle mb-0 text-start">
+                      4. Lorem ipsum dolor sit amet, adipisicing elirdwe sit
+                      amet, adipisicing elirdwe
+                    </p>
+                    <p className="noticDate mb-0 d-block text-start py-2">
+                      02:10 PM | 21 Apr 2024
+                    </p>
+                  </div>
+                </Button>
+              </Carousel.Slide>
+              <Carousel.Slide>
+                <Button
+                  onClick={open}
+                  classNames={{
+                    root: "rootBtn",
+                    label: "labelBtn",
+                    inner: "innerBtn",
+                  }}
+                >
+                  <div className="buttonItem">
+                    <CgFileDocument className="noticeIcon" />
+                    <p className="noticTitle mb-0 text-start">
+                      5. Lorem ipsum dolor sit amet, adipisicing elirdwe sit
+                      amet, adipisicing elirdwe
+                    </p>
+                    <p className="noticDate mb-0 d-block text-start py-2">
+                      02:10 PM | 21 Apr 2024
+                    </p>
+                  </div>
+                </Button>
+              </Carousel.Slide>
+              <Carousel.Slide>
+                <Button
+                  onClick={open}
+                  classNames={{
+                    root: "rootBtn",
+                    label: "labelBtn",
+                    inner: "innerBtn",
+                  }}
+                >
+                  <div className="buttonItem">
+                    <CgFileDocument className="noticeIcon" />
+                    <p className="noticTitle mb-0 text-start">
+                      6. Lorem ipsum dolor sit amet, adipisicing elirdwe sit
+                      amet, adipisicing elirdwe
+                    </p>
+                    <p className="noticDate mb-0 d-block text-start py-2">
+                      02:10 PM | 21 Apr 2024
+                    </p>
                   </div>
                 </Button>
               </Carousel.Slide>
@@ -97,6 +222,81 @@ const index = () => {
           </div>
         </Grid.Col>
       </Grid>
+      <div className="itemCard mt-3">
+        <h5 className="mb-3 ">Employee statistics</h5>
+        <Tabs defaultValue="1">
+          <Tabs.List>
+            <Tabs.Tab value="1">By Job Status</Tabs.Tab>
+            <Tabs.Tab value="2">By Designation</Tabs.Tab>
+            <Tabs.Tab value="3">By Department</Tabs.Tab>
+            <Tabs.Tab value="4">By Gender</Tabs.Tab>
+            <Tabs.Tab value="5">By Religion</Tabs.Tab>
+            <Tabs.Tab value="6">By Maritial Status</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value="1">
+            <div className="pt-5">
+              <BarChartNew />
+            </div>
+          </Tabs.Panel>
+          <Tabs.Panel value="2">
+            <div className="pt-5">
+              <BarChart
+                h={400}
+                data={data2}
+                dataKey="post"
+                series={[{ name: "Employees" }]}
+              />
+            </div>
+          </Tabs.Panel>
+          <Tabs.Panel value="3">
+            <div className="pt-5">
+              <BarChart
+                h={400}
+                data={data}
+                dataKey="post"
+                series={[{ name: "Employees" }]}
+              />
+            </div>
+          </Tabs.Panel>
+          <Tabs.Panel value="4">
+            <div className="pt-5">
+              <BarChart
+                h={400}
+                data={data2}
+                dataKey="post"
+                series={[{ name: "Employees" }]}
+              />
+            </div>
+          </Tabs.Panel>
+          <Tabs.Panel value="5">
+            <div className="pt-5">
+              <BarChart
+                h={400}
+                data={data}
+                dataKey="post"
+                series={[{ name: "Employees" }]}
+              />
+            </div>
+          </Tabs.Panel>
+          <Tabs.Panel value="6">
+            <div className="pt-5">
+              <BarChart
+                h={400}
+                data={data2}
+                dataKey="post"
+                series={[{ name: "Employees" }]}
+              />
+            </div>
+          </Tabs.Panel>
+        </Tabs>
+
+        {/* <BarChart
+          h={300}
+          data={data2}
+          dataKey="post2"
+          series={[{ name: "Smartphones", color: "cyan" }]}
+        /> */}
+      </div>
     </>
   );
 };

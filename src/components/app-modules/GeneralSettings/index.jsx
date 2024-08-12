@@ -1,10 +1,11 @@
 "use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import useSWR from "swr";
 import { useForm } from "@mantine/form";
+import { TimeInput } from "@mantine/dates";
 import {
-  TextInput,
-  Input,
+  // TextInput,
   Button,
   Group,
   Select,
@@ -15,10 +16,9 @@ import {
   Loader,
   Alert,
 } from "@mantine/core";
-import Breadcrumb from "@/components/utils/Breadcrumb";
-import { TimeInput } from "@mantine/dates";
 import { IoTimeOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
+import Breadcrumb from "@/components/utils/Breadcrumb";
 import { update } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
 import { formatTime } from "@/lib/helper";
@@ -54,8 +54,17 @@ const GeneralSettings = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm({
+    mode: "uncontrolled",
     initialValues: {
-      weekly_holiday: [],
+      weekly_holiday: {
+        Saturday: false,
+        Sunday: false,
+        Monday: false,
+        Tuesday: false,
+        Wednesday: false,
+        Thursday: false,
+        Friday: false,
+      },
       fiscalyear_month: "",
       workingday_starts_at: "",
       basic_salary_percentage: "",
@@ -78,10 +87,37 @@ const GeneralSettings = () => {
     }
   );
 
+  // console.log(data);
+
   useEffect(() => {
     if (data) {
       form.setValues({
-        weekly_holiday: data?.weekly_holiday?.day?.map((item) => item.id) || [],
+        weekly_holiday: {
+          Saturday:
+            data?.weekly_holiday?.day?.some(
+              (item) => item.day === "Saturday"
+            ) || false,
+          Sunday:
+            data?.weekly_holiday?.day?.some((item) => item.day === "Sunday") ||
+            false,
+          Monday:
+            data?.weekly_holiday?.day?.some((item) => item.day === "Monday") ||
+            false,
+          Tuesday:
+            data?.weekly_holiday?.day?.some((item) => item.day === "Tuesday") ||
+            false,
+          Wednesday:
+            data?.weekly_holiday?.day?.some(
+              (item) => item.day === "Wednesday"
+            ) || false,
+          Thursday:
+            data?.weekly_holiday?.day?.some(
+              (item) => item.day === "Thursday"
+            ) || false,
+          Friday:
+            data?.weekly_holiday?.day?.some((item) => item.day === "Friday") ||
+            false,
+        },
         fiscalyear_month: data.fiscalyear_month || "",
         workingday_starts_at: data.workingday_starts_at || "",
         basic_salary_percentage: data.basic_salary_percentage || "",
@@ -101,21 +137,17 @@ const GeneralSettings = () => {
     }
   }, [data]);
 
-  console.log(form.values);
-
-  const handleCheckboxChange = (dayId) => {
-    const currentWeeklyHoliday = form.values.weekly_holiday;
-    const newWeeklyHoliday = currentWeeklyHoliday.includes(dayId)
-      ? currentWeeklyHoliday.filter((id) => id !== dayId)
-      : [...currentWeeklyHoliday, dayId];
-
-    form.setValues({ weekly_holiday: newWeeklyHoliday });
-  };
+  // console.log(form.values);
 
   const handleSubmit = async (values) => {
+    const weeklyHolidayArray = Object.keys(values.weekly_holiday)
+      .filter((day) => values.weekly_holiday[day])
+      .map((day) => weeklyHolidays.find((holiday) => holiday.name === day)?.id);
+
     const formattedValues = {
       ...values,
       workingday_starts_at: formatTime(values.workingday_starts_at),
+      weekly_holiday: weeklyHolidayArray,
     };
 
     setIsSubmitting(true);
@@ -129,7 +161,7 @@ const GeneralSettings = () => {
       if (response?.status === "success") {
         // console.log(response);
         setIsSubmitting(false);
-        close();
+        // close();
         mutate();
         toast.success("Settings updated successfully!");
       } else {
@@ -142,13 +174,13 @@ const GeneralSettings = () => {
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     } catch (error) {
       console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
       toast.error("Failed to update settings.");
     }
   };
@@ -197,6 +229,7 @@ const GeneralSettings = () => {
                 disabled={isSubmitting}
                 data={fiscalYearMonths}
                 {...form.getInputProps("fiscalyear_month")}
+                key={form.key("fiscalyear_month")}
               />
               <TimeInput
                 mb="sm"
@@ -206,6 +239,7 @@ const GeneralSettings = () => {
                 required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("workingday_starts_at")}
+                key={form.key("workingday_starts_at")}
               />
               <NumberInput
                 mb="sm"
@@ -215,6 +249,7 @@ const GeneralSettings = () => {
                 required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("basic_salary_percentage")}
+                key={form.key("basic_salary_percentage")}
               />
               <NumberInput
                 mb="sm"
@@ -226,6 +261,7 @@ const GeneralSettings = () => {
                 {...form.getInputProps(
                   "consecutive_days_late_attendance_to_fine"
                 )}
+                key={form.key("consecutive_days_late_attendance_to_fine")}
               />
               <NumberInput
                 mb="sm"
@@ -235,23 +271,22 @@ const GeneralSettings = () => {
                 required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("consecutive_late_attendance_to_fine")}
+                key={form.key("consecutive_late_attendance_to_fine")}
               />
               <div className="holidayBox mb-3">
                 <p className="mb-1">Weekly Holidays</p>
                 <div className="d-flex flex-wrap">
                   {weeklyHolidays.map((day) => (
                     <Checkbox
-                      key={day.id}
+                      // key={day.id}
+                      key={form.key(`weekly_holiday.${day.name}`)}
                       me="lg"
                       mb="sm"
                       label={day.name}
                       disabled={isSubmitting}
-                      checked={form.values.weekly_holiday.includes(day.id)}
-                      onChange={() => handleCheckboxChange(day.id)}
-                      // {...form.getInputProps('weekly_holiday', {
-                      //   type: 'checkbox',
-                      //   value: day.id,
-                      // })}
+                      {...form.getInputProps(`weekly_holiday.${day.name}`, {
+                        type: "checkbox",
+                      })}
                     />
                   ))}
                 </div>
@@ -266,6 +301,7 @@ const GeneralSettings = () => {
                 required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("fraction_of_daily_salary_for_halfday")}
+                key={form.key("fraction_of_daily_salary_for_halfday")}
               />
               <NumberInput
                 mb="sm"
@@ -275,6 +311,7 @@ const GeneralSettings = () => {
                 required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("max_working_hours_against_timesheet")}
+                key={form.key("max_working_hours_against_timesheet")}
               />
               <Select
                 mb="sm"
@@ -284,6 +321,7 @@ const GeneralSettings = () => {
                 disabled={isSubmitting}
                 data={attendanceOptions}
                 {...form.getInputProps("consider_attendance_on_holidays")}
+                key={form.key("consider_attendance_on_holidays")}
               />
               <Checkbox
                 mb="sm"
@@ -292,12 +330,14 @@ const GeneralSettings = () => {
                 {...form.getInputProps("holiday_as_workingday", {
                   type: "checkbox",
                 })}
+                key={form.key("holiday_as_workingday")}
               />
               <Checkbox
                 mb="sm"
                 label="Allow Overtime"
                 disabled={isSubmitting}
                 {...form.getInputProps("allow_overtime", { type: "checkbox" })}
+                key={form.key("allow_overtime")}
               />
             </Grid.Col>
           </Grid>

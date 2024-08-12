@@ -4,7 +4,7 @@ import Link from "next/link";
 import { data } from "./data";
 import { data2 } from "./data2";
 import "@mantine/charts/styles.css";
-import { Tabs, Grid, Modal, Button } from "@mantine/core";
+import { Tabs, Table, Grid, Modal, Button } from "@mantine/core";
 import { BarChart } from "@mantine/charts";
 import PieChart from "../PieChart/index";
 import { useRef } from "react";
@@ -15,13 +15,66 @@ import { useDisclosure } from "@mantine/hooks";
 import { HiArrowLongRight } from "react-icons/hi2";
 import { CgFileDocument } from "react-icons/cg";
 import { FcDocument } from "react-icons/fc";
-import BarChartNew from "@/components/app-modules/BarChartNew";
-
 const arrowIcon = <HiArrowLongRight />;
+
+const elements = [
+  {
+    name: "G. M. Nazmul Hussain",
+    requestType: "Regular Leave",
+    leaveType: "Casual",
+    fromDate: "Aug-08-2024",
+    toDate: "Aug-08-2024",
+    status: "Pending",
+  },
+  {
+    name: "G. M. Nazmul Hussain",
+    requestType: "Regular Leave",
+    leaveType: "Casual",
+    fromDate: "Aug-08-2024",
+    toDate: "Aug-08-2024",
+    status: "Pending",
+  },
+  {
+    name: "G. M. Nazmul Hussain",
+    requestType: "Regular Leave",
+    leaveType: "Casual",
+    fromDate: "Aug-08-2024",
+    toDate: "Aug-08-2024",
+    status: "Pending",
+  },
+  {
+    name: "G. M. Nazmul Hussain",
+    requestType: "Regular Leave",
+    leaveType: "Casual",
+    fromDate: "Aug-08-2024",
+    toDate: "Aug-08-2024",
+    status: "Pending",
+  },
+  {
+    name: "G. M. Nazmul Hussain",
+    requestType: "Regular Leave",
+    leaveType: "Casual",
+    fromDate: "Aug-08-2024",
+    toDate: "Aug-08-2024",
+    status: "Pending",
+  },
+];
 
 const index = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const autoplay = useRef(Autoplay({ delay: 2000 }));
+
+  // Table of Leave Policy
+  const pendingLeaveRequests = elements.map((element) => (
+    <Table.Tr key={element.name}>
+      <Table.Td>{element.name}</Table.Td>
+      <Table.Td>{element.requestType}</Table.Td>
+      <Table.Td>{element.leaveType}</Table.Td>
+      <Table.Td>{element.fromDate}</Table.Td>
+      <Table.Td>{element.toDate}</Table.Td>
+      <Table.Td>{element.status}</Table.Td>
+    </Table.Tr>
+  ));
 
   return (
     <>
@@ -222,81 +275,156 @@ const index = () => {
           </div>
         </Grid.Col>
       </Grid>
-      <div className="itemCard mt-3">
-        <h5 className="mb-3 ">Employee statistics</h5>
-        <Tabs defaultValue="1">
-          <Tabs.List>
-            <Tabs.Tab value="1">By Job Status</Tabs.Tab>
-            <Tabs.Tab value="2">By Designation</Tabs.Tab>
-            <Tabs.Tab value="3">By Department</Tabs.Tab>
-            <Tabs.Tab value="4">By Gender</Tabs.Tab>
-            <Tabs.Tab value="5">By Religion</Tabs.Tab>
-            <Tabs.Tab value="6">By Maritial Status</Tabs.Tab>
-          </Tabs.List>
-          <Tabs.Panel value="1">
-            <div className="pt-5">
-              <BarChartNew />
-            </div>
-          </Tabs.Panel>
-          <Tabs.Panel value="2">
-            <div className="pt-5">
-              <BarChart
-                h={400}
-                data={data2}
-                dataKey="post"
-                series={[{ name: "Employees" }]}
-              />
-            </div>
-          </Tabs.Panel>
-          <Tabs.Panel value="3">
-            <div className="pt-5">
-              <BarChart
-                h={400}
-                data={data}
-                dataKey="post"
-                series={[{ name: "Employees" }]}
-              />
-            </div>
-          </Tabs.Panel>
-          <Tabs.Panel value="4">
-            <div className="pt-5">
-              <BarChart
-                h={400}
-                data={data2}
-                dataKey="post"
-                series={[{ name: "Employees" }]}
-              />
-            </div>
-          </Tabs.Panel>
-          <Tabs.Panel value="5">
-            <div className="pt-5">
-              <BarChart
-                h={400}
-                data={data}
-                dataKey="post"
-                series={[{ name: "Employees" }]}
-              />
-            </div>
-          </Tabs.Panel>
-          <Tabs.Panel value="6">
-            <div className="pt-5">
-              <BarChart
-                h={400}
-                data={data2}
-                dataKey="post"
-                series={[{ name: "Employees" }]}
-              />
-            </div>
-          </Tabs.Panel>
-        </Tabs>
+      <Grid>
+        <Grid.Col span={6}>
+          <div className="itemCard mt-3">
+            <h5 className="mb-3">Employee statistics</h5>
+            <Tabs defaultValue="1">
+              <Tabs.List>
+                <Tabs.Tab value="1">By Job Status</Tabs.Tab>
+                <Tabs.Tab value="2">By Designation</Tabs.Tab>
+                <Tabs.Tab value="3">By Department</Tabs.Tab>
+                <Tabs.Tab value="4">By Gender</Tabs.Tab>
+                <Tabs.Tab value="5">By Religion</Tabs.Tab>
+                <Tabs.Tab value="6">By Maritial Status</Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="1">
+                <div className="pt-5">
+                  <BarChart
+                    h={550}
+                    data={data}
+                    dataKey="post"
+                    series={[{ name: "Employees" }]}
+                    orientation="vertical"
+                  />
+                </div>
+              </Tabs.Panel>
+              <Tabs.Panel value="2">
+                <div className="pt-5">
+                  <BarChart
+                    h={550}
+                    data={data2}
+                    dataKey="post"
+                    series={[{ name: "Employees" }]}
+                    orientation="vertical"
+                  />
+                </div>
+              </Tabs.Panel>
+              <Tabs.Panel value="3">
+                <div className="pt-5">
+                  <BarChart
+                    h={550}
+                    data={data}
+                    dataKey="post"
+                    series={[{ name: "Employees" }]}
+                    orientation="vertical"
+                  />
+                </div>
+              </Tabs.Panel>
+              <Tabs.Panel value="4">
+                <div className="pt-5">
+                  <BarChart
+                    h={550}
+                    data={data2}
+                    dataKey="post"
+                    series={[{ name: "Employees" }]}
+                    orientation="vertical"
+                  />
+                </div>
+              </Tabs.Panel>
+              <Tabs.Panel value="5">
+                <div className="pt-5">
+                  <BarChart
+                    h={550}
+                    data={data}
+                    dataKey="post"
+                    series={[{ name: "Employees" }]}
+                    orientation="vertical"
+                  />
+                </div>
+              </Tabs.Panel>
+              <Tabs.Panel value="6">
+                <div className="pt-5">
+                  <BarChart
+                    h={550}
+                    data={data2}
+                    dataKey="post"
+                    series={[{ name: "Employees" }]}
+                    orientation="vertical"
+                  />
+                </div>
+              </Tabs.Panel>
+            </Tabs>
 
-        {/* <BarChart
+            {/* <BarChart
           h={300}
           data={data2}
           dataKey="post2"
           series={[{ name: "Smartphones", color: "cyan" }]}
         /> */}
-      </div>
+          </div>
+        </Grid.Col>
+        <Grid.Col span={6}>
+          <div className="itemCard viewTable mt-3">
+            <div className="viewBtnBox px-0 pt-0 d-flex justify-content-between align-items-center">
+              <h5 className="mb-0">Pending Leave Requests</h5>
+              <Button
+                component={Link}
+                href="/leave-request"
+                size="sm"
+                variant="light"
+                rightSection={arrowIcon}
+              >
+                View All
+              </Button>
+            </div>
+            <div className="leavePolicyBox mb-3">
+              <Table striped withTableBorder withColumnBorders>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>Employee Name</Table.Th>
+                    <Table.Th>Request Type</Table.Th>
+                    <Table.Th>Leave Type</Table.Th>
+                    <Table.Th>From Date</Table.Th>
+                    <Table.Th>To Date</Table.Th>
+                    <Table.Th>Status</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>{pendingLeaveRequests}</Table.Tbody>
+              </Table>
+            </div>
+          </div>
+          <div className="itemCard viewTable mt-3">
+            <div className="viewBtnBox px-0 pt-0 d-flex justify-content-between align-items-center">
+              <h5 className="mb-0">Pending Attendance Requests</h5>
+              <Button
+                component={Link}
+                href="/manual-attendance"
+                size="sm"
+                variant="light"
+                rightSection={arrowIcon}
+              >
+                View All
+              </Button>
+            </div>
+            <div className="leavePolicyBox mb-3">
+              <Table striped withTableBorder withColumnBorders>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>Employee Name</Table.Th>
+                    <Table.Th>Request Type</Table.Th>
+                    <Table.Th>Leave Type</Table.Th>
+                    <Table.Th>From Date</Table.Th>
+                    <Table.Th>To Date</Table.Th>
+                    <Table.Th>Status</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>{pendingLeaveRequests}</Table.Tbody>
+              </Table>
+            </div>
+          </div>
+        </Grid.Col>
+      </Grid>
     </>
   );
 };

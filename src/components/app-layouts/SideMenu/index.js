@@ -451,10 +451,18 @@ const Page = () => {
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
-                          href="/assign-to-group"
+                          href="/assign-device-to-group"
                           className="text-decoration-none subMenu"
                         >
-                          Assign to Device Group
+                          Assign Device to Group
+                        </Link>
+                      </li>
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                        <Link
+                          href="/assign-employee-to-group"
+                          className="text-decoration-none subMenu"
+                        >
+                          Assign Employee to Group
                         </Link>
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">

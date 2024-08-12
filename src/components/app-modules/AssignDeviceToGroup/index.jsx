@@ -469,10 +469,10 @@ const Index = () => {
 
       <div className="mb-4">
         <Breadcrumb
-          title="Assign To Group"
+          title="Assign Device To Group"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Assign To Group" },
+            { title: "Assign Device To Group" },
           ]}
         />
       </div>

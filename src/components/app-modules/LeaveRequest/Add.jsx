@@ -9,32 +9,38 @@ import {
   Button,
   Select,
   Group,
-  Checkbox,
-  MultiSelect,
   FileInput,
-  rem,
 } from "@mantine/core";
 import { FiFile } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { submit } from "@/lib/submit";
-import { fetcher } from "@/lib/fetch";
+import { fetcher, getData } from "@/lib/fetch";
+import { getFullName } from "@/lib/helper";
 
 const Index = ({ opened, close, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [leavePolicies, setLeavePolicies] = useState([]);
+  // const [leavePoliciesExclude, setLeavePoliciesExclude] = useState([]);
+  const [isExtendExisting, setIsExtendExisting] = useState(false);
+  const [totalLeave, setTotalLeave] = useState(0);
 
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
       user: "",
+      request_type: "",
       leavepolicy: "",
-      from_date: "",
-      to_date: "",
-      total_leave: "",
-      valid_leave_dates: "",
+      exchange_with: "",
+      from_date: null,
+      to_date: null,
+      // extended_days: 2,
+      // total_leave: "",
+      // valid_leave_dates: "",
       attachment: "",
-      description: "",
-      rejection_reason: "",
-      approved_by: "",
+      // description: "",
+      reason: "",
+      // reason: "",
+      // approved_by: "",
     },
     // validate: {
     //   name: (value) =>
@@ -52,29 +58,109 @@ const Index = ({ opened, close, mutate }) => {
     revalidateOnFocus: false,
   });
 
-  console.log(data);
+  // console.log(data);
 
   const users = data?.data.result.map((item) => ({
-    label: (item?.first_name + " " + item?.last_name).toString() || "",
+    label: getFullName(item?.first_name, item?.last_name),
+    // label: (item?.first_name + " " + item?.last_name).toString() || "",
     value: item?.id.toString() || "",
   }));
 
-  const {
-    data: leavepolicyData,
-    error: leavepolicyError,
-    isLoading: leavepolicyIsFetchLoading,
-  } = useSWR(`/api/leave/get-leavepolicy/`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-    revalidateOnFocus: false,
+  // const {
+  //   data: leavepolicyData,
+  //   error: leavepolicyError,
+  //   isLoading: leavepolicyIsFetchLoading,
+  // } = useSWR(`/api/leave/get-leavepolicy/`, fetcher, {
+  //   errorRetryCount: 2,
+  //   keepPreviousData: true,
+  //   revalidateOnFocus: false,
+  // });
+
+  // console.log(data);
+
+  // const leavepolicies = leavepolicyData?.data.result.map((item) => ({
+  //   label: item?.name.toString() || "",
+  //   value: item?.id.toString() || "",
+  // }));
+
+  const fetchLeavePolicies = async (userId, type) => {
+    try {
+      const response = await getData(
+        `/api/leave/get-leavepolicy/?${type}=${userId}`
+      );
+      console.log(response);
+
+      const leavepolicies = response?.data?.data?.result.map((item) => ({
+        label: item?.name.toString() || "",
+        value: item?.id.toString() || "",
+      }));
+
+      // const responseExclude = await getData(
+      //   `/api/leave/get-leavepolicy/?exclude_user=${userId}`
+      // );
+      // console.log(response);
+
+      // const leavepoliciesExclude = response?.data?.data?.result.map((item) => ({
+      //   label: item?.name.toString() || "",
+      //   value: item?.id.toString() || "",
+      // }));
+      // console.log(leavepolicies);
+
+      setLeavePolicies(leavepolicies);
+      // setLeavePoliciesExclude(leavepoliciesExclude);
+    } catch (error) {
+      console.error("Error fetching Leave types:", error);
+      toast.error("Error fetching Leave types");
+    }
+  };
+
+  form.watch("user", ({ previousValue, value, touched, dirty }) => {
+    if (value) {
+      const request_type = form.getValues().request_type;
+      const type = request_type === "New Allocation" ? "exclude_user" : "user";
+      fetchLeavePolicies(value, type);
+    } else {
+      form.setFieldValue("leavepolicy", "");
+      fetchLeavePolicies([]);
+    }
   });
 
-  console.log(data);
+  form.watch("request_type", ({ previousValue, value, touched, dirty }) => {
+    const userId = form.getValues().user;
+    if (value && userId) {
+      const type = value === "New Allocation" ? "exclude_user" : "user";
+      fetchLeavePolicies(userId, type);
+      form.setFieldValue("leavepolicy", "");
+      form.setFieldValue("exchange_with", "");
+    } else {
+      form.setFieldValue("leavepolicy", "");
+      form.setFieldValue("exchange_with", "");
+      setLeavePolicies([]);
+    }
+    setIsExtendExisting(value === "Extend Existing");
+  });
 
-  const leavepolicies = leavepolicyData?.data.result.map((item) => ({
-    label: item?.name.toString() || "",
-    value: item?.id.toString() || "",
-  }));
+  const calculateTotalLeave = (fromDate, toDate) => {
+    return (new Date(toDate) - new Date(fromDate)) / (1000 * 60 * 60 * 24) + 1;
+  };
+
+  form.watch("from_date", ({ value }) => {
+    const fromDate = value;
+    const toDate = form.getValues().to_date;
+    if (toDate && toDate) {
+      const totalDays = calculateTotalLeave(fromDate, toDate);
+      setTotalLeave(totalDays);
+    }
+  });
+
+  form.watch("to_date", ({ value }) => {
+    const toDate = value;
+    const fromDate = form.getValues().from_date;
+    if (toDate && toDate) {
+      const totalDays = calculateTotalLeave(fromDate, toDate);
+      setTotalLeave(totalDays);
+    }
+  });
 
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
@@ -83,6 +169,7 @@ const Index = ({ opened, close, mutate }) => {
       const formattedFromDate = values.from_date
         ? values.from_date.toISOString().split("T")[0]
         : null;
+
       const formattedToDate = values.to_date
         ? values.from_date.toISOString().split("T")[0]
         : null;
@@ -151,7 +238,6 @@ const Index = ({ opened, close, mutate }) => {
         centered
       >
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-          
           <Select
             mb="sm"
             label="Employee"
@@ -160,7 +246,7 @@ const Index = ({ opened, close, mutate }) => {
             disabled={isSubmitting}
             data={users}
             searchable
-            limit={10}
+            // limit={10}
             nothingFoundMessage="Nothing found..."
             {...form.getInputProps("user")}
           />
@@ -169,6 +255,8 @@ const Index = ({ opened, close, mutate }) => {
             mb="sm"
             placeholder="Pick value"
             data={["Regular Leave", "Extend Existing", "New Allocation"]}
+            {...form.getInputProps("request_type")}
+            key={form.key("request_type")}
           />
           <Select
             mb="sm"
@@ -176,25 +264,31 @@ const Index = ({ opened, close, mutate }) => {
             placeholder="Leave Type"
             required={true}
             disabled={isSubmitting}
-            data={leavepolicies}
+            data={leavePolicies}
             searchable
-            limit={10}
+            // limit={10}
             nothingFoundMessage="Nothing found..."
             {...form.getInputProps("leavepolicy")}
+            key={form.key("leavepolicy")}
           />
-          <Select
-            label="Exchange with (Optional)"
-            mb="sm"
-            placeholder="Pick value"
-            data={leavepolicies}
-            {...form.getInputProps("leavepolicy")}
-          />
+          {isExtendExisting && (
+            <Select
+              label="Exchange with (Optional)"
+              mb="sm"
+              placeholder="Pick value"
+              data={leavePolicies}
+              {...form.getInputProps("exchange_with")}
+              key={form.key("exchange_with")}
+            />
+          )}
+
           <DateInput
             mb="sm"
             valueFormat="DD MMM YYYY"
             label="From Date"
             placeholder="DD MMM YYYY"
             {...form.getInputProps("from_date")}
+            key={form.key("from_date")}
           />
           <DateInput
             mb="sm"
@@ -208,7 +302,8 @@ const Index = ({ opened, close, mutate }) => {
             mb="sm"
             label="Total Days"
             placeholder="0"
-            {...form.getInputProps("total_leave")}
+            value={totalLeave}
+            // {...form.getInputProps("total_leave")}
           />
           <FileInput
             mb="sm"
@@ -222,7 +317,7 @@ const Index = ({ opened, close, mutate }) => {
             mb="sm"
             label="Details"
             placeholder="Details"
-            {...form.getInputProps("rejection_reason")}
+            {...form.getInputProps("description")}
           />
           <Group justify="flex-end" mt="sm">
             <Button

@@ -28,6 +28,7 @@ import AddButton from "@/components/utils/AddButton";
 import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
+import { formatDate, getFullName } from "@/lib/helper";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -107,7 +108,8 @@ const index = () => {
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      // render: ({ employee }) => employee?.name || "N/A",
+      render: ({ user }) =>
+        getFullName(user?.first_name, user?.last_name) || "N/A",
       // for export
       key: "employee",
     },
@@ -118,7 +120,7 @@ const index = () => {
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      // render: ({ employee }) => employee?.name || "N/A",
+      render: ({ request_type }) => request_type || "N/A",
       // for export
       key: "requestType",
     },
@@ -139,7 +141,7 @@ const index = () => {
       title: "From Date",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ from_date }) => from_date || "N/A",
+      render: ({ from_date }) => (from_date ? formatDate(from_date) : "N/A"),
       // for export
       key: "from_date",
     },
@@ -149,7 +151,7 @@ const index = () => {
       title: "To Date",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ to_date }) => to_date || "N/A",
+      render: ({ to_date }) => (to_date ? formatDate(to_date) : "N/A"),
       // for export
       key: "to_date",
     },
@@ -180,7 +182,7 @@ const index = () => {
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ detail }) => detail || "N/A",
+      render: ({ reason }) => reason || "N/A",
       // for export
       key: "detail",
     },

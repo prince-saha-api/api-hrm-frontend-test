@@ -20,7 +20,6 @@ import { getFullName } from "@/lib/helper";
 const Index = ({ opened, close, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [leavePolicies, setLeavePolicies] = useState([]);
-  // const [leavePoliciesExclude, setLeavePoliciesExclude] = useState([]);
   const [isExtendExisting, setIsExtendExisting] = useState(false);
   const [totalLeave, setTotalLeave] = useState(0);
 
@@ -33,19 +32,18 @@ const Index = ({ opened, close, mutate }) => {
       exchange_with: "",
       from_date: null,
       to_date: null,
-      // extended_days: 2,
-      // total_leave: "",
-      // valid_leave_dates: "",
       attachment: "",
-      // description: "",
       reason: "",
-      // reason: "",
-      // approved_by: "",
     },
-    // validate: {
-    //   name: (value) =>
-    //     value.length < 5 ? "Name must have at least 5 letters" : null,
-    // },
+    validate: {
+      user: (value) => (!value ? "Employee is required" : null),
+      request_type: (value) => (!value ? "Request type is required" : null),
+      leavepolicy: (value) => (!value ? "Leave type is required" : null),
+      from_date: (value) => (!value ? "From date is required" : null),
+      to_date: (value) => (!value ? "To date is required" : null),
+      reason: (value) =>
+        value.length < 5 ? "Reason must be at least 5 characters" : null,
+    },
   });
 
   const {
@@ -58,30 +56,10 @@ const Index = ({ opened, close, mutate }) => {
     revalidateOnFocus: false,
   });
 
-  // console.log(data);
-
   const users = data?.data.result.map((item) => ({
     label: getFullName(item?.first_name, item?.last_name),
-    // label: (item?.first_name + " " + item?.last_name).toString() || "",
     value: item?.id.toString() || "",
   }));
-
-  // const {
-  //   data: leavepolicyData,
-  //   error: leavepolicyError,
-  //   isLoading: leavepolicyIsFetchLoading,
-  // } = useSWR(`/api/leave/get-leavepolicy/`, fetcher, {
-  //   errorRetryCount: 2,
-  //   keepPreviousData: true,
-  //   revalidateOnFocus: false,
-  // });
-
-  // console.log(data);
-
-  // const leavepolicies = leavepolicyData?.data.result.map((item) => ({
-  //   label: item?.name.toString() || "",
-  //   value: item?.id.toString() || "",
-  // }));
 
   const fetchLeavePolicies = async (userId, type) => {
     try {
@@ -95,26 +73,14 @@ const Index = ({ opened, close, mutate }) => {
         value: item?.id.toString() || "",
       }));
 
-      // const responseExclude = await getData(
-      //   `/api/leave/get-leavepolicy/?exclude_user=${userId}`
-      // );
-      // console.log(response);
-
-      // const leavepoliciesExclude = response?.data?.data?.result.map((item) => ({
-      //   label: item?.name.toString() || "",
-      //   value: item?.id.toString() || "",
-      // }));
-      // console.log(leavepolicies);
-
       setLeavePolicies(leavepolicies);
-      // setLeavePoliciesExclude(leavepoliciesExclude);
     } catch (error) {
       console.error("Error fetching Leave types:", error);
       toast.error("Error fetching Leave types");
     }
   };
 
-  form.watch("user", ({ previousValue, value, touched, dirty }) => {
+  form.watch("user", ({ value, touched, dirty }) => {
     if (value) {
       const request_type = form.getValues().request_type;
       const type = request_type === "New Allocation" ? "exclude_user" : "user";
@@ -125,7 +91,7 @@ const Index = ({ opened, close, mutate }) => {
     }
   });
 
-  form.watch("request_type", ({ previousValue, value, touched, dirty }) => {
+  form.watch("request_type", ({ value, touched, dirty }) => {
     const userId = form.getValues().user;
     if (value && userId) {
       const type = value === "New Allocation" ? "exclude_user" : "user";
@@ -214,7 +180,7 @@ const Index = ({ opened, close, mutate }) => {
         setIsSubmitting(false);
         toast.error(
           response?.status == "error"
-            ? response.message
+            ? response?.message[0]
             : "Error submitting form"
         );
       }
@@ -222,7 +188,7 @@ const Index = ({ opened, close, mutate }) => {
       console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
-      }, 5000);
+      }, 500);
     }
   };
 
@@ -249,11 +215,14 @@ const Index = ({ opened, close, mutate }) => {
             // limit={10}
             nothingFoundMessage="Nothing found..."
             {...form.getInputProps("user")}
+            key={form.key("user")}
           />
           <Select
             label="Request Type"
             mb="sm"
             placeholder="Pick value"
+            required={true}
+            disabled={isSubmitting}
             data={["Regular Leave", "Extend Existing", "New Allocation"]}
             {...form.getInputProps("request_type")}
             key={form.key("request_type")}
@@ -276,6 +245,7 @@ const Index = ({ opened, close, mutate }) => {
               label="Exchange with (Optional)"
               mb="sm"
               placeholder="Pick value"
+              disabled={isSubmitting}
               data={leavePolicies}
               {...form.getInputProps("exchange_with")}
               key={form.key("exchange_with")}
@@ -287,6 +257,7 @@ const Index = ({ opened, close, mutate }) => {
             valueFormat="DD MMM YYYY"
             label="From Date"
             placeholder="DD MMM YYYY"
+            disabled={isSubmitting}
             {...form.getInputProps("from_date")}
             key={form.key("from_date")}
           />
@@ -295,7 +266,9 @@ const Index = ({ opened, close, mutate }) => {
             valueFormat="DD MMM YYYY"
             label="To Date"
             placeholder="DD MMM YYYY"
+            disabled={isSubmitting}
             {...form.getInputProps("to_date")}
+            key={form.key("to_date")}
           />
           <TextInput
             disabled
@@ -310,6 +283,7 @@ const Index = ({ opened, close, mutate }) => {
             leftSection={<FiFile />}
             label="Attachment"
             placeholder="Attachment"
+            disabled={isSubmitting}
             leftSectionPointerEvents="none"
             {...form.getInputProps("attachment")}
           />
@@ -317,6 +291,7 @@ const Index = ({ opened, close, mutate }) => {
             mb="sm"
             label="Details"
             placeholder="Details"
+            disabled={isSubmitting}
             {...form.getInputProps("description")}
           />
           <Group justify="flex-end" mt="sm">

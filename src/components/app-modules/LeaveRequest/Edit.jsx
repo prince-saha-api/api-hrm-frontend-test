@@ -12,6 +12,54 @@ import {
 } from "@mantine/core";
 import { FiFile } from "react-icons/fi";
 const Index = ({ opened, close, setItem }) => {
+  // const {
+  //   data: leavepolicyData,
+  //   error: leavepolicyError,
+  //   isLoading: leavepolicyIsFetchLoading,
+  // } = useSWR(`/api/leave/get-leavepolicy/`, fetcher, {
+  //   errorRetryCount: 2,
+  //   keepPreviousData: true,
+  //   revalidateOnFocus: false,
+  // });
+
+  // console.log(data);
+
+  // const leavepolicies = leavepolicyData?.data.result.map((item) => ({
+  //   label: item?.name.toString() || "",
+  //   value: item?.id.toString() || "",
+  // }));
+
+  // const fetchLeavePolicies = async (userId, type) => {
+  //   try {
+  //     const response = await getData(
+  //       `/api/leave/get-leavepolicy/?${type}=${userId}`
+  //     );
+  //     console.log(response);
+
+  //     const leavepolicies = response?.data?.data?.result.map((item) => ({
+  //       label: item?.name.toString() || "",
+  //       value: item?.id.toString() || "",
+  //     }));
+
+  //     // const responseExclude = await getData(
+  //     //   `/api/leave/get-leavepolicy/?exclude_user=${userId}`
+  //     // );
+  //     // console.log(response);
+
+  //     // const leavepoliciesExclude = response?.data?.data?.result.map((item) => ({
+  //     //   label: item?.name.toString() || "",
+  //     //   value: item?.id.toString() || "",
+  //     // }));
+  //     // console.log(leavepolicies);
+
+  //     setLeavePolicies(leavepolicies);
+  //     // setLeavePoliciesExclude(leavepoliciesExclude);
+  //   } catch (error) {
+  //     console.error("Error fetching Leave types:", error);
+  //     toast.error("Error fetching Leave types");
+  //   }
+  // };
+
   return (
     <>
       <Modal

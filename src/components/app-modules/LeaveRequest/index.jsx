@@ -38,7 +38,7 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "user",
+    columnAccessor: "id",
     direction: "asc", // desc
   });
 
@@ -114,7 +114,7 @@ const index = () => {
       accessor: "employee",
       title: "Employee Name",
       noWrap: true,
-      sortable: true,
+      // sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ user }) =>
         getFullName(user?.first_name, user?.last_name) || "N/A",
@@ -123,21 +123,21 @@ const index = () => {
     },
     {
       // for table display
-      accessor: "requestType",
+      accessor: "request_type",
       title: "Request Type",
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ request_type }) => request_type || "N/A",
       // for export
-      key: "requestType",
+      key: "request_type",
     },
     {
       // for table display
       accessor: "leavepolicy",
       title: "Leave Type",
       noWrap: true,
-      sortable: true,
+      // sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ leavepolicy }) => leavepolicy?.name || "N/A",
       // for export
@@ -165,13 +165,13 @@ const index = () => {
     },
     {
       // for table display
-      accessor: "totalDays",
+      accessor: "total_leave",
       title: "Total Days",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ totalDays }) => totalDays || "N/A",
+      render: ({ total_leave }) => total_leave || "N/A",
       // for export
-      key: "totalDays",
+      key: "total_leave",
     },
     {
       // for table display
@@ -179,25 +179,25 @@ const index = () => {
       title: "Attachment",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ totalDays }) => totalDays || "N/A",
+      render: ({ attachment }) => "attachment" || "N/A",
       // for export
       key: "attachment",
     },
     {
       // for table display
-      accessor: "detail",
+      accessor: "reason",
       title: "Detail",
       noWrap: true,
-      sortable: true,
+      // sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ reason }) => reason || "N/A",
       // for export
-      key: "detail",
+      key: "reason",
     },
     {
       // for table display
-      accessor: "Status",
-      title: "status",
+      accessor: "status",
+      title: "Status",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
       render: (item) => (
@@ -294,7 +294,7 @@ const index = () => {
     },
     {
       label: "Request Type",
-      value: "requestType",
+      value: "request_type",
     },
     {
       label: "Leave Type",
@@ -310,19 +310,19 @@ const index = () => {
     },
     {
       label: "Total Days",
-      value: "totaDays",
+      value: "total_leave",
     },
     {
       label: "Attachment",
       value: "attachment",
     },
     {
-      label: "Status",
-      value: "status",
+      label: "Detail",
+      value: "reason",
     },
     {
-      label: "Detail",
-      value: "detail",
+      label: "Status",
+      value: "status",
     },
     {
       label: "Actions",
@@ -333,20 +333,27 @@ const index = () => {
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
     "employee",
-    "requestType",
+    "request_type",
     "leavepolicy",
     "from_date",
     "to_date",
-    "totalDays",
+    "total_leave",
     "attachment",
+    "reason",
     "status",
-    "detail",
     "actions",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set(["na", "leavepolicy", "from_date", "to_date", ...keys]),
+      ...new Set([
+        "na",
+        "leavepolicy",
+        "from_date",
+        "to_date",
+        "actions",
+        ...keys,
+      ]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>

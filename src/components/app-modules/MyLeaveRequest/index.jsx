@@ -28,6 +28,7 @@ import AddButton from "@/components/utils/AddButton";
 import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
+import { formatDate, getFullName } from "@/lib/helper";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -35,11 +36,13 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "user",
+    columnAccessor: "id",
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/leave/get-leaverequest/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let userId = 10;
+
+  let apiUrl = `/api/leave/get-leaverequest/?user=${userId}&page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -54,6 +57,22 @@ const index = () => {
     keepPreviousData: true,
     revalidateOnFocus: false,
   });
+
+  let apiUrlForLeaveSummary = `/api/leave/get-leavesummary/?user=${userId}`;
+
+  const {
+    data: leaveSummaryData,
+    error: leaveSummaryError,
+    isValidating: leaveSummaryIsValidating,
+    isLoading: leaveSummaryIsLoading,
+    mutate: leaveSummaryMutate,
+  } = useSWR(apiUrlForLeaveSummary, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+    revalidateOnFocus: false,
+  });
+
+  // console.log(leaveSummaryData);
 
   const [selectedRecords, setSelectedRecords] = useState([]);
 
@@ -102,14 +121,14 @@ const index = () => {
     },
     {
       // for table display
-      accessor: "requestType",
+      accessor: "request_type",
       title: "Request Type",
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ leavepolicy }) => leavepolicy?.name || "N/A",
+      render: ({ request_type }) => request_type || "N/A",
       // for export
-      key: "requestType",
+      key: "request_type",
     },
     {
       // for table display
@@ -128,7 +147,7 @@ const index = () => {
       title: "From Date",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ from_date }) => from_date || "N/A",
+      render: ({ from_date }) => (from_date ? formatDate(from_date) : "N/A"),
       // for export
       key: "from_date",
     },
@@ -138,19 +157,19 @@ const index = () => {
       title: "To Date",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ to_date }) => to_date || "N/A",
+      render: ({ to_date }) => (to_date ? formatDate(to_date) : "N/A"),
       // for export
       key: "to_date",
     },
     {
       // for table display
-      accessor: "totalDays",
+      accessor: "total_leave",
       title: "Total Days",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ totalDays }) => totalDays || "N/A",
+      render: ({ total_leave }) => total_leave || "N/A",
       // for export
-      key: "totalDays",
+      key: "total_leave",
     },
     {
       // for table display
@@ -158,36 +177,49 @@ const index = () => {
       title: "Attachment",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ totalDays }) => totalDays || "N/A",
+      render: ({ attachment }) => "attachment" || "N/A",
       // for export
       key: "attachment",
     },
     {
       // for table display
-      accessor: "detail",
+      accessor: "reason",
       title: "Detail",
       noWrap: true,
-      sortable: true,
+      // sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ detail }) => detail || "N/A",
+      render: ({ reason }) => reason || "N/A",
       // for export
-      key: "detail",
+      key: "reason",
     },
     {
       // for table display
-      accessor: "Status",
-      title: "status",
+      accessor: "status",
+      title: "Status",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: () => (
-        <Group gap="xs">
-          <Button variant="light" size="compact-xs" color="teal">
-            Approve
-          </Button>
-          <Button variant="light" size="compact-xs" color="red">
-            Reject
-          </Button>
-        </Group>
+      render: ({ status }) => (
+        <>
+          {status && (
+            <Group gap="xs">
+              {status === "Approved" ? (
+                <Button variant="light" size="compact-xs" color="teal">
+                  Approved
+                </Button>
+              ) : status === "Rejected" ? (
+                <Button variant="light" size="compact-xs" color="red">
+                  Rejected
+                </Button>
+              ) : status === "Pending" ? (
+                <Button variant="light" size="compact-xs" color="pink">
+                  Pending
+                </Button>
+              ) : (
+                "N/A"
+              )}
+            </Group>
+          )}
+        </>
       ),
       // for export
       key: "status",
@@ -240,7 +272,7 @@ const index = () => {
     },
     {
       label: "Request Type",
-      value: "requestType",
+      value: "request_type",
     },
     {
       label: "Leave Type",
@@ -256,19 +288,19 @@ const index = () => {
     },
     {
       label: "Total Days",
-      value: "totaDays",
+      value: "total_leave",
     },
     {
       label: "Attachment",
       value: "attachment",
     },
     {
-      label: "Status",
-      value: "status",
+      label: "Detail",
+      value: "reason",
     },
     {
-      label: "Detail",
-      value: "detail",
+      label: "Status",
+      value: "status",
     },
     {
       label: "Actions",
@@ -278,20 +310,27 @@ const index = () => {
 
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
-    "requestType",
+    "request_type",
     "leavepolicy",
     "from_date",
     "to_date",
-    "totalDays",
+    "total_leave",
     "attachment",
+    "reason",
     "status",
-    "detail",
     "actions",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set(["na", "leavepolicy", "from_date", "to_date", ...keys]),
+      ...new Set([
+        "na",
+        "request_type",
+        "from_date",
+        "to_date",
+        "actions",
+        ...keys,
+      ]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>
@@ -566,46 +605,26 @@ const index = () => {
       </div>
 
       <div className="mb-4 d-flex flex-wrap gap-3">
-        <div className="cardBox">
-          <h5 className="leaveTitle text-center">Casual Leave</h5>
-          <div className="d-flex justify-content-center">
-            <p className="mb-0">Allowcation: 8</p>
-            <p className="mb-0 ms-3">Consumed: 3</p>
-          </div>
-          <b className="mb-0 text-center d-block leaveLeft">Remaining: 5</b>
-        </div>
-        <div className="cardBox">
-          <h5 className="leaveTitle text-center">Sick Leave</h5>
-          <div className="d-flex justify-content-center">
-            <p className="mb-0">Allowcation: 8</p>
-            <p className="mb-0 ms-3">Consumed: 6</p>
-          </div>
-          <b className="mb-0 text-center d-block leaveLeft">Remaining: 2</b>
-        </div>
-        <div className="cardBox">
-          <h5 className="leaveTitle text-center">Casual Leave</h5>
-          <div className="d-flex justify-content-center">
-            <p className="mb-0">Allowcation: 8</p>
-            <p className="mb-0 ms-3">Consumed: 3</p>
-          </div>
-          <b className="mb-0 text-center d-block leaveLeft">Remaining: 5</b>
-        </div>
-        <div className="cardBox">
-          <h5 className="leaveTitle text-center">Sick Leave</h5>
-          <div className="d-flex justify-content-center">
-            <p className="mb-0">Allowcation: 8</p>
-            <p className="mb-0 ms-3">Consumed: 6</p>
-          </div>
-          <b className="mb-0 text-center d-block leaveLeft">Remaining: 2</b>
-        </div>
-        <div className="cardBox">
-          <h5 className="leaveTitle text-center">Casual Leave</h5>
-          <div className="d-flex justify-content-center">
-            <p className="mb-0">Allowcation: 8</p>
-            <p className="mb-0 ms-3">Consumed: 3</p>
-          </div>
-          <b className="mb-0 text-center d-block leaveLeft">Remaining: 5</b>
-        </div>
+        {leaveSummaryData?.data?.result?.length
+          ? leaveSummaryData.data.result.map((item, index) => (
+              <div className="cardBox" key={index}>
+                <h5 className="leaveTitle text-center">
+                  {item?.leavepolicy?.name}
+                </h5>
+                <div className="d-flex justify-content-center">
+                  <p className="mb-0">
+                    Allowcation: {item?.total_allocation || "0"}
+                  </p>
+                  <p className="mb-0 ms-3">
+                    Consumed: {item?.total_consumed || "0"}
+                  </p>
+                </div>
+                <b className="mb-0 text-center d-block leaveLeft">
+                  Remaining: {item?.total_left || "0"}
+                </b>
+              </div>
+            ))
+          : null}
       </div>
 
       <div className="d-flex justify-content-between mb-3">

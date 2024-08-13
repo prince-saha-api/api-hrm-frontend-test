@@ -28,6 +28,8 @@ import AddButton from "@/components/utils/AddButton";
 import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
+import Approve from "./Approve";
+import Reject from "./Reject";
 import { formatDate, getFullName } from "@/lib/helper";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
@@ -76,9 +78,15 @@ const index = () => {
     useDisclosure(false);
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
     useDisclosure(false);
+  const [approveOpened, { open: approveOpen, close: approveClose }] =
+    useDisclosure(false);
+  const [rejectOpened, { open: rejectOpen, close: rejectClose }] =
+    useDisclosure(false);
 
   const [selectedEditItem, setSelectedEditItem] = useState(null);
   const [selectedDeleteItem, setSelectedDeleteItem] = useState(null);
+  const [selectedApproveItem, setSelectedApproveItem] = useState(null);
+  const [selectedRejectItem, setSelectedRejectItem] = useState(null);
 
   useEffect(() => {
     if (selectedEditItem) {
@@ -192,14 +200,43 @@ const index = () => {
       title: "status",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: () => (
+      render: (item) => (
         <Group gap="xs">
-          <Button size="compact-xs" color="teal">
-            Approve
-          </Button>
-          <Button variant="filled" size="compact-xs" color="red">
-            Reject
-          </Button>
+          {item?.status === "Pending" ? (
+            <>
+              <Button
+                size="compact-xs"
+                color="teal"
+                onClick={() => {
+                  setSelectedApproveItem(item);
+                  approveOpen();
+                }}
+              >
+                Approve
+              </Button>
+              <Button
+                variant="filled"
+                size="compact-xs"
+                color="red"
+                onClick={() => {
+                  setSelectedRejectItem(item);
+                  rejectOpen();
+                }}
+              >
+                Reject
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="filled"
+                size="compact-xs"
+                color={item?.status === "Approved" ? "green" : "red"}
+              >
+                {item?.status}
+              </Button>
+            </>
+          )}
         </Group>
       ),
       // for export
@@ -563,6 +600,20 @@ const index = () => {
         opened={deleteOpened}
         close={deleteClose}
         item={selectedDeleteItem}
+        mutate={mutate}
+      />
+
+      <Approve
+        opened={approveOpened}
+        close={approveClose}
+        item={selectedApproveItem}
+        mutate={mutate}
+      />
+
+      <Reject
+        opened={rejectOpened}
+        close={rejectClose}
+        item={selectedRejectItem}
         mutate={mutate}
       />
 

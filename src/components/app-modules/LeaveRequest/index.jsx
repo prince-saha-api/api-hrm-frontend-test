@@ -28,6 +28,8 @@ import AddButton from "@/components/utils/AddButton";
 import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
+import Approve from "./Approve";
+import Reject from "./Reject";
 import { formatDate, getFullName } from "@/lib/helper";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
@@ -36,7 +38,7 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "user",
+    columnAccessor: "id",
     direction: "asc", // desc
   });
 
@@ -76,9 +78,15 @@ const index = () => {
     useDisclosure(false);
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
     useDisclosure(false);
+  const [approveOpened, { open: approveOpen, close: approveClose }] =
+    useDisclosure(false);
+  const [rejectOpened, { open: rejectOpen, close: rejectClose }] =
+    useDisclosure(false);
 
   const [selectedEditItem, setSelectedEditItem] = useState(null);
   const [selectedDeleteItem, setSelectedDeleteItem] = useState(null);
+  const [selectedApproveItem, setSelectedApproveItem] = useState(null);
+  const [selectedRejectItem, setSelectedRejectItem] = useState(null);
 
   useEffect(() => {
     if (selectedEditItem) {
@@ -106,7 +114,7 @@ const index = () => {
       accessor: "employee",
       title: "Employee Name",
       noWrap: true,
-      sortable: true,
+      // sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ user }) =>
         getFullName(user?.first_name, user?.last_name) || "N/A",
@@ -115,21 +123,21 @@ const index = () => {
     },
     {
       // for table display
-      accessor: "requestType",
+      accessor: "request_type",
       title: "Request Type",
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ request_type }) => request_type || "N/A",
       // for export
-      key: "requestType",
+      key: "request_type",
     },
     {
       // for table display
       accessor: "leavepolicy",
       title: "Leave Type",
       noWrap: true,
-      sortable: true,
+      // sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ leavepolicy }) => leavepolicy?.name || "N/A",
       // for export
@@ -157,13 +165,13 @@ const index = () => {
     },
     {
       // for table display
-      accessor: "totalDays",
+      accessor: "total_leave",
       title: "Total Days",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ totalDays }) => totalDays || "N/A",
+      render: ({ total_leave }) => total_leave || "N/A",
       // for export
-      key: "totalDays",
+      key: "total_leave",
     },
     {
       // for table display
@@ -171,35 +179,64 @@ const index = () => {
       title: "Attachment",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ totalDays }) => totalDays || "N/A",
+      render: ({ attachment }) => "attachment" || "N/A",
       // for export
       key: "attachment",
     },
     {
       // for table display
-      accessor: "detail",
+      accessor: "reason",
       title: "Detail",
       noWrap: true,
-      sortable: true,
+      // sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ reason }) => reason || "N/A",
       // for export
-      key: "detail",
+      key: "reason",
     },
     {
       // for table display
-      accessor: "Status",
-      title: "status",
+      accessor: "status",
+      title: "Status",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: () => (
+      render: (item) => (
         <Group gap="xs">
-          <Button size="compact-xs" color="teal">
-            Approve
-          </Button>
-          <Button variant="filled" size="compact-xs" color="red">
-            Reject
-          </Button>
+          {item?.status === "Pending" ? (
+            <>
+              <Button
+                size="compact-xs"
+                color="teal"
+                onClick={() => {
+                  setSelectedApproveItem(item);
+                  approveOpen();
+                }}
+              >
+                Approve
+              </Button>
+              <Button
+                variant="filled"
+                size="compact-xs"
+                color="red"
+                onClick={() => {
+                  setSelectedRejectItem(item);
+                  rejectOpen();
+                }}
+              >
+                Reject
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="filled"
+                size="compact-xs"
+                color={item?.status === "Approved" ? "green" : "red"}
+              >
+                {item?.status}
+              </Button>
+            </>
+          )}
         </Group>
       ),
       // for export
@@ -257,7 +294,7 @@ const index = () => {
     },
     {
       label: "Request Type",
-      value: "requestType",
+      value: "request_type",
     },
     {
       label: "Leave Type",
@@ -273,19 +310,19 @@ const index = () => {
     },
     {
       label: "Total Days",
-      value: "totaDays",
+      value: "total_leave",
     },
     {
       label: "Attachment",
       value: "attachment",
     },
     {
-      label: "Status",
-      value: "status",
+      label: "Detail",
+      value: "reason",
     },
     {
-      label: "Detail",
-      value: "detail",
+      label: "Status",
+      value: "status",
     },
     {
       label: "Actions",
@@ -296,20 +333,27 @@ const index = () => {
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
     "employee",
-    "requestType",
+    "request_type",
     "leavepolicy",
     "from_date",
     "to_date",
-    "totalDays",
+    "total_leave",
     "attachment",
+    "reason",
     "status",
-    "detail",
     "actions",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set(["na", "leavepolicy", "from_date", "to_date", ...keys]),
+      ...new Set([
+        "na",
+        "leavepolicy",
+        "from_date",
+        "to_date",
+        "actions",
+        ...keys,
+      ]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>
@@ -563,6 +607,20 @@ const index = () => {
         opened={deleteOpened}
         close={deleteClose}
         item={selectedDeleteItem}
+        mutate={mutate}
+      />
+
+      <Approve
+        opened={approveOpened}
+        close={approveClose}
+        item={selectedApproveItem}
+        mutate={mutate}
+      />
+
+      <Reject
+        opened={rejectOpened}
+        close={rejectClose}
+        item={selectedRejectItem}
         mutate={mutate}
       />
 

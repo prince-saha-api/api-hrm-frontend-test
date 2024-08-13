@@ -15,7 +15,7 @@ import { FiFile } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { submit } from "@/lib/submit";
 import { fetcher, getData } from "@/lib/fetch";
-import { getFullName } from "@/lib/helper";
+import { getFullName, formatDateToYYYYMMDD } from "@/lib/helper";
 
 const Index = ({ opened, close, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,10 +39,17 @@ const Index = ({ opened, close, mutate }) => {
       user: (value) => (!value ? "Employee is required" : null),
       request_type: (value) => (!value ? "Request type is required" : null),
       leavepolicy: (value) => (!value ? "Leave type is required" : null),
+      exchange_with: (value, values) =>
+        values.request_type === "Extend Existing" && !value
+          ? "Exchange with is required"
+          : values.request_type === "Extend Existing" &&
+            value &&
+            values.leavepolicy === value
+          ? "Exchange with should not be equal with leave type"
+          : null,
       from_date: (value) => (!value ? "From date is required" : null),
       to_date: (value) => (!value ? "To date is required" : null),
-      reason: (value) =>
-        value.length < 5 ? "Reason must be at least 5 characters" : null,
+      attachment: (value) => (!value ? "Attachment is required" : null),
     },
   });
 
@@ -86,9 +93,10 @@ const Index = ({ opened, close, mutate }) => {
       const type = request_type === "New Allocation" ? "exclude_user" : "user";
       fetchLeavePolicies(value, type);
     } else {
-      form.setFieldValue("leavepolicy", "");
       fetchLeavePolicies([]);
     }
+    form.setFieldValue("leavepolicy", "");
+    form.setFieldValue("exchange_with", "");
   });
 
   form.watch("request_type", ({ value, touched, dirty }) => {
@@ -96,13 +104,11 @@ const Index = ({ opened, close, mutate }) => {
     if (value && userId) {
       const type = value === "New Allocation" ? "exclude_user" : "user";
       fetchLeavePolicies(userId, type);
-      form.setFieldValue("leavepolicy", "");
-      form.setFieldValue("exchange_with", "");
     } else {
-      form.setFieldValue("leavepolicy", "");
-      form.setFieldValue("exchange_with", "");
       setLeavePolicies([]);
     }
+    form.setFieldValue("leavepolicy", "");
+    form.setFieldValue("exchange_with", "");
     setIsExtendExisting(value === "Extend Existing");
   });
 
@@ -113,7 +119,7 @@ const Index = ({ opened, close, mutate }) => {
   form.watch("from_date", ({ value }) => {
     const fromDate = value;
     const toDate = form.getValues().to_date;
-    if (toDate && toDate) {
+    if (fromDate && toDate) {
       const totalDays = calculateTotalLeave(fromDate, toDate);
       setTotalLeave(totalDays);
     }
@@ -122,7 +128,7 @@ const Index = ({ opened, close, mutate }) => {
   form.watch("to_date", ({ value }) => {
     const toDate = value;
     const fromDate = form.getValues().from_date;
-    if (toDate && toDate) {
+    if (fromDate && toDate) {
       const totalDays = calculateTotalLeave(fromDate, toDate);
       setTotalLeave(totalDays);
     }
@@ -132,13 +138,8 @@ const Index = ({ opened, close, mutate }) => {
     setIsSubmitting(true);
 
     try {
-      const formattedFromDate = values.from_date
-        ? values.from_date.toISOString().split("T")[0]
-        : null;
-
-      const formattedToDate = values.to_date
-        ? values.from_date.toISOString().split("T")[0]
-        : null;
+      const formattedFromDate = formatDateToYYYYMMDD(values.from_date);
+      const formattedToDate = formatDateToYYYYMMDD(values.to_date);
 
       const formattedValues = {
         ...values,
@@ -175,7 +176,7 @@ const Index = ({ opened, close, mutate }) => {
         form.reset();
         close();
         mutate();
-        toast.success("leave allocation request created successfully");
+        toast.success("leave request created successfully");
       } else {
         setIsSubmitting(false);
         toast.error(
@@ -192,6 +193,10 @@ const Index = ({ opened, close, mutate }) => {
     }
   };
 
+  const handleError = (errors) => {
+    console.log(errors);
+  };
+
   return (
     <>
       <Modal
@@ -203,7 +208,12 @@ const Index = ({ opened, close, mutate }) => {
         onClose={close}
         centered
       >
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+        <form
+          onSubmit={form.onSubmit(
+            (values) => handleSubmit(values),
+            handleError
+          )}
+        >
           <Select
             mb="sm"
             label="Employee"
@@ -242,9 +252,10 @@ const Index = ({ opened, close, mutate }) => {
           />
           {isExtendExisting && (
             <Select
-              label="Exchange with (Optional)"
+              label="Exchange with"
               mb="sm"
               placeholder="Pick value"
+              required
               disabled={isSubmitting}
               data={leavePolicies}
               {...form.getInputProps("exchange_with")}
@@ -257,6 +268,7 @@ const Index = ({ opened, close, mutate }) => {
             valueFormat="DD MMM YYYY"
             label="From Date"
             placeholder="DD MMM YYYY"
+            required
             disabled={isSubmitting}
             {...form.getInputProps("from_date")}
             key={form.key("from_date")}
@@ -266,6 +278,7 @@ const Index = ({ opened, close, mutate }) => {
             valueFormat="DD MMM YYYY"
             label="To Date"
             placeholder="DD MMM YYYY"
+            required
             disabled={isSubmitting}
             {...form.getInputProps("to_date")}
             key={form.key("to_date")}
@@ -283,16 +296,18 @@ const Index = ({ opened, close, mutate }) => {
             leftSection={<FiFile />}
             label="Attachment"
             placeholder="Attachment"
+            required
             disabled={isSubmitting}
             leftSectionPointerEvents="none"
             {...form.getInputProps("attachment")}
+            key={form.key("attachment")}
           />
           <Textarea
             mb="sm"
             label="Details"
             placeholder="Details"
             disabled={isSubmitting}
-            {...form.getInputProps("description")}
+            {...form.getInputProps("reason")}
           />
           <Group justify="flex-end" mt="sm">
             <Button

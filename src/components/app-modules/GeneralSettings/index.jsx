@@ -5,7 +5,6 @@ import useSWR from "swr";
 import { useForm } from "@mantine/form";
 import { TimeInput } from "@mantine/dates";
 import {
-  // TextInput,
   Button,
   Group,
   Select,
@@ -39,13 +38,13 @@ const fiscalYearMonths = [
 ];
 
 const weeklyHolidays = [
+  { id: 7, name: "Friday" },
   { id: 1, name: "Saturday" },
   { id: 2, name: "Sunday" },
   { id: 3, name: "Monday" },
   { id: 4, name: "Tuesday" },
   { id: 5, name: "Wednesday" },
   { id: 6, name: "Thursday" },
-  { id: 7, name: "Friday" },
 ];
 
 const attendanceOptions = ["Disabled", "Overtime"];
@@ -219,126 +218,136 @@ const GeneralSettings = () => {
 
       <div className="itemCard">
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-          <Grid>
-            <Grid.Col span={3}>
-              <Select
-                mb="sm"
-                label="Fiscal Year Start from Month"
-                placeholder="Pick value"
-                required={true}
-                disabled={isSubmitting}
-                data={fiscalYearMonths}
-                {...form.getInputProps("fiscalyear_month")}
-                key={form.key("fiscalyear_month")}
-              />
-              <TimeInput
-                mb="sm"
-                label="Working Day Starts At"
-                ref={refTimeIn}
-                rightSection={timeIn}
-                required={true}
-                disabled={isSubmitting}
-                {...form.getInputProps("workingday_starts_at")}
-                key={form.key("workingday_starts_at")}
-              />
-              <NumberInput
-                mb="sm"
-                label="Set the percentage(%) of the basic salary against the gross salary"
-                placeholder="default 60"
-                hideControls
-                required={true}
-                disabled={isSubmitting}
-                {...form.getInputProps("basic_salary_percentage")}
-                key={form.key("basic_salary_percentage")}
-              />
-              <NumberInput
-                mb="sm"
-                label="Number of consecutive late attendance to fine"
-                placeholder="default 3"
-                hideControls
-                required={true}
-                disabled={isSubmitting}
-                {...form.getInputProps(
-                  "consecutive_days_late_attendance_to_fine"
-                )}
-                key={form.key("consecutive_days_late_attendance_to_fine")}
-              />
-              <NumberInput
-                mb="sm"
-                label="Consecutive late attendance fine amount against the fraction of daily salary"
-                placeholder="default 100%"
-                hideControls
-                required={true}
-                disabled={isSubmitting}
-                {...form.getInputProps("consecutive_late_attendance_to_fine")}
-                key={form.key("consecutive_late_attendance_to_fine")}
-              />
-              <div className="holidayBox mb-3">
-                <p className="mb-1">Weekly Holidays</p>
-                <div className="d-flex flex-wrap">
-                  {weeklyHolidays.map((day) => (
-                    <Checkbox
-                      // key={day.id}
-                      key={form.key(`weekly_holiday.${day.name}`)}
-                      me="lg"
-                      mb="sm"
-                      label={day.name}
-                      disabled={isSubmitting}
-                      {...form.getInputProps(`weekly_holiday.${day.name}`, {
-                        type: "checkbox",
-                      })}
-                    />
-                  ))}
+          <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
+            <Grid.Col span={4}>
+              <div className="border px-4 py-3 h-100">
+                <Select
+                  mb="sm"
+                  label="Fiscal Year Start from Month"
+                  placeholder="Pick value"
+                  required={true}
+                  disabled={isSubmitting}
+                  data={fiscalYearMonths}
+                  {...form.getInputProps("fiscalyear_month")}
+                  key={form.key("fiscalyear_month")}
+                />
+                <TimeInput
+                  mb="sm"
+                  label="Working Day Starts At"
+                  ref={refTimeIn}
+                  rightSection={timeIn}
+                  required={true}
+                  disabled={isSubmitting}
+                  {...form.getInputProps("workingday_starts_at")}
+                  key={form.key("workingday_starts_at")}
+                />
+                <NumberInput
+                  mb="sm"
+                  label="Set the percentage(%) of the basic salary against the gross salary"
+                  placeholder="default 60"
+                  hideControls
+                  required={true}
+                  disabled={isSubmitting}
+                  {...form.getInputProps("basic_salary_percentage")}
+                  key={form.key("basic_salary_percentage")}
+                />
+                <NumberInput
+                  mb="sm"
+                  label="Number of consecutive late attendance to fine"
+                  placeholder="default 3"
+                  hideControls
+                  required={true}
+                  disabled={isSubmitting}
+                  {...form.getInputProps(
+                    "consecutive_days_late_attendance_to_fine"
+                  )}
+                  key={form.key("consecutive_days_late_attendance_to_fine")}
+                />
+                <NumberInput
+                  mb="sm"
+                  label="Consecutive late attendance fine amount against the fraction of daily salary (%)"
+                  placeholder="default 100%"
+                  hideControls
+                  required={true}
+                  disabled={isSubmitting}
+                  {...form.getInputProps("consecutive_late_attendance_to_fine")}
+                  key={form.key("consecutive_late_attendance_to_fine")}
+                />
+                <div className="holidayBox mb-3">
+                  <p className="mb-1">Weekly Holidays</p>
+                  <Grid gutter="xs">
+                    {weeklyHolidays.map((day) => (
+                      <Grid.Col span={4}>
+                        <Checkbox
+                          // key={day.id}
+                          key={form.key(`weekly_holiday.${day.name}`)}
+                          me="lg"
+                          mb="sm"
+                          label={day.name}
+                          disabled={isSubmitting}
+                          {...form.getInputProps(`weekly_holiday.${day.name}`, {
+                            type: "checkbox",
+                          })}
+                        />
+                      </Grid.Col>
+                    ))}
+                  </Grid>
                 </div>
               </div>
             </Grid.Col>
-            <Grid.Col span={3}>
-              <NumberInput
-                mb="sm"
-                label="Fraction of Daily Salary for Half Day"
-                placeholder="default 50%"
-                hideControls
-                required={true}
-                disabled={isSubmitting}
-                {...form.getInputProps("fraction_of_daily_salary_for_halfday")}
-                key={form.key("fraction_of_daily_salary_for_halfday")}
-              />
-              <NumberInput
-                mb="sm"
-                label="Max working hours against Timesheet"
-                placeholder="default 8 hours"
-                hideControls
-                required={true}
-                disabled={isSubmitting}
-                {...form.getInputProps("max_working_hours_against_timesheet")}
-                key={form.key("max_working_hours_against_timesheet")}
-              />
-              <Select
-                mb="sm"
-                label="Consider Attendance on Holidays"
-                placeholder="Pick value"
-                required={true}
-                disabled={isSubmitting}
-                data={attendanceOptions}
-                {...form.getInputProps("consider_attendance_on_holidays")}
-                key={form.key("consider_attendance_on_holidays")}
-              />
-              <Checkbox
-                mb="sm"
-                label="Include Holidays as Working Days"
-                disabled={isSubmitting}
-                {...form.getInputProps("holiday_as_workingday", {
-                  type: "checkbox",
-                })}
-                key={form.key("holiday_as_workingday")}
-              />
-              <Checkbox
-                mb="sm"
-                label="Allow Overtime"
-                disabled={isSubmitting}
-                {...form.getInputProps("allow_overtime", { type: "checkbox" })}
-                key={form.key("allow_overtime")}
-              />
+            <Grid.Col span={4}>
+              <div className="border px-4 py-3 h-100">
+                <NumberInput
+                  mb="sm"
+                  label="Fraction of Daily Salary for Half Day"
+                  placeholder="default 50%"
+                  hideControls
+                  required={true}
+                  disabled={isSubmitting}
+                  {...form.getInputProps(
+                    "fraction_of_daily_salary_for_halfday"
+                  )}
+                  key={form.key("fraction_of_daily_salary_for_halfday")}
+                />
+                <NumberInput
+                  mb="sm"
+                  label="Max working hours against Timesheet"
+                  placeholder="default 8 hours"
+                  hideControls
+                  required={true}
+                  disabled={isSubmitting}
+                  {...form.getInputProps("max_working_hours_against_timesheet")}
+                  key={form.key("max_working_hours_against_timesheet")}
+                />
+                <Select
+                  mb="sm"
+                  label="Consider Attendance on Holidays"
+                  placeholder="Pick value"
+                  required={true}
+                  disabled={isSubmitting}
+                  data={attendanceOptions}
+                  {...form.getInputProps("consider_attendance_on_holidays")}
+                  key={form.key("consider_attendance_on_holidays")}
+                />
+                <Checkbox
+                  mb="sm"
+                  label="Include Holidays as Working Days"
+                  disabled={isSubmitting}
+                  {...form.getInputProps("holiday_as_workingday", {
+                    type: "checkbox",
+                  })}
+                  key={form.key("holiday_as_workingday")}
+                />
+                <Checkbox
+                  mb="sm"
+                  label="Allow Overtime"
+                  disabled={isSubmitting}
+                  {...form.getInputProps("allow_overtime", {
+                    type: "checkbox",
+                  })}
+                  key={form.key("allow_overtime")}
+                />
+              </div>
             </Grid.Col>
           </Grid>
 

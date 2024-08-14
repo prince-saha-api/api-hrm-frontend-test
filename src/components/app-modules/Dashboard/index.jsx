@@ -17,7 +17,7 @@ import { CgFileDocument } from "react-icons/cg";
 import { FcDocument } from "react-icons/fc";
 const arrowIcon = <HiArrowLongRight />;
 
-const elements = [
+const leaveData = [
   {
     name: "G. M. Nazmul Hussain",
     requestType: "Regular Leave",
@@ -60,18 +60,73 @@ const elements = [
   },
 ];
 
+const attendanceData = [
+  {
+    name: "Jiaur Rahman",
+    date: "Aug-08-2024",
+    inTime: "8:55",
+    outTime: "6:15",
+    shift: "Day",
+    status: "Pending",
+  },
+  {
+    name: "Jiaur Rahman",
+    date: "Aug-08-2024",
+    inTime: "8:55",
+    outTime: "6:15",
+    shift: "Day",
+    status: "Pending",
+  },
+  {
+    name: "Jiaur Rahman",
+    date: "Aug-08-2024",
+    inTime: "8:55",
+    outTime: "6:15",
+    shift: "Day",
+    status: "Pending",
+  },
+  {
+    name: "Jiaur Rahman",
+    date: "Aug-08-2024",
+    inTime: "8:55",
+    outTime: "6:15",
+    shift: "Day",
+    status: "Pending",
+  },
+  {
+    name: "Jiaur Rahman",
+    date: "Aug-08-2024",
+    inTime: "8:55",
+    outTime: "6:15",
+    shift: "Day",
+    status: "Pending",
+  },
+];
+
 const index = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const autoplay = useRef(Autoplay({ delay: 2000 }));
 
-  // Table of Leave Policy
-  const pendingLeaveRequests = elements.map((element) => (
+  // Table of Pending Leave Requests
+  const pendingLeaveRequests = leaveData.map((element) => (
     <Table.Tr key={element.name}>
       <Table.Td>{element.name}</Table.Td>
       <Table.Td>{element.requestType}</Table.Td>
       <Table.Td>{element.leaveType}</Table.Td>
       <Table.Td>{element.fromDate}</Table.Td>
       <Table.Td>{element.toDate}</Table.Td>
+      <Table.Td>{element.status}</Table.Td>
+    </Table.Tr>
+  ));
+
+  // Table of Pending Attendance Requests
+  const pendingAttendanceRequests = attendanceData.map((element) => (
+    <Table.Tr key={element.name}>
+      <Table.Td>{element.name}</Table.Td>
+      <Table.Td>{element.date}</Table.Td>
+      <Table.Td>{element.inTime}</Table.Td>
+      <Table.Td>{element.outTime}</Table.Td>
+      <Table.Td>{element.shift}</Table.Td>
       <Table.Td>{element.status}</Table.Td>
     </Table.Tr>
   ));
@@ -355,13 +410,6 @@ const index = () => {
                 </div>
               </Tabs.Panel>
             </Tabs>
-
-            {/* <BarChart
-          h={300}
-          data={data2}
-          dataKey="post2"
-          series={[{ name: "Smartphones", color: "cyan" }]}
-        /> */}
           </div>
         </Grid.Col>
         <Grid.Col span={6}>
@@ -411,15 +459,15 @@ const index = () => {
               <Table striped withTableBorder withColumnBorders>
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th>Employee Name</Table.Th>
-                    <Table.Th>Request Type</Table.Th>
-                    <Table.Th>Leave Type</Table.Th>
-                    <Table.Th>From Date</Table.Th>
-                    <Table.Th>To Date</Table.Th>
+                    <Table.Th>Employee</Table.Th>
+                    <Table.Th>Date</Table.Th>
+                    <Table.Th>In Time</Table.Th>
+                    <Table.Th>Out Time</Table.Th>
+                    <Table.Th>Shift</Table.Th>
                     <Table.Th>Status</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
-                <Table.Tbody>{pendingLeaveRequests}</Table.Tbody>
+                <Table.Tbody>{pendingAttendanceRequests}</Table.Tbody>
               </Table>
             </div>
           </div>

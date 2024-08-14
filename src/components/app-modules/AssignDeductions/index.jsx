@@ -300,50 +300,44 @@ const Index = () => {
                                  (currentPage - 1) * pageSize + index + 1,
                            },
                            {
-                              accessor: "image",
-                              title: "Image",
+                              accessor: "employee",
+                              title: "Employee",
                               sortable: false,
                               render: ({ image }) => (
-                                 <div className="text-center">
-                                    <img
-                                       src={getStoragePath(image)}
-                                       alt="img"
-                                       className="table_user_img"
-                                    />
-                                 </div>
+                                <div className="text-center">
+                                  <img
+                                    src={getStoragePath(image)}
+                                    alt="img"
+                                    className="table_user_img"
+                                  />
+                                </div>
                               ),
-                           },
-
-                           {
-                              accessor: "username",
-                              title: "Employee Name",
+                            },
+          
+                            {
+                              accessor: "designation",
+                              title: "Designation",
                               sortable: true,
                               // visibleMediaQuery: aboveXs,
-                           },
-                           {
-                              accessor: "employee_id",
-                              title: "Employee ID",
+                            },
+                            {
+                              accessor: "department",
+                              title: "Department",
                               noWrap: true,
                               sortable: true,
-                           },
-                           {
-                              accessor: "employee_id",
+                            },
+                            {
+                              accessor: "contactNo",
                               title: "Contact No.",
                               noWrap: true,
                               sortable: true,
-                           },
-                           {
-                              accessor: "employee_id",
-                              title: "Designation",
+                            },
+                            {
+                              accessor: "employeeType",
+                              title: "Employee Type",
                               noWrap: true,
                               sortable: true,
-                           },
-                           {
-                              accessor: "employee_id",
-                              title: "Grade",
-                              noWrap: true,
-                              sortable: true,
-                           },
+                            },
                         ]}
                         fetching={isLoading}
                         records={apiData?.results || []}

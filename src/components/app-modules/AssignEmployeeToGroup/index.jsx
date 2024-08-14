@@ -30,7 +30,7 @@ import {
 const PAGE_SIZES = [5, 10, 15, 20];
 const items = [
   { title: "Dashboard", href: "/" },
-  { title: "Assign Employee To Group" },
+  { title: "Assign Employee To Device Group" },
 ].map((item, index) => (
   <Anchor href={item.href} key={index}>
     {item.title}
@@ -190,7 +190,7 @@ const Index = () => {
   return (
     <>
       <div className="pageTop mb-4">
-        <h3>Assign Employee To Group</h3>
+        <h3>Assign Employee To Device Group</h3>
         <Breadcrumbs>{items}</Breadcrumbs>
       </div>
 
@@ -215,23 +215,8 @@ const Index = () => {
                 "Policy-6",
               ]}
               searchable
-              // withAsterisk
             />
-            {/* <MultiSelect
-                     classNames={{
-                        root: "cust_iputRoot",
-                        label: "cust_iputLabel",
-                        wrapper: "cust_iputWrapper",
-                     }}
-                     label="Employee"
-                     placeholder="Employee"
-                     data={[
-                        "Jiaur Rahman - 20220102016",
-                        "G. M. Nazmul Hussain - 20220102017",
-                        "Rasel Rahman - 20220102018",
-                     ]}
-                     searchable
-                  /> */}
+
             <Modal opened={opened} onClose={close} title="Filter" centered>
               <Accordion defaultValue="">{itemsAccordion}</Accordion>
               <div className="d-flex justify-content-end">
@@ -286,8 +271,8 @@ const Index = () => {
                       (currentPage - 1) * pageSize + index + 1,
                   },
                   {
-                    accessor: "image",
-                    title: "Image",
+                    accessor: "employee",
+                    title: "Employee",
                     sortable: false,
                     render: ({ image }) => (
                       <div className="text-center">
@@ -298,19 +283,6 @@ const Index = () => {
                         />
                       </div>
                     ),
-                  },
-
-                  {
-                    accessor: "username",
-                    title: "Employee Name",
-                    sortable: true,
-                    // visibleMediaQuery: aboveXs,
-                  },
-                  {
-                    accessor: "employee_id",
-                    title: "Employee ID",
-                    noWrap: true,
-                    sortable: true,
                   },
                   {
                     accessor: "employee_id",
@@ -326,7 +298,7 @@ const Index = () => {
                   },
                   {
                     accessor: "employee_id",
-                    title: "Grade",
+                    title: "Device Group",
                     noWrap: true,
                     sortable: true,
                   },

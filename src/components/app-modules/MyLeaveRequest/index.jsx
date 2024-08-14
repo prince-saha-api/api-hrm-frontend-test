@@ -29,6 +29,7 @@ import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
 import { formatDate, getFullName } from "@/lib/helper";
+import { useUser } from "@/components/contexts/UserContext";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -40,7 +41,8 @@ const index = () => {
     direction: "asc", // desc
   });
 
-  let userId = 10;
+  const { user } = useUser();
+  const userId = user?.id;
 
   let apiUrl = `/api/leave/get-leaverequest/?user=${userId}&page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""

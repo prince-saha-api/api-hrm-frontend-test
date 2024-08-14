@@ -227,8 +227,7 @@ const ProfileView = ({ data }) => {
       <ResetPassword
         opened={passwordOpened}
         close={passwordClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile?.id}
       />
       <NID
         opened={nidOpened}

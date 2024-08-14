@@ -112,7 +112,7 @@ const index = () => {
     {
       // for table display
       accessor: "employee",
-      title: "Employee Name",
+      title: "Employee",
       noWrap: true,
       // sortable: true,
       // visibleMediaQuery: aboveXs,

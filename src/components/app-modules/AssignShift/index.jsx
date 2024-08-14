@@ -203,21 +203,6 @@ const Index = () => {
               placeholder="Pick value"
               data={["Day", "Night"]}
             />
-            {/* <MultiSelect
-                     classNames={{
-                        root: "cust_iputRoot",
-                        label: "cust_iputLabel",
-                        wrapper: "cust_iputWrapper",
-                     }}
-                     label="Employee"
-                     placeholder="Employee"
-                     data={[
-                        "Jiaur Rahman - 20220102016",
-                        "G. M. Nazmul Hussain - 20220102017",
-                        "Rasel Rahman - 20220102018",
-                     ]}
-                     searchable
-                  /> */}
             <Modal opened={opened} onClose={close} title="Filter" centered>
               <Accordion defaultValue="">{itemsAccordion}</Accordion>
               <div className="d-flex justify-content-end">
@@ -272,8 +257,8 @@ const Index = () => {
                       (currentPage - 1) * pageSize + index + 1,
                   },
                   {
-                    accessor: "image",
-                    title: "Image",
+                    accessor: "employee",
+                    title: "Employee",
                     sortable: false,
                     render: ({ image }) => (
                       <div className="text-center">
@@ -287,14 +272,14 @@ const Index = () => {
                   },
 
                   {
-                    accessor: "username",
-                    title: "Employee Name",
+                    accessor: "designation",
+                    title: "Designation",
                     sortable: true,
                     // visibleMediaQuery: aboveXs,
                   },
                   {
-                    accessor: "employee_id",
-                    title: "Employee ID",
+                    accessor: "department",
+                    title: "Department",
                     noWrap: true,
                     sortable: true,
                   },
@@ -305,14 +290,8 @@ const Index = () => {
                     sortable: true,
                   },
                   {
-                    accessor: "employee_id",
-                    title: "Designation",
-                    noWrap: true,
-                    sortable: true,
-                  },
-                  {
-                    accessor: "employee_id",
-                    title: "Grade",
+                    accessor: "shift",
+                    title: "Shift",
                     noWrap: true,
                     sortable: true,
                   },

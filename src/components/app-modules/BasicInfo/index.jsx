@@ -27,6 +27,7 @@ import { update, submit } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
 import { formatDate, getStoragePath } from "@/lib/helper";
 import { validateEmail, validatePhoneNumber } from "@/lib/validate";
+import { BsDatabaseExclamation } from "react-icons/bs";
 
 const BasicInfo = () => {
   const [basicInfo, setBasicInfo] = useState(null);
@@ -277,7 +278,7 @@ const BasicInfo = () => {
         <div className="itemCard">
           <div className="dataBox">
             <p className="dataBoxIcon">
-              <FcAcceptDatabase />
+              <BsDatabaseExclamation/>
             </p>
             <Button
               variant="filled"
@@ -301,7 +302,7 @@ const BasicInfo = () => {
         title="Basic Info"
         items={[
           { title: "Dashboard", href: "/dashboard" },
-          { title: "Basic Setup" },
+          { title: "Basic Info" },
         ]}
       />
 

@@ -1,126 +1,138 @@
 .side_nav {
-   background-color: var(--sidebar-color);
-   border-right: 1px solid transparent;
-   margin-top: 0;
-   position: fixed;
-   top: 60px;
-   bottom: 0;
-   left: 0;
-   -webkit-transition: all 0.2s ease;
-   -ms-transition: all 0.2s ease;
-   transition: all 0.2s ease;
-   width: 260px;
-   z-index: 100;
+  background-color: var(--sidebar-color);
+  border-right: 1px solid transparent;
+  margin-top: 0;
+  position: fixed;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  -webkit-transition: all 0.2s ease;
+  -ms-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  width: 260px;
+  z-index: 100;
 }
-.menuTitle {
-   color: #ebebec;
-   font-size: 14px;
-   padding: 5px 0px;
-   white-space: nowrap;
+.sidebarOpen.side_nav {
+  left: -260px;
+}
+@media (max-width: 991px) {
+  .side_nav {
+    left: -260px;
+  }
+  .sidebarOpen.side_nav {
+    left: 0px;
+  }
 }
 
+
+.menuTitle {
+  color: #ebebec;
+  font-size: 14px;
+  padding: 5px 0px;
+  white-space: nowrap;
+}
 .sideMenu {
-   font-size: 16px !important;
-   color: var(--menu-color);
+  font-size: 16px !important;
+  color: var(--menu-color);
 }
 .singleNav {
-   text-decoration: none;
+  text-decoration: none;
 }
 // side-bad menu style old
 
 #navigation_part .accordion {
-   --bs-accordion-border-color: none;
+  --bs-accordion-border-color: none;
 }
 
 #navigation_part .accordion-body {
-   padding: 0;
+  padding: 0;
 }
 #navigation_part .accordion-button {
-   padding: 0px !important;
-   background-color: transparent !important;
-   border: none !important;
-   line-height: 40px;
+  padding: 0px !important;
+  background-color: transparent !important;
+  border: none !important;
+  line-height: 40px;
 }
 #navigation_part .accordion-button:focus {
-   box-shadow: none !important;
+  box-shadow: none !important;
 }
 #navigation_part .accordion-item {
-   background: transparent;
-   border: none !important;
-   width: 100%;
+  background: transparent;
+  border: none !important;
+  width: 100%;
 }
 #navigation_part .accordion-item .menu_icon {
-   width: 18px;
-   height: 18px;
-   margin-right: 10px;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
 }
 
 .accordion-button::after {
-   transform: rotate(-90deg);
-   filter: brightness(0) invert(1);
-   width: 13px !important;
-   height: 13px !important;
-   background-size: 13px !important;
+  transform: rotate(-90deg);
+  filter: brightness(0) invert(1);
+  width: 13px !important;
+  height: 13px !important;
+  background-size: 13px !important;
 }
 .accordion-button.collapsed {
-   padding-bottom: 10px !important;
+  padding-bottom: 10px !important;
 }
 .accordion-item .sidenav_submenu {
-   padding-left: 28px;
+  padding-left: 28px;
 }
 .accordion-item .sidenav_sub_item {
-   line-height: 30px;
-   list-style: none;
-   position: relative;
+  line-height: 30px;
+  list-style: none;
+  position: relative;
 }
 .accordion-item .sidenav_sub_item .subMenu::after {
-   content: "";
-   width: 5px;
-   height: 5px;
-   background-color: var(--menu-color);
-   position: absolute;
-   left: -15px;
-   top: 10px;
-   transition: all 0.4s ease-in-out;
-   opacity: 0.7;
+  content: "";
+  width: 5px;
+  height: 5px;
+  background-color: var(--menu-color);
+  position: absolute;
+  left: -15px;
+  top: 10px;
+  transition: all 0.4s ease-in-out;
+  opacity: 0.7;
 }
 .accordion-item .sidenav_sub_item .subMenu {
-   color: var(--menu-color);
-   font-size: 15px !important;
-   opacity: 0.7;
-   transition: all 0.1s ease-in-out;
-   line-height: 25px !important;
-   display: inline-block;
-   position: relative;
+  color: var(--menu-color);
+  font-size: 15px !important;
+  opacity: 0.7;
+  transition: all 0.1s ease-in-out;
+  line-height: 25px !important;
+  display: inline-block;
+  position: relative;
 }
 .accordion-item .sidenav_sub_item .subMenu:hover {
-   color: var(--main-color);
-   opacity: 1;
+  color: var(--main-color);
+  opacity: 1;
 }
 .accordion-item .sidenav_sub_item .subMenu:hover::after {
-   background-color: var(--main-color) !important;
-   opacity: 1;
+  background-color: var(--main-color) !important;
+  opacity: 1;
 }
 .subTab .sideMenu {
-   font-size: 15px !important;
-   color: var(--menu-color) !important;
-   opacity: 0.7;
+  font-size: 15px !important;
+  color: var(--menu-color) !important;
+  opacity: 0.7;
 }
 .subTab .accordion-button {
-   line-height: 30px !important;
+  line-height: 30px !important;
 }
 .subTab {
-   position: relative;
+  position: relative;
 }
 .subTab::before {
-   content: "";
-   width: 5px;
-   height: 5px;
-   background-color: var(--menu-color);
-   position: absolute;
-   left: -15px;
-   top: 11px;
-   transition: all 0.4s ease-in-out;
-   opacity: 0.7;
+  content: "";
+  width: 5px;
+  height: 5px;
+  background-color: var(--menu-color);
+  position: absolute;
+  left: -15px;
+  top: 11px;
+  transition: all 0.4s ease-in-out;
+  opacity: 0.7;
 }
 // side-bad menu style old

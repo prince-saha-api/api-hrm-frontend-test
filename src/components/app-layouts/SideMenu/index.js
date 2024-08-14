@@ -27,8 +27,7 @@ const Page = () => {
   return (
     <>
       <div
-        id="navigation_part"
-        className={classEase(isSidebarOpen && "sidebar-open", "side_nav")}
+        id="navigation_part" className={classEase(isSidebarOpen && "sidebarOpen", "side_nav")}
       >
         <div className="p-3">
           <div className="accordion_part">

@@ -7,6 +7,8 @@ import { redirect } from "next/navigation";
 import SideMenu from "../../components/app-layouts/SideMenu";
 import Navbar from "../../components/app-layouts/TopNavbar";
 import { checkIsAuthenticated } from "../../lib/check";
+import PageContent from "@/components/providers/PageContent";
+import PageWrapper from "@/components/providers/PageWrapper";
 // import "../../styles/main.scss";
 
 export const metadata = {
@@ -30,11 +32,11 @@ export default async function RootLayout({ children }) {
   return (
     <>
       {/* <Accessible /> */}
-      <div className="wrapper">
+      <PageWrapper>
         <SideMenu />
         <Navbar />
-        <div className="pageContent">{children}</div>
-      </div>
+        <PageContent>{children}</PageContent>
+      </PageWrapper>
     </>
   );
 }

@@ -6,6 +6,7 @@ import { Burger, Avatar, Indicator } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Dropdown from "react-bootstrap/Dropdown";
+import { useSidebar } from "@/components/contexts/SidebarContext";
 import { logout } from "../../../lib/auth";
 import { getLoggedInUser } from "../../../lib/getter";
 import { getStoragePath } from "../../../lib/helper";
@@ -51,6 +52,9 @@ const Navbar = () => {
   };
 
   const [opened, { toggle }] = useDisclosure();
+
+  const { toggleSidebar } = useSidebar();
+
   return (
     <div className="topbar d-flex">
       <div className="logoBox">
@@ -69,7 +73,11 @@ const Navbar = () => {
               burger: "toggleIcon",
             }}
             opened={opened}
-            onClick={toggle}
+            // onClick={toggle}
+            onClick={() => {
+              toggle();
+              toggleSidebar();
+            }}
             aria-label="Toggle navigation"
           />
         </div>

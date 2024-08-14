@@ -15,14 +15,21 @@ import { LuUser2 } from "react-icons/lu";
 import { PiBuildings } from "react-icons/pi";
 import { AiOutlinePartition } from "react-icons/ai";
 import Accordion from "react-bootstrap/Accordion";
+import classEase from "classease";
 import Image from "next/image";
+import { useSidebar } from "@/components/contexts/SidebarContext";
 import Logo from "../../../../public/logo.png";
 import { TbSettings } from "react-icons/tb";
 
 const Page = () => {
+  const { isSidebarOpen } = useSidebar();
+
   return (
     <>
-      <div id="navigation_part" className="side_nav">
+      <div
+        id="navigation_part"
+        className={classEase(isSidebarOpen && "sidebar-open", "side_nav")}
+      >
         <div className="p-3">
           <div className="accordion_part">
             <div className="pb-2">

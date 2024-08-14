@@ -29,12 +29,21 @@ P {
 }
 
 .wrapper {
-  margin: 0 0 0 290px;
+  margin: 0 0 0 30px;
   padding-top: 90px;
   padding-right: 30px;
   min-height: 100vh;
   padding-bottom: 30px;
   overflow: hidden;
+}
+
+@media (min-width: 992px) {
+  .wrapper {
+    margin: 0 0 0 290px;
+   }
+   .main.wrapper {
+    margin: 0 0 0 30px;
+  }
 }
 
 .itemCard {

@@ -9,6 +9,8 @@ import { update, submit } from "@/lib/submit";
 const Index = ({ opened, close, item }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  console.log(item);
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -32,7 +34,7 @@ const Index = ({ opened, close, item }) => {
     // console.log(values);
 
     setIsSubmitting(true);
-    const updatedValues = { ...values, user: 14 };
+    const updatedValues = { ...values, user: item };
 
     try {
       const response = await update(`/auth/reset-password/`, updatedValues);

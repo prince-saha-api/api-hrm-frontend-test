@@ -10,11 +10,13 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import classEase from "classease";
 import { toast } from "react-toastify";
+import { useUser } from "@/components/contexts/UserContext";
 import { login } from "../../../lib/auth";
 import { authTokenKey, authUserKey } from "../../../lib/config";
 
 const Page = () => {
   const router = useRouter();
+  const { setUser } = useUser();
 
   const [employeeId, setEmployeeId] = useState("");
   const [password, setPassword] = useState("");
@@ -50,10 +52,12 @@ const Page = () => {
       } else if (!rememberMe) {
         // should be updated
         localStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
         Cookies.set(authUserKey, user?.username);
         Cookies.set(authTokenKey, access);
       } else {
         localStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
         // Expires in 30 days
         Cookies.set(authUserKey, user?.username, {
           expires: 30,

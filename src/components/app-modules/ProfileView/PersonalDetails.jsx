@@ -28,8 +28,8 @@ const Index = ({ opened, close, item, setItem }) => {
       religion: item?.religion?.id.toString() || null,
       nid_passport_no: item?.nid_passport_no || "",
       tin_no: item?.tin_no || "",
-      present_address: item?.present_address,
-      permanent_address: item?.permanent_address,
+      present_address: item?.present_address || {},
+      permanent_address: item?.permanent_address || {},
       permanentAddressSameAsPresent:
         item?.permanent_address?.id === item?.present_address?.id,
     },

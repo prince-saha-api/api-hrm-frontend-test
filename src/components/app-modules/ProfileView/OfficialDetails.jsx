@@ -28,7 +28,7 @@ const Index = ({ opened, close, item, setItem }) => {
       official_phone: item?.official_phone || "",
       employee_type: item?.employee_type || null,
       company: item?.departmenttwo?.[0]?.branch?.company?.id.toString() || null,
-      branch: item?.departmenttwo?.[0]?.branch?.id.toString() || null,
+      branch: item?.departmenttwo?.[0]?.branch?.id?.toString() || null,
       shift: String(item?.shift?.id) || null,
       grade: String(item?.grade?.id) || null,
       role_permission: [],

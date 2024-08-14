@@ -1,6 +1,7 @@
 import { ToastContainer } from "react-toastify";
 import { Notifications } from "@mantine/notifications";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { SidebarProvider } from "@/components/contexts/SidebarContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "@mantine/core/styles.css";
@@ -23,7 +24,8 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <MantineProvider>
-          {children}
+          <SidebarProvider>{children}</SidebarProvider>
+
           <Notifications />
           <ToastContainer
             position="bottom-right"

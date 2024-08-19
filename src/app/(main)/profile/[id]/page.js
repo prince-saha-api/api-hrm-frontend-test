@@ -27,6 +27,12 @@ async function getData(id) {
 //   }));
 // }
 
+export const fetchCache = "force-no-store";
+
+export async function generateStaticParams() {
+  return [];
+}
+
 const Page = async ({ params }) => {
   const data = await getData(params.id);
 

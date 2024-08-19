@@ -19,12 +19,12 @@ const index = () => {
       </div>
 
       <Grid>
-        <Grid.Col span={6}>
+        <Grid.Col span={{ base: 12, xl: 6 }}>
           <div className="itemCard">
             <EmployeeGroup />
           </div>
         </Grid.Col>
-        <Grid.Col span={6}>
+        <Grid.Col span={{ base: 12, xl: 6 }}>
           <div className="itemCard">
             <EmployeeGrade />
           </div>

@@ -85,8 +85,8 @@ const Index = () => {
       title: "#",
       noWrap: true,
       sortable: false,
-      // width: 50,
-      titleClassName: "dt_cell_sm",
+      width: 40,
+      // titleClassName: "dt_cell_xs",
       render: (_, index) => (currentPage - 1) * pageSize + index + 1,
       // for export
       key: "na",
@@ -100,7 +100,8 @@ const Index = () => {
       title: "Name",
       noWrap: true,
       sortable: true,
-      titleClassName: "dt_cell_md",
+      // titleClassName: "dt_cell_md",
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ name }) => name || "N/A",
       // for export
@@ -111,6 +112,8 @@ const Index = () => {
       accessor: "description",
       title: "Description",
       noWrap: true,
+      // titleClassName: "dt_cell_lg",
+      width: 300,
       // visibleMediaQuery: aboveXs,
       render: ({ description }) => description || "N/A",
       // for export
@@ -122,6 +125,8 @@ const Index = () => {
       title: "Company",
       // visibleMediaQuery: aboveXs,
       sortable: true,
+      // titleClassName: "dt_cell_md",
+      width: 170,
       render: ({ company }) => company?.basic_information?.name || "N/A",
       modifier: ({ company }) => company?.basic_information?.name || "N/A",
       // for export
@@ -131,7 +136,10 @@ const Index = () => {
       // for table display
       accessor: "phone",
       title: "Phone",
+      sortable: true,
       // visibleMediaQuery: aboveXs,
+      // titleClassName: "dt_cell_md",
+      width: 170,
       render: ({ phone }) => phone || "N/A",
       // for export
       key: "phone",
@@ -141,6 +149,8 @@ const Index = () => {
       accessor: "email",
       title: "Email",
       // visibleMediaQuery: aboveXs,
+      // titleClassName: "dt_cell_md",
+      width: 170,
       render: ({ email }) => email || "N/A",
       // for export
       key: "email",
@@ -149,6 +159,8 @@ const Index = () => {
       // for table display
       accessor: "address",
       title: "Address",
+      // cellsClassName: "dt_cell_lg",
+      width: 300,
       // visibleMediaQuery: aboveXs,
       render: ({ address }) =>
         `${address?.address ? address.address : ""}${
@@ -182,9 +194,9 @@ const Index = () => {
       // for table display
       accessor: "actions",
       title: "Actions",
-      width: 90,
       textAlign: "center",
-      // width: "0%",
+      // titleClassName: "dt_cell_sm",
+      width: 80,
       render: (item) => (
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>

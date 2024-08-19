@@ -17,6 +17,7 @@ import {
 import { toast } from "react-toastify";
 import { fetcher, getData } from "@/lib/fetch";
 import { getFullName } from "@/lib/helper";
+import { employeeTypes } from "@/data";
 
 const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
   const [branches, setBranches] = useState([]);
@@ -290,17 +291,7 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                   // mt="sm"
                   // label="Employee Type"
                   placeholder="Employee Type"
-                  data={[
-                    "Trainee",
-                    "Apprentice",
-                    "Intern",
-                    "Probation",
-                    "Permanent",
-                    "Temporary",
-                    "Contractual",
-                    "Commission",
-                    "Labour",
-                  ]}
+                  data={employeeTypes}
                   {...form.getInputProps("employee_type")}
                 />
               </div>

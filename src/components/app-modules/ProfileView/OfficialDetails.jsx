@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { update } from "@/lib/submit";
 import { fetcher, getData } from "@/lib/fetch";
 import { getFullName } from "@/lib/helper";
+import { employeeTypes } from "@/data";
 
 const Index = ({ opened, close, item, setItem }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -282,17 +283,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 label="Employee Type"
                 placeholder="Employee Type"
                 // disabled={isSubmitting}
-                data={[
-                  "Trainee",
-                  "Apprentice",
-                  "Intern",
-                  "Probation",
-                  "Permanent",
-                  "Temporary",
-                  "Contractual",
-                  "Commission",
-                  "Labour",
-                ]}
+                data={employeeTypes}
                 {...form.getInputProps("employee_type")}
               />
               <Select

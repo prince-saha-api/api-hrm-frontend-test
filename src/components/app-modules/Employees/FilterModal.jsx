@@ -1,255 +1,508 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import useSWR from "swr";
-import { useDisclosure } from "@mantine/hooks";
 import { DatePickerInput } from "@mantine/dates";
+import { useForm } from "@mantine/form";
 import { Grid } from "@mantine/core";
-import { countries } from "@/data/countries";
-import { DataTable } from "mantine-datatable";
-import { submit } from "@/lib/submit";
-import { fetcher } from "@/lib/fetch";
 import {
   Button,
   Select,
-  Breadcrumbs,
-  Anchor,
   Accordion,
   TextInput,
-  MultiSelect,
-  Popover,
-  Box,
   Modal,
-  NumberInput,
   RangeSlider,
 } from "@mantine/core";
-import { formatDate, getDate, getTime, getStoragePath } from "@/lib/helper";
+import { toast } from "react-toastify";
+import { fetcher, getData } from "@/lib/fetch";
+import { getFullName, formatDateToYYYYMMDD } from "@/lib/helper";
+import {
+  genders,
+  maritalStatus,
+  bloodGroups,
+  employeeTypes,
+  jobStatus,
+} from "@/data";
 
-const accordionData = [
-  {
-    value: "Personal Info",
-    dataInput: (
-      <Grid>
-        <Grid.Col span={6}>
-          <TextInput
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
-            label="First Name"
-            placeholder="First Name"
-            mb="xs"
-          />
-          <TextInput label="Email" placeholder="example@gmail.com" mb="xs" />
-          <Select
-            mb="xs"
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
-            label="Gender"
-            placeholder="Gender"
-            searchable
-            data={countries}
-            //  {...form.getInputProps("presentAddress.country")}
-          />
-          <Select
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
-            label="Marital Status"
-            placeholder="Marital Status"
-            data={["Male", "Female", "Other"]}
-          />
-        </Grid.Col>
-        <Grid.Col span={6}>
-          <TextInput
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
-            label="Last Name"
-            placeholder="Last Name"
-            mb="xs"
-          />
-          <NumberInput
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
-            rightSection={<></>}
-            rightSectionWidth={0}
-            label="Contact No."
-            placeholder="Contact No"
-            mb="xs"
-          />
-          <Select
-            mb="xs"
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
-            label="Religion"
-            placeholder="Religion"
-            data={["Male", "Female", "Other"]}
-          />
-          <Select
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
-            label="Blood Group"
-            placeholder="Blood Group"
-            data={["Male", "Female", "Other"]}
-          />
-        </Grid.Col>
-      </Grid>
-    ),
-  },
-  {
-    value: "Work Info",
-    dataInput: (
-      <Grid>
-        <Grid.Col span={6}>
-          <TextInput //
-            label="Employee ID"
-            placeholder="Employee ID"
-            mb="xs"
-          />
+const FilterModal = ({ opened, close, data, setData }) => {
+  const [branches, setBranches] = useState([]);
+  const [departments, setDepartments] = useState([]);
 
-          <Select
-            label="Branch"
-            placeholder="Branch"
-            // searchable
-            data={["Dhaka", "Rangpur", "Dinajpur"]}
-            mb="xs"
-          />
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      first_name: "",
+      last_name: "",
+      personal_email: "",
+      personal_phone: "",
+      gender: "",
+      religion: "",
+      marital_status: "",
+      blood_group: "",
+      //
+      official_id: "",
+      company: "",
+      branch: "",
+      department: "",
+      designation: "",
+      supervisor: "",
+      shift: "",
+      employee_type: "",
+      job_status: "",
+      grade: "",
+      ethnicgroup_user: "",
+      joining_date: [null, null],
+      gross_salary: [10000, 80000],
+    },
+    validate: {
+      // first_name: (value) => (!value ? "Name is required" : null),
+      // last_name: (value) => (!value ? "Name is required" : null),
+      // personal_email: (value) => (!value ? "Name is required" : null),
+      // company: (value) => (!value ? "Select a company" : null),
+      // branch: (value) => (!value ? "Select a branch" : null),
+      // email: (value) =>
+      //   value && !validateEmail(value) ? "Invalid email" : null,
+      // phone: (value) =>
+      //   value && !validatePhoneNumber(value) ? "Invalid phone number" : null,
+    },
+  });
 
-          <Select
-            label="Designation"
-            placeholder="Designation"
-            // searchable
-            data={["Dhaka", "Rangpur", "Dinajpur"]}
-            mb="xs"
-          />
+  // useEffect(() => {
+  //   if (data) {
+  //     form.setValues({
+  //       first_name: data?.first_name || "",
+  //       last_name: data?.last_name || "",
+  //       personal_email: data?.personal_email || "",
+  //       personal_phone: data?.personal_phone || "",
+  //       gender: data?.gender || "",
+  //       religion: data?.religion || "",
+  //       marital_status: data?.marital_status || "",
+  //       blood_group: data?.blood_group || "",
+  //       //
+  //       official_id: data?.official_id || "",
+  //       company: data?.company || "",
+  //       branch: data?.branch || "",
+  //       department: data?.department || "",
+  //       designation: data?.designation || "",
+  //       supervisor: data?.supervisor || "",
+  //       shift: data?.shift || "",
+  //       employee_type: data?.employee_type || "",
+  //       job_status: data?.job_status || "",
+  //       grade: data?.grade || "",
+  //       ethnicgroup_user: data?.ethnicgroup_user || "",
+  //       joining_date: [null, null],
+  //       gross_salary: [10000, 30000],
+  //     });
+  //   }
+  // }, [data]);
 
-          <Select
-            label="Shift"
-            placeholder="Shift"
-            // searchable
-            data={["Dhaka", "Rangpur", "Dinajpur"]}
-            mb="xs"
-          />
+  const {
+    data: religionsData,
+    error: religionsError,
+    isLoading: religionsIsFetchLoading,
+  } = useSWR(`/api/user/get-religion/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
 
-          <Select
-            label="Job Status"
-            placeholder="Job Status"
-            // searchable
-            data={["Dhaka", "Rangpur", "Dinajpur"]}
-            mb="xs"
-          />
+  // console.log(religionsData);
 
-          <Select
-            label="Group"
-            placeholder="Group"
-            // searchable
-            data={["Group-1", "Group-2"]}
-            mb="xs"
-          />
-        </Grid.Col>
-        <Grid.Col span={6}>
-          <Select
-            label="Company"
-            placeholder="Company"
-            // searchable
-            data={["Dhaka", "Rangpur", "Dinajpur"]}
-            mb="xs"
-          />
-          <Select
-            label="Department"
-            placeholder="Department"
-            // searchable
-            data={["Dhaka", "Rangpur", "Dinajpur"]}
-            mb="xs"
-          />
-          <Select
-            label="Supervisor"
-            placeholder="Supervisor"
-            // searchable
-            data={["Dhaka", "Rangpur", "Dinajpur"]}
-            mb="xs"
-          />
+  const religions = religionsData?.data?.result?.map((item) => ({
+    value: item?.id.toString() || "",
+    label: item?.name?.toString() || "",
+  }));
 
-          <Select
-            label="Employee type"
-            placeholder="Employee type"
-            // searchable
-            data={["Employee type-1", "Employee type-2"]}
-            mb="xs"
-          />
+  const {
+    data: companyData,
+    error: companyError,
+    isLoading: isCompanyLoading,
+  } = useSWR(`/api/company/get-company/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
 
-          <Select
-            label="Grade"
-            placeholder="Grade"
-            // searchable
-            data={["Grade-1", "Grade-2"]}
-            mb="xs"
-          />
-          <DatePickerInput
-            type="range"
-            label="Joining Date"
-            placeholder="Joining Date (From, To)"
-            // value={value}
-            // onChange={setValue}
-          />
-        </Grid.Col>
+  const companies = companyData?.data?.result?.map((item) => ({
+    label: item?.basic_information?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
 
-        <Grid.Col span={12}>
-          <div className="w-100">
-            <div className="cust_iputLabel">Gross Salary</div>
+  const {
+    data: shiftsData,
+    error: shiftsError,
+    isLoading: isShiftsLoading,
+  } = useSWR(`/api/user/get-shift/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
 
-            <RangeSlider
-              classNames={{
-                root: "w-100",
-                wrapper: "cust_iputWrapper",
-              }}
-              // minRange={5000}
-              min={0}
-              max={300000}
-              step={500}
-              defaultValue={[10000, 30000]}
-            />
-          </div>
-        </Grid.Col>
-      </Grid>
-    ),
-  },
-];
+  const shifts = shiftsData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
 
-const FilterModal = ({ opened, close }) => {
-  const itemsAccordion = accordionData.map((item) => (
-    <Accordion.Item key={item.value} value={item.value}>
-      <Accordion.Control>{item.value}</Accordion.Control>
-      <Accordion.Panel>{item.dataInput}</Accordion.Panel>
-    </Accordion.Item>
-  ));
+  const {
+    data: gradesData,
+    error: gradesError,
+    isLoading: isGradesLoading,
+  } = useSWR(`/api/user/get-grade/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const grades = gradesData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: groupsData,
+    error: groupsError,
+    isLoading: isGroupsLoading,
+  } = useSWR(`/api/user/get-ethnicgroup/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const groups = groupsData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: employeesData,
+    error: employeesError,
+    isLoading: isEmployeesLoading,
+  } = useSWR(`/api/user/get-employee/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const employees = employeesData?.data?.result?.map((item) => ({
+    label: getFullName(item?.first_name, item?.last_name),
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: designationsData,
+    error: designationsError,
+    isLoading: isDesignationsLoading,
+  } = useSWR(`/api/user/get-dsignation/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const designations = designationsData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const fetchBranches = async (companyId) => {
+    try {
+      const response = await getData(
+        `/api/branch/get-branch/?company=${companyId}`
+      );
+      console.log(response);
+      const branchData = response?.data?.data?.result.map((branch) => ({
+        label: branch?.name?.toString() || "",
+        value: branch?.id.toString() || "",
+      }));
+      setBranches(branchData);
+    } catch (error) {
+      console.error("Error fetching branches:", error);
+      toast.error("Error fetching branches");
+    }
+  };
+
+  form.watch("company", ({ previousValue, value, touched, dirty }) => {
+    if (value) {
+      fetchBranches(value);
+    } else {
+      form.setFieldValue("branch", null);
+      setBranches([]);
+    }
+  });
+
+  const fetchDepartments = async (companyId, branchId) => {
+    try {
+      const response = await getData(
+        `/api/department/get-department/?company=${companyId}&branch=${branchId}`
+      );
+      console.log(response);
+      const departmentData = response?.data?.data?.result.map((department) => ({
+        label: department?.name?.toString() || "",
+        value: department?.id.toString() || "",
+      }));
+      setDepartments(departmentData);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+      toast.error("Error fetching departments");
+    }
+  };
+
+  form.watch("branch", ({ previousValue, value, touched, dirty }) => {
+    if (value) {
+      fetchDepartments(form.getValues().company, value);
+      form.setFieldValue("department", null);
+    } else {
+      console.log(value);
+      form.setFieldValue("department", "");
+      setDepartments([]);
+    }
+  });
+
+  // const [grossSalary, setGrossSalary] = useState(form.getValues().gross_salary);
+
+  const handleGrossSalaryChange = (value) => {
+    // setGrossSalary(value);
+    form.setFieldValue("gross_salary", value);
+  };
+
+  const handleSubmit = async (values) => {
+    const formData = {
+      ...values,
+      joining_date: [
+        formatDateToYYYYMMDD(values.joining_date[0]),
+        formatDateToYYYYMMDD(values.joining_date[1]),
+      ],
+    };
+
+    // console.log(formData);
+    setData(formData);
+    close();
+    form.reset();
+    return;
+  };
+
+  const handleError = (errors) => {
+    console.log(errors);
+  };
 
   return (
     <Modal opened={opened} onClose={close} title="Filter" centered>
-      <Accordion defaultValue="">{itemsAccordion}</Accordion>
-      <div className="d-flex justify-content-end">
-        <Button variant="filled" size="sm" mt="sm">
-          Search
-        </Button>
-      </div>
+      <form
+        onSubmit={form.onSubmit((values) => handleSubmit(values), handleError)}
+      >
+        <Accordion defaultValue="">
+          <Accordion.Item key="Personal Info" value="Personal Info">
+            <Accordion.Control>Personal Info</Accordion.Control>
+            <Accordion.Panel>
+              <Grid>
+                <Grid.Col span={6}>
+                  <TextInput
+                    label="First Name"
+                    placeholder="First Name"
+                    mb="xs"
+                    {...form.getInputProps("first_name")}
+                    key={form.key("first_name")}
+                  />
+                  <TextInput
+                    label="Email"
+                    placeholder="example@gmail.com"
+                    mb="xs"
+                    {...form.getInputProps("personal_email")}
+                    key={form.key("personal_email")}
+                  />
+                  <Select
+                    mb="xs"
+                    label="Gender"
+                    placeholder="Gender"
+                    searchable
+                    data={genders}
+                    {...form.getInputProps("gender")}
+                    key={form.key("gender")}
+                  />
+                  <Select
+                    label="Marital Status"
+                    placeholder="Marital Status"
+                    data={maritalStatus}
+                    {...form.getInputProps("marital_status")}
+                    key={form.key("marital_status")}
+                  />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <TextInput
+                    label="Last Name"
+                    placeholder="Last Name"
+                    mb="xs"
+                    {...form.getInputProps("last_name")}
+                    key={form.key("last_name")}
+                  />
+                  <TextInput
+                    label="Contact No."
+                    placeholder="Contact No"
+                    mb="xs"
+                    {...form.getInputProps("personal_phone")}
+                    key={form.key("personal_phone")}
+                  />
+                  <Select
+                    mb="xs"
+                    label="Religion"
+                    placeholder="Religion"
+                    data={religions}
+                    {...form.getInputProps("religion")}
+                    key={form.key("religion")}
+                  />
+                  <Select
+                    label="Blood Group"
+                    placeholder="Blood Group"
+                    data={bloodGroups}
+                    {...form.getInputProps("blood_group")}
+                    key={form.key("blood_group")}
+                  />
+                </Grid.Col>
+              </Grid>
+            </Accordion.Panel>
+          </Accordion.Item>
+
+          <Accordion.Item key="Work Info" value="Work Info">
+            <Accordion.Control>Work Info</Accordion.Control>
+            <Accordion.Panel>
+              <Grid>
+                <Grid.Col span={6}>
+                  <TextInput //
+                    label="Employee ID"
+                    placeholder="Employee ID"
+                    mb="xs"
+                    {...form.getInputProps("official_id")}
+                    key={form.key("official_id")}
+                  />
+
+                  <Select
+                    label="Branch"
+                    placeholder="Branch"
+                    // searchable
+                    data={branches}
+                    mb="xs"
+                    {...form.getInputProps("branch")}
+                    key={form.key("branch")}
+                  />
+
+                  <Select
+                    label="Designation"
+                    placeholder="Designation"
+                    // searchable
+                    data={designations}
+                    mb="xs"
+                    {...form.getInputProps("designation")}
+                    key={form.key("designation")}
+                  />
+
+                  <Select
+                    label="Shift"
+                    placeholder="Shift"
+                    // searchable
+                    data={shifts}
+                    mb="xs"
+                    {...form.getInputProps("shift")}
+                    key={form.key("shift")}
+                  />
+
+                  <Select
+                    label="Job Status"
+                    placeholder="Job Status"
+                    // searchable
+                    data={jobStatus}
+                    mb="xs"
+                    {...form.getInputProps("job_status")}
+                    key={form.key("job_status")}
+                  />
+
+                  <Select
+                    label="Group"
+                    placeholder="Group"
+                    // searchable
+                    data={groups}
+                    mb="xs"
+                    {...form.getInputProps("ethnicgroup_user")}
+                    key={form.key("ethnicgroup_user")}
+                  />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Select
+                    label="Company"
+                    placeholder="Company"
+                    // searchable
+                    data={companies}
+                    mb="xs"
+                    {...form.getInputProps("company")}
+                    key={form.key("company")}
+                  />
+                  <Select
+                    label="Department"
+                    placeholder="Department"
+                    // searchable
+                    data={departments}
+                    mb="xs"
+                    {...form.getInputProps("department")}
+                    key={form.key("department")}
+                  />
+                  <Select
+                    label="Supervisor"
+                    placeholder="Supervisor"
+                    // searchable
+                    data={employees}
+                    mb="xs"
+                    {...form.getInputProps("supervisor")}
+                    key={form.key("supervisor")}
+                  />
+
+                  <Select
+                    label="Employee type"
+                    placeholder="Employee type"
+                    // searchable
+                    data={employeeTypes}
+                    mb="xs"
+                    {...form.getInputProps("employee_type")}
+                    key={form.key("employee_type")}
+                  />
+
+                  <Select
+                    label="Grade"
+                    placeholder="Grade"
+                    // searchable
+                    data={grades}
+                    mb="xs"
+                    {...form.getInputProps("grade")}
+                    key={form.key("grade")}
+                  />
+                  <DatePickerInput
+                    type="range"
+                    label="Joining Date"
+                    placeholder="Joining Date (From, To)"
+                    // value={value}
+                    // onChange={setValue}
+                    {...form.getInputProps("joining_date")}
+                    key={form.key("joining_date")}
+                  />
+                </Grid.Col>
+
+                <Grid.Col span={12}>
+                  <div className="w-100">
+                    <div className="cust_iputLabel">Gross Salary</div>
+                    <RangeSlider
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      defaultValue={[10000, 80000]}
+                      min={0}
+                      max={300000}
+                      step={500}
+                      // value={grossSalary}
+                      onChangeEnd={handleGrossSalaryChange}
+                    />
+                  </div>
+                </Grid.Col>
+              </Grid>
+            </Accordion.Panel>
+          </Accordion.Item>
+        </Accordion>
+        <div className="d-flex justify-content-end">
+          <Button variant="filled" size="sm" mt="sm" type="submit">
+            Search
+          </Button>
+        </div>
+      </form>
     </Modal>
   );
 };

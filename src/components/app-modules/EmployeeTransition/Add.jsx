@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import useSWR from "swr";
 import { useForm } from "@mantine/form";
+import { DateInput } from "@mantine/dates";
 import {
   Modal,
   TextInput,
-  Textarea,
   Button,
   Select,
   Group,
@@ -12,31 +12,30 @@ import {
   Checkbox,
   NumberInput,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
 import { toast } from "react-toastify";
 import { submit } from "@/lib/submit";
-import { fetcher } from "@/lib/fetch";
-import { countries } from "@/data/countries";
+import { fetcher, getData } from "@/lib/fetch";
+import { getFullName, formatDateToYYYYMMDD } from "@/lib/helper";
+import { jobStatus } from "@/data";
 
 const Index = ({ opened, close, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [branches, setBranches] = useState([]);
+  const [departments, setDepartments] = useState([]);
 
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      name: "",
-      description: "",
+      user: "",
       company: "",
-      phone: "",
-      email: "",
-      fax: "",
-      address: {
-        city: "",
-        state_division: "",
-        post_zip_code: "",
-        country: "",
-        address: "",
-      },
+      branch: "",
+      department: "",
+      designation: "",
+      effective_from: null,
+      increment_on: "",
+      new_salary: "",
+      employee_type: "",
+      status_adjustment: "",
     },
     validate: {
       name: (value) =>
@@ -79,19 +78,101 @@ const Index = ({ opened, close, mutate }) => {
   });
 
   const {
-    data,
-    error,
-    isLoading: isFetchLoading,
-  } = useSWR(`/api/company/get-company/`, fetcher, {
+    data: employeeData,
+    error: employeeError,
+    isLoading: employeeIsFetchLoading,
+  } = useSWR(`/api/user/get-employee/`, fetcher, {
     errorRetryCount: 2,
     keepPreviousData: true,
     revalidateOnFocus: false,
   });
 
-  const companies = data?.result?.map((item) => ({
-    label: item?.basic_information?.name?.toString() || "",
-    value: item?.basic_information?.id.toString() || "",
+  const employees = employeeData?.data.result.map((item) => ({
+    label: getFullName(item?.first_name, item?.last_name),
+    value: item?.id.toString() || "",
   }));
+
+  const {
+    data: companyData,
+    error: companyError,
+    isLoading: isCompanyLoading,
+  } = useSWR(`/api/company/get-company/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const companies = companyData?.data?.result?.map((item) => ({
+    label: item?.basic_information?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: designationsData,
+    error: designationsError,
+    isLoading: isDesignationsLoading,
+  } = useSWR(`/api/user/get-dsignation/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const designations = designationsData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const fetchBranches = async (companyId) => {
+    try {
+      const response = await getData(
+        `/api/branch/get-branch/?company=${companyId}`
+      );
+      console.log(response);
+      const branchData = response?.data?.data?.result.map((branch) => ({
+        label: branch?.name?.toString() || "",
+        value: branch?.id.toString() || "",
+      }));
+      setBranches(branchData);
+    } catch (error) {
+      console.error("Error fetching branches:", error);
+      toast.error("Error fetching branches");
+    }
+  };
+
+  form.watch("company", ({ previousValue, value, touched, dirty }) => {
+    if (value) {
+      fetchBranches(value);
+    } else {
+      form.setFieldValue("branch", "");
+      setBranches([]);
+    }
+  });
+
+  const fetchDepartments = async (companyId, branchId) => {
+    try {
+      const response = await getData(
+        `/api/department/get-department/?company=${companyId}&branch=${branchId}`
+      );
+      console.log(response);
+      const departmentData = response?.data?.data?.result.map((department) => ({
+        label: department?.name?.toString() || "",
+        value: department?.id.toString() || "",
+      }));
+      setDepartments(departmentData);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+      toast.error("Error fetching departments");
+    }
+  };
+
+  form.watch("branch", ({ previousValue, value, touched, dirty }) => {
+    if (value) {
+      fetchDepartments(form.getValues().company, value);
+      form.setFieldValue("department", null);
+    } else {
+      console.log(value);
+      form.setFieldValue("department", "");
+      setDepartments([]);
+    }
+  });
 
   const handleSubmit = async (values) => {
     // e.preventDefault();
@@ -149,8 +230,8 @@ const Index = ({ opened, close, mutate }) => {
                 label="Employee"
                 placeholder="Employee"
                 // disabled={isSubmitting}
-                data={["Jiaur Rahman", "Nazmul"]}
-                // {...form.getInputProps("company")}
+                data={employees}
+                {...form.getInputProps("user")}
               />
               <p className="mb-1">Status Adjustment</p>
               <div className="">
@@ -164,32 +245,32 @@ const Index = ({ opened, close, mutate }) => {
                 label="New Company"
                 placeholder="New Company"
                 // disabled={isSubmitting}
-                data={["Abc Company", "Xyz Company"]}
-                // {...form.getInputProps("company")}
+                data={companies}
+                {...form.getInputProps("company")}
               />
               <Select
                 mb="sm"
                 label="New Branch"
                 placeholder="New Branch"
                 // disabled={isSubmitting}
-                data={["Abc Branch", "Xyz Branch"]}
-                // {...form.getInputProps("company")}
+                data={branches}
+                {...form.getInputProps("branch")}
               />
               <Select
                 mb="sm"
                 label="New Department"
                 placeholder="New Department"
                 // disabled={isSubmitting}
-                data={["Abc Department", "Xyz Department"]}
-                // {...form.getInputProps("company")}
+                data={departments}
+                {...form.getInputProps("department")}
               />
               <Select
                 mb="sm"
                 label="New Designation"
                 placeholder="New Designation"
                 // disabled={isSubmitting}
-                data={["Abc Designation", "Xyz Designation"]}
-                // {...form.getInputProps("company")}
+                data={designations}
+                {...form.getInputProps("designation")}
               />
             </Grid.Col>
             <Grid.Col span={6}>
@@ -198,8 +279,8 @@ const Index = ({ opened, close, mutate }) => {
                 label="Job Status Update"
                 placeholder="Job Status Update"
                 // disabled={isSubmitting}
-                data={["Trainee", "Intern", "Probation", "Permanent"]}
-                // {...form.getInputProps("company")}
+                data={jobStatus}
+                {...form.getInputProps("job_status")}
               />
               <NumberInput
                 mb="sm"
@@ -218,7 +299,7 @@ const Index = ({ opened, close, mutate }) => {
                 hideControls
                 // required={true}
                 // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
+                {...form.getInputProps("name")}
               />
               <TextInput
                 mb="sm"
@@ -236,7 +317,7 @@ const Index = ({ opened, close, mutate }) => {
                 // disabled={isSubmitting}
                 // {...form.getInputProps("name")}
               />
-              <DatePickerInput
+              <DateInput
                 label="Effective From"
                 placeholder="Pick date"
                 mb="sm"

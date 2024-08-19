@@ -27,7 +27,7 @@ async function getData(id) {
 //   }));
 // }
 
-export const fetchCache = "force-no-store";
+// export const fetchCache = "force-no-store";
 
 export async function generateStaticParams() {
   return [];

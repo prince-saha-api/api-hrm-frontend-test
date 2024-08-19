@@ -122,7 +122,7 @@ const Index = ({ opened, close, mutate }) => {
       console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
-      }, 5000);
+      }, 500);
     }
   };
 

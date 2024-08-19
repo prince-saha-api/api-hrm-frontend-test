@@ -144,7 +144,7 @@ const initialData = {
     //   attachment: null,
     // },
   ],
-}
+};
 
 const AddEmployee = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -288,11 +288,11 @@ const AddEmployee = () => {
       if (response?.status === "success") {
         // console.log(response);
         setIsSubmitting(false);
-        setIsCreated(true)
+        setIsCreated(true);
         // form.reset();
         // close();
         // mutate();
-        setFormData(initialData)
+        setFormData(initialData);
         toast.success("Employee created successfully");
         // setActive(6)
       } else {
@@ -310,7 +310,7 @@ const AddEmployee = () => {
           toast.error("Error submitting form");
           setTimeout(() => {
             setIsSubmitting(false);
-          }, 5000);
+          }, 500);
         }
       }
 
@@ -329,44 +329,44 @@ const AddEmployee = () => {
 
       <div className="itemCard">
         {!isCreated ? (
-        <Stepper active={active} onStepClick={handleStepClick}>
-          <Stepper.Step label="Personal Details" description="Step 1">
-            <PersonalDetails
-              ref={(el) => (stepRefs.current[0] = el)}
-              data={formData.personalDetails}
-              onNext={handleNextStep}
-              // onBack={prevStep}
-            />
-          </Stepper.Step>
+          <Stepper active={active} onStepClick={handleStepClick}>
+            <Stepper.Step label="Personal Details" description="Step 1">
+              <PersonalDetails
+                ref={(el) => (stepRefs.current[0] = el)}
+                data={formData.personalDetails}
+                onNext={handleNextStep}
+                // onBack={prevStep}
+              />
+            </Stepper.Step>
 
-          <Stepper.Step label="Official Details" description="Step 2">
-            <OfficeDetails
-              ref={(el) => (stepRefs.current[1] = el)}
-              data={formData.officialDetails}
-              onNext={handleNextStep}
-              onBack={prevStep}
-            />
-          </Stepper.Step>
+            <Stepper.Step label="Official Details" description="Step 2">
+              <OfficeDetails
+                ref={(el) => (stepRefs.current[1] = el)}
+                data={formData.officialDetails}
+                onNext={handleNextStep}
+                onBack={prevStep}
+              />
+            </Stepper.Step>
 
-          <Stepper.Step label="Salary and Leaves" description="Step 3">
-            <SalaryAndLeaves
-              ref={(el) => (stepRefs.current[2] = el)}
-              data={formData.salaryAndLeaves}
-              onNext={handleNextStep}
-              onBack={prevStep}
-            />
-          </Stepper.Step>
+            <Stepper.Step label="Salary and Leaves" description="Step 3">
+              <SalaryAndLeaves
+                ref={(el) => (stepRefs.current[2] = el)}
+                data={formData.salaryAndLeaves}
+                onNext={handleNextStep}
+                onBack={prevStep}
+              />
+            </Stepper.Step>
 
-          <Stepper.Step label="Emergency Contact" description="Step 4">
-            <EmergencyContact
-              ref={(el) => (stepRefs.current[3] = el)}
-              data={formData.emergencyContact}
-              onNext={handleNextStep}
-              onBack={prevStep}
-            />
-          </Stepper.Step>
+            <Stepper.Step label="Emergency Contact" description="Step 4">
+              <EmergencyContact
+                ref={(el) => (stepRefs.current[3] = el)}
+                data={formData.emergencyContact}
+                onNext={handleNextStep}
+                onBack={prevStep}
+              />
+            </Stepper.Step>
 
-          {/* <Stepper.Step label="Academic Record" description="Step 5">
+            {/* <Stepper.Step label="Academic Record" description="Step 5">
             <AcademicRecord
               ref={(el) => (stepRefs.current[4] = el)}
               data={formData.academicRecord}
@@ -375,32 +375,32 @@ const AddEmployee = () => {
             />
           </Stepper.Step> */}
 
-          <Stepper.Step label="Education & Experience" description="Step 6">
-            <EducationAndExperience
-              ref={(el) => (stepRefs.current[4] = el)}
-              data={{
-                academicRecord: formData.academicRecord,
-                previousExperience: formData.previousExperience,
-              }}
-              onNext={handleEducationAndExperienceNext}
-              onBack={prevStep}
-            />
-          </Stepper.Step>
+            <Stepper.Step label="Education & Experience" description="Step 6">
+              <EducationAndExperience
+                ref={(el) => (stepRefs.current[4] = el)}
+                data={{
+                  academicRecord: formData.academicRecord,
+                  previousExperience: formData.previousExperience,
+                }}
+                onNext={handleEducationAndExperienceNext}
+                onBack={prevStep}
+              />
+            </Stepper.Step>
 
-          <Stepper.Step label="Upload Documents" description="Final">
-            <UploadDocuments
-              ref={(el) => (stepRefs.current[5] = el)}
-              data={formData.uploadDocuments}
-              onNext={handleSubmit}
-              onBack={prevStep}
-            />
-          </Stepper.Step>
+            <Stepper.Step label="Upload Documents" description="Final">
+              <UploadDocuments
+                ref={(el) => (stepRefs.current[5] = el)}
+                data={formData.uploadDocuments}
+                onNext={handleSubmit}
+                onBack={prevStep}
+              />
+            </Stepper.Step>
 
-          {/* <Stepper.Completed>
+            {/* <Stepper.Completed>
             <SuccessCheckmarkAnimation />
 
           </Stepper.Completed> */}
-        </Stepper>
+          </Stepper>
         ) : (
           <SuccessCheckmarkAnimation />
         )}

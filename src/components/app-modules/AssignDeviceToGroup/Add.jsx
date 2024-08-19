@@ -87,17 +87,17 @@ const Index = ({ mutate }) => {
         toast.success("Device assigned successfully");
       } else {
         setIsSubmitting(false);
-        toast.error(
-          response?.status == "error"
-            ? response.message
-            : "Error submitting form"
-        );
+        if (response?.status === "error" && Array.isArray(response.message)) {
+          response.message.forEach((msg) => {
+            toast.error(msg);
+          });
+        } else {
+          toast.error("Error submitting form");
+        }
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      setTimeout(() => {
-        setIsSubmitting(false);
-      }, 5000);
+      setIsSubmitting(false);
     }
   };
 

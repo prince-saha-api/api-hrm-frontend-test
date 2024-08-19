@@ -142,13 +142,13 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     } catch (error) {
       console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     }
   };
 
@@ -167,7 +167,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
         centered
       >
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <TextInput
+          <TextInput
             mb="sm"
             label="Role"
             placeholder="Role"

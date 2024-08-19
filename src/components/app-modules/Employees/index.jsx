@@ -21,7 +21,7 @@ import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { constants } from "@/lib/config";
 import { getStoragePath, generateGroupString } from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
-import FilterModal from "./FilterModal";
+import FilterModal from "@/components/utils/EmployeeFilterModal";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 

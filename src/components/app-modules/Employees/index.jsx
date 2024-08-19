@@ -21,7 +21,7 @@ import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { constants } from "@/lib/config";
 import { getStoragePath, generateGroupString } from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
-import FilterModal from "./FilterModal";
+import FilterModal from "@/components/utils/EmployeeFilterModal";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -33,9 +33,27 @@ const Employees = () => {
     direction: "asc", // desc
   });
 
+  const [filterData, setFilterData] = useState(null);
+
   let apiUrl = `/api/user/get-employee/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
+
+  if (filterData) {
+    Object.keys(filterData).forEach((key) => {
+      const value = filterData[key];
+
+      if (Array.isArray(value)) {
+        if (value[0] !== null && value[1] !== null) {
+          apiUrl += `&${key}_from=${encodeURIComponent(
+            value[0]
+          )}&${key}_to=${encodeURIComponent(value[1])}`;
+        }
+      } else if (value) {
+        apiUrl += `&${key}=${encodeURIComponent(value)}`;
+      }
+    });
+  }
 
   const {
     data: apiData,
@@ -544,7 +562,12 @@ const Employees = () => {
 
   return (
     <>
-      <FilterModal opened={filterOpened} close={filterClose} />
+      <FilterModal
+        opened={filterOpened}
+        close={filterClose}
+        data={filterData}
+        setData={setFilterData}
+      />
       <div className="mb-4 d-flex justify-content-between align-items-end">
         <Breadcrumb
           title="Employees"

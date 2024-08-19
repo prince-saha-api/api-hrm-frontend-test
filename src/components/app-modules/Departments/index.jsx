@@ -104,7 +104,7 @@ const Index = () => {
       title: "#",
       noWrap: true,
       sortable: false,
-      width: 90,
+      width: 40,
       render: (_, index) => (currentPage - 1) * pageSize + index + 1,
       // for export
       key: "na",
@@ -118,6 +118,7 @@ const Index = () => {
       title: "Name",
       noWrap: true,
       sortable: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ name }) => name || "N/A",
       // for export
@@ -128,6 +129,7 @@ const Index = () => {
       accessor: "description",
       title: "Description",
       noWrap: true,
+      width: 300,
       // visibleMediaQuery: aboveXs,
       render: ({ description }) => description || "N/A",
       // for export
@@ -138,6 +140,7 @@ const Index = () => {
       accessor: "company",
       title: "Company",
       // visibleMediaQuery: aboveXs,
+      width: 170,
       sortable: true,
       render: ({ branch }) => branch?.company?.basic_information?.name || "N/A",
       // for export
@@ -148,6 +151,7 @@ const Index = () => {
       accessor: "branch",
       title: "Branch",
       // visibleMediaQuery: aboveXs,
+      width: 170,
       render: ({ branch }) => branch?.name || "N/A",
       // for export
       key: "branch",
@@ -157,6 +161,7 @@ const Index = () => {
       accessor: "phone",
       title: "Phone",
       // visibleMediaQuery: aboveXs,
+      width: 170,
       render: ({ phone }) => phone || "N/A",
       // for export
       key: "phone",
@@ -166,6 +171,7 @@ const Index = () => {
       accessor: "email",
       title: "Email",
       // visibleMediaQuery: aboveXs,
+      width: 170,
       render: ({ email }) => email || "N/A",
       // for export
       key: "email",
@@ -176,6 +182,7 @@ const Index = () => {
       accessor: "address",
       title: "Address",
       // visibleMediaQuery: aboveXs,
+      width: 300,
       render: ({ address }) => generateAddressString(address || {}),
       // for export
       key: "address",
@@ -184,7 +191,7 @@ const Index = () => {
       // for table display
       accessor: "actions",
       title: "Actions",
-      width: 90,
+      width: 80,
       textAlign: "center",
       // width: "0%",
       render: (item) => (

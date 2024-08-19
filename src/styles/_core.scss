@@ -310,7 +310,10 @@ employee manage css end
 .mantine-datatable-table th,
 .mantine-datatable-table td {
   border-color: #f1eae6 !important;
+  white-space: normal !important;
+  word-break: break-word !important;
 }
+
 .cusBtn {
   height: 42px !important;
   // padding: 0 25px !important;

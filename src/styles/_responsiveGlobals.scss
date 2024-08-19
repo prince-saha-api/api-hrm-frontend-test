@@ -1,0 +1,25 @@
+@media (max-width: 767px) {
+  .showItem {
+    width: 100% !important;
+    margin-bottom: 10px !important;
+  }
+  .downItem {
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+}
+
+.dt_cell_sm {
+  width: 50px !important;
+  background-color: #ddd !important;
+  border-left: 1px solid #333;
+}
+.dt_cell_md {
+  width: 170px !important;
+  background-color: #ddd !important;
+  border-left: 1px solid #333;
+}
+
+
+
+

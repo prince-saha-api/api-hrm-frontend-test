@@ -555,8 +555,8 @@ const Index = () => {
         />
       </div>
 
-      <div className="d-flex justify-content-between mb-3">
-        <div className="showItem d-flex align-items-center justify-content-center">
+      <div className="d-flex justify-content-between mb-3 flex-wrap">
+        <div className="showItem d-flex align-items-center">
           <p className="mb-0 me-2">Show</p>
           <Select
             classNames={{

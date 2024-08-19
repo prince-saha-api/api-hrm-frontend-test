@@ -40,8 +40,8 @@ P {
 @media (min-width: 992px) {
   .wrapper {
     margin: 0 0 0 290px;
-   }
-   .main.wrapper {
+  }
+  .main.wrapper {
     margin: 0 0 0 30px;
   }
 }
@@ -304,15 +304,13 @@ employee manage css end
   height: 60px !important;
 }
 .datatable_table[data-striped] tbody tr:nth-of-type(odd) {
-  background-color: #f2f2f2 !important;
+  // background-color: #f2f2f2 !important;
+  background-color: #fffaf4 !important;
 }
-
-.modalTitle {
-  font-size: 20px !important;
-  font-weight: 600 !important;
-  color: var(--color-dark);
+.mantine-datatable-table th,
+.mantine-datatable-table td {
+  border-color: #f1eae6 !important;
 }
-
 .cusBtn {
   height: 42px !important;
   // padding: 0 25px !important;

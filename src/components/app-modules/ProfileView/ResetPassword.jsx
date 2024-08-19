@@ -48,22 +48,25 @@ const Index = ({ opened, close, item }) => {
         // mutate();
         toast.success("Password changed successfully");
       } else {
-        toast.error(
-          response?.status === "error"
-            ? response?.message[0]
-            : "Error submitting form"
-        );
+        setIsSubmitting(false);
+        if (response?.status === "error" && Array.isArray(response.message)) {
+          response.message.forEach((msg) => {
+            toast.error(msg);
+          });
+        } else {
+          toast.error("Error submitting form");
+        }
       }
       setTimeout(() => {
         setIsSubmitting(false);
         // mutate();
-      }, 5000);
+      }, 500);
     } catch (error) {
       console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
         mutate();
-      }, 5000);
+      }, 500);
     }
   };
 

@@ -140,7 +140,7 @@ const Index = ({ opened, close, item, setItem }) => {
       setTimeout(() => {
         setIsSubmitting(false);
         // mutate();
-      }, 5000);
+      }, 500);
     } catch (error) {
       console.error("Error submitting form:", error);
       // setTimeout(() => {

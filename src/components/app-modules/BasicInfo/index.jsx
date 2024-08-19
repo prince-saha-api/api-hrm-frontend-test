@@ -278,7 +278,7 @@ const BasicInfo = () => {
         <div className="itemCard">
           <div className="dataBox">
             <p className="dataBoxIcon">
-              <BsDatabaseExclamation/>
+              <BsDatabaseExclamation />
             </p>
             <Button
               variant="filled"
@@ -340,7 +340,7 @@ const BasicInfo = () => {
                 </Button>
               </Flex>
             </Grid.Col>
-            <Grid.Col span={3}>
+            <Grid.Col span={{ base: 12, sm: 6, md: 4, lg: 3, xl: 3 }}>
               <div className="infoText">
                 <p className="color-light font_14 mb-1">Company Name</p>
                 <p className="font_18">
@@ -390,7 +390,7 @@ const BasicInfo = () => {
                 </p>
               </div>
             </Grid.Col>
-            <Grid.Col span={3}>
+            <Grid.Col span={{ base: 12, sm: 6, md: 4, lg: 3, xl: 3 }}>
               <div className="infoText">
                 <p className="color-light font_14 mb-1">Tax ID Number</p>
                 <p className="font_18">{basicInfo?.tax_id_number}</p>
@@ -450,205 +450,162 @@ const BasicInfo = () => {
         <div className="itemCard">
           <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
             <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-              <Grid.Col span={8}>
-                <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: "xl" }}>
-                  <Grid.Col span={6}>
-                    <Box>
-                      <TextInput
-                        label="Company Name"
-                        placeholder="Name"
-                        {...form.getInputProps("name")}
-                        disabled={isSubmitting}
-                      />
-                      {/* <DateInput
-                        classNames={{
-                          root: "w-100",
-                        }}
-                        mt="sm"
-                        label="Establishment Date"
-                        placeholder="Establishment Date"
-                        {...form.getInputProps("establishment_date")}
-                      /> */}
+              <Grid.Col
+                span={{ base: 12, sm: 6, md: 6, lg: 4, xl: 4 }}
+                order={{ base: 2, sm: 1 }}
+              >
+                <Box>
+                  <TextInput
+                    label="Company Name"
+                    placeholder="Name"
+                    {...form.getInputProps("name")}
+                    disabled={isSubmitting}
+                  />
+                  <DateInput
+                    mt="sm"
+                    label="Establishment Date"
+                    placeholder="Establishment Date"
+                    {...form.getInputProps("establishment_date")}
+                    disabled={isSubmitting}
+                  />
 
-                      <DateInput
-                        mt="sm"
-                        label="Establishment Date"
-                        placeholder="Establishment Date"
-                        {...form.getInputProps("establishment_date")}
-                        disabled={isSubmitting}
-                      />
+                  <TextInput
+                    mt="sm"
+                    label="Industry Type"
+                    placeholder="Industry Type"
+                    {...form.getInputProps("industry_type")}
+                    disabled={isSubmitting}
+                  />
+                  <TextInput
+                    mt="sm"
+                    label="Business Registration No"
+                    placeholder="Business Registration No"
+                    {...form.getInputProps("business_registration_number")}
+                    disabled={isSubmitting}
+                  />
 
-                      <TextInput
-                        mt="sm"
-                        label="Industry Type"
-                        placeholder="Industry Type"
-                        {...form.getInputProps("industry_type")}
-                        disabled={isSubmitting}
-                      />
+                  <TextInput
+                    mt="sm"
+                    label="TAX ID"
+                    placeholder="TAX ID"
+                    {...form.getInputProps("tax_id_number")}
+                    disabled={isSubmitting}
+                  />
 
-                      {/* <Select
-                        mt="sm"
-                        label="Industry Type"
-                        placeholder="Select industry type"
-                        data={company_types || []}
-                        value={form.getValues().industry_type.id.toString()}
-                        onChange={(value, option) => {
-                          form.setFieldValue("industry_type", {
-                            id: option?.value || "",
-                            name: option?.label || "",
-                          });
-                        }}
-                        disabled={isSubmitting}
-                      /> */}
+                  <TextInput
+                    mt="sm"
+                    label="BIN"
+                    placeholder="BIN"
+                    {...form.getInputProps("bin_no")}
+                    disabled={isSubmitting}
+                  />
 
-                      <TextInput
-                        mt="sm"
-                        label="Business Registration No"
-                        placeholder="Business Registration No"
-                        {...form.getInputProps("business_registration_number")}
-                        disabled={isSubmitting}
-                      />
+                  <TextInput
+                    mt="sm"
+                    label="Description"
+                    placeholder="Description"
+                    {...form.getInputProps("description")}
+                    disabled={isSubmitting}
+                  />
 
-                      <TextInput
-                        mt="sm"
-                        label="TAX ID"
-                        placeholder="TAX ID"
-                        {...form.getInputProps("tax_id_number")}
-                        disabled={isSubmitting}
-                      />
-
-                      <TextInput
-                        mt="sm"
-                        label="BIN"
-                        placeholder="BIN"
-                        {...form.getInputProps("bin_no")}
-                        disabled={isSubmitting}
-                      />
-
-                      <TextInput
-                        mt="sm"
-                        label="Description"
-                        placeholder="Description"
-                        {...form.getInputProps("description")}
-                        disabled={isSubmitting}
-                      />
-
-                      <TextInput
-                        mt="sm"
-                        label="Website"
-                        placeholder="Website"
-                        {...form.getInputProps("website_url")}
-                        disabled={isSubmitting}
-                      />
-                    </Box>
-                  </Grid.Col>
-
-                  <Grid.Col span={6}>
-                    <Box>
-                      <TextInput
-                        // mt="sm"
-                        label="Email"
-                        placeholder="Email"
-                        {...form.getInputProps("primary_email")}
-                        disabled={isSubmitting}
-                      />
-
-                      <TextInput
-                        mt="sm"
-                        label="Phone"
-                        placeholder="Phone"
-                        {...form.getInputProps("primary_phone_number")}
-                        disabled={isSubmitting}
-                      />
-                      <TextInput
-                        mt="sm"
-                        label="Fax"
-                        placeholder="Fax"
-                        {...form.getInputProps("fax")}
-                        disabled={isSubmitting}
-                      />
-                      <TextInput
-                        classNames={{
-                          root: "w-100",
-                        }}
-                        mt="sm"
-                        label="Address"
-                        placeholder="Address"
-                        {...form.getInputProps("address.address")}
-                        disabled={isSubmitting}
-                      />
-
-                      <TextInput
-                        classNames={{
-                          root: "w-100",
-                        }}
-                        mt="sm"
-                        label="City"
-                        placeholder="City"
-                        {...form.getInputProps("address.city")}
-                        disabled={isSubmitting}
-                      />
-
-                      <TextInput
-                        classNames={{
-                          root: "w-100",
-                        }}
-                        mt="sm"
-                        label="State"
-                        placeholder="State"
-                        {...form.getInputProps(`address.state_division`)}
-                        disabled={isSubmitting}
-                      />
-
-                      <TextInput
-                        classNames={{
-                          root: "w-100",
-                        }}
-                        mt="sm"
-                        label="Postal / ZIP Code"
-                        placeholder="Postal / ZIP Code"
-                        {...form.getInputProps(`address.post_zip_code`)}
-                        disabled={isSubmitting}
-                      />
-
-                      <Select
-                        classNames={{
-                          root: "w-100",
-                        }}
-                        mt="sm"
-                        label="Country"
-                        placeholder="Country"
-                        searchable
-                        data={countries}
-                        {...form.getInputProps("address.country")}
-                        disabled={isSubmitting}
-                      />
-                    </Box>
-                  </Grid.Col>
-                </Grid>
-                <Button
-                  type="button"
-                  mt="lg"
-                  me={"lg"}
-                  size="sm"
-                  variant="outline"
-                  // ml="sm"
-                  onClick={() => handleCancel()}
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  mt="lg"
-                  size="sm"
-                  loading={isSubmitting}
-                  loaderProps={{ type: "dots" }}
-                >
-                  Submit
-                </Button>
+                  <TextInput
+                    mt="sm"
+                    label="Website"
+                    placeholder="Website"
+                    {...form.getInputProps("website_url")}
+                    disabled={isSubmitting}
+                  />
+                </Box>
               </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col
+                span={{ base: 12, sm: 6, md: 6, lg: 4, xl: 4 }}
+                order={{ base: 3, sm: 2 }}
+              >
+                <Box>
+                  <TextInput
+                    // mt="sm"
+                    label="Email"
+                    placeholder="Email"
+                    {...form.getInputProps("primary_email")}
+                    disabled={isSubmitting}
+                  />
+
+                  <TextInput
+                    mt="sm"
+                    label="Phone"
+                    placeholder="Phone"
+                    {...form.getInputProps("primary_phone_number")}
+                    disabled={isSubmitting}
+                  />
+                  <TextInput
+                    mt="sm"
+                    label="Fax"
+                    placeholder="Fax"
+                    {...form.getInputProps("fax")}
+                    disabled={isSubmitting}
+                  />
+                  <TextInput
+                    classNames={{
+                      root: "w-100",
+                    }}
+                    mt="sm"
+                    label="Address"
+                    placeholder="Address"
+                    {...form.getInputProps("address.address")}
+                    disabled={isSubmitting}
+                  />
+
+                  <TextInput
+                    classNames={{
+                      root: "w-100",
+                    }}
+                    mt="sm"
+                    label="City"
+                    placeholder="City"
+                    {...form.getInputProps("address.city")}
+                    disabled={isSubmitting}
+                  />
+
+                  <TextInput
+                    classNames={{
+                      root: "w-100",
+                    }}
+                    mt="sm"
+                    label="State"
+                    placeholder="State"
+                    {...form.getInputProps(`address.state_division`)}
+                    disabled={isSubmitting}
+                  />
+
+                  <TextInput
+                    classNames={{
+                      root: "w-100",
+                    }}
+                    mt="sm"
+                    label="Postal / ZIP Code"
+                    placeholder="Postal / ZIP Code"
+                    {...form.getInputProps(`address.post_zip_code`)}
+                    disabled={isSubmitting}
+                  />
+
+                  <Select
+                    classNames={{
+                      root: "w-100",
+                    }}
+                    mt="sm"
+                    label="Country"
+                    placeholder="Country"
+                    searchable
+                    data={countries}
+                    {...form.getInputProps("address.country")}
+                    disabled={isSubmitting}
+                  />
+                </Box>
+              </Grid.Col>
+              <Grid.Col
+                span={{ base: 12, sm: 6, md: 6, lg: 4, xl: 4 }}
+                order={{ base: 1, sm: 3 }}
+              >
                 <div className="uploadBox">
                   {basicInfo?.logo || preview !== null ? (
                     <div
@@ -710,7 +667,41 @@ const BasicInfo = () => {
                   </Group>
                 </div>
               </Grid.Col>
+              <Grid.Col span={{ base: 12 }} order={{ base: 4, sm: 4 }}>
+                <div className="submitBtns">
+                  <Button
+                    type="button"
+                    me={"lg"}
+                    size="sm"
+                    variant="outline"
+                    // ml="sm"
+                    onClick={() => handleCancel()}
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    size="sm"
+                    loading={isSubmitting}
+                    loaderProps={{ type: "dots" }}
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </Grid.Col>
             </Grid>
+            {/* <Grid>
+              <Grid.Col span={3} order={{ base: 2, sm: 1, lg: 3 }}>
+                2
+              </Grid.Col>
+              <Grid.Col span={3} order={{ base: 3, sm: 2, lg: 2 }}>
+                3
+              </Grid.Col>
+              <Grid.Col span={3} order={{ base: 3, sm: 3, lg: 1 }}>
+                1
+              </Grid.Col>
+            </Grid> */}
           </form>
         </div>
       )}

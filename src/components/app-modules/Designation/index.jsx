@@ -84,7 +84,7 @@ const Index = () => {
       title: "#",
       noWrap: true,
       sortable: false,
-      width: 90,
+      width: 40,
       render: (_, index) => (currentPage - 1) * pageSize + index + 1,
       // for export
       key: "na",
@@ -98,6 +98,7 @@ const Index = () => {
       title: "Name",
       noWrap: true,
       sortable: true,
+      width: 250,
       // visibleMediaQuery: aboveXs,
       render: ({ name }) => name || "N/A",
       // for export
@@ -108,6 +109,7 @@ const Index = () => {
       accessor: "grade",
       title: "Grade",
       noWrap: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ grade }) => grade?.name || "N/A",
       modifier: ({ grade }) => grade?.name || "N/A",
@@ -118,7 +120,7 @@ const Index = () => {
       // for table display
       accessor: "actions",
       title: "Actions",
-      width: 90,
+      width: 80,
       textAlign: "center",
       // width: "0%",
       render: (item) => (

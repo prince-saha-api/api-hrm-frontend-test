@@ -4,7 +4,14 @@ import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
-import { Button, Select, Menu, MultiSelect, Popover } from "@mantine/core";
+import {
+  Button,
+  Select,
+  Menu,
+  MultiSelect,
+  Popover,
+  Group,
+} from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
@@ -32,7 +39,7 @@ const Index = () => {
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/branch/get-branch/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let apiUrl = `/api/jobrecord/get-jobhistory/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -294,7 +301,7 @@ const Index = () => {
   // const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/api/branch/get-branch/?column_accessor=${
+    let url = `/api/jobrecord/get-jobhistory/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 

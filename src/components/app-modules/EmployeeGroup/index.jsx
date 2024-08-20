@@ -84,7 +84,7 @@ const Index = () => {
       title: "#",
       noWrap: true,
       sortable: false,
-      width: 90,
+      width: 40,
       render: (_, index) => (currentPage - 1) * pageSize + index + 1,
       // for export
       key: "na",
@@ -422,7 +422,7 @@ const Index = () => {
         mutate={mutate}
       />
 
-      <div className="mb-4 d-flex justify-content-between align-items-end">
+      <div className="mb-4 d-flex justify-content-between align-items-end flex-wrap">
         {/* <Breadcrumb
           title="Employee Group"
           items={[
@@ -441,8 +441,8 @@ const Index = () => {
         />
       </div>
 
-      <div className="d-flex justify-content-between mb-3">
-        <div className="showItem d-flex align-items-center justify-content-center">
+      <div className="d-flex justify-content-between mb-3 flex-wrap">
+        <div className="showItem d-flex align-items-center">
           <p className="mb-0 me-2">Show</p>
           <Select
             withCheckIcon={false}

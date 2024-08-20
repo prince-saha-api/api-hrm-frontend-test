@@ -1,6 +1,7 @@
 "use client";
 
 import React, { forwardRef, useImperativeHandle } from "react";
+import useSWR from "swr";
 import { MultiSelect } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
@@ -12,6 +13,7 @@ import {
   Group,
 } from "@mantine/core";
 import { Grid } from "@mantine/core";
+import { fetcher } from "@/lib/fetch";
 import { countries } from "@/data/countries";
 
 const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
@@ -27,6 +29,20 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
     //   // // add other validations as needed
     // },
   });
+
+  const {
+    data: leavepolicyData,
+    error: leavepolicyError,
+    isLoading: isLeavepolicyLoading,
+  } = useSWR(`/api/leave/get-leavepolicy/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const leavepolicies = leavepolicyData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
 
   useImperativeHandle(ref, () => ({
     validateStep: (updateFormData, key) => {
@@ -101,15 +117,11 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   placeholder="Leave Policy"
-                  data={[
-                    { value: "1", label: "Leave Policy 1" },
-                    { value: "2", label: "Leave Policy 2" },
-                    { value: "3", label: "Leave Policy 3" },
-                    { value: "4", label: "Leave Policy 4" },
-                  ]}
+                  data={leavepolicies}
                   searchable
                   withAsterisk
                   {...form.getInputProps("leavepolicy")}
+                  key={form.key("leavepolicy")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">

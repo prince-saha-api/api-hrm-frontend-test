@@ -143,21 +143,21 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
             label="Is Optional?"
             variant="outline"
             disabled={isSubmitting}
-            {...form.getInputProps("is_optional")}
+            {...form.getInputProps("is_optional", { type: "checkbox" })}
           />
           <Checkbox
             mt="md"
             label="Is Calendar Day?"
             variant="outline"
             disabled={isSubmitting}
-            {...form.getInputProps("is_calendar_day")}
+            {...form.getInputProps("is_calendar_day", { type: "checkbox" })}
           />
           <Checkbox
             mt="md"
             label="Require Attachment?"
             variant="outline"
             disabled={isSubmitting}
-            {...form.getInputProps("require_attachment")}
+            {...form.getInputProps("require_attachment", { type: "checkbox" })}
           />
 
           <Group justify="flex-end" mt="sm">

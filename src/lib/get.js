@@ -51,24 +51,26 @@ export const fetchData = async (url, retries = MAX_RETRIES, options = {}) => {
 
     const authOptions = setAuthToken(token?.value);
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
+    // const controller = new AbortController();
+    // const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
     const response = await fetch(apiBaseUrl + url, {
       ...authOptions,
       ...options,
-      signal: controller.signal,
+      // signal: controller.signal,
       // next: { revalidate: 2000 },
     });
-    clearTimeout(timeoutId);
+    // clearTimeout(timeoutId);
 
     // if (!response.ok) {
     //   throw new Error("Failed to fetch data");
     // }
 
-    if (!response?.status === "success") {
+    const res = await response.json();
+
+    if (!res?.status === "success") {
       throw new Error("Failed to fetch data");
     }
-    return response.json();
+    return res;
   } catch (error) {
     if (retries > 0) {
       return fetchData(apiBaseUrl + url, retries - 1, options);

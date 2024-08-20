@@ -12,16 +12,23 @@ import {
   Checkbox,
   NumberInput,
 } from "@mantine/core";
+
 import { toast } from "react-toastify";
 import { submit } from "@/lib/submit";
 import { fetcher, getData } from "@/lib/fetch";
 import { getFullName, formatDateToYYYYMMDD } from "@/lib/helper";
-import { jobStatus } from "@/data";
+import { jobStatus, employeeTypes } from "@/data";
 
 const Index = ({ opened, close, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [branches, setBranches] = useState([]);
   const [departments, setDepartments] = useState([]);
+  const [statusAdjustment, setStatusAdjustment] = useState({
+    Promotion: false,
+    Increment: false,
+    Transfer: false,
+    StatusUpdate: false,
+  });
 
   const form = useForm({
     mode: "uncontrolled",
@@ -35,7 +42,12 @@ const Index = ({ opened, close, mutate }) => {
       increment_on: "",
       new_salary: "",
       employee_type: "",
-      status_adjustment: "",
+      status_adjustment: {
+        Promotion: false,
+        Increment: false,
+        Transfer: false,
+        StatusUpdate: false,
+      },
     },
     validate: {
       name: (value) =>
@@ -174,6 +186,46 @@ const Index = ({ opened, close, mutate }) => {
     }
   });
 
+  form.watch(
+    "status_adjustment.Promotion",
+    ({ previousValue, value, touched, dirty }) => {
+      setStatusAdjustment((prev) => ({
+        ...prev,
+        Promotion: value,
+      }));
+    }
+  );
+
+  form.watch(
+    "status_adjustment.Increment",
+    ({ previousValue, value, touched, dirty }) => {
+      setStatusAdjustment((prev) => ({
+        ...prev,
+        Increment: value,
+      }));
+    }
+  );
+
+  form.watch(
+    "status_adjustment.Transfer",
+    ({ previousValue, value, touched, dirty }) => {
+      setStatusAdjustment((prev) => ({
+        ...prev,
+        Transfer: value,
+      }));
+    }
+  );
+
+  form.watch(
+    "status_adjustment.StatusUpdate",
+    ({ previousValue, value, touched, dirty }) => {
+      setStatusAdjustment((prev) => ({
+        ...prev,
+        StatusUpdate: value,
+      }));
+    }
+  );
+
   const handleSubmit = async (values) => {
     // e.preventDefault();
     // console.log(values);
@@ -223,8 +275,8 @@ const Index = ({ opened, close, mutate }) => {
         centered
       >
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-          <Grid>
-            <Grid.Col span={6}>
+          <Grid grow gutter="sm">
+            <Grid.Col span={12}>
               <Select
                 mb="sm"
                 label="Employee"
@@ -234,97 +286,179 @@ const Index = ({ opened, close, mutate }) => {
                 {...form.getInputProps("user")}
               />
               <p className="mb-1">Status Adjustment</p>
-              <div className="">
-                <Checkbox mb="xs" label="Promotion" />
-                <Checkbox mb="xs" label="Increment Salary" />
-                <Checkbox mb="xs" label="Transfer" />
-                <Checkbox mb="xs" label="Status Update" />
+              <div className="d-flex flex-wrap">
+                <Checkbox
+                  mb="sm"
+                  className="me-2"
+                  label="Promotion"
+                  {...form.getInputProps(`status_adjustment.Promotion`, {
+                    type: "checkbox",
+                  })}
+                />
+                <Checkbox
+                  mb="sm"
+                  className="me-2"
+                  label="Increment Salary"
+                  {...form.getInputProps(`status_adjustment.Increment`, {
+                    type: "checkbox",
+                  })}
+                />
+                <Checkbox
+                  mb="sm"
+                  className="me-2"
+                  label="Transfer"
+                  {...form.getInputProps(`status_adjustment.Transfer`, {
+                    type: "checkbox",
+                  })}
+                />
+                <Checkbox
+                  mb="sm"
+                  className="me-2"
+                  label="Status Update"
+                  {...form.getInputProps(`status_adjustment.StatusUpdate`, {
+                    type: "checkbox",
+                  })}
+                />
               </div>
-              <Select
-                mb="sm"
-                label="New Company"
-                placeholder="New Company"
-                // disabled={isSubmitting}
-                data={companies}
-                {...form.getInputProps("company")}
-              />
-              <Select
-                mb="sm"
-                label="New Branch"
-                placeholder="New Branch"
-                // disabled={isSubmitting}
-                data={branches}
-                {...form.getInputProps("branch")}
-              />
-              <Select
-                mb="sm"
-                label="New Department"
-                placeholder="New Department"
-                // disabled={isSubmitting}
-                data={departments}
-                {...form.getInputProps("department")}
-              />
-              <Select
-                mb="sm"
-                label="New Designation"
-                placeholder="New Designation"
-                // disabled={isSubmitting}
-                data={designations}
-                {...form.getInputProps("designation")}
-              />
             </Grid.Col>
-            <Grid.Col span={6}>
-              <Select
-                mb="sm"
-                label="Job Status Update"
-                placeholder="Job Status Update"
-                // disabled={isSubmitting}
-                data={jobStatus}
-                {...form.getInputProps("job_status")}
-              />
-              <NumberInput
-                mb="sm"
-                label="Previous Salary"
-                placeholder="0"
-                disabled
-                hideControls
-                // required={true}
-                // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
-              />
-              <NumberInput
-                mb="sm"
-                label="New Salary"
-                placeholder="0"
-                hideControls
-                // required={true}
-                // disabled={isSubmitting}
-                {...form.getInputProps("name")}
-              />
-              <TextInput
-                mb="sm"
-                label="Incremented Amount"
-                placeholder="Incremented Amount"
-                // required={true}
-                // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
-              />
-              <TextInput
-                mb="sm"
-                label="Percentage"
-                placeholder="Percentage"
-                // required={true}
-                // disabled={isSubmitting}
-                // {...form.getInputProps("name")}
-              />
-              <DateInput
-                label="Effective From"
-                placeholder="Pick date"
-                mb="sm"
-                value={value}
-                onChange={setValue}
-              />
-            </Grid.Col>
+          </Grid>
+
+          {(statusAdjustment?.Promotion ||
+            statusAdjustment?.Increment ||
+            statusAdjustment?.Transfer ||
+            statusAdjustment?.StatusUpdate) && <hr className="border" />}
+
+          <Grid grow gutter="sm">
+            {statusAdjustment?.Transfer && (
+              <>
+                <Grid.Col span={6}>
+                  <Select
+                    label="New Company"
+                    placeholder="New Company"
+                    // disabled={isSubmitting}
+                    data={companies}
+                    {...form.getInputProps("company")}
+                  />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Select
+                    label="New Branch"
+                    placeholder="New Branch"
+                    // disabled={isSubmitting}
+                    data={branches}
+                    {...form.getInputProps("branch")}
+                  />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Select
+                    label="New Department"
+                    placeholder="New Department"
+                    // disabled={isSubmitting}
+                    data={departments}
+                    {...form.getInputProps("department")}
+                  />
+                </Grid.Col>
+              </>
+            )}
+            {statusAdjustment?.Promotion && (
+              <Grid.Col span={6}>
+                <Select
+                  label="New Designation"
+                  placeholder="New Designation"
+                  // disabled={isSubmitting}
+                  data={designations}
+                  {...form.getInputProps("designation")}
+                />
+              </Grid.Col>
+            )}
+
+            {statusAdjustment?.StatusUpdate && (
+              <>
+                <Grid.Col span={6}>
+                  <Select
+                    label="Job Status Update"
+                    placeholder="Job Status Update"
+                    // disabled={isSubmitting}
+                    data={jobStatus}
+                    {...form.getInputProps("job_status")}
+                  />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Select
+                    label="Employee Type"
+                    placeholder="Employee Type"
+                    data={employeeTypes}
+                    // {...form.getInputProps("employee_type")}
+                  />
+                </Grid.Col>
+              </>
+            )}
+
+            {statusAdjustment?.Increment && (
+              <>
+                <Grid.Col span={6}>
+                  <Select
+                    label="Increment On"
+                    placeholder="Increment On"
+                    data={["Gross Salary", "Basic Salary"]}
+                    // {...form.getInputProps("employee_type")}
+                  />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <NumberInput
+                    label="Previous Salary"
+                    placeholder="0"
+                    disabled
+                    hideControls
+                    // required={true}
+                    // disabled={isSubmitting}
+                    // {...form.getInputProps("name")}
+                  />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <NumberInput
+                    label="New Salary"
+                    placeholder="0"
+                    hideControls
+                    // required={true}
+                    // disabled={isSubmitting}
+                    {...form.getInputProps("name")}
+                  />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <TextInput
+                    label="Incremented Amount"
+                    placeholder="Incremented Amount"
+                    // required={true}
+                    // disabled={isSubmitting}
+                    // {...form.getInputProps("name")}
+                  />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <TextInput
+                    label="Percentage"
+                    placeholder="Percentage"
+                    // required={true}
+                    // disabled={isSubmitting}
+                    // {...form.getInputProps("name")}
+                  />
+                </Grid.Col>
+              </>
+            )}
+
+            {(statusAdjustment?.Promotion ||
+              statusAdjustment?.Increment ||
+              statusAdjustment?.Transfer ||
+              statusAdjustment?.StatusUpdate) && (
+              <Grid.Col span={6}>
+                <DateInput
+                  label="Effective From"
+                  placeholder="Pick date"
+                  value={value}
+                  onChange={setValue}
+                />
+              </Grid.Col>
+            )}
           </Grid>
 
           <Group justify="flex-end" mt="sm">

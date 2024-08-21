@@ -51,15 +51,15 @@ const Page = () => {
         return;
       } else if (!rememberMe) {
         // should be updated
-        localStorage.setItem("user", JSON.stringify(user));
+        // localStorage.setItem("user", JSON.stringify(user));
         setUser(user);
-        Cookies.set(authUserKey, user?.username);
+        Cookies.set(authUserKey, user?.id);
         Cookies.set(authTokenKey, access);
       } else {
-        localStorage.setItem("user", JSON.stringify(user));
+        // localStorage.setItem("user", JSON.stringify(user));
         setUser(user);
         // Expires in 30 days
-        Cookies.set(authUserKey, user?.username, {
+        Cookies.set(authUserKey, user?.id, {
           expires: 30,
         });
         Cookies.set(authTokenKey, access, {

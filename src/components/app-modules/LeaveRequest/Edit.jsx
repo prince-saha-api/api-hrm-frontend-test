@@ -39,12 +39,18 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       user: (value) => (!value ? "Employee is required" : null),
       request_type: (value) => (!value ? "Request type is required" : null),
       leavepolicy: (value) => (!value ? "Leave type is required" : null),
+      // exchange_with: (value, values) =>
+      //   values.request_type === "Extend Existing" && !value
+      //     ? "Exchange with is required"
+      //     : values.request_type === "Extend Existing" &&
+      //       value &&
+      //       values.leavepolicy === value
+      //     ? "Exchange with should not be equal with leave type"
+      //     : null,
       exchange_with: (value, values) =>
-        values.request_type === "Extend Existing" && !value
-          ? "Exchange with is required"
-          : values.request_type === "Extend Existing" &&
-            value &&
-            values.leavepolicy === value
+        values.request_type === "Extend Existing" &&
+        value &&
+        values.leavepolicy === value
           ? "Exchange with should not be equal with leave type"
           : null,
       from_date: (value) => (!value ? "From date is required" : null),
@@ -270,10 +276,10 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
           />
           {isExtendExisting && (
             <Select
-              label="Exchange with"
+              label="Exchange With (Optional)"
               mb="sm"
               placeholder="Pick value"
-              required
+              // required
               disabled={isSubmitting}
               data={leavePolicies}
               {...form.getInputProps("exchange_with")}

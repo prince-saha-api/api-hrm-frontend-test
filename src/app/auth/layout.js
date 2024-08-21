@@ -19,7 +19,7 @@ export default async function RootLayout({ children }) {
 
   const isAuthenticated = await checkIsAuthenticated();
 
-  if (isAuthenticated) {
+  if (isAuthenticated?.status) {
     redirect("/dashboard");
   }
 

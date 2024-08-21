@@ -328,7 +328,11 @@ const ProfileView = ({ data }) => {
               <div className="profile position-relative">
                 <Image
                   // src="/profile03.jpg"
-                  src={getStoragePath(profilePhoto?.photo)}
+                  src={
+                    profilePhoto?.photo
+                      ? getStoragePath(profilePhoto?.photo)
+                      : "/default-profile.png"
+                  }
                   width={200}
                   height={200}
                   alt="profile_img"
@@ -432,7 +436,11 @@ const ProfileView = ({ data }) => {
                 <Image
                   className="reportsImg"
                   // src="/profile01.jpg"
-                  src={getStoragePath(profile?.supervisor?.photo || "")}
+                  src={
+                    profile?.supervisor?.photo
+                      ? getStoragePath(profile?.supervisor?.photo)
+                      : "/default-profile.png"
+                  }
                   width={200}
                   height={200}
                   alt="profile_img"

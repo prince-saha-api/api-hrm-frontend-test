@@ -25,14 +25,14 @@ export default async function RootLayout({ children }) {
 
   const isAuthenticated = await checkIsAuthenticated();
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated?.status) {
     redirect("/auth/login");
   }
 
   return (
     <>
       {/* <Accessible /> */}
-      <PageWrapper>
+      <PageWrapper user={isAuthenticated?.user}>
         <SideMenu />
         <Navbar />
         <PageContent>{children}</PageContent>

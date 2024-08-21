@@ -18,16 +18,20 @@ import Accordion from "react-bootstrap/Accordion";
 import classEase from "classease";
 import Image from "next/image";
 import { useSidebar } from "@/components/contexts/SidebarContext";
+import { useUser } from "@/components/contexts/UserContext";
 import Logo from "../../../../public/logo.png";
 import { TbSettings } from "react-icons/tb";
 
 const Page = () => {
   const { isSidebarOpen } = useSidebar();
+  const { user } = useUser();
+  const userId = user?.id;
 
   return (
     <>
       <div
-        id="navigation_part" className={classEase(isSidebarOpen && "sidebarOpen", "side_nav")}
+        id="navigation_part"
+        className={classEase(isSidebarOpen && "sidebarOpen", "side_nav")}
       >
         <div className="p-3">
           <div className="accordion_part">
@@ -140,7 +144,7 @@ const Page = () => {
                     <ul className="text-decoration-none mb-0 sidenav_submenu">
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
-                          href="/profile-view"
+                          href={`/profile/${userId}`}
                           className="text-decoration-none subMenu"
                         >
                           Profile

@@ -8,28 +8,19 @@ import Cookies from "js-cookie";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useSidebar } from "@/components/contexts/SidebarContext";
 import { logout } from "../../../lib/auth";
-import { getLoggedInUser } from "../../../lib/getter";
-import { getStoragePath } from "../../../lib/helper";
+import { getFullName, getStoragePath } from "@/lib/helper";
 import { authTokenKey, authUserKey } from "../../../lib/config";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "public/logo.png";
+import { useUser } from "@/components/contexts/UserContext";
 import profileImg from "public/profile01.jpg";
 
 const Navbar = () => {
   // const { logout } = useAuth();
   const router = useRouter();
-
-  const [userImagePath, setUserImagePath] = useState("");
-
-  useEffect(() => {
-    const userData = getLoggedInUser();
-    const imagePath =
-      userData?.image && userData?.image !== ""
-        ? getStoragePath(userData?.image)
-        : "/images.png";
-    setUserImagePath(imagePath);
-  }, []);
+  const { user } = useUser();
+  const userId = user?.id;
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -38,8 +29,7 @@ const Navbar = () => {
       const res = await logout();
 
       if (res) {
-        // localStorage.setItem("user", JSON.stringify({}));
-        localStorage.removeItem("user");
+        // localStorage.removeItem("user");
         Cookies.remove(authUserKey);
         Cookies.remove(authTokenKey);
       }
@@ -97,14 +87,23 @@ const Navbar = () => {
                 <Avatar
                   size="37"
                   radius="xl"
-                  src="https://media.licdn.com/dms/image/D5603AQHVDYHwJOCMMg/profile-displayphoto-shrink_200_200/0/1689354777920?e=2147483647&v=beta&t=GcBRig8My5RTMDsCxXcE4YC1DSOEi35O9-17P3HZsiE"
+                  src={getStoragePath(user?.photo || "")}
                 />
               </Indicator>
-              <span className="ms-2">Admin</span>
+              <span className="ms-2">
+                {getFullName(user?.first_name, user?.last_name)}
+              </span>
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="profile_item rounded-1">
-              <Dropdown.Item href="/profile-view">Profile</Dropdown.Item>
+              <Dropdown.Item>
+                <Link
+                  className="text-decoration-none text-reset"
+                  href={`/profile/${userId}`}
+                >
+                  My Profile
+                </Link>
+              </Dropdown.Item>
               <Dropdown.Item href="#" onClick={(e) => handleLogout(e)}>
                 Logout
               </Dropdown.Item>

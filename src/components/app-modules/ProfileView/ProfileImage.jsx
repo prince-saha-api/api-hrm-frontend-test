@@ -6,11 +6,14 @@ import { toast } from "react-toastify";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { update } from "@/lib/submit";
 import { getStoragePath } from "@/lib/helper";
+import { useUser } from "@/components/contexts/UserContext";
 
 const Index = ({ opened, close, item, setItem }) => {
   const fileInputRef = useRef(null);
   const [preview, setPreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user, setUser } = useUser();
+  const userId = user?.id;
 
   const form = useForm({
     mode: "uncontrolled",
@@ -128,6 +131,14 @@ const Index = ({ opened, close, item, setItem }) => {
         setPreview(null);
         close();
         // mutate();
+
+        if (item?.user == userId) {
+          setUser((prev) => ({
+            ...prev,
+            photo: response?.data?.photo,
+          }));
+        }
+
         toast.success("Profile photo changed successfully");
       } else {
         toast.error(

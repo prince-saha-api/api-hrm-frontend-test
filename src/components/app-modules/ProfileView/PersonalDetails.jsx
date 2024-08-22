@@ -15,9 +15,13 @@ import { toast } from "react-toastify";
 import { update } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
 import { countries } from "@/data/countries";
+import { useUser } from "@/components/contexts/UserContext";
 
 const Index = ({ opened, close, item, setItem }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { user, setUser } = useUser();
+  const userId = user?.id;
 
   const form = useForm({
     mode: "uncontrolled",
@@ -113,11 +117,26 @@ const Index = ({ opened, close, item, setItem }) => {
           ...prev,
           fathers_name: response?.data?.fathers_name,
           mothers_name: response?.data?.mothers_name,
+          religion: response?.data?.religion,
           nationality: response?.data?.nationality,
           nid_passport_no: response?.data?.nid_passport_no,
+          tin_no: response?.data?.tin_no,
           present_address: response?.data?.present_address,
           permanent_address: response?.data?.permanent_address,
         }));
+        if (item?.id == userId) {
+          setUser((prev) => ({
+            ...prev,
+            fathers_name: response?.data?.fathers_name,
+            mothers_name: response?.data?.mothers_name,
+            religion: response?.data?.religion,
+            nationality: response?.data?.nationality,
+            nid_passport_no: response?.data?.nid_passport_no,
+            tin_no: response?.data?.tin_no,
+            present_address: response?.data?.present_address,
+            permanent_address: response?.data?.permanent_address,
+          }));
+        }
         toast.success("Profile updated successfully");
       } else {
         toast.error(

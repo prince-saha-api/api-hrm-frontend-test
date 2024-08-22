@@ -151,6 +151,14 @@ const Index = ({ opened, close, item, setItem }) => {
             ...prev,
             first_name: response?.data?.first_name,
             last_name: response?.data?.last_name,
+            personal_phone: response?.data?.personal_phone,
+            personal_email: response?.data?.personal_email,
+            dob: response?.data?.dob,
+            gender: response?.data?.gender,
+            blood_group: response?.data?.blood_group,
+            marital_status: response?.data?.marital_status,
+            spouse_name: response?.data?.spouse_name,
+            supervisor: response?.data?.supervisor,
           }));
         }
 

@@ -23,8 +23,11 @@ const Index = ({ opened, close, item, setItem }) => {
     mode: "uncontrolled",
     initialValues: {
       payment_in: item?.payment_in || "",
-      gross_salary: item?.gross_salary || "",
-      leavepolicy: [],
+      // gross_salary: item?.gross_salary || "",
+      leavepolicy:
+        item?.leavesummary_user?.map((item) =>
+          item?.leavepolicy?.id.toString()
+        ) || [],
       earningpolicy: [],
       deductionpolicy: [],
       bankaccount: {
@@ -46,6 +49,20 @@ const Index = ({ opened, close, item, setItem }) => {
     validate: {},
   });
 
+  const {
+    data: leavepolicyData,
+    error: leavepolicyError,
+    isLoading: isLeavepolicyLoading,
+  } = useSWR(`/api/leave/get-leavepolicy/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const leavepolicies = leavepolicyData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
 
@@ -59,15 +76,11 @@ const Index = ({ opened, close, item, setItem }) => {
         setIsSubmitting(false);
         close();
         // mutate();
-        // setItem((prev) => ({
-        //   ...prev,
-        //   fathers_name: response?.data?.fathers_name,
-        //   mothers_name: response?.data?.mothers_name,
-        //   nationality: response?.data?.nationality,
-        //   nid_passport_no: response?.data?.nid_passport_no,
-        //   present_address: response?.data?.present_address,
-        //   permanent_address: response?.data?.permanent_address,
-        // }));
+        setItem((prev) => ({
+          ...prev,
+          payment_in: response?.data?.payment_in || "",
+          bank_account: response?.data?.bank_account || null,
+        }));
         toast.success("Profile updated successfully");
       } else {
         toast.error(
@@ -119,24 +132,19 @@ const Index = ({ opened, close, item, setItem }) => {
                 data={["Cash", "Cheque", "Bank"]}
                 {...form.getInputProps("payment_in")}
               />
-              <NumberInput
+              {/* <NumberInput
                 rightSection={<></>}
                 rightSectionWidth={0}
                 mb="sm"
                 label="Monthly Gross Salary"
                 placeholder="Monthly Gross Salary"
                 {...form.getInputProps("gross_salary")}
-              />
+              /> */}
               <MultiSelect
                 mb="sm"
                 label="Leave Policy"
                 placeholder="Leave Policy"
-                data={[
-                  { value: "1", label: "Leave Policy 1" },
-                  { value: "2", label: "Leave Policy 2" },
-                  { value: "3", label: "Leave Policy 3" },
-                  { value: "4", label: "Leave Policy 4" },
-                ]}
+                data={leavepolicies}
                 searchable
                 withAsterisk
                 {...form.getInputProps("leavepolicy")}
@@ -184,6 +192,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 {...form.getInputProps("bankaccount.branch_name")}
               />
               <Select
+                mb="sm"
                 label="Bank Account Type"
                 placeholder="Bank Account Type"
                 data={[
@@ -195,8 +204,6 @@ const Index = ({ opened, close, item, setItem }) => {
                 ]}
                 {...form.getInputProps("bankaccount.account_type")}
               />
-            </Grid.Col>
-            <Grid.Col span={6}>
               <NumberInput
                 mb="sm"
                 label="Account No."
@@ -205,6 +212,8 @@ const Index = ({ opened, close, item, setItem }) => {
                 rightSectionWidth={0}
                 {...form.getInputProps("bankaccount.account_no")}
               />
+            </Grid.Col>
+            <Grid.Col span={6}>
               <NumberInput
                 mb="sm"
                 label="Routing No."
@@ -223,7 +232,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 mb="sm"
                 label="Bank Address"
                 placeholder="Bank Address"
-                {...form.getInputProps("bankaccount.swift_bic")}
+                {...form.getInputProps("bankaccount.address.address")}
               />
               <TextInput
                 mb="sm"

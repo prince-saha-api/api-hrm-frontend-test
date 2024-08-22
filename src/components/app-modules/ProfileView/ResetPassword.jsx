@@ -44,6 +44,7 @@ const Index = ({ opened, close, item }) => {
       if (response?.status === "success") {
         // console.log(response);
         setIsSubmitting(false);
+        form.reset();
         close();
         // mutate();
         toast.success("Password changed successfully");

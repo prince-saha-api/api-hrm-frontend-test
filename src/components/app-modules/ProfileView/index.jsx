@@ -121,43 +121,7 @@ const ProfileView = ({ data }) => {
   const [documentsOpened, { open: documentsOpen, close: documentsClose }] =
     useDisclosure(false);
 
-  // Data of Leave Policy
-  const elements2 = [
-    {
-      leaveType: "Sick",
-      allocationDays: "16",
-      consumedDays: "2",
-      left: "10",
-    },
-    {
-      leaveType: "Casual",
-      allocationDays: "16",
-      consumedDays: "3",
-      left: "5",
-    },
-    {
-      leaveType: "Sick",
-      allocationDays: "16",
-      consumedDays: "2",
-      left: "10",
-    },
-    {
-      leaveType: "Casual",
-      allocationDays: "16",
-      consumedDays: "5",
-      left: "8",
-    },
-  ];
-
   // Table of Leave Policy
-  const leavePolicyRows = elements2.map((element2, index) => (
-    <Table.Tr key={index}>
-      <Table.Td>{element2.leaveType}</Table.Td>
-      <Table.Td>{element2.allocationDays}</Table.Td>
-      <Table.Td>{element2.consumedDays}</Table.Td>
-      <Table.Td>{element2.left}</Table.Td>
-    </Table.Tr>
-  ));
 
   // Data of Earning Policy
   const elements3 = [
@@ -741,7 +705,16 @@ const ProfileView = ({ data }) => {
                           <Table.Th>Left</Table.Th>
                         </Table.Tr>
                       </Table.Thead>
-                      <Table.Tbody>{leavePolicyRows}</Table.Tbody>
+                      <Table.Tbody>
+                        {profile?.leavesummary_user?.map((item, index) => (
+                          <Table.Tr key={index}>
+                            <Table.Td>{item?.leavepolicy?.name || 0}</Table.Td>
+                            <Table.Td>{item?.total_allocation || 0}</Table.Td>
+                            <Table.Td>{item?.total_consumed || 0}</Table.Td>
+                            <Table.Td>{item?.total_left || 0}</Table.Td>
+                          </Table.Tr>
+                        ))}
+                      </Table.Tbody>
                     </Table>
                   </div>
                   <div className="leavePolicyBox mb-3">

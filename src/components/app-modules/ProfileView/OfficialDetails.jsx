@@ -27,16 +27,16 @@ const Index = ({ opened, close, item, setItem }) => {
     initialValues: {
       official_email: item?.official_email || "",
       official_phone: item?.official_phone || "",
-      employee_type: item?.employee_type || null,
-      company: item?.departmenttwo?.[0]?.branch?.company?.id.toString() || null,
-      branch: item?.departmenttwo?.[0]?.branch?.id?.toString() || null,
+      // employee_type: item?.employee_type || null,
+      // company: item?.departmenttwo?.[0]?.branch?.company?.id.toString() || null,
+      // branch: item?.departmenttwo?.[0]?.branch?.id?.toString() || null,
       shift: String(item?.shift?.id) || null,
       grade: String(item?.grade?.id) || null,
       role_permission: [],
       official_note: item?.official_note || "",
       ethnic_group:
         item?.ethnicgroup_user?.map((item) => item?.id.toString()) || [],
-      joining_date: item?.joining_date ? new Date(item.joining_date) : null,
+      // joining_date: item?.joining_date ? new Date(item.joining_date) : null,
       expense_approver: item?.expense_approver?.id.toString() || null,
       leave_approver: item?.leave_approver?.id.toString() || null,
       shift_request_approver: String(item?.shift_request_approver?.id) || null,
@@ -44,19 +44,19 @@ const Index = ({ opened, close, item, setItem }) => {
     validate: {},
   });
 
-  const {
-    data: companyData,
-    error: companyError,
-    isLoading: isCompanyLoading,
-  } = useSWR(`/api/company/get-company/`, fetcher, {
-    errorRetryCount: 2,
-    keepPreviousData: true,
-  });
+  // const {
+  //   data: companyData,
+  //   error: companyError,
+  //   isLoading: isCompanyLoading,
+  // } = useSWR(`/api/company/get-company/`, fetcher, {
+  //   errorRetryCount: 2,
+  //   keepPreviousData: true,
+  // });
 
-  const companies = companyData?.data?.result?.map((item) => ({
-    label: item?.basic_information?.name?.toString() || "",
-    value: item?.id.toString() || "",
-  }));
+  // const companies = companyData?.data?.result?.map((item) => ({
+  //   label: item?.basic_information?.name?.toString() || "",
+  //   value: item?.id.toString() || "",
+  // }));
 
   const {
     data: shiftsData,
@@ -104,13 +104,13 @@ const Index = ({ opened, close, item, setItem }) => {
     data: groupsData,
     error: groupsError,
     isLoading: isGroupsLoading,
-  } = useSWR(`/api/device/get-group/`, fetcher, {
+  } = useSWR(`/api/user/get-ethnicgroup/`, fetcher, {
     errorRetryCount: 2,
     keepPreviousData: true,
   });
 
   const groups = groupsData?.data?.result?.map((item) => ({
-    label: item?.title?.toString() || "",
+    label: item?.name?.toString() || "",
     value: item?.id.toString() || "",
   }));
 
@@ -128,74 +128,74 @@ const Index = ({ opened, close, item, setItem }) => {
     value: item?.id.toString() || "",
   }));
 
-  const fetchBranches = async (companyId) => {
-    try {
-      const response = await getData(
-        `/api/branch/get-branch/?company=${companyId}`
-      );
-      console.log(response);
-      const branchData = response?.data?.data?.result.map((branch) => ({
-        label: branch?.name?.toString() || "",
-        value: branch?.id.toString() || "",
-      }));
-      setBranches(branchData);
-    } catch (error) {
-      console.error("Error fetching branches:", error);
-      toast.error("Error fetching branches");
-    }
-  };
+  // const fetchBranches = async (companyId) => {
+  //   try {
+  //     const response = await getData(
+  //       `/api/branch/get-branch/?company=${companyId}`
+  //     );
+  //     console.log(response);
+  //     const branchData = response?.data?.data?.result.map((branch) => ({
+  //       label: branch?.name?.toString() || "",
+  //       value: branch?.id.toString() || "",
+  //     }));
+  //     setBranches(branchData);
+  //   } catch (error) {
+  //     console.error("Error fetching branches:", error);
+  //     toast.error("Error fetching branches");
+  //   }
+  // };
 
-  form.watch("company", ({ previousValue, value, touched, dirty }) => {
-    if (value) {
-      fetchBranches(value);
-    } else {
-      form.setFieldValue("branch", null);
-      setBranches([]);
-    }
-  });
+  // form.watch("company", ({ previousValue, value, touched, dirty }) => {
+  //   if (value) {
+  //     fetchBranches(value);
+  //   } else {
+  //     form.setFieldValue("branch", null);
+  //     setBranches([]);
+  //   }
+  // });
 
-  useEffect(() => {
-    fetchBranches(item?.departmenttwo?.[0]?.branch?.company?.id.toString());
-  }, []);
+  // useEffect(() => {
+  //   fetchBranches(item?.departmenttwo?.[0]?.branch?.company?.id.toString());
+  // }, []);
 
-  const fetchDepartments = async (companyId, branchId) => {
-    try {
-      const response = await getData(
-        `/api/department/get-department/?company=${companyId}&branch=${branchId}`
-      );
-      console.log(response);
-      const departmentData = response?.data?.data?.result.map((department) => ({
-        label: department?.name?.toString() || "",
-        value: department?.id.toString() || "",
-      }));
-      setDepartments(departmentData);
-    } catch (error) {
-      console.error("Error fetching departments:", error);
-      toast.error("Error fetching departments");
-    }
-  };
+  // const fetchDepartments = async (companyId, branchId) => {
+  //   try {
+  //     const response = await getData(
+  //       `/api/department/get-department/?company=${companyId}&branch=${branchId}`
+  //     );
+  //     console.log(response);
+  //     const departmentData = response?.data?.data?.result.map((department) => ({
+  //       label: department?.name?.toString() || "",
+  //       value: department?.id.toString() || "",
+  //     }));
+  //     setDepartments(departmentData);
+  //   } catch (error) {
+  //     console.error("Error fetching departments:", error);
+  //     toast.error("Error fetching departments");
+  //   }
+  // };
 
-  form.watch("branch", ({ previousValue, value, touched, dirty }) => {
-    if (value) {
-      fetchDepartments(form.getValues().company, value);
-      form.setFieldValue("department", null);
-    } else {
-      console.log(value);
-      form.setFieldValue("department", "");
-      setDepartments([]);
-    }
-  });
+  // form.watch("branch", ({ previousValue, value, touched, dirty }) => {
+  //   if (value) {
+  //     fetchDepartments(form.getValues().company, value);
+  //     form.setFieldValue("department", null);
+  //   } else {
+  //     console.log(value);
+  //     form.setFieldValue("department", "");
+  //     setDepartments([]);
+  //   }
+  // });
 
   const handleSubmit = async (values) => {
     // return;
 
-    const formattedDate = values.joining_date
-      ? values.joining_date.toISOString().split("T")[0]
-      : null;
+    // const formattedDate = values.joining_date
+    //   ? values.joining_date.toISOString().split("T")[0]
+    //   : null;
 
     const updatedValues = {
       ...values,
-      joining_date: formattedDate,
+      // joining_date: formattedDate,
       // ethnic_group: values.ethnic_group.map((id) => Number(id)),
     };
 
@@ -211,15 +211,20 @@ const Index = ({ opened, close, item, setItem }) => {
         setIsSubmitting(false);
         close();
         // mutate();
-        // setItem((prev) => ({
-        //   ...prev,
-        //   fathers_name: response?.data?.fathers_name,
-        //   mothers_name: response?.data?.mothers_name,
-        //   nationality: response?.data?.nationality,
-        //   nid_passport_no: response?.data?.nid_passport_no,
-        //   present_address: response?.data?.present_address,
-        //   permanent_address: response?.data?.permanent_address,
-        // }));
+        setItem((prev) => ({
+          ...prev,
+          grade: response?.data?.grade,
+          shift: response?.data?.shift,
+          ethnicgroup_user: response?.data?.ethnicgroup_user,
+          supervisor: response?.data?.supervisor,
+          expense_approver: response?.data?.expense_approver,
+          leave_approver: response?.data?.leave_approver,
+          shift_request_approver: response?.data?.shift_request_approver,
+          role_permission: response?.data?.role_permission,
+          official_email: response?.data?.official_email,
+          official_phone: response?.data?.official_phone,
+          official_note: response?.data?.official_note,
+        }));
         toast.success("Profile updated successfully");
       } else {
         toast.error(
@@ -278,15 +283,15 @@ const Index = ({ opened, close, item, setItem }) => {
                 // hideControls
                 {...form.getInputProps("official_phone")}
               />
-              <Select
+              {/* <Select
                 mb="sm"
                 label="Employee Type"
                 placeholder="Employee Type"
                 // disabled={isSubmitting}
                 data={employeeTypes}
                 {...form.getInputProps("employee_type")}
-              />
-              <Select
+              /> */}
+              {/* <Select
                 mb="sm"
                 label="Company"
                 placeholder="Company"
@@ -294,8 +299,8 @@ const Index = ({ opened, close, item, setItem }) => {
                 data={companies}
                 {...form.getInputProps("company")}
                 key={form.key("company")}
-              />
-              <Select
+              /> */}
+              {/* <Select
                 mb="sm"
                 label="Branch"
                 placeholder="Branch"
@@ -303,7 +308,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 data={branches}
                 {...form.getInputProps("branch")}
                 key={form.key("branch")}
-              />
+              /> */}
               <Select
                 mb="sm"
                 label="Default Shift"
@@ -321,6 +326,15 @@ const Index = ({ opened, close, item, setItem }) => {
                 data={grades}
                 {...form.getInputProps("grade")}
                 key={form.key("grade")}
+              />
+              <MultiSelect
+                mb="sm"
+                label="Group"
+                placeholder="Group"
+                // disabled={isSubmitting}
+                data={groups}
+                {...form.getInputProps("ethnic_group")}
+                key={form.key("ethnic_group")}
               />
             </Grid.Col>
             <Grid.Col span={6}>
@@ -340,21 +354,13 @@ const Index = ({ opened, close, item, setItem }) => {
                 // disabled={isSubmitting}
                 {...form.getInputProps("official_note")}
               />
-              <MultiSelect
-                mb="sm"
-                label="Group"
-                placeholder="Group"
-                // disabled={isSubmitting}
-                data={groups}
-                {...form.getInputProps("ethnic_group")}
-                key={form.key("ethnic_group")}
-              />
-              <DateInput
+
+              {/* <DateInput
                 mb="sm"
                 label="Joining Date"
                 placeholder="Pick date"
                 {...form.getInputProps("joining_date")}
-              />
+              /> */}
               <Select
                 mb="sm"
                 label="Expense Approver"

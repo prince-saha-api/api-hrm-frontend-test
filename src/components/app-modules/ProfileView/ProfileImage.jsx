@@ -31,8 +31,8 @@ const Index = ({ opened, close, item, setItem }) => {
           return "Photo should be in .jpg or .png format";
         }
 
-        if (value.size > 300 * 1024) {
-          return "Photo must not be more than 300KB";
+        if (value.size > 100 * 1024) {
+          return "Photo must not be more than 100KB";
         }
 
         // const dimensionError = await validateImageDimensions(value);
@@ -67,8 +67,10 @@ const Index = ({ opened, close, item, setItem }) => {
   // };
 
   const handleFileChange = (file) => {
-    setPreview(URL.createObjectURL(file));
-    form.setFieldValue("photo", file); // add this line
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+      form.setFieldValue("photo", file); // add this line
+    }
   };
 
   const handleClearPhoto = () => {

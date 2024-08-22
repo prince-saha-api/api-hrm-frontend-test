@@ -111,6 +111,11 @@ export const generateGroupString = (groups = []) => {
   return filteredGroups.length ? filteredGroups.join(", ") : "N/A";
 };
 
+export const generateStringFromArray = (arr = []) => {
+  const filtered = arr.map((item) => String(item)).filter(Boolean);
+  return filtered.length ? filtered.join(", ") : "";
+};
+
 export const formatCurrency = (value) => {
   if (isNaN(value)) {
     return "";

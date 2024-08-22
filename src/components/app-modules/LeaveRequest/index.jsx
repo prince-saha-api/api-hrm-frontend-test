@@ -242,45 +242,45 @@ const index = () => {
       // for export
       key: "status",
     },
-    {
-      // for table display
-      accessor: "actions",
-      title: "Actions",
-      width: 90,
-      textAlign: "center",
-      // width: "0%",
-      render: (item) => (
-        <Menu shadow="md" width={150} position="bottom-end">
-          <Menu.Target>
-            <button className="border-0 bg-transparent">
-              <HiDotsVertical />
-            </button>
-          </Menu.Target>
+    // {
+    //   // for table display
+    //   accessor: "actions",
+    //   title: "Actions",
+    //   width: 90,
+    //   textAlign: "center",
+    //   // width: "0%",
+    //   render: (item) => (
+    //     <Menu shadow="md" width={150} position="bottom-end">
+    //       <Menu.Target>
+    //         <button className="border-0 bg-transparent">
+    //           <HiDotsVertical />
+    //         </button>
+    //       </Menu.Target>
 
-          <Menu.Dropdown>
-            <Menu.Item
-              leftSection={<BiMessageSquareEdit className="fs-6" />}
-              onClick={() => {
-                setSelectedEditItem(item);
-              }}
-            >
-              Edit
-            </Menu.Item>
-            <Menu.Item
-              leftSection={<AiOutlineDelete className="fs-6" />}
-              onClick={() => {
-                setSelectedDeleteItem(item);
-                deleteOpen();
-              }}
-            >
-              Delete
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-      ),
-      // for export
-      key: "actions",
-    },
+    //       <Menu.Dropdown>
+    //         <Menu.Item
+    //           leftSection={<BiMessageSquareEdit className="fs-6" />}
+    //           onClick={() => {
+    //             setSelectedEditItem(item);
+    //           }}
+    //         >
+    //           Edit
+    //         </Menu.Item>
+    //         <Menu.Item
+    //           leftSection={<AiOutlineDelete className="fs-6" />}
+    //           onClick={() => {
+    //             setSelectedDeleteItem(item);
+    //             deleteOpen();
+    //           }}
+    //         >
+    //           Delete
+    //         </Menu.Item>
+    //       </Menu.Dropdown>
+    //     </Menu>
+    //   ),
+    //   // for export
+    //   key: "actions",
+    // },
   ];
 
   const visibleColumns = [
@@ -324,10 +324,10 @@ const index = () => {
       label: "Status",
       value: "status",
     },
-    {
-      label: "Actions",
-      value: "actions",
-    },
+    // {
+    //   label: "Actions",
+    //   value: "actions",
+    // },
   ];
 
   const [selectedOptions, setSelectedOptions] = useState([
@@ -341,7 +341,7 @@ const index = () => {
     "attachment",
     "reason",
     "status",
-    "actions",
+    // "actions",
   ]);
 
   const handleChange = (keys) => {
@@ -351,7 +351,7 @@ const index = () => {
         "leavepolicy",
         "from_date",
         "to_date",
-        "actions",
+        // "actions",
         ...keys,
       ]),
     ];

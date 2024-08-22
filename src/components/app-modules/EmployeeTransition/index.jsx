@@ -28,6 +28,7 @@ import AddButton from "@/components/utils/AddButton";
 import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
+import { getDate, getFullName, generateStringFromArray } from "@/lib/helper";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -35,7 +36,7 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "name",
+    columnAccessor: "id",
     direction: "asc", // desc
   });
 
@@ -107,7 +108,8 @@ const Index = () => {
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ employee }) => employee || "N/A",
+      render: ({ user }) =>
+        user ? getFullName(user?.first_name, user?.last_name) : "",
       // for export
       key: "employee",
     },
@@ -117,7 +119,8 @@ const Index = () => {
       title: "Transition Type",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ transition }) => transition || "N/A",
+      render: ({ status_adjustment }) =>
+        generateStringFromArray(status_adjustment || []),
       // for export
       key: "transition",
     },
@@ -127,8 +130,8 @@ const Index = () => {
       title: "Designation",
       // visibleMediaQuery: aboveXs,
       sortable: true,
-      render: ({ designation }) => designation || "N/A",
-      // modifier: ({ company }) => company?.basic_information?.name || "N/A",
+      render: ({ designation }) => designation?.name || "",
+      // modifier: ({ company }) => company?.basic_information?.name || "",
       // for export
       key: "designation",
     },
@@ -137,39 +140,43 @@ const Index = () => {
       accessor: "department",
       title: "Department",
       // visibleMediaQuery: aboveXs,
-      render: ({ department }) => department || "N/A",
+      render: ({ department }) => department?.name || "",
       // for export
       key: "department",
     },
     {
       // for table display
-      accessor: "joiningSalary",
+      accessor: "joining_salary",
       title: "Joining Salary",
       // visibleMediaQuery: aboveXs,
-      render: ({ phone }) => phone || "N/A",
+      render: ({ joining_salary }) => joining_salary || "",
       // for export
-      key: "joiningSalary",
+      key: "joining_salary",
     },
     {
       // for table display
-      accessor: "incrementedAmount",
+      accessor: "increment_amount",
       title: "Incremented Amount",
+      render: ({ increment_amount }) => increment_amount || "",
       // for export
-      key: "incrementedAmount",
+      key: "increment_amount",
     },
     {
       // for table display
-      accessor: "presentSalary",
+      accessor: "present_salary",
       title: "Present Salary",
+      render: ({ salary }) => salary || "",
       // for export
-      key: "presentSalary",
+      key: "present_salary",
     },
     {
       // for table display
-      accessor: "effectiveFrom",
+      accessor: "effective_from",
       title: "Effective From",
+      render: ({ effective_from }) =>
+        effective_from ? getDate(effective_from) : "",
       // for export
-      key: "effectiveFrom",
+      key: "effective_from",
     },
 
     // {
@@ -178,49 +185,49 @@ const Index = () => {
     //   title: "Operating Hour",
     //   // visibleMediaQuery: aboveXs,
     //   render: ({ operating_hour }) =>
-    //     operating_hour?.operating_hour_from || "N/A",
+    //     operating_hour?.operating_hour_from || "",
     //   // for export
     //   key: "operating_hour",
     // },
-    {
-      // for table display
-      accessor: "actions",
-      title: "Actions",
-      width: 90,
-      textAlign: "center",
-      // width: "0%",
-      render: (item) => (
-        <Menu shadow="md" width={150} position="bottom-end">
-          <Menu.Target>
-            <button className="border-0 bg-transparent">
-              <HiDotsVertical />
-            </button>
-          </Menu.Target>
+    // {
+    //   // for table display
+    //   accessor: "actions",
+    //   title: "Actions",
+    //   width: 90,
+    //   textAlign: "center",
+    //   // width: "0%",
+    //   render: (item) => (
+    //     <Menu shadow="md" width={150} position="bottom-end">
+    //       <Menu.Target>
+    //         <button className="border-0 bg-transparent">
+    //           <HiDotsVertical />
+    //         </button>
+    //       </Menu.Target>
 
-          <Menu.Dropdown>
-            <Menu.Item
-              leftSection={<BiMessageSquareEdit className="fs-6" />}
-              onClick={() => {
-                setSelectedEditItem(item);
-              }}
-            >
-              Edit
-            </Menu.Item>
-            <Menu.Item
-              leftSection={<AiOutlineDelete className="fs-6" />}
-              onClick={() => {
-                setSelectedDeleteItem(item);
-                deleteOpen();
-              }}
-            >
-              Delete
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-      ),
-      // for export
-      key: "actions",
-    },
+    //       <Menu.Dropdown>
+    //         <Menu.Item
+    //           leftSection={<BiMessageSquareEdit className="fs-6" />}
+    //           onClick={() => {
+    //             setSelectedEditItem(item);
+    //           }}
+    //         >
+    //           Edit
+    //         </Menu.Item>
+    //         <Menu.Item
+    //           leftSection={<AiOutlineDelete className="fs-6" />}
+    //           onClick={() => {
+    //             setSelectedDeleteItem(item);
+    //             deleteOpen();
+    //           }}
+    //         >
+    //           Delete
+    //         </Menu.Item>
+    //       </Menu.Dropdown>
+    //     </Menu>
+    //   ),
+    //   // for export
+    //   key: "actions",
+    // },
   ];
 
   const visibleColumns = [
@@ -245,25 +252,25 @@ const Index = () => {
       value: "department",
     },
     {
-      label: "joiningSalary",
-      value: "joiningSalary",
+      label: "joining Salary",
+      value: "joining_salary",
     },
     {
-      label: "incrementedAmount",
-      value: "incrementedAmount",
+      label: "incremented Amount",
+      value: "increment_amount",
     },
     {
       label: "Pesent Salary",
-      value: "presentSalary",
+      value: "present_salary",
     },
     {
       label: "Effective From",
-      value: "effectiveFrom",
+      value: "effective_from",
     },
-    {
-      label: "Actions",
-      value: "actions",
-    },
+    // {
+    //   label: "Actions",
+    //   value: "actions",
+    // },
   ];
 
   const [selectedOptions, setSelectedOptions] = useState([
@@ -272,11 +279,11 @@ const Index = () => {
     "transition",
     "designation",
     "department",
-    "joiningSalary",
-    "incrementedAmount",
-    "presentSalary",
-    "effectiveFrom",
-    "actions",
+    "joining_salary",
+    "increment_amount",
+    "present_salary",
+    "effective_from",
+    // "actions",
   ]);
 
   const handleChange = (keys) => {

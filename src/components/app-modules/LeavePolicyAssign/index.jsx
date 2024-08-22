@@ -51,6 +51,9 @@ const Index = () => {
     direction: "asc", // desc
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedPolicies, setSelectedPolicies] = useState([]);
+
   const [filterData, setFilterData] = useState(null);
 
   let apiUrl = `/api/user/get-employee/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
@@ -85,6 +88,20 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
+  const {
+    data: leavepolicyData,
+    error: leavepolicyError,
+    isLoading: isLeavepolicyLoading,
+  } = useSWR(`/api/leave/get-leavepolicy/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const leavepolicies = leavepolicyData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
   const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
@@ -97,6 +114,65 @@ const Index = () => {
     setPageSize(newPageSize);
     setCurrentPage(1);
     // mutate();
+  };
+
+  useEffect(() => {
+    setSelectedRecords([]);
+  }, [filterData]);
+
+  const handleBulkAssign = async () => {
+    const employees = selectedRecords.map((e) => Number(e?.id)).filter(Boolean);
+    const policies = selectedPolicies.map((p) => Number(p)).filter(Boolean);
+    // console.log(employees, policies);
+    // return;
+
+    const values = {
+      user: employees,
+      leavepolicy: policies,
+    };
+
+    if (!values?.leavepolicy?.length) {
+      toast.error("Select leave policy");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // return;
+
+    try {
+      const response = await submit("/api/leave/assign-leavepolicy/", values);
+
+      if (response?.status === "success") {
+        // console.log(response);
+        setIsSubmitting(false);
+        // form.reset();
+        // close();
+        setSelectedPolicies([]);
+        setSelectedRecords([]);
+        mutate();
+        toast.success("Leave policy assigned successfully");
+      } else {
+        setIsSubmitting(false);
+        // toast.error(
+        //   response?.status === "error"
+        //     ? response?.message[0]
+        //     : "Error submitting form"
+        // );
+        if (response?.status === "error" && Array.isArray(response.message)) {
+          response.message.forEach((msg) => {
+            toast.error(msg);
+          });
+        } else {
+          toast.error("Error updating");
+        }
+      }
+    } catch (error) {
+      console.error("Error updating:", error);
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 500);
+    }
   };
 
   return (
@@ -130,15 +206,10 @@ const Index = () => {
               mb="md"
               label="Leave Policy"
               placeholder="Leave Policy"
-              data={[
-                "Policy-1",
-                "Policy-2",
-                "Policy-3",
-                "Policy-4",
-                "Policy-5",
-                "Policy-6",
-              ]}
+              data={leavepolicies}
               searchable
+              value={selectedPolicies}
+              onChange={setSelectedPolicies}
             />
 
             <div className="d-flex align-items-center mt-4">
@@ -149,10 +220,10 @@ const Index = () => {
           <Grid.Col span={12}>
             <Button
               className="mb-3"
-              component="a"
-              href="/#"
-              data-disabled
-              onClick={(event) => event.preventDefault()}
+              loading={isSubmitting}
+              loaderProps={{ type: "dots" }}
+              disabled={selectedRecords?.length === 0}
+              onClick={() => handleBulkAssign()}
             >
               Assign
             </Button>

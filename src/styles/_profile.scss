@@ -101,6 +101,17 @@
   padding: 25px 20px !important;
   border-radius: 8px !important;
   min-width: 180px;
+  background-color: rgb(240, 240, 240);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+.docItem svg,
+.docItem h6 {
+  fill: rgb(0, 0, 0) !important;
+  color: rgb(0, 0, 0) !important;
 }
 .docBtn {
   font-size: 33px;

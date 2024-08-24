@@ -89,7 +89,9 @@ const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
             <Box className="stepBox">
               {/* <h4 className="text-dark mb-4 pb-2">Upload Documents</h4> */}
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">NID/Passport</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">NID/Passport</span>
+                </div>
                 <FileInput
                   classNames={{
                     root: "w-100",
@@ -103,7 +105,9 @@ const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Resume</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Resume</span>
+                </div>
                 <FileInput
                   classNames={{
                     root: "w-100",
@@ -118,7 +122,9 @@ const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Appointment Letter</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Appointment Letter</span>
+                </div>
                 <FileInput
                   classNames={{
                     root: "w-100",
@@ -133,7 +139,9 @@ const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Photo</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Photo</span>
+                </div>
                 <FileInput
                   classNames={{
                     root: "w-100",

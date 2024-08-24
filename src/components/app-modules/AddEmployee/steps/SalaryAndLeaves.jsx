@@ -50,7 +50,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
           <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Payment In</div>
+                <div className="cust_iputLabel"><span className="requiredInput">Payment In</span></div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -64,7 +64,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Monthly Gross Salary</div>
+                <div className="cust_iputLabel"><span className="requiredInput">Monthly Gross Salary</span></div>
                 <NumberInput
                   classNames={{
                     root: "w-100",
@@ -94,7 +94,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Leave Policy</div>
+                <div className="cust_iputLabel"><span className="requiredInput">Leave Policy</span></div>
                 <MultiSelect
                   classNames={{
                     root: "w-100",
@@ -113,7 +113,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Earning Policy</div>
+                <div className="cust_iputLabel"><span className="requiredInput">Earning Policy</span></div>
                 <MultiSelect
                   classNames={{
                     root: "w-100",
@@ -132,7 +132,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Deduction Policy</div>
+                <div className="cust_iputLabel"><span className="requiredInput">Deduction Policy</span></div>
                 <MultiSelect
                   classNames={{
                     root: "w-100",
@@ -152,7 +152,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
               </div>
 
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Bank Name</div>
+                <div className="cust_iputLabel"><span className="requiredInput">Bank Name</span></div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -165,7 +165,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Branch</div>
+                <div className="cust_iputLabel"><span className="requiredInput">Branch</span></div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -177,7 +177,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Bank Account Type</div>
+                <div className="cust_iputLabel"><span className="requiredInput">Bank Account Type</span></div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -202,7 +202,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
           <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Account No.</div>
+                <div className="cust_iputLabel"><span className="requiredInput">Account No.</span></div>
                 <NumberInput
                   classNames={{
                     root: "w-100",

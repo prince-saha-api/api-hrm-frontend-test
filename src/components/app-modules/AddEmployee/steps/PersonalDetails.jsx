@@ -179,7 +179,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
           <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">First Name</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">First Name</span>
+                </div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -189,12 +191,15 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   }}
                   // label="First Name"
                   placeholder="First Name"
+                  withAsterisk
                   {...form.getInputProps("first_name")}
                 />
               </div>
 
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Last Name</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Last Name</span>
+                </div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -204,13 +209,16 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   }}
                   // // mt="sm"
                   // label="Last Name"
+                  withAsterisk
                   placeholder="Last Name"
                   {...form.getInputProps("last_name")}
                 />
               </div>
 
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Gender</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Gender</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -227,7 +235,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
               </div>
 
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Date of Birth</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Date of Birth</span>
+                </div>
                 <DateInput
                   classNames={{
                     root: "w-100",
@@ -274,7 +284,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
               </div>
 
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Fathers Name</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Fathers Name</span>
+                </div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -304,7 +316,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Marital Status</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Marital Status</span>
+                </div>
                 <div className="w-100">
                   <Select
                     classNames={{
@@ -353,7 +367,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
           <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Nationality</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Nationality</span>
+                </div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -368,7 +384,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Religion</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Religion</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -394,7 +412,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Email</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Email</span>
+                </div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -409,7 +429,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Contact No.</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Contact No.</span>
+                </div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -420,7 +442,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">NID / Passport</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">NID / Passport</span>
+                </div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -470,7 +494,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
           <Grid.Col span={6}>
             <Box className="stepBox mt-0">
-              <p className="fw-bold mb-3">Present Address</p>
+              <p className="fw-bold mb-3">
+                <span className="requiredInput">Present Address</span>
+              </p>
 
               <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Address</div>
@@ -559,7 +585,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 justify="space-between"
                 classNames={{ root: "mb-3" }}
               >
-                <p className="fw-bold mb-0">Permanent Address</p>
+                <p className="fw-bold mb-0">
+                  <span className="requiredInput">Permanent Address</span>
+                </p>
                 <Checkbox
                   label="Same as Present Address"
                   // checked={form.getValues().permanentAddressSameAsPresent}

@@ -231,7 +231,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
           <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Employee ID</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Employee ID</span>
+                </div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -269,7 +271,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Password</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Password</span>
+                </div>
                 <PasswordInput
                   classNames={{
                     root: "w-100",
@@ -282,7 +286,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Employee Type</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Employee Type</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -296,7 +302,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Company</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Company</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -316,7 +324,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Branch</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Branch</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -337,7 +347,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Department</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Department</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -357,7 +369,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Designation</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Designation</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -381,7 +395,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
           <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Default Shift</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Default Shift</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -416,7 +432,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
               </div>
 
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">User Role</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">User Role</span>
+                </div>
                 <MultiSelect
                   classNames={{
                     root: "w-100",
@@ -459,7 +477,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
               </div>
 
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Joining Date</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Joining Date</span>
+                </div>
                 <DateInput
                   classNames={{
                     root: "w-100",
@@ -474,7 +494,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Supervisor</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Supervisor</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -490,7 +512,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Expense Approver</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Expense Approver</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -506,7 +530,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Leave Approver</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Leave Approver</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -522,7 +548,9 @@ const OfficeDetails = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">Shift Approver</div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Shift Approver</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",

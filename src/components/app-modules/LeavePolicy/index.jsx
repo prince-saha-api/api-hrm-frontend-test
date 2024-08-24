@@ -85,7 +85,7 @@ const Index = () => {
       title: "#",
       noWrap: true,
       sortable: false,
-      width: 90,
+      width: 40,
       render: (_, index) => (currentPage - 1) * pageSize + index + 1,
       // for export
       key: "na",
@@ -147,9 +147,8 @@ const Index = () => {
       // for table display
       accessor: "actions",
       title: "Actions",
-      width: 90,
+      width: 80,
       textAlign: "center",
-      // width: "0%",
       render: (item) => (
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>
@@ -501,8 +500,8 @@ const Index = () => {
         />
       </div>
 
-      <div className="d-flex justify-content-between mb-3">
-        <div className="showItem d-flex align-items-center justify-content-center">
+      <div className="d-flex justify-content-between mb-3 flex-wrap">
+        <div className="showItem d-flex align-items-center">
           <p className="mb-0 me-2">Show</p>
           <Select
             classNames={{

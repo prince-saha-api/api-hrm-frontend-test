@@ -42,25 +42,11 @@ const accordionData = [
   {
     value: "Employee",
     dataInput: (
-      <Grid>
-        <Grid.Col span={6}>
-          <TextInput
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
-            label="First Name"
-            placeholder="First Name"
-            mb="xs"
-          />
+      <Grid gutter={{ base: 8, xl: 'md'}}>
+        <Grid.Col span={{ base: 12, lg: 6 }}>
+          <TextInput label="First Name" placeholder="First Name" mb="xs" />
           <TextInput label="Email" placeholder="example@gmail.com" mb="xs" />
           <Select
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
             label="Country"
             placeholder="Country"
             searchable
@@ -68,23 +54,9 @@ const accordionData = [
             //  {...form.getInputProps("presentAddress.country")}
           />
         </Grid.Col>
-        <Grid.Col span={6}>
-          <TextInput
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
-            label="Last Name"
-            placeholder="Last Name"
-            mb="xs"
-          />
+        <Grid.Col span={{ base: 12, lg: 6 }}>
+          <TextInput label="Last Name" placeholder="Last Name" mb="xs" />
           <NumberInput
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
             rightSection={<></>}
             rightSectionWidth={0}
             label="Contact No."
@@ -92,11 +64,6 @@ const accordionData = [
             mb="xs"
           />
           <Select
-            classNames={{
-              root: "jiaurBD",
-              label: "jiaurBD",
-              wrapper: "jiaurBD",
-            }}
             label="Gender"
             placeholder="Gender"
             data={["Male", "Female", "Other"]}
@@ -109,9 +76,8 @@ const accordionData = [
     value: "Work Info",
     dataInput: (
       <Grid>
-        <Grid.Col span={6}>
+        <Grid.Col span={{ base: 12, lg: 6 }}>
           <TextInput label="Company" placeholder="Company" mb="xs" />
-
           <TextInput label="Department" placeholder="Department" mb="xs" />
           <Select
             label="Employee type"
@@ -122,7 +88,7 @@ const accordionData = [
           />
           <TextInput label="Grade" placeholder="Grade" mb="xs" />
         </Grid.Col>
-        <Grid.Col span={6}>
+        <Grid.Col span={{ base: 12, lg: 6 }}>
           <Select
             label="Branch"
             placeholder="Branch"
@@ -131,7 +97,6 @@ const accordionData = [
             mb="xs"
           />
           <TextInput label="Designation" placeholder="Designation" mb="xs" />
-
           <Select
             label="Group"
             placeholder="Group"
@@ -194,29 +159,31 @@ const Index = () => {
         <h3>Assign Shift</h3>
         <Breadcrumbs>{items}</Breadcrumbs>
       </div>
+      <Modal opened={opened} onClose={close} title="Filter" centered>
+        <Accordion defaultValue="">{itemsAccordion}</Accordion>
+        <div className="d-flex justify-content-end">
+          <Button variant="filled" size="sm" mt="sm">
+            Search
+          </Button>
+        </div>
+      </Modal>
 
       <div id="leavePolicy" className="itemCard">
-        <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={3}>
+        <Grid>
+          <Grid.Col span={{ base: 6, sm: 4, md: 4, lg: 3 }}>
             <Select
               label="Shift"
               placeholder="Pick value"
               data={["Day", "Night"]}
             />
-            <Modal opened={opened} onClose={close} title="Filter" centered>
-              <Accordion defaultValue="">{itemsAccordion}</Accordion>
-              <div className="d-flex justify-content-end">
-                <Button variant="filled" size="sm" mt="sm">
-                  Search
-                </Button>
-              </div>
-            </Modal>
-
+          </Grid.Col>
+          <Grid.Col span={12}>
             <div className="d-flex align-items-center mt-4">
               <p className="mb-0 me-3">Employee</p>
               <Button onClick={open}>Filter</Button>
             </div>
           </Grid.Col>
+
           <Grid.Col span={12}>
             <Button
               className="mb-3"

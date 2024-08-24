@@ -48,6 +48,20 @@ const Navbar = () => {
   return (
     <div className="topbar d-flex">
       <div className="logoBox">
+        <div className="toggle ms-3 forPhone">
+          <Burger
+            classNames={{
+              burger: "toggleIcon",
+            }}
+            opened={opened}
+            // onClick={toggle}
+            onClick={() => {
+              toggle();
+              toggleSidebar();
+            }}
+            aria-label="Toggle navigation"
+          />
+        </div>
         <Link
           href="/dashboard"
           className="main_logo text-decoration-none d-flex justify-content-start align-items-center"
@@ -57,7 +71,7 @@ const Navbar = () => {
       </div>
 
       <div className="d-flex justify-content-between align-items-center w-100">
-        <div className="toggle ms-3">
+        <div className="toggle ms-3 forDesktop">
           <Burger
             classNames={{
               burger: "toggleIcon",

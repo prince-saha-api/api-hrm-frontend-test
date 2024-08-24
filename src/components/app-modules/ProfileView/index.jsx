@@ -943,6 +943,7 @@ const ProfileView = ({ data }) => {
                           key={index}
                           className="docItem me-4 mb-4"
                           href={getStoragePath(doc?.attachment)}
+                          target="_blank"
                         >
                           {doc?.title === "NID/Passport" ? (
                             <CiCreditCard2 className="docBtn" />

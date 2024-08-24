@@ -869,21 +869,26 @@ const ProfileView = ({ data }) => {
 
                   {profile?.employee_experiencehistory?.length
                     ? profile.employee_experiencehistory.map((item, index) => (
-                        <div className="employeeInfo borderLeft">
+                        <div key={index} className="employeeInfo borderLeft">
                           <p>
-                            <span>Company Name:</span>Xyz Conpany
+                            <span>Company Name:</span>
+                            {item?.company_name || ""}
                           </p>
                           <p>
-                            <span>Designation:</span>UI/UX Designer
+                            <span>Designation:</span>
+                            {item?.designation || ""}
                           </p>
                           <p>
-                            <span>Address:</span>Mirpur
+                            <span>Address:</span>
+                            {item?.address || ""}
                           </p>
                           <p>
-                            <span>From:</span>03-Jun-2022
+                            <span>From:</span>
+                            {item?.from_date ? getDate(item?.from_date) : ""}
                           </p>
                           <p>
-                            <span>To:</span>05-Feb-2023
+                            <span>To:</span>
+                            {item?.to_date ? getDate(item?.to_date) : ""}
                           </p>
                         </div>
                       ))
@@ -911,33 +916,50 @@ const ProfileView = ({ data }) => {
               <div className="d-flex flex-wrap">
                 {profile?.employee_docs?.length
                   ? profile?.employee_docs.map((doc, index) => (
-                      <button
-                        key={index}
-                        className="docItem me-4 mb-4"
-                        onClick={() => {
-                          setSingleDocument({
-                            title: doc?.title,
-                            attachment: doc?.attachment,
-                          });
-                          singleDocumentOpen();
-                        }}
-                      >
-                        {doc?.title === "NID/Passport" ? (
-                          <CiCreditCard2 className="docBtn" />
-                        ) : doc?.title === "Resume" ? (
-                          <PiIdentificationCardLight className="docBtn" />
-                        ) : doc?.title === "Appointment Letter" ? (
-                          <CiFileOn className="docBtn fs-2" />
-                        ) : (
-                          <CiFileOn className="docBtn fs-2" />
-                        )}
-
-                        <h6>{doc?.title || "N/A"}</h6>
-                      </button>
+                      <>
+                        {/* <button
+                          key={index}
+                          className="docItem me-4 mb-4"
+                          onClick={() => {
+                            setSingleDocument({
+                              title: doc?.title,
+                              attachment: doc?.attachment,
+                            });
+                            singleDocumentOpen();
+                          }}
+                        >
+                          {doc?.title === "NID/Passport" ? (
+                            <CiCreditCard2 className="docBtn" />
+                          ) : doc?.title === "Resume" ? (
+                            <PiIdentificationCardLight className="docBtn" />
+                          ) : doc?.title === "Appointment Letter" ? (
+                            <CiFileOn className="docBtn fs-2" />
+                          ) : (
+                            <CiFileOn className="docBtn fs-2" />
+                          )}
+                          <h6>{doc?.title || "N/A"}</h6>
+                        </button> */}
+                        <a
+                          key={index}
+                          className="docItem me-4 mb-4"
+                          href={getStoragePath(doc?.attachment)}
+                        >
+                          {doc?.title === "NID/Passport" ? (
+                            <CiCreditCard2 className="docBtn" />
+                          ) : doc?.title === "Resume" ? (
+                            <PiIdentificationCardLight className="docBtn" />
+                          ) : doc?.title === "Appointment Letter" ? (
+                            <CiFileOn className="docBtn fs-2" />
+                          ) : (
+                            <CiFileOn className="docBtn fs-2" />
+                          )}
+                          <h6>{doc?.title || "N/A"}</h6>
+                        </a>
+                      </>
                     ))
                   : ""}
 
-                <button
+                {/* <button
                   className="docItem me-4"
                   onClick={() => {
                     nidOpen();
@@ -945,8 +967,8 @@ const ProfileView = ({ data }) => {
                 >
                   <CiCreditCard2 className="docBtn" />
                   <h6>NID/Passport</h6>
-                </button>
-                <button
+                </button> */}
+                {/* <button
                   className="docItem me-4"
                   onClick={() => {
                     resumeOpen();
@@ -954,8 +976,8 @@ const ProfileView = ({ data }) => {
                 >
                   <PiIdentificationCardLight className="docBtn" />
                   <h6>Resume</h6>
-                </button>
-                <button
+                </button> */}
+                {/* <button
                   className="docItem me-4"
                   onClick={() => {
                     appointmentOpen();
@@ -963,7 +985,7 @@ const ProfileView = ({ data }) => {
                 >
                   <CiFileOn className="docBtn fs-2" />
                   <h6>Appointment Letter</h6>
-                </button>
+                </button> */}
               </div>
             </div>
           </Tabs.Panel>

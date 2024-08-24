@@ -22,6 +22,7 @@ const Index = ({ opened, close, document }) => {
           <Button rightSection={<FiDownload size={16} />}>Download</Button>
         </div>
         file: {getStoragePath(document?.attachment)}
+        <a href={getStoragePath(document?.attachment)}>View</a>
       </Modal>
     </>
   );

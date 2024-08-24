@@ -29,9 +29,9 @@ P {
 }
 
 .wrapper {
-  margin: 0 0 0 30px;
+  margin: 0 0 0 15px;
   padding-top: 90px;
-  padding-right: 30px;
+  padding-right: 15px;
   min-height: 100vh;
   padding-bottom: 30px;
   overflow: hidden;
@@ -40,6 +40,7 @@ P {
 @media (min-width: 992px) {
   .wrapper {
     margin: 0 0 0 290px;
+    padding-right: 30px;
   }
   .main.wrapper {
     margin: 0 0 0 30px;
@@ -55,6 +56,11 @@ P {
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+@media (max-width: 767px) {
+  .itemCard {
+    padding: 15px 15px;
+  }
 }
 
 .itemCard:last-of-type {

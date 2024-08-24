@@ -71,6 +71,19 @@
   max-width: 70px;
 }
 
+.requiredInput {
+  position: relative;
+}
+.requiredInput::after {
+  content: "*";
+  display: inline-block;
+  font-size: 16px;
+  color: red;
+  position: absolute;
+  top: -3px;
+  left: calc(100% + 3px);
+}
+
 // Success Check Animation CSS
 .success-checkmark {
   width: 80px;

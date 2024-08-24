@@ -133,7 +133,9 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
               <Grid.Col span={6}>
                 <Box className="stepBox">
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">Name</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">Name</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
@@ -157,7 +159,9 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">Phone No</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">Phone No.</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
@@ -183,7 +187,9 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">Relation</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">Relation</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
@@ -201,7 +207,9 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
               <Grid.Col span={6}>
                 <Box className="stepBox">
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">City</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">City</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
@@ -214,7 +222,9 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">State</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">State</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
@@ -227,7 +237,9 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">ZIP Code</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">ZIP Code</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
@@ -240,7 +252,9 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">Country</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">Country</span>
+                    </div>
                     <Select
                       classNames={{
                         root: "w-100",
@@ -255,7 +269,9 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">Address</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">Address</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",

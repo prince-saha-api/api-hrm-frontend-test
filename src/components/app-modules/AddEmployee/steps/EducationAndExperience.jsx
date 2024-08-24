@@ -140,7 +140,9 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
                   )}
 
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">Certification</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">Certification</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
@@ -153,7 +155,9 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">Institute</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">Institute</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
@@ -166,7 +170,9 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">Level</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">Level</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
@@ -190,7 +196,9 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">Passing Year</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">Passing Year</span>
+                    </div>
                     <NumberInput
                       classNames={{
                         root: "w-100",
@@ -242,7 +250,9 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
                   )}
 
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">Company Name</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">Company Name</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
@@ -256,7 +266,9 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">Designation</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">Designation</span>
+                    </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
@@ -286,7 +298,9 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">From</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">From</span>
+                    </div>
                     <DateInput
                       classNames={{
                         root: "w-100",
@@ -303,7 +317,9 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
                     />
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">To</div>
+                    <div className="cust_iputLabel">
+                      <span className="requiredInput">To</span>
+                    </div>
                     <DateInput
                       classNames={{
                         root: "w-100",

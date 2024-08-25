@@ -42,7 +42,7 @@ const accordionData = [
   {
     value: "Employee",
     dataInput: (
-      <Grid gutter={{ base: 8, xl: 'md'}}>
+      <Grid gutter={{ base: 8, xl: "md" }}>
         <Grid.Col span={{ base: 12, lg: 6 }}>
           <TextInput label="First Name" placeholder="First Name" mb="xs" />
           <TextInput label="Email" placeholder="example@gmail.com" mb="xs" />
@@ -170,7 +170,7 @@ const Index = () => {
 
       <div id="leavePolicy" className="itemCard">
         <Grid>
-          <Grid.Col span={{ base: 6, sm: 4, md: 4, lg: 3 }}>
+          <Grid.Col span={{ base: 12, sm: 6, md: 6, lg: 3 }}>
             <Select
               label="Shift"
               placeholder="Pick value"

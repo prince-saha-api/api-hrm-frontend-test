@@ -31,15 +31,6 @@ import FilterModal from "@/components/utils/EmployeeFilterModal";
 
 const PAGE_SIZES = [20, 30, 40, 50];
 
-// const items = [
-//   { title: "Dashboard", href: "/" },
-//   { title: "Leave Policy" },
-// ].map((item, index) => (
-//   <Anchor href={item.href} key={index}>
-//     {item.title}
-//   </Anchor>
-// ));
-
 const Index = () => {
   const [filterOpened, { open: filterOpen, close: filterClose }] =
     useDisclosure(false);
@@ -186,7 +177,7 @@ const Index = () => {
 
       <div className="pageTop mb-4">
         <Breadcrumb
-          title="Employees"
+          title="Leave Policy Assign"
           items={[
             { title: "Dashboard", href: "/dashboard" },
             { title: "Leave Policy Assign" },
@@ -195,15 +186,9 @@ const Index = () => {
       </div>
 
       <div id="leavePolicy" className="itemCard">
-        <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={5}>
+        <Grid>
+          <Grid.Col span={{ base: 12, sm: 6, md: 6, lg: 3 }}>
             <MultiSelect
-              classNames={{
-                root: "cust_iputRoot",
-                label: "cust_iputLabel",
-                wrapper: "cust_iputWrapper",
-              }}
-              mb="md"
               label="Leave Policy"
               placeholder="Leave Policy"
               data={leavepolicies}
@@ -211,9 +196,10 @@ const Index = () => {
               value={selectedPolicies}
               onChange={setSelectedPolicies}
             />
-
+          </Grid.Col>
+          <Grid.Col span={12}>
             <div className="d-flex align-items-center mt-4">
-              <p className="cust_iputLabel mb-0">Employee</p>
+              <p className="mb-0 me-3">Employee</p>
               <Button onClick={filterOpen}>Filter</Button>
             </div>
           </Grid.Col>
@@ -251,6 +237,7 @@ const Index = () => {
                   {
                     title: "#",
                     accessor: "na",
+                    width: 40,
                     noWrap: true,
                     sortable: false,
                     render: (_, index) =>
@@ -261,6 +248,7 @@ const Index = () => {
                     accessor: "photo",
                     title: "Employee",
                     sortable: false,
+                    width: 170,
                     render: ({ id, photo, first_name, last_name }) => (
                       <div className="d-flex justify-content-start align-items-center">
                         {photo ? (
@@ -284,12 +272,14 @@ const Index = () => {
                   {
                     accessor: "designation",
                     title: "Designation",
+                    width: 250,
                     // visibleMediaQuery: aboveXs,
                     render: ({ designation }) => designation?.name || "N/A",
                   },
                   {
                     accessor: "department_name",
                     title: "Department",
+                    width: 250,
                     // visibleMediaQuery: aboveXs,
                     render: ({ departmenttwo }) =>
                       departmenttwo?.[0]?.name || "N/A",
@@ -298,6 +288,7 @@ const Index = () => {
                     // for table display
                     accessor: "official_id",
                     title: "Employee ID",
+                    width: 170,
                     noWrap: true,
                     sortable: true,
                     render: ({ official_id }) => official_id || "N/A",
@@ -305,6 +296,7 @@ const Index = () => {
                   {
                     accessor: "employee_type",
                     title: "Employee Type",
+                    width: 170,
                     noWrap: true,
                     sortable: true,
                     render: ({ employee_type }) => employee_type || "N/A",

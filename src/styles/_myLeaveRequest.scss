@@ -1,9 +1,40 @@
-.cardBox {
+
+.leaveCardBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.leaveCard {
   width: calc(20% - 1rem);
   padding: 15px;
   border-radius: 4px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   background-color: #fff;
+}
+
+@media (max-width: 1600px) {
+  .leaveCard {
+    width: calc(25% - 1rem);
+  }
+}
+@media (max-width: 1350px) {
+  .leaveCard {
+    width: calc(33.33% - 1rem);
+  }
+}
+@media (max-width: 1080px) {
+  .leaveCard {
+    width: calc(50% - 1rem);
+  }
+}
+@media (max-width: 767px) {
+  .leaveCardBox {
+    justify-content: center;
+  }
+  .leaveCard {
+    width: 75%;
+  }
 }
 
 .leaveTitle {

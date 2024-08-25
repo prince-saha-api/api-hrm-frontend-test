@@ -8,6 +8,7 @@ import { NumberInput, TextInput, Box, Button, Group } from "@mantine/core";
 import { Grid } from "@mantine/core";
 import { LuPlus } from "react-icons/lu";
 import { FaTrashAlt } from "react-icons/fa";
+import { formatDateToYYYYMMDD } from "@/lib/helper";
 
 const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
@@ -30,6 +31,8 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
         data.previousExperience && data.previousExperience.length
           ? data.previousExperience.map((item) => ({
               ...item,
+              from_date: item?.from_date ? new Date(item.from_date) : null,
+              to_date: item?.to_date ? new Date(item.to_date) : null,
               key: randomId(),
             }))
           : [
@@ -45,12 +48,18 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
     },
     validate: {
       academicRecord: {
-        certification: (value) =>
-          value?.length < 2 ? "Name must have at least 2 letters" : null,
+        certification: (value) => (!value ? "Certification is required" : null),
+        board_institute_name: (value) =>
+          !value ? "Board or Institute is required" : null,
+        level: (value) => (!value ? "Level is required" : null),
+        year_of_passing: (value) =>
+          !value ? "Passing year is required" : null,
       },
       previousExperience: {
-        company_name: (value) =>
-          value?.length < 2 ? "Name must have at least 2 letters" : null,
+        company_name: (value) => (!value ? "Company name is required" : null),
+        designation: (value) => (!value ? "Designation is required" : null),
+        from_date: (value) => (!value ? "From date is required" : null),
+        to_date: (value) => (!value ? "To date is required" : null),
       },
     },
   });
@@ -110,9 +119,14 @@ const AcademicRecord = forwardRef(({ data, onNext, onBack }, ref) => {
 
   const handleSubmit = (values) => {
     console.log(values);
+    const updatedExperiences = values.previousExperience.map((item) => ({
+      ...item,
+      from_date: formatDateToYYYYMMDD(item.from_date),
+      to_date: formatDateToYYYYMMDD(item.to_date),
+    }));
     onNext({
       academicRecord: values.academicRecord,
-      previousExperience: values.previousExperience,
+      previousExperience: updatedExperiences,
     });
   };
 

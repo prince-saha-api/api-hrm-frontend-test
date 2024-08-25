@@ -63,6 +63,8 @@ export const getTime = (dateString) => {
 };
 
 export const getDate = (dateString) => {
+  if (!dateString) return null;
+
   const options = {
     year: "numeric",
     month: "long",

@@ -113,7 +113,7 @@ const index = () => {
       title: "#",
       noWrap: true,
       sortable: false,
-      width: 90,
+      width: 40,
       render: (_, index) => (currentPage - 1) * pageSize + index + 1,
       // for export
       key: "na",
@@ -125,6 +125,7 @@ const index = () => {
       // for table display
       accessor: "request_type",
       title: "Request Type",
+      width: 170,
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
@@ -138,6 +139,7 @@ const index = () => {
       title: "Leave Type",
       noWrap: true,
       sortable: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ leavepolicy }) => leavepolicy?.name || "N/A",
       // for export
@@ -148,6 +150,7 @@ const index = () => {
       accessor: "from_date",
       title: "From Date",
       noWrap: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ from_date }) => (from_date ? formatDate(from_date) : "N/A"),
       // for export
@@ -158,6 +161,7 @@ const index = () => {
       accessor: "to_date",
       title: "To Date",
       noWrap: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ to_date }) => (to_date ? formatDate(to_date) : "N/A"),
       // for export
@@ -168,6 +172,7 @@ const index = () => {
       accessor: "total_leave",
       title: "Total Days",
       noWrap: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ total_leave }) => total_leave || "N/A",
       // for export
@@ -178,6 +183,7 @@ const index = () => {
       accessor: "attachment",
       title: "Attachment",
       noWrap: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ attachment }) => "attachment" || "N/A",
       // for export
@@ -188,6 +194,7 @@ const index = () => {
       accessor: "reason",
       title: "Detail",
       noWrap: true,
+      width: 250,
       // sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ reason }) => reason || "N/A",
@@ -199,6 +206,7 @@ const index = () => {
       accessor: "status",
       title: "Status",
       noWrap: true,
+      width: 100,
       // visibleMediaQuery: aboveXs,
       render: ({ status }) => (
         <>
@@ -606,10 +614,10 @@ const index = () => {
         />
       </div>
 
-      <div className="mb-4 d-flex flex-wrap gap-3">
+      <div className="leaveCardBox">
         {leaveSummaryData?.data?.result?.length
           ? leaveSummaryData.data.result.map((item, index) => (
-              <div className="cardBox" key={index}>
+              <div className="leaveCard" key={index}>
                 <h5 className="leaveTitle text-center">
                   {item?.leavepolicy?.name}
                 </h5>
@@ -629,8 +637,8 @@ const index = () => {
           : null}
       </div>
 
-      <div className="d-flex justify-content-between mb-3">
-        <div className="showItem d-flex align-items-center justify-content-center">
+      <div className="d-flex justify-content-between mb-3 flex-wrap">
+        <div className="showItem d-flex align-items-center">
           <p className="mb-0 me-2">Show</p>
           <Select
             classNames={{

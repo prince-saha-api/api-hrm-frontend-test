@@ -44,7 +44,7 @@ const OfficeDetails = forwardRef(
       mode: "uncontrolled",
       initialValues: {
         ...data,
-        joining_date: data.joining_date ? new Date(data.joining_date) : null,
+        joining_date: data?.joining_date ? new Date(data.joining_date) : null,
       },
       validate: {
         official_id: (value) =>
@@ -135,13 +135,13 @@ const OfficeDetails = forwardRef(
       data: groupsData,
       error: groupsError,
       isLoading: isGroupsLoading,
-    } = useSWR(`/api/device/get-group/`, fetcher, {
+    } = useSWR(`/api/user/get-ethnicgroup/`, fetcher, {
       errorRetryCount: 2,
       keepPreviousData: true,
     });
 
     const groups = groupsData?.data?.result?.map((item) => ({
-      label: item?.title?.toString() || "",
+      label: item?.name?.toString() || "",
       value: item?.id.toString() || "",
     }));
 
@@ -501,6 +501,7 @@ const OfficeDetails = forwardRef(
                     // label="Joining Date"
                     placeholder="Joining Date"
                     {...form.getInputProps("joining_date")}
+                    key={form.key("joining_date")}
                   />
                 </div>
                 <div className="d-flex align-items-start w-100 cust_mt">

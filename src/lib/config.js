@@ -8,5 +8,5 @@ export const authUserKey = process.env.NEXT_PUBLIC_AUTH_USER_KEY;
 export const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const constants = {
-  PAGE_SIZES: [2, 10, 20, 30, 40],
+  PAGE_SIZES: [10, 20, 30, 40],
 };

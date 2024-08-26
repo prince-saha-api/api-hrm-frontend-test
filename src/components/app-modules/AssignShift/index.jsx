@@ -1,132 +1,24 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
-import { Grid } from "@mantine/core";
-import { countries } from "@/data/countries";
+import { Grid, Button, Select } from "@mantine/core";
+import { toast } from "react-toastify";
 import { DataTable } from "mantine-datatable";
-import { submit } from "../../../lib/submit";
-import { fetcher } from "../../../lib/fetch";
-import {
-  Button,
-  Select,
-  Breadcrumbs,
-  Anchor,
-  Accordion,
-  TextInput,
-  MultiSelect,
-  Popover,
-  Box,
-  Modal,
-  NumberInput,
-} from "@mantine/core";
-import {
-  formatDate,
-  getDate,
-  getTime,
-  getStoragePath,
-} from "../../../lib/helper";
+import { constants } from "@/lib/config";
+import { submit } from "@/lib/submit";
+import { fetcher } from "@/lib/fetch";
+import { getStoragePath, getFullName } from "@/lib/helper";
+import Breadcrumb from "@/components/utils/Breadcrumb";
+import FilterModal from "@/components/utils/EmployeeFilterModal";
 
-const PAGE_SIZES = [5, 10, 15, 20];
-const items = [
-  { title: "Dashboard", href: "/" },
-  { title: "Assign Shift" },
-].map((item, index) => (
-  <Anchor href={item.href} key={index}>
-    {item.title}
-  </Anchor>
-));
-
-const accordionData = [
-  {
-    value: "Employee",
-    dataInput: (
-      <Grid>
-        <Grid.Col span={{ base: 12, lg: 6 }}>
-          <TextInput label="First Name" placeholder="First Name" mb="xs" />
-          <TextInput label="Email" placeholder="example@gmail.com" mb="xs" />
-          <Select
-            label="Country"
-            placeholder="Country"
-            searchable
-            data={countries}
-            //  {...form.getInputProps("presentAddress.country")}
-          />
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, lg: 6 }}>
-          <TextInput label="Last Name" placeholder="Last Name" mb="xs" />
-          <NumberInput
-            rightSection={<></>}
-            rightSectionWidth={0}
-            label="Contact No."
-            placeholder="Contact No"
-            mb="xs"
-          />
-          <Select
-            label="Gender"
-            placeholder="Gender"
-            data={["Male", "Female", "Other"]}
-          />
-        </Grid.Col>
-      </Grid>
-    ),
-  },
-  {
-    value: "Work Info",
-    dataInput: (
-      <Grid>
-        <Grid.Col span={{ base: 12, lg: 6 }}>
-          <TextInput label="Company" placeholder="Company" mb="xs" />
-          <TextInput label="Department" placeholder="Department" mb="xs" />
-          <Select
-            label="Employee type"
-            placeholder="Employee type"
-            // searchable
-            data={["Employee type-1", "Employee type-2"]}
-            mb="xs"
-          />
-          <TextInput label="Grade" placeholder="Grade"/>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, lg: 6 }}>
-          <Select
-            label="Branch"
-            placeholder="Branch"
-            // searchable
-            data={["Dhaka", "Rangpur", "Dinajpur"]}
-            mb="xs"
-          />
-          <TextInput label="Designation" placeholder="Designation" mb="xs" />
-          <Select
-            label="Group"
-            placeholder="Group"
-            // searchable
-            data={["Group-1", "Group-2"]}
-            mb="xs"
-          />
-
-          <Select
-            label="Shift"
-            placeholder="Shift"
-            // searchable
-            data={["Day", "Night"]}
-          />
-        </Grid.Col>
-      </Grid>
-    ),
-  },
-];
+const PAGE_SIZES = constants.PAGE_SIZES;
 
 const Index = () => {
-  // See groceries data above
-  const itemsAccordion = accordionData.map((item) => (
-    <Accordion.Item key={item.value} value={item.value}>
-      <Accordion.Control>{item.value}</Accordion.Control>
-      <Accordion.Panel>{item.dataInput}</Accordion.Panel>
-    </Accordion.Item>
-  ));
-
-  const [opened, { open, close }] = useDisclosure(false);
+  const [filterOpened, { open: filterOpen, close: filterClose }] =
+    useDisclosure(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
@@ -135,61 +27,167 @@ const Index = () => {
     direction: "asc", // desc
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedShift, setSelectedShift] = useState(null);
+
+  const [filterData, setFilterData] = useState(null);
+
+  let apiUrl = `/api/user/get-employee/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+    sortStatus?.direction === "desc" ? "-" : ""
+  }${sortStatus.columnAccessor}`;
+
+  if (filterData) {
+    Object.keys(filterData).forEach((key) => {
+      const value = filterData[key];
+
+      if (Array.isArray(value)) {
+        if (value[0] !== null && value[1] !== null) {
+          apiUrl += `&${key}_from=${encodeURIComponent(
+            value[0]
+          )}&${key}_to=${encodeURIComponent(value[1])}`;
+        }
+      } else if (value) {
+        apiUrl += `&${key}=${encodeURIComponent(value)}`;
+      }
+    });
+  }
+
   const {
     data: apiData,
     error,
     isValidating,
     isLoading,
     mutate,
-  } = useSWR(
-    `/employee/?page=${1}&page_size=${pageSize}&column_accessor=${
-      sortStatus.columnAccessor
-    }&direction=${sortStatus.direction}`,
-    fetcher,
-    {
-      errorRetryCount: 2,
-      keepPreviousData: true,
-    }
-  );
+  } = useSWR(apiUrl, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+    revalidateOnFocus: false,
+  });
+
+  const {
+    data: shiftsData,
+    error: shiftsError,
+    isLoading: isShiftsLoading,
+  } = useSWR(`/api/user/get-shift/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const shifts = shiftsData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
   const [selectedRecords, setSelectedRecords] = useState([]);
+
+  const handleSortStatusChange = (status) => {
+    console.log(status);
+    setSortStatus(status);
+    setCurrentPage(1);
+  };
+
+  const handlePageSizeChange = (newPageSize) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1);
+    // mutate();
+  };
+
+  useEffect(() => {
+    setSelectedRecords([]);
+  }, [filterData]);
+
+  const handleBulkAssign = async () => {
+    const employees = selectedRecords.map((e) => Number(e?.id)).filter(Boolean);
+    console.log(employees, selectedShift);
+
+    const values = {
+      user: employees,
+      shift: selectedShift,
+    };
+
+    if (!values?.shift) {
+      toast.error("Select shift");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // return;
+
+    try {
+      const response = await submit("/api/user/assign-shift/", values);
+
+      if (response?.status === "success") {
+        // console.log(response);
+        setIsSubmitting(false);
+        // form.reset();
+        // close();
+        setSelectedShift(null);
+        setSelectedRecords([]);
+        mutate();
+        toast.success("Shift assigned successfully");
+      } else {
+        setIsSubmitting(false);
+        if (response?.status === "error" && Array.isArray(response.message)) {
+          response.message.forEach((msg) => {
+            toast.error(msg);
+          });
+        } else {
+          toast.error("Error updating");
+        }
+      }
+    } catch (error) {
+      console.error("Error updating:", error);
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 500);
+    }
+  };
+
   return (
     <>
+      <FilterModal
+        opened={filterOpened}
+        close={filterClose}
+        data={filterData}
+        setData={setFilterData}
+      />
+
       <div className="pageTop mb-4">
-        <h3>Assign Shift</h3>
-        <Breadcrumbs>{items}</Breadcrumbs>
+        <Breadcrumb
+          title="Assign Shift"
+          items={[
+            { title: "Dashboard", href: "/dashboard" },
+            { title: "Assign Shift" },
+          ]}
+        />
       </div>
-      <Modal opened={opened} onClose={close} title="Filter" centered>
-        <Accordion defaultValue="">{itemsAccordion}</Accordion>
-        <div className="d-flex justify-content-end">
-          <Button variant="filled" size="sm" mt="sm">
-            Search
-          </Button>
-        </div>
-      </Modal>
 
       <div id="leavePolicy" className="itemCard">
         <Grid>
           <Grid.Col span={{ base: 12, sm: 6, md: 6, lg: 3 }}>
             <Select
-              label="Shift"
-              placeholder="Pick value"
-              data={["Day", "Night"]}
+              label="Shifts"
+              placeholder="Shifts"
+              data={shifts}
+              searchable
+              value={selectedShift}
+              onChange={setSelectedShift}
             />
           </Grid.Col>
           <Grid.Col span={12}>
             <div className="d-flex align-items-center mt-4">
               <p className="mb-0 me-3">Employee</p>
-              <Button onClick={open}>Filter</Button>
+              <Button onClick={filterOpen}>Filter</Button>
             </div>
           </Grid.Col>
-
           <Grid.Col span={12}>
             <Button
               className="mb-3"
-              component="a"
-              href="/#"
-              data-disabled
-              onClick={(event) => event.preventDefault()}
+              loading={isSubmitting}
+              loaderProps={{ type: "dots" }}
+              disabled={selectedRecords?.length === 0}
+              onClick={() => handleBulkAssign()}
             >
               Assign
             </Button>
@@ -215,61 +213,89 @@ const Index = () => {
                 striped
                 columns={[
                   {
-                    title: "SL",
+                    title: "#",
                     accessor: "na",
+                    width: 40,
                     noWrap: true,
                     sortable: false,
                     render: (_, index) =>
                       (currentPage - 1) * pageSize + index + 1,
                   },
                   {
-                    accessor: "employee",
+                    // for table display
+                    accessor: "photo",
                     title: "Employee",
                     sortable: false,
-                    render: ({ image }) => (
-                      <div className="text-center">
-                        <img
-                          src={getStoragePath(image)}
-                          alt="img"
-                          className="table_user_img"
-                        />
+                    width: 170,
+                    render: ({
+                      id,
+                      photo,
+                      first_name,
+                      last_name,
+                      official_id,
+                    }) => (
+                      <div className="d-flex justify-content-start align-items-center">
+                        {photo ? (
+                          <img
+                            src={getStoragePath(photo)}
+                            alt="img"
+                            className="table_user_img"
+                          />
+                        ) : (
+                          ""
+                        )}
+                        <div className="d-flex flex-column ms-2">
+                          <Link
+                            href={`/profile/${id}`}
+                            className="text-decoration-none color-inherit"
+                          >
+                            {getFullName(first_name, last_name)}
+                          </Link>
+                          {official_id && <span>{official_id}</span>}
+                        </div>
                       </div>
                     ),
                   },
-
                   {
                     accessor: "designation",
                     title: "Designation",
-                    sortable: true,
+                    width: 250,
                     // visibleMediaQuery: aboveXs,
+                    render: ({ designation }) => designation?.name || "N/A",
                   },
                   {
-                    accessor: "department",
+                    accessor: "department_name",
                     title: "Department",
-                    noWrap: true,
-                    sortable: true,
+                    width: 250,
+                    // visibleMediaQuery: aboveXs,
+                    render: ({ departmenttwo }) =>
+                      departmenttwo?.[0]?.name || "N/A",
                   },
                   {
-                    accessor: "employee_id",
-                    title: "Contact No.",
+                    accessor: "employee_type",
+                    title: "Employee Type",
+                    width: 170,
                     noWrap: true,
                     sortable: true,
+                    render: ({ employee_type }) => employee_type || "N/A",
                   },
                   {
                     accessor: "shift",
                     title: "Shift",
+                    width: 170,
                     noWrap: true,
                     sortable: true,
+                    render: ({ shift }) => shift?.name || "N/A",
                   },
                 ]}
                 fetching={isLoading}
-                records={apiData?.results || []}
+                records={apiData?.data.result || []}
                 page={currentPage}
                 onPageChange={setCurrentPage}
-                totalRecords={apiData?.count}
+                totalRecords={apiData?.data?.count || 0}
                 recordsPerPage={pageSize}
                 sortStatus={sortStatus}
-                // onSortStatusChange={handleSortStatusChange}
+                onSortStatusChange={handleSortStatusChange}
                 selectedRecords={selectedRecords}
                 onSelectedRecordsChange={setSelectedRecords}
                 // recordsPerPageOptions={PAGE_SIZES}

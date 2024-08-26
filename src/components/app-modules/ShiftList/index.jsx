@@ -49,7 +49,7 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  // const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
     console.log(status);
@@ -109,6 +109,7 @@ const Index = () => {
       // for table display
       accessor: "in_time",
       title: "In Time",
+      sortable: true,
       noWrap: true,
       // visibleMediaQuery: aboveXs,
       render: ({ in_time }) =>
@@ -136,9 +137,9 @@ const Index = () => {
       accessor: "late_tolerance_time",
       title: "Late Tolarence Time",
       // visibleMediaQuery: aboveXs,
-      sortable: true,
+      // sortable: true,
       render: ({ late_tolerance_time }) =>
-        late_tolerance_time ? late_tolerance_time : "N/A",
+        late_tolerance_time ? late_tolerance_time : "0",
       // for export
       key: "late_tolerance_time",
     },
@@ -221,7 +222,7 @@ const Index = () => {
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set(["na", "title", "leave_type", "actions", ...keys]),
+      ...new Set(["na", "name", "in_time", "actions", ...keys]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>

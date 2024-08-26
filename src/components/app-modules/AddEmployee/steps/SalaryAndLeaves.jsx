@@ -54,6 +54,20 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
     value: item?.id.toString() || "",
   }));
 
+  const {
+    data: bankAccountTypeData,
+    error: bankAccountTypeError,
+    isLoading: isBankAccountTypeLoading,
+  } = useSWR(`/api/contribution/get-bankaccounttype/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const bankAccountTypes = bankAccountTypeData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
   useImperativeHandle(ref, () => ({
     validateStep: (updateFormData, key) => {
       const values = form.getValues();
@@ -227,13 +241,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   // mt="sm"
                   // label="Bank Account Type"
                   placeholder="Bank Account Type"
-                  data={[
-                    { value: "1", label: "Current" },
-                    { value: "2", label: "Savings" },
-                    { value: "3", label: "Salary" },
-                    { value: "4", label: "Chequing" },
-                    { value: "5", label: "Business" },
-                  ]}
+                  data={bankAccountTypes}
                   {...form.getInputProps("bank_account.account_type")}
                 />
               </div>

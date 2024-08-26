@@ -51,7 +51,7 @@ import SalaryLeaves from "./SalaryLeaves";
 import EmergencyContact from "./EmergencyContact";
 import Education from "./Education";
 import Experience from "./Experience";
-import Documents from "./Documents-new";
+import Documents from "./Documents";
 import SingleDocument from "./SingleDocument";
 
 const ProfileView = ({ data }) => {

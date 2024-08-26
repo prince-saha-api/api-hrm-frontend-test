@@ -461,7 +461,7 @@ const index = () => {
                      accessor: "na",
                      noWrap: true,
                      sortable: false,
-                     width: 90,
+                     width: 40,
                      render: (_, index) =>
                         (currentPage - 1) * pageSize + index + 1,
                   },
@@ -470,6 +470,7 @@ const index = () => {
                      accessor: "designation_name",
                      title: "Posting Date",
                      noWrap: true,
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ designation_name }) =>
                         designation_name || "N/A",
@@ -477,36 +478,42 @@ const index = () => {
                   {
                      accessor: "department_name",
                      title: "Title",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
                      title: "From Date",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
                      title: "To Date",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
                      title: "Gross Payable",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
                      title: "Total Deductible",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
                      title: "Net Payable",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
@@ -514,9 +521,8 @@ const index = () => {
                   {
                      accessor: "actions",
                      title: "Actions",
-                     width: 90,
+                     width: 100,
                      textAlign: "center",
-                     // width: "0%",
                      render: (item) => (
                         <>
                            <Menu shadow="md" width={150} position="bottom-end">

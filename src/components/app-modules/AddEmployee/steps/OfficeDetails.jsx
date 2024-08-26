@@ -64,6 +64,8 @@ const OfficeDetails = forwardRef(
         department: (value) => (!value ? "Department is required" : null),
         designation: (value) => (!value ? "Designation is required" : null),
         shift: (value) => (!value ? "Shift is required" : null),
+        ethnic_group: (value) =>
+          !value || !value.length ? "Group is required" : null,
         joining_date: (value) => (!value ? "Joining date is required" : null),
         supervisor: (value) => (!value ? "Supervisor is required" : null),
         expense_approver: (value) =>
@@ -473,7 +475,9 @@ const OfficeDetails = forwardRef(
                 </div>
 
                 <div className="d-flex align-items-start w-100 cust_mt">
-                  <div className="cust_iputLabel">Group</div>
+                  <div className="cust_iputLabel">
+                    <span className="requiredInput">Group</span>
+                  </div>
                   <MultiSelect
                     classNames={{
                       root: "w-100",
@@ -517,6 +521,7 @@ const OfficeDetails = forwardRef(
                     // label="Supervisor"
                     placeholder="Supervisor"
                     searchable
+                    nothingFoundMessage="Nothing found..."
                     data={employees}
                     {...form.getInputProps("supervisor")}
                     key={form.key("supervisor")}
@@ -535,6 +540,7 @@ const OfficeDetails = forwardRef(
                     // label="Expense Approver"
                     placeholder="Expense Approver"
                     searchable
+                    nothingFoundMessage="Nothing found..."
                     data={employees}
                     {...form.getInputProps("expense_approver")}
                     key={form.key("expense_approver")}
@@ -553,6 +559,7 @@ const OfficeDetails = forwardRef(
                     // label="Leave Approver"
                     placeholder="Leave Approver"
                     searchable
+                    nothingFoundMessage="Nothing found..."
                     data={employees}
                     {...form.getInputProps("leave_approver")}
                     key={form.key("leave_approver")}
@@ -571,6 +578,7 @@ const OfficeDetails = forwardRef(
                     // label="Shift Approver"
                     placeholder="Shift Approver"
                     searchable
+                    nothingFoundMessage="Nothing found..."
                     data={employees}
                     {...form.getInputProps("shift_request_approver")}
                     key={form.key("shift_request_approver")}

@@ -19,7 +19,7 @@ import { fetcher } from "../../../lib/fetch";
 import { AiOutlineFilePdf } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
-import { LuPlus } from "react-icons/lu";
+import { FaPlus } from "react-icons/fa6";
 import Logo from "../../../../public/api_logo.png";
 
 import {
@@ -330,9 +330,12 @@ const index = () => {
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Earnings</Table.Th>
-                  <Table.Th></Table.Th>
-                  {/* <Table.Th>Symbol</Table.Th>
-                        <Table.Th>Atomic mass</Table.Th> */}
+                  <Table.Th>
+                    <Button size="compact-xs">
+                      <FaPlus className="me-1" />
+                      Add
+                    </Button>
+                  </Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>{rows}</Table.Tbody>

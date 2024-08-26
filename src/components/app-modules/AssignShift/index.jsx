@@ -42,7 +42,7 @@ const accordionData = [
   {
     value: "Employee",
     dataInput: (
-      <Grid gutter={{ base: 8, xl: "md" }}>
+      <Grid>
         <Grid.Col span={{ base: 12, lg: 6 }}>
           <TextInput label="First Name" placeholder="First Name" mb="xs" />
           <TextInput label="Email" placeholder="example@gmail.com" mb="xs" />
@@ -86,7 +86,7 @@ const accordionData = [
             data={["Employee type-1", "Employee type-2"]}
             mb="xs"
           />
-          <TextInput label="Grade" placeholder="Grade" mb="xs" />
+          <TextInput label="Grade" placeholder="Grade"/>
         </Grid.Col>
         <Grid.Col span={{ base: 12, lg: 6 }}>
           <Select
@@ -110,7 +110,6 @@ const accordionData = [
             placeholder="Shift"
             // searchable
             data={["Day", "Night"]}
-            mb="xs"
           />
         </Grid.Col>
       </Grid>

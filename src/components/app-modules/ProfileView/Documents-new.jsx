@@ -25,12 +25,14 @@ const EditDocuments = ({ opened, close, item, setItem }) => {
 
   const form = useForm({
     mode: "uncontrolled",
-    initialValues:
-      item?.employee_docs.map((doc) => ({
-        id: doc.id,
-        title: doc.title,
-        attachment: doc.attachment || null,
-      })) || [],
+    initialValues: {
+      docs:
+        item?.employee_docs?.map((doc) => ({
+          id: doc.id,
+          title: doc.title,
+          attachment: doc.attachment || null,
+        })) || [],
+    },
 
     // validate: item?.employee_docs.reduce((acc, doc) => {
     //   acc[doc.id] = (value) =>
@@ -43,13 +45,15 @@ const EditDocuments = ({ opened, close, item, setItem }) => {
 
   const handleSubmit = async (values) => {
     console.log(values);
-    const updatedDocuments = Object.keys(values).map((key, doc) => ({
+    const updatedDocuments = values.docs.map((doc) => ({
       id: doc.id,
       title: doc.title,
       attachment: doc.attachment,
     }));
 
     console.log(updatedDocuments);
+
+    return;
 
     try {
       const formValues = new FormData();
@@ -101,22 +105,24 @@ const EditDocuments = ({ opened, close, item, setItem }) => {
       <form
         onSubmit={form.onSubmit((values) => handleSubmit(values), handleError)}
       >
-        {form.values.map((doc, index) => (
-          <FileInput
-            key={doc.id}
-            mb="sm"
-            leftSection={
-              doc.title === "Photo" ? (
-                <TbPhotoFilled className="fileIcon" />
-              ) : (
-                <FaFile className="fileIcon" />
-              )
-            }
-            placeholder={doc.title}
-            label={doc.title}
-            leftSectionPointerEvents="none"
-            {...form.getInputProps(`${index}.attachment`)}
-          />
+        {form.getValues().docs.map((doc, index) => (
+          <div key={doc.id}>
+            <FileInput
+              mb="sm"
+              leftSection={
+                doc.title === "Photo" ? (
+                  <TbPhotoFilled className="fileIcon" />
+                ) : (
+                  <FaFile className="fileIcon" />
+                )
+              }
+              placeholder={doc.title}
+              label={doc.title}
+              leftSectionPointerEvents="none"
+              // {...form.getInputProps(`docs.${index}.attachment`)}
+              // key={form.key(`docs.${index}.attachment`)}
+            />
+          </div>
         ))}
 
         <Group justify="flex-end" mt="md">

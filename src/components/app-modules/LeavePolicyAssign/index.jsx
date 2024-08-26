@@ -8,28 +8,21 @@ import { Grid } from "@mantine/core";
 import { toast } from "react-toastify";
 import { countries } from "@/data/countries";
 import { DataTable } from "mantine-datatable";
-import {
-  Button,
-  Select,
-  Breadcrumbs,
-  Anchor,
-  Accordion,
-  TextInput,
-  MultiSelect,
-  Popover,
-  Box,
-  Modal,
-  NumberInput,
-  Menu,
-} from "@mantine/core";
+import { Button, MultiSelect } from "@mantine/core";
 import { constants } from "@/lib/config";
 import { submit } from "@/lib/submit";
 import { fetcher, getData } from "@/lib/fetch";
-import { formatDate, getDate, getTime, getStoragePath } from "@/lib/helper";
+import {
+  formatDate,
+  getDate,
+  getTime,
+  getStoragePath,
+  getFullName,
+} from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import FilterModal from "@/components/utils/EmployeeFilterModal";
 
-const PAGE_SIZES = [20, 30, 40, 50];
+const PAGE_SIZES = constants.PAGE_SIZES;
 
 const Index = () => {
   const [filterOpened, { open: filterOpen, close: filterClose }] =
@@ -264,7 +257,7 @@ const Index = () => {
                           href={`/profile/${id}`}
                           className="ms-2 text-decoration-none color-inherit"
                         >
-                          {first_name + " " + last_name}
+                          {getFullName(first_name, last_name)}
                         </Link>
                       </div>
                     ),

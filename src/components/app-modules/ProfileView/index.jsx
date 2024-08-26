@@ -51,7 +51,7 @@ import SalaryLeaves from "./SalaryLeaves";
 import EmergencyContact from "./EmergencyContact";
 import Education from "./Education";
 import Experience from "./Experience";
-import Documents from "./Documents";
+import Documents from "./Documents-new";
 import SingleDocument from "./SingleDocument";
 
 const ProfileView = ({ data }) => {
@@ -259,8 +259,8 @@ const ProfileView = ({ data }) => {
       <Documents
         opened={documentsOpened}
         close={documentsClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
 
       <Breadcrumb
@@ -916,49 +916,48 @@ const ProfileView = ({ data }) => {
               <div className="d-flex flex-wrap">
                 {profile?.employee_docs?.length
                   ? profile?.employee_docs.map((doc, index) => (
-                      <>
-                        {/* <button
-                          key={index}
-                          className="docItem me-4 mb-4"
-                          onClick={() => {
-                            setSingleDocument({
-                              title: doc?.title,
-                              attachment: doc?.attachment,
-                            });
-                            singleDocumentOpen();
-                          }}
-                        >
-                          {doc?.title === "NID/Passport" ? (
-                            <CiCreditCard2 className="docBtn" />
-                          ) : doc?.title === "Resume" ? (
-                            <PiIdentificationCardLight className="docBtn" />
-                          ) : doc?.title === "Appointment Letter" ? (
-                            <CiFileOn className="docBtn fs-2" />
-                          ) : (
-                            <CiFileOn className="docBtn fs-2" />
-                          )}
-                          <h6>{doc?.title || "N/A"}</h6>
-                        </button> */}
-                        <a
-                          key={index}
-                          className="docItem me-4 mb-4"
-                          href={getStoragePath(doc?.attachment)}
-                          target="_blank"
-                        >
-                          {doc?.title === "NID/Passport" ? (
-                            <CiCreditCard2 className="docBtn" />
-                          ) : doc?.title === "Resume" ? (
-                            <PiIdentificationCardLight className="docBtn" />
-                          ) : doc?.title === "Appointment Letter" ? (
-                            <CiFileOn className="docBtn fs-2" />
-                          ) : (
-                            <CiFileOn className="docBtn fs-2" />
-                          )}
-                          <h6>{doc?.title || "N/A"}</h6>
-                        </a>
-                      </>
+                      <a
+                        key={index}
+                        className="docItem me-4 mb-4"
+                        href={getStoragePath(doc?.attachment)}
+                        target="_blank"
+                      >
+                        {doc?.title === "NID/Passport" ? (
+                          <CiCreditCard2 className="docBtn" />
+                        ) : doc?.title === "Resume" ? (
+                          <PiIdentificationCardLight className="docBtn" />
+                        ) : doc?.title === "Appointment Letter" ? (
+                          <CiFileOn className="docBtn fs-2" />
+                        ) : (
+                          <CiFileOn className="docBtn fs-2" />
+                        )}
+                        <h6>{doc?.title || "N/A"}</h6>
+                      </a>
                     ))
                   : ""}
+
+                {/* <button
+                  key={index}
+                  className="docItem me-4 mb-4"
+                  onClick={() => {
+                    setSingleDocument({
+                      title: doc?.title,
+                      attachment: doc?.attachment,
+                    });
+                    singleDocumentOpen();
+                  }}
+                >
+                  {doc?.title === "NID/Passport" ? (
+                    <CiCreditCard2 className="docBtn" />
+                  ) : doc?.title === "Resume" ? (
+                    <PiIdentificationCardLight className="docBtn" />
+                  ) : doc?.title === "Appointment Letter" ? (
+                    <CiFileOn className="docBtn fs-2" />
+                  ) : (
+                    <CiFileOn className="docBtn fs-2" />
+                  )}
+                  <h6>{doc?.title || "N/A"}</h6>
+                </button> */}
 
                 {/* <button
                   className="docItem me-4"

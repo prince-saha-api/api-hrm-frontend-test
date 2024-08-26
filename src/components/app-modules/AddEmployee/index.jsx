@@ -85,7 +85,7 @@ const initialData = {
       },
     },
     gross_salary: null,
-    basic_salary: null,
+    // basic_salary: null,
     leavepolicy: [],
     payrollpolicy: {
       earningpolicy: [],
@@ -149,6 +149,8 @@ const initialData = {
 const AddEmployee = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCreated, setIsCreated] = useState(false);
+  const [branches, setBranches] = useState([]);
+  const [departments, setDepartments] = useState([]);
 
   const items = [
     { title: "Employees", href: "/" },
@@ -240,8 +242,12 @@ const AddEmployee = () => {
   };
 
   const handleSubmit = async (currentStepData) => {
+    const updatedData = {
+      ...formData,
+      [stepKeys[active + 1]]: currentStepData,
+    };
     handleFormDataChange(stepKeys[active + 1], currentStepData);
-    console.log(formData);
+    console.log(updatedData);
     // return;
     setIsSubmitting(true);
     try {
@@ -261,7 +267,7 @@ const AddEmployee = () => {
       };
 
       // Flatten and append form values
-      flattenObject(formData);
+      flattenObject(updatedData);
 
       // Example of how to append a specific file (e.g., the "photo" field)
       // formData.append('photo', formValues.personalDetails.photo);
@@ -345,6 +351,10 @@ const AddEmployee = () => {
                 data={formData.officialDetails}
                 onNext={handleNextStep}
                 onBack={prevStep}
+                branches={branches}
+                setBranches={setBranches}
+                departments={departments}
+                setDepartments={setDepartments}
               />
             </Stepper.Step>
 

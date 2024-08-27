@@ -196,10 +196,10 @@ const Index = () => {
 
       <div id="leavePolicy" className="itemCard">
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={5}>
+          <Grid.Col span={{ base: 12, lg: 5 }}>
             <MultiSelect
               classNames={{
-                root: "cust_iputRoot",
+                root: "cust_iputRoot notFlex",
                 label: "cust_iputLabel",
                 wrapper: "cust_iputWrapper",
               }}
@@ -218,7 +218,7 @@ const Index = () => {
             />
             <Modal opened={opened} onClose={close} title="Filter" centered>
               <Accordion defaultValue="">{itemsAccordion}</Accordion>
-              <div className="d-flex justify-content-end">
+              <div className="d-md-flex justify-content-end">
                 <Button variant="filled" size="sm" mt="sm">
                   Search
                 </Button>
@@ -226,7 +226,7 @@ const Index = () => {
             </Modal>
 
             <div className="d-flex align-items-center mt-4">
-              <p className="cust_iputLabel mb-0">Employee</p>
+              <p className="mb-0 me-3">Employee</p>
               <Button onClick={open}>Filter</Button>
             </div>
           </Grid.Col>

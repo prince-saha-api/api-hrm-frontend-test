@@ -7,6 +7,9 @@
     width: 100% !important;
     justify-content: flex-start !important;
   }
+  .cust_iputRoot.notFlex {
+    display: initial !important;
+  }
 }
 @media (max-width: 991px) {
   .forDesktop {
@@ -21,6 +24,7 @@
     display: none;
   }
 }
+
 
 // .dt_cell_xs {
 //   width: 30px !important;

@@ -301,13 +301,13 @@ const index = () => {
         </form>
       </Modal>
 
-      <div className="mb-4 d-flex justify-content-between align-items-end">
+      <div className="mb-4 d-md-flex justify-content-between align-items-end">
         <div className="pageTop">
           <h3>Payslip</h3>
           <Breadcrumbs>{items}</Breadcrumbs>
         </div>
 
-        <div className="downItem d-flex">
+        <div className="downItem d-flex mt-3 mt-md-0">
           <div className="me-2">
             <Button
               type="submit"
@@ -358,7 +358,7 @@ const index = () => {
         </div>
 
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, lg: 6 }}>
             <Table stickyHeader stickyHeaderOffset={60} withTableBorder>
               <Table.Thead>
                 <Table.Tr>
@@ -380,7 +380,7 @@ const index = () => {
               </Table.Caption>
             </Table>
           </Grid.Col>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, lg: 6 }}>
             <Table stickyHeader stickyHeaderOffset={60} withTableBorder>
               <Table.Thead>
                 <Table.Tr>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useForm } from "@mantine/form";
-import { Checkbox } from "@mantine/core";
 import {
   Modal,
   TextInput,
@@ -8,6 +7,7 @@ import {
   Button,
   Select,
   Group,
+  Checkbox,
 } from "@mantine/core";
 import { toast } from "react-toastify";
 import { submit } from "@/lib/submit";

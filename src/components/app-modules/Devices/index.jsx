@@ -156,6 +156,15 @@ const Index = () => {
     },
     {
       // for table display
+      accessor: "is_active",
+      title: "Active",
+      noWrap: true,
+      render: ({ is_active }) => (is_active ? "Yes" : "No"),
+      // for export
+      key: "is_active",
+    },
+    {
+      // for table display
       accessor: "actions",
       title: "Actions",
       width: 90,
@@ -225,6 +234,10 @@ const Index = () => {
       value: "deviceip",
     },
     {
+      label: "Active",
+      value: "is_active",
+    },
+    {
       label: "Actions",
       value: "actions",
     },
@@ -238,6 +251,7 @@ const Index = () => {
     "location",
     "macaddress",
     "deviceip",
+    "is_active",
     "actions",
   ]);
 

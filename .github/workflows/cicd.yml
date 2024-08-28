@@ -81,6 +81,11 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/api-hrm:${{github.run_id}} 
 
-    - name: Trivy Image scan
-      run: trivy image --format table -o image.html princeay0n/api-hrm:latest
+    # - name: Trivy Image scan
+    #   run: trivy image --format table -o image.html princeay0n/api-hrm:latest
+    - name: Kubectl Action 
+      uses: danielr1996/kubectl-action@1.0.0
+      with:
+       kubeconfig: ${{ secrets.KUBE_CONFIG }}
+       args: apply -f deployment.yaml
 

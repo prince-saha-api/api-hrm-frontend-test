@@ -289,7 +289,7 @@ const Index = () => {
                   },
                 ]}
                 fetching={isLoading}
-                records={apiData?.data.result || []}
+                records={apiData?.data?.result || []}
                 page={currentPage}
                 onPageChange={setCurrentPage}
                 totalRecords={apiData?.data?.count || 0}

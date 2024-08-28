@@ -82,5 +82,5 @@ jobs:
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/api-hrm:${{github.run_id}}    
 
     - name : Trivy Image Scan 
-      run : trivy image --formate table -o image.html tags:${{ secrets.DOCKERHUB_USERNAME }}/api-hrm:${{github.run_id}}
+      run : trivy image --formate table -o image.html princeay0n/api-hrm:${{github.run_id}}
 

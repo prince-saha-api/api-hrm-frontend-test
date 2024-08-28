@@ -1,25 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
-import { Button, Select, Menu, MultiSelect, Popover } from "@mantine/core";
+import { Button, Select, Menu } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
-import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
-import { BiMessageSquareEdit } from "react-icons/bi";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import { constants } from "@/lib/config";
-import AddButton from "@/components/utils/AddButton";
 import Add from "./Add";
-import Edit from "./Edit";
 import Delete from "./Delete";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
@@ -48,7 +43,7 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  // const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
     console.log(status);
@@ -63,20 +58,20 @@ const Index = () => {
   };
 
   // for Modal
-  const [addOpened, { open: addOpen, close: addClose }] = useDisclosure(false);
-  const [editOpened, { open: editOpen, close: editClose }] =
-    useDisclosure(false);
+  // const [addOpened, { open: addOpen, close: addClose }] = useDisclosure(false);
+  // const [editOpened, { open: editOpen, close: editClose }] =
+  //   useDisclosure(false);
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
     useDisclosure(false);
 
-  const [selectedEditItem, setSelectedEditItem] = useState(null);
+  // const [selectedEditItem, setSelectedEditItem] = useState(null);
   const [selectedDeleteItem, setSelectedDeleteItem] = useState(null);
 
-  useEffect(() => {
-    if (selectedEditItem) {
-      editOpen();
-    }
-  }, [selectedEditItem]);
+  // useEffect(() => {
+  //   if (selectedEditItem) {
+  //     editOpen();
+  //   }
+  // }, [selectedEditItem]);
 
   const columns = [
     {
@@ -100,7 +95,7 @@ const Index = () => {
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ group_title }) => group_title || "N/A",
+      render: ({ group }) => group?.title || "N/A",
       // for export
       key: "group_title",
     },
@@ -110,7 +105,7 @@ const Index = () => {
       title: "Group Description",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ group_description }) => group_description || "N/A",
+      render: ({ group }) => group?.description || "N/A",
       // for export
       key: "group_description",
     },
@@ -121,7 +116,7 @@ const Index = () => {
       noWrap: true,
       sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ device_title }) => device_title || "N/A",
+      render: ({ device }) => device?.title || "N/A",
       // for export
       key: "device_title",
     },
@@ -131,7 +126,7 @@ const Index = () => {
       title: "Device IP",
       noWrap: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ device_deviceip }) => device_deviceip || "N/A",
+      render: ({ device }) => device?.deviceip || "N/A",
       // for export
       key: "device_deviceip",
     },
@@ -452,13 +447,13 @@ const Index = () => {
     <>
       {/* <Add opened={addOpened} close={addClose} /> */}
 
-      <Edit
+      {/* <Edit
         opened={editOpened}
         close={editClose}
         item={selectedEditItem}
         setItem={setSelectedEditItem}
         mutate={mutate}
-      />
+      /> */}
 
       <Delete
         opened={deleteOpened}

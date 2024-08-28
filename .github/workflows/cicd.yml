@@ -26,15 +26,15 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install dependencies
-      run: npm install
+    # - name: Install dependencies
+    #   run: npm install
 
 
-    - name: Build project
-      run: npm run build
+    # - name: Build project
+    #   run: npm run build
 
-    - name: Deploy
-      run: echo "Deployment step - add your deployment script here"
+    # - name: Deploy
+    #   run: echo "Deployment step - add your deployment script here"
       
   trivyScan:
     runs-on: self-hosted

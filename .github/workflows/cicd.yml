@@ -84,7 +84,7 @@ jobs:
     # - name: Trivy Image scan
     #   run: trivy image --format table -o image.html princeay0n/api-hrm:latest
     - name: Kubectl Action 
-      uses: danielr1996/kubectl-action@1.0.0
+      uses: tale/kubectl-action@1
       with:
        kubeconfig: ${{ secrets.KUBE_CONFIG }}
        args: apply -f deployment-service.yml

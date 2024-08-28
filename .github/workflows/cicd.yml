@@ -37,7 +37,7 @@ jobs:
       run: echo "Deployment step - add your deployment script here"
       
     - name: Trivy FS scan
-      run: trivy fs --format table -o fs.html
+      run: trivy fs --format table -o fs.html .
 
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan

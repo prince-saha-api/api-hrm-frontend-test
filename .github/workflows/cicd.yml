@@ -79,8 +79,8 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/api-hrm:${{github.run_id}}    
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/api-hrm:${{github.run_id}} 
 
-    - name : Trivy Image Scan 
-      run : trivy image --formate table -o image.html princeay0n/api-hrm:${{github.run_id}}
+    - name: Trivy Image scan
+      run: trivy image --format table -o image.html princeay0n/api-hrm:latest
 

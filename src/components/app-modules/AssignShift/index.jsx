@@ -165,8 +165,13 @@ const Index = () => {
 
       <div id="leavePolicy" className="itemCard">
         <Grid>
-          <Grid.Col span={{ base: 12, sm: 6, md: 6, lg: 3 }}>
+          <Grid.Col span={{ base: 12, md: 7, lg: 7, xl: 4 }}>
             <Select
+              classNames={{
+                root: "cust_iputRoot notFlex",
+                label: "cust_iputLabel other_label",
+                wrapper: "cust_iputWrapper",
+              }}
               label="Shifts"
               placeholder="Shifts"
               data={shifts}
@@ -174,10 +179,8 @@ const Index = () => {
               value={selectedShift}
               onChange={setSelectedShift}
             />
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <div className="d-flex align-items-center mt-4">
-              <p className="mb-0 me-3">Employee</p>
+            <div className="d-flex align-items-center my-4">
+              <p className="mb-0 employeeLabel">Employee</p>
               <Button onClick={filterOpen}>Filter</Button>
             </div>
           </Grid.Col>

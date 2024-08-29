@@ -163,8 +163,8 @@ export const convertTimeTo12HourFormat = (timeString) => {
 };
 
 export const formatTime = (time) => {
-  const [hours, minutes] = time.split(":");
-  return `${hours}:${minutes}:00`;
+  const [hours, minutes, seconds = "00"] = time.split(":");
+  return `${hours}:${minutes}:${seconds}`;
 };
 
 export const formatDateToYYYYMMDD = (date) => {
@@ -175,4 +175,29 @@ export const formatDateToYYYYMMDD = (date) => {
   const day = `0${date.getDate()}`.slice(-2);
 
   return `${year}-${month}-${day}`;
+};
+
+export const getStatusProps = (status) => {
+  return {
+    disabled: true,
+    style: {
+      backgroundColor:
+        status === "Pending"
+          ? "#FCE9F0"
+          : status === "Approved"
+          ? "#E2F3E6"
+          : status === "Rejected"
+          ? "#FFE6E0"
+          : null,
+      color:
+        status === "Pending"
+          ? "#E64980"
+          : status === "Approved"
+          ? "#12B886"
+          : status === "Rejected"
+          ? "#FA5252"
+          : null,
+      // cursor: "default",
+    },
+  };
 };

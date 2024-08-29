@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
@@ -8,8 +9,8 @@ import {
   Button,
   Select,
   Menu,
-  MultiSelect,
-  Popover,
+  // MultiSelect,
+  // Popover,
   Group,
 } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
@@ -19,16 +20,22 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
 import { BiMessageSquareEdit } from "react-icons/bi";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
-import { constants } from "@/lib/config";
-import { getDate } from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import AddButton from "@/components/utils/AddButton";
+import { constants } from "@/lib/config";
+import {
+  getDate,
+  getFullName,
+  convertTimeTo12HourFormat,
+  getStatusProps,
+} from "@/lib/helper";
 import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
+import Approve from "./Approve";
+import Reject from "./Reject";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -40,7 +47,7 @@ const Index = () => {
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/leave/get-holiday/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let apiUrl = `/api/attendance/get-manual-attendence/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -56,10 +63,10 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  // const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
-    console.log(status);
+    // console.log(status);
     setSortStatus(status);
     setCurrentPage(1);
   };
@@ -76,9 +83,15 @@ const Index = () => {
     useDisclosure(false);
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
     useDisclosure(false);
+  const [approveOpened, { open: approveOpen, close: approveClose }] =
+    useDisclosure(false);
+  const [rejectOpened, { open: rejectOpen, close: rejectClose }] =
+    useDisclosure(false);
 
   const [selectedEditItem, setSelectedEditItem] = useState(null);
   const [selectedDeleteItem, setSelectedDeleteItem] = useState(null);
+  const [selectedApproveItem, setSelectedApproveItem] = useState(null);
+  const [selectedRejectItem, setSelectedRejectItem] = useState(null);
 
   useEffect(() => {
     if (selectedEditItem) {
@@ -88,110 +101,139 @@ const Index = () => {
 
   const columns = [
     {
-      // for table display
+      key: "na",
       accessor: "na",
       title: "#",
       noWrap: true,
       sortable: false,
-      width: 90,
+      width: 40,
       render: (_, index) => (currentPage - 1) * pageSize + index + 1,
-      // for export
-      key: "na",
       modifier: (_, index) => index + 1,
       // pdfModifier: ({ na }) =>
       //   na > 0 ? "is_text_danger_" + getTime(InTime) : getTime(InTime),
     },
     {
-      // for table display
+      key: "employee",
       accessor: "employee",
       title: "Employee",
-      noWrap: true,
-      sortable: true,
-      // visibleMediaQuery: aboveXs,
-      render: ({ employee }) => employee || "N/A",
-      // for export
-      key: "employee",
+      sortable: false,
+      width: 170,
+      render: ({ id, photo, first_name, last_name, official_id }) => (
+        <div className="d-flex justify-content-start align-items-center">
+          {photo ? (
+            <img
+              src={getStoragePath(photo)}
+              alt="img"
+              className="table_user_img"
+            />
+          ) : (
+            ""
+          )}
+          <div className="d-flex flex-column ms-2">
+            <Link
+              href={`/profile/${id}`}
+              className="text-decoration-none color-inherit"
+            >
+              {getFullName(first_name, last_name)}
+            </Link>
+            {official_id && <span>{official_id}</span>}
+          </div>
+        </div>
+      ),
     },
     {
-      // for table display
+      key: "date",
       accessor: "date",
       title: "Date",
-      // visibleMediaQuery: aboveXs,
       sortable: true,
       render: ({ date }) => (date ? getDate(date) : "N/A"),
-      // for export
-      key: "date",
     },
     {
-      // for table display
-      accessor: "inTime",
+      key: "in_time",
+      accessor: "in_time",
       title: "In Time",
-      // visibleMediaQuery: aboveXs,
       sortable: true,
-      render: ({ inTime }) => (inTime ? "Yes" : "No"),
-      // for export
-      key: "inTime",
+      noWrap: true,
+      render: ({ in_time }) =>
+        in_time ? convertTimeTo12HourFormat(in_time) : "N/A",
+      modifier: ({ in_time }) =>
+        in_time ? convertTimeTo12HourFormat(in_time) : "N/A",
     },
     {
-      // for table display
-      accessor: "outTime",
+      key: "out_time",
+      accessor: "out_time",
       title: "Out Time",
-      // visibleMediaQuery: aboveXs,
       sortable: true,
-      render: ({ outTime }) => (outTime ? "Yes" : "No"),
-      // for export
-      key: "outTime",
+      render: ({ out_time }) =>
+        out_time ? convertTimeTo12HourFormat(out_time) : "N/A",
+      modifier: ({ out_time }) =>
+        out_time ? convertTimeTo12HourFormat(out_time) : "N/A",
     },
     {
-      // for table display
+      key: "shift",
       accessor: "shift",
       title: "Shift",
-      // visibleMediaQuery: aboveXs,
       sortable: true,
-      render: ({ shift }) => (shift ? "Yes" : "No"),
-      // for export
-      key: "shift",
+      render: ({ shift }) => shift?.name || "N/A",
     },
     {
-      // for table display
-      accessor: "adminNote",
+      key: "admin_note",
+      accessor: "admin_note",
       title: "Admin Note",
-      // visibleMediaQuery: aboveXs,
       sortable: true,
-      render: ({ adminNote }) => (adminNote ? "Yes" : "No"),
-      // for export
-      key: "adminNote",
+      render: ({ admin_note }) => admin_note || "N/A",
     },
     {
-      // for table display
+      key: "status",
       accessor: "status",
       title: "Status",
-      // visibleMediaQuery: aboveXs,
-      sortable: true,
       width: 250,
-      render: ({}) => (
+      render: (item) => (
         <Group gap="xs">
-          <Button size="compact-xs" variant="light" color="teal">
-            Approved
-          </Button>
-          <Button size="compact-xs" variant="light" color="grape">
-            Pending
-          </Button>
-          <Button size="compact-xs" variant="light" color="red">
-            Rejected
-          </Button>
+          {item?.status === "Pending" ? (
+            <>
+              <Button
+                variant="filled"
+                size="compact-xs"
+                color="teal"
+                onClick={() => {
+                  setSelectedApproveItem(item);
+                  approveOpen();
+                }}
+              >
+                Approve
+              </Button>
+              <Button
+                variant="filled"
+                size="compact-xs"
+                color="red"
+                onClick={() => {
+                  setSelectedRejectItem(item);
+                  rejectOpen();
+                }}
+              >
+                Reject
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="light"
+              size="compact-xs"
+              component="span"
+              {...getStatusProps(item?.status)}
+            >
+              {item?.status}
+            </Button>
+          )}
         </Group>
       ),
-      // for export
-      key: "status",
     },
     {
-      // for table display
+      key: "actions",
       accessor: "actions",
       title: "Actions",
       width: 90,
       textAlign: "center",
-      // width: "0%",
       render: (item) => (
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>
@@ -204,25 +246,37 @@ const Index = () => {
             <Menu.Item
               leftSection={<BiMessageSquareEdit className="fs-6" />}
               onClick={() => {
-                setSelectedEditItem(item);
+                if (
+                  !(item?.status === "Rejected" || item?.status === "Approved")
+                ) {
+                  setSelectedEditItem(item);
+                }
               }}
+              disabled={
+                item?.status === "Rejected" || item?.status === "Approved"
+              }
             >
               Edit
             </Menu.Item>
             <Menu.Item
               leftSection={<AiOutlineDelete className="fs-6" />}
               onClick={() => {
-                setSelectedDeleteItem(item);
-                deleteOpen();
+                if (
+                  !(item?.status === "Rejected" || item?.status === "Approved")
+                ) {
+                  setSelectedDeleteItem(item);
+                  deleteOpen();
+                }
               }}
+              disabled={
+                item?.status === "Rejected" || item?.status === "Approved"
+              }
             >
               Delete
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
       ),
-      // for export
-      key: "actions",
     },
   ];
 
@@ -241,11 +295,11 @@ const Index = () => {
     },
     {
       label: "In Time",
-      value: "inTime",
+      value: "in_time",
     },
     {
       label: "Out Time",
-      value: "outTime",
+      value: "out_time",
     },
     {
       label: "Shift",
@@ -253,7 +307,7 @@ const Index = () => {
     },
     {
       label: "Admin Note",
-      value: "adminNote",
+      value: "admin_note",
     },
     {
       label: "Status",
@@ -269,10 +323,10 @@ const Index = () => {
     "na",
     "employee",
     "date",
-    "inTime",
-    "outTime",
+    "in_time",
+    "out_time",
     "shift",
-    "adminNote",
+    "admin_note",
     "status",
     "actions",
   ]);
@@ -297,7 +351,7 @@ const Index = () => {
   // const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/api/leave/get-leavepolicy/?column_accessor=${
+    let url = `/api/attendance/get-manual-attendence/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -368,7 +422,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "Leave Policy", "leave-policy");
+        exportToPDF(headers, data, "Manual Attendance", "manual-attendance");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -431,7 +485,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "leave-policy");
+        exportToCSV(data, "manual-attendance");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -493,7 +547,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "leave-policy");
+        exportToExcel(data, "manual-attendance");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,
@@ -531,6 +585,20 @@ const Index = () => {
         opened={deleteOpened}
         close={deleteClose}
         item={selectedDeleteItem}
+        mutate={mutate}
+      />
+
+      <Approve
+        opened={approveOpened}
+        close={approveClose}
+        item={selectedApproveItem}
+        mutate={mutate}
+      />
+
+      <Reject
+        opened={rejectOpened}
+        close={rejectClose}
+        item={selectedRejectItem}
         mutate={mutate}
       />
 
@@ -685,8 +753,8 @@ const Index = () => {
           recordsPerPage={pageSize}
           sortStatus={sortStatus}
           onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
+          // selectedRecords={selectedRecords}
+          // onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}

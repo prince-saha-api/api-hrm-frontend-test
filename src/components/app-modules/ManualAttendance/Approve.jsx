@@ -1,23 +1,21 @@
 import React from "react";
 import { Modal, Button, Group } from "@mantine/core";
 import { toast } from "react-toastify";
-import { deleteItem } from "@/lib/submit";
+import { update } from "@/lib/submit";
 
 const Index = ({ opened, close, item, mutate }) => {
-  const handleDelete = async () => {
+  const handleUpdate = async () => {
     try {
-      const response = await deleteItem(
-        `/api/attendance/delete-manual-attendence/${item.id}`
+      const response = await update(
+        `/api/attendance/approve-manual-attendence/${item.id}`
       );
 
-      const res = await response.json();
-
-      if (res?.status === "success") {
-        toast.success("Item deleted successfully");
+      if (response?.status === "success") {
+        toast.success("Request Approved");
         mutate();
         close();
       } else {
-        toast.error(res.message[0]);
+        toast.error(response?.message?.[0] || "Something went wrong");
         close();
       }
     } catch (error) {
@@ -36,13 +34,13 @@ const Index = ({ opened, close, item, mutate }) => {
       centered
     >
       <form>
-        <p>Are you sure want to delete ?</p>
+        <p>Are you sure want to approve?</p>
 
         <Group justify="flex-end" mt="md">
           <Button onClick={close} variant="filled">
             No
           </Button>
-          <Button variant="filled" color="red" onClick={handleDelete}>
+          <Button variant="filled" color="red" onClick={handleUpdate}>
             Yes
           </Button>
         </Group>

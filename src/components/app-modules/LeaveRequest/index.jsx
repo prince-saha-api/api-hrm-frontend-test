@@ -214,6 +214,7 @@ const index = () => {
           {item?.status === "Pending" ? (
             <>
               <Button
+                variant="filled"
                 size="compact-xs"
                 color="teal"
                 onClick={() => {
@@ -238,7 +239,7 @@ const index = () => {
           ) : (
             <>
               <Button
-                variant="filled"
+                variant="light"
                 size="compact-xs"
                 color={item?.status === "Approved" ? "green" : "red"}
               >

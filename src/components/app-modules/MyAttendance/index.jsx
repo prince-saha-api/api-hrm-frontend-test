@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
@@ -7,12 +8,10 @@ import {
   Button,
   Select,
   Menu,
-  MultiSelect,
-  Popover,
-  Group,
-  Grid,
+  // MultiSelect,
+  // Popover,
+  // Group,
 } from "@mantine/core";
-import { MonthPickerInput } from "@mantine/dates";
 import { DataTable } from "mantine-datatable";
 import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
@@ -20,17 +19,20 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
 import { BiMessageSquareEdit } from "react-icons/bi";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import { fetcher, getData } from "@/lib/fetch";
-import { MdOutlineCalendarMonth } from "react-icons/md";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
-import { constants } from "@/lib/config";
-import { getDate } from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import AddButton from "@/components/utils/AddButton";
+import { constants } from "@/lib/config";
+import {
+  getDate,
+  convertTimeTo12HourFormat,
+  getStatusProps,
+} from "@/lib/helper";
 import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
+import MonthlyAttendance from "./MonthlyAttendance";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -42,7 +44,7 @@ const Index = () => {
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/leave/get-holiday/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let apiUrl = `/api/attendance/get-loggedin-users-manual-attendence/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -58,10 +60,10 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  // const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
-    console.log(status);
+    // console.log(status);
     setSortStatus(status);
     setCurrentPage(1);
   };
@@ -90,99 +92,87 @@ const Index = () => {
 
   const columns = [
     {
-      // for table display
+      key: "na",
       accessor: "na",
       title: "#",
       noWrap: true,
       sortable: false,
-      width: 90,
+      width: 40,
       render: (_, index) => (currentPage - 1) * pageSize + index + 1,
-      // for export
-      key: "na",
       modifier: (_, index) => index + 1,
       // pdfModifier: ({ na }) =>
       //   na > 0 ? "is_text_danger_" + getTime(InTime) : getTime(InTime),
     },
     {
-      // for table display
+      key: "date",
       accessor: "date",
       title: "Date",
-      // visibleMediaQuery: aboveXs,
       sortable: true,
       render: ({ date }) => (date ? getDate(date) : "N/A"),
-      // for export
-      key: "date",
     },
     {
-      // for table display
-      accessor: "inTime",
+      key: "in_time",
+      accessor: "in_time",
       title: "In Time",
-      // visibleMediaQuery: aboveXs,
       sortable: true,
-      render: ({ inTime }) => (inTime ? "Yes" : "No"),
-      // for export
-      key: "inTime",
+      noWrap: true,
+      render: ({ in_time }) =>
+        in_time ? convertTimeTo12HourFormat(in_time) : "N/A",
+      modifier: ({ in_time }) =>
+        in_time ? convertTimeTo12HourFormat(in_time) : "N/A",
     },
     {
-      // for table display
-      accessor: "outTime",
+      key: "out_time",
+      accessor: "out_time",
       title: "Out Time",
-      // visibleMediaQuery: aboveXs,
       sortable: true,
-      render: ({ outTime }) => (outTime ? "Yes" : "No"),
-      // for export
-      key: "outTime",
+      render: ({ out_time }) =>
+        out_time ? convertTimeTo12HourFormat(out_time) : "N/A",
+      modifier: ({ out_time }) =>
+        out_time ? convertTimeTo12HourFormat(out_time) : "N/A",
     },
     {
-      // for table display
+      key: "shift",
       accessor: "shift",
       title: "Shift",
-      // visibleMediaQuery: aboveXs,
       sortable: true,
-      render: ({ shift }) => (shift ? "Yes" : "No"),
-      // for export
-      key: "shift",
+      render: ({ shift }) => shift?.name || "N/A",
     },
     {
-      // for table display
-      accessor: "adminNote",
+      key: "admin_note",
+      accessor: "admin_note",
       title: "Admin Note",
-      // visibleMediaQuery: aboveXs,
       sortable: true,
-      render: ({ adminNote }) => (adminNote ? "Yes" : "No"),
-      // for export
-      key: "adminNote",
+      render: ({ admin_note }) => admin_note || "N/A",
     },
     {
-      // for table display
+      key: "status",
       accessor: "status",
       title: "Status",
-      // visibleMediaQuery: aboveXs,
-      sortable: true,
       width: 250,
-      render: ({}) => (
-        <Group gap="xs">
-          <Button size="compact-xs" variant="light" color="teal">
-            Approved
-          </Button>
-          <Button size="compact-xs" variant="light" color="grape">
-            Pending
-          </Button>
-          <Button size="compact-xs" variant="light" color="red">
-            Rejected
-          </Button>
-        </Group>
+      render: ({ status }) => (
+        <>
+          {status ? (
+            <Button
+              variant="light"
+              size="compact-xs"
+              component="span"
+              {...getStatusProps(status)}
+            >
+              {status}
+            </Button>
+          ) : (
+            "N/A"
+          )}
+        </>
       ),
-      // for export
-      key: "status",
     },
     {
-      // for table display
+      key: "actions",
       accessor: "actions",
       title: "Actions",
       width: 90,
       textAlign: "center",
-      // width: "0%",
       render: (item) => (
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>
@@ -195,25 +185,37 @@ const Index = () => {
             <Menu.Item
               leftSection={<BiMessageSquareEdit className="fs-6" />}
               onClick={() => {
-                setSelectedEditItem(item);
+                if (
+                  !(item?.status === "Rejected" || item?.status === "Approved")
+                ) {
+                  setSelectedEditItem(item);
+                }
               }}
+              disabled={
+                item?.status === "Rejected" || item?.status === "Approved"
+              }
             >
               Edit
             </Menu.Item>
             <Menu.Item
               leftSection={<AiOutlineDelete className="fs-6" />}
               onClick={() => {
-                setSelectedDeleteItem(item);
-                deleteOpen();
+                if (
+                  !(item?.status === "Rejected" || item?.status === "Approved")
+                ) {
+                  setSelectedDeleteItem(item);
+                  deleteOpen();
+                }
               }}
+              disabled={
+                item?.status === "Rejected" || item?.status === "Approved"
+              }
             >
               Delete
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
       ),
-      // for export
-      key: "actions",
     },
   ];
 
@@ -228,11 +230,11 @@ const Index = () => {
     },
     {
       label: "In Time",
-      value: "inTime",
+      value: "in_time",
     },
     {
       label: "Out Time",
-      value: "outTime",
+      value: "out_time",
     },
     {
       label: "Shift",
@@ -240,7 +242,7 @@ const Index = () => {
     },
     {
       label: "Admin Note",
-      value: "adminNote",
+      value: "admin_note",
     },
     {
       label: "Status",
@@ -255,16 +257,16 @@ const Index = () => {
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
     "date",
-    "inTime",
-    "outTime",
+    "in_time",
+    "out_time",
     "shift",
-    "adminNote",
+    "admin_note",
     "status",
     "actions",
   ]);
 
   const handleChange = (keys) => {
-    const updatedKeys = [...new Set(["na", "title", "actions", ...keys])];
+    const updatedKeys = [...new Set(["na", "actions", ...keys])];
 
     const reorderedOptions = visibleColumns.filter((column) =>
       updatedKeys.includes(column.value)
@@ -283,7 +285,7 @@ const Index = () => {
   // const [dataToExport, setDataToExport] = useState(null);
 
   const getExportDataUrl = () => {
-    let url = `/api/leave/get-leavepolicy/?column_accessor=${
+    let url = `/api/attendance/get-loggedin-users-manual-attendence/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -497,9 +499,6 @@ const Index = () => {
     }
   };
 
-  const dateIcon = <MdOutlineCalendarMonth />;
-  const [value, setValue] = useState(null);
-
   return (
     <>
       <Add
@@ -641,12 +640,12 @@ const Index = () => {
 
       <div className="itemCard p-0 datatable-wrapper">
         <DataTable
-          style={{
-            height:
-              !apiData?.data.result || apiData.data.result.length === 0
-                ? "300px"
-                : "auto",
-          }}
+          // style={{
+          //   height:
+          //     !apiData?.data.result || apiData.data.result.length === 0
+          //       ? "300px"
+          //       : "auto",
+          // }}
           classNames={{
             root: "datatable",
             table: "datatable_table",
@@ -667,15 +666,17 @@ const Index = () => {
             selectedOptions.includes(column.key)
           )}
           fetching={isLoading}
-          records={apiData?.data.result || []}
+          records={apiData?.data || []}
+          // records={apiData?.data.result || []}
           page={currentPage}
           onPageChange={setCurrentPage}
-          totalRecords={apiData?.data.count}
+          totalRecords={apiData?.data.length}
+          // totalRecords={apiData?.data.count}
           recordsPerPage={pageSize}
           sortStatus={sortStatus}
           onSortStatusChange={handleSortStatusChange}
-          selectedRecords={selectedRecords}
-          onSelectedRecordsChange={setSelectedRecords}
+          // selectedRecords={selectedRecords}
+          // onSelectedRecordsChange={setSelectedRecords}
           // recordsPerPageOptions={PAGE_SIZES}
           // onRecordsPerPageChange={setPageSize}
           // rowExpansion={rowExpansion}
@@ -685,202 +686,7 @@ const Index = () => {
       </div>
 
       <div className="itemCard">
-        <Grid>
-          <Grid.Col span={6}>
-            <h4 className="mb-0">Monthly Attendance</h4>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <div className="d-flex align-items-center justify-content-end">
-              <p className="mb-0 me-3">Select Month</p>
-              <MonthPickerInput
-                rightSection={dateIcon}
-                rightSectionPointerEvents="none"
-                styles={{
-                  root: { width: "200px" },
-                }}
-                // label="Pick date"
-                placeholder="Pick date"
-                value={value}
-                onChange={setValue}
-              />
-            </div>
-          </Grid.Col>
-        </Grid>
-        <div className="calenderBox">
-          <div className="colorBox mb-4 mt-5">
-            <div className="d-flex align-items-center">
-              <span className="bg_Present"></span>
-              <p>Present</p>
-            </div>
-            <div className="d-flex align-items-center ms-3">
-              <span className="bg_Absent"></span>
-              <p>Absent</p>
-            </div>
-            <div className="d-flex align-items-center ms-3">
-              <span className="bg_Leave"></span>
-              <p>Leave</p>
-            </div>
-            <div className="d-flex align-items-center ms-3">
-              <span className="bg_HalfPresent"></span>
-              <p>Half Present</p>
-            </div>
-            <div className="d-flex align-items-center ms-3">
-              <span className="bg_LateAttendance"></span>
-              <p>Late Attendance</p>
-            </div>
-            <div className="d-flex align-items-center ms-3">
-              <span className="bg_EarlyLeave"></span>
-              <p>Early Leave</p>
-            </div>
-            <div className="d-flex align-items-center ms-3">
-              <span className="bg_Overtime"></span>
-              <p>Overtime</p>
-            </div>
-            <div className="d-flex align-items-center ms-3">
-              <span className="bg_HollyDay"></span>
-              <p>Holly Day</p>
-            </div>
-            <div className="d-flex align-items-center ms-3">
-              <span className="bg_Running"></span>
-              <p>Incomplete</p>
-            </div>
-          </div>
-          <div className="dayName">
-            <div className="name">Sunday</div>
-            <div className="name">Monday</div>
-            <div className="name">Tuesday</div>
-            <div className="name">Wednesday</div>
-            <div className="name">Thursday</div>
-            <div className="name">Friday</div>
-            <div className="name">Saturday</div>
-          </div>
-          <div className="dateBox">
-            <div className="day bg_Present">
-              <p className="date">1</p>
-              <b>P</b>
-            </div>
-            <div className="day bg_Absent">
-              <p className="date">2</p>
-              <b>A</b>
-            </div>
-            <div className="day">
-              <p className="date">3</p>
-              <b>P</b>
-            </div>
-            <div className="day bg_Leave">
-              <p className="date">4</p>
-              <b>L</b>
-            </div>
-            <div className="day">
-              <p className="date">5</p>
-              <b>P</b>
-            </div>
-            <div className="day bg_HollyDay">
-              <p className="date">6</p>
-              <b>H</b>
-            </div>
-            <div className="day">
-              <p className="date">7</p>
-              <b>P</b>
-            </div>
-            <div className="day">
-              <p className="date">8</p>
-              <b>P</b>
-            </div>
-            <div className="day">
-              <p className="date">9</p>
-              <b>P</b>
-            </div>
-            <div className="day bg_HalfPresent">
-              <p className="date">10</p>
-              <b>HP</b>
-            </div>
-            <div className="day">
-              <p className="date">11</p>
-              <b>P</b>
-            </div>
-            <div className="day">
-              <p className="date">12</p>
-              <b>P</b>
-            </div>
-            <div className="day bg_HollyDay">
-              <p className="date">13</p>
-              <b>H</b>
-            </div>
-            <div className="day bg_EarlyLeave">
-              <p className="date">14</p>
-              <b>EL</b>
-            </div>
-            <div className="day">
-              <p className="date">15</p>
-              <b>P</b>
-            </div>
-            <div className="day">
-              <p className="date">16</p>
-              <b>P</b>
-            </div>
-            <div className="day bg_Running">
-              <p className="date">17</p>
-              <b>!</b>
-            </div>
-            <div className="day">
-              <p className="date">18</p>
-              <b>P</b>
-            </div>
-            <div className="day">
-              <p className="date">19</p>
-              <b>P</b>
-            </div>
-            <div className="day bg_HollyDay">
-              <p className="date">20</p>
-              <b>H</b>
-            </div>
-            <div className="day">
-              <p className="date">21</p>
-              <b>P</b>
-            </div>
-            <div className="day">
-              <p className="date">22</p>
-              <b>P</b>
-            </div>
-            <div className="day bg_running">
-              <p className="date">23</p>
-              <b>P</b>
-            </div>
-            <div className="day">
-              <p className="date">24</p>
-              <b>P</b>
-            </div>
-            <div className="day bg_LateAttendance">
-              <p className="date">25</p>
-              <b>LA</b>
-            </div>
-            <div className="day bg_EarlyLeave">
-              <p className="date">26</p>
-              <b>EL</b>
-            </div>
-            <div className="day bg_HollyDay">
-              <p className="date">27</p>
-              <b>H</b>
-            </div>
-            <div className="day">
-              <p className="date">28</p>
-              <b>P</b>
-            </div>
-            <div className="day bg_HollyDay">
-              <p className="date">29</p>
-              <b>P</b>
-            </div>
-            <div className="day bg_Overtime">
-              <p className="date">30</p>
-              <b>OT</b>
-            </div>
-            <div className="day">
-              <p className="date">31</p>
-              <b>P</b>
-            </div>
-          </div>
-        </div>
+        <MonthlyAttendance />
       </div>
     </>
   );

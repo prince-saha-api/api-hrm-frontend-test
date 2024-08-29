@@ -1,13 +1,8 @@
 "use client";
+
 import React from "react";
 import Link from "next/link";
-import { FaUser } from "react-icons/fa";
-import { BiTargetLock } from "react-icons/bi";
-import { MdDeviceHub } from "react-icons/md";
 import { LuNewspaper } from "react-icons/lu";
-import { FiSettings } from "react-icons/fi";
-import { VscSettings } from "react-icons/vsc";
-import { RiUserSettingsLine } from "react-icons/ri";
 import { BiDevices } from "react-icons/bi";
 import { LuListChecks } from "react-icons/lu";
 import { FaRegMoneyBillAlt } from "react-icons/fa";
@@ -16,10 +11,8 @@ import { PiBuildings } from "react-icons/pi";
 import { AiOutlinePartition } from "react-icons/ai";
 import Accordion from "react-bootstrap/Accordion";
 import classEase from "classease";
-import Image from "next/image";
 import { useSidebar } from "@/components/contexts/SidebarContext";
 import { useUser } from "@/components/contexts/UserContext";
-import Logo from "../../../../public/logo.png";
 import { TbSettings } from "react-icons/tb";
 
 const Page = () => {
@@ -399,22 +392,22 @@ const Page = () => {
                           Manual Attendance
                         </Link>
                       </li>
-                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                      {/* <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
                           href="/remote-attendance"
                           className="text-decoration-none subMenu"
                         >
                           Remote Attendance
                         </Link>
-                      </li>
-                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                      </li> */}
+                      {/* <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
                           href="/work-record"
                           className="text-decoration-none subMenu"
                         >
                           Work Record
                         </Link>
-                      </li>
+                      </li> */}
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
                           href="/raw-data"

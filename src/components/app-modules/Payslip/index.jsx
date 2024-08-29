@@ -349,12 +349,12 @@ const index = () => {
         <div className="slipHeader">
           <Image src={Logo} width={100} className="mb-3" alt="Logo" />
           <p className="mb-0">
-            House -4, Road 23/A, Block B, Banani Dhaka 1213, Bangladesh
+            Address: House -4, Road 23/A, Block B, Banani Dhaka 1213, Bangladesh
           </p>
-          <p className="mb-0">John Doe</p>
-          <p className="mb-0">Web Designer</p>
-          <p className="mb-0">Employee ID: FT-0009</p>
-          <p className="mb-4">Joining Date: 1 Jan 2013</p>
+          <p className="mb-0">Nmae: John Doe</p>
+          <p className="mb-0">Designation: Web Developer</p>
+          <p className="mb-0">Employee ID: API2021209212</p>
+          <p className="mb-4">Joining Date: 1-Jan-2023</p>
         </div>
 
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>

@@ -194,13 +194,22 @@ const Index = () => {
         <Breadcrumbs>{items}</Breadcrumbs>
       </div>
 
+      <Modal opened={opened} onClose={close} title="Filter" centered>
+        <Accordion defaultValue="">{itemsAccordion}</Accordion>
+        <div className="d-md-flex justify-content-end">
+          <Button variant="filled" size="sm" mt="sm">
+            Search
+          </Button>
+        </div>
+      </Modal>
+
       <div id="leavePolicy" className="itemCard">
-        <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={{ base: 12, lg: 5 }}>
-            <MultiSelect
+        <Grid>
+          <Grid.Col span={{ base: 12, md: 7, lg: 7, xl: 4 }}>
+            <Select
               classNames={{
                 root: "cust_iputRoot notFlex",
-                label: "cust_iputLabel",
+                label: "cust_iputLabel other_label",
                 wrapper: "cust_iputWrapper",
               }}
               mb="md"
@@ -216,17 +225,9 @@ const Index = () => {
               ]}
               searchable
             />
-            <Modal opened={opened} onClose={close} title="Filter" centered>
-              <Accordion defaultValue="">{itemsAccordion}</Accordion>
-              <div className="d-md-flex justify-content-end">
-                <Button variant="filled" size="sm" mt="sm">
-                  Search
-                </Button>
-              </div>
-            </Modal>
 
-            <div className="d-flex align-items-center mt-4">
-              <p className="mb-0 me-3">Employee</p>
+            <div className="d-flex align-items-center my-4">
+              <p className="mb-0 employeeLabel">Employee</p>
               <Button onClick={open}>Filter</Button>
             </div>
           </Grid.Col>

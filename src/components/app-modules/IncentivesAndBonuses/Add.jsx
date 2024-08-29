@@ -28,7 +28,7 @@ const Index = ({ opened, close }) => {
          >
             <form>
                <TextInput mb="sm" label="Title" placeholder="Title" />
-               <Textarea
+               <TextInput
                   mb="sm"
                   label="Description"
                   placeholder="Description"

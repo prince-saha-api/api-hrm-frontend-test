@@ -195,12 +195,12 @@ const Index = () => {
       </div>
 
       <div id="leavePolicy" className="itemCard">
-        <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={5}>
-            <MultiSelect
+        <Grid>
+          <Grid.Col span={{ base: 12, md: 7, lg: 7, xl: 4 }}>
+            <Select
               classNames={{
-                root: "cust_iputRoot",
-                label: "cust_iputLabel",
+                root: "cust_iputRoot notFlex",
+                label: "cust_iputLabel other_label",
                 wrapper: "cust_iputWrapper",
               }}
               mb="md"
@@ -215,23 +215,7 @@ const Index = () => {
                 "Policy-6",
               ]}
               searchable
-              // withAsterisk
             />
-            {/* <MultiSelect
-                     classNames={{
-                        root: "cust_iputRoot",
-                        label: "cust_iputLabel",
-                        wrapper: "cust_iputWrapper",
-                     }}
-                     label="Employee"
-                     placeholder="Employee"
-                     data={[
-                        "Jiaur Rahman - 20220102016",
-                        "G. M. Nazmul Hussain - 20220102017",
-                        "Rasel Rahman - 20220102018",
-                     ]}
-                     searchable
-                  /> */}
             <Modal opened={opened} onClose={close} title="Filter" centered>
               <Accordion defaultValue="">{itemsAccordion}</Accordion>
               <div className="d-flex justify-content-end">
@@ -241,8 +225,8 @@ const Index = () => {
               </div>
             </Modal>
 
-            <div className="d-flex align-items-center mt-4">
-              <p className="mb-0 me-3">Employee</p>
+            <div className="d-flex align-items-center my-4">
+              <p className="mb-0 employeeLabel">Employee</p>
               <Button onClick={open}>Filter</Button>
             </div>
           </Grid.Col>

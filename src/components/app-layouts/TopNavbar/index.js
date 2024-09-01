@@ -14,7 +14,6 @@ import Link from "next/link";
 import Image from "next/image";
 import Logo from "public/logo.png";
 import { useUser } from "@/components/contexts/UserContext";
-import profileImg from "public/profile01.jpg";
 
 const Navbar = () => {
   // const { logout } = useAuth();
@@ -88,7 +87,6 @@ const Navbar = () => {
         <div className="profileBox">
           <Dropdown>
             <Dropdown.Toggle className="border-0 me-4 d-flex align-items-center">
-              {/* <Image src={profileImg} alt="img" className="profile_img" /> */}
               <Indicator
                 // inline
                 withBorder

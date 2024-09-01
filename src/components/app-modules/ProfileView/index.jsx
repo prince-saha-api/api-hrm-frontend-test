@@ -291,7 +291,6 @@ const ProfileView = ({ data }) => {
             <div className="profileBox borderRight h-100 d-flex">
               <div className="profile position-relative">
                 <Image
-                  // src="/profile03.jpg"
                   src={
                     profilePhoto?.photo
                       ? getStoragePath(profilePhoto?.photo)
@@ -399,7 +398,6 @@ const ProfileView = ({ data }) => {
                 <span>Supervisor:</span>
                 <Image
                   className="reportsImg"
-                  // src="/profile01.jpg"
                   src={
                     profile?.supervisor?.photo
                       ? getStoragePath(profile?.supervisor?.photo)

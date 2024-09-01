@@ -83,10 +83,6 @@ const Page = () => {
         <Row>
           <Col lg={6} className="div_height">
             <div className="w-100 bg-white py-5 rounded-1 auth_box">
-              {/* <div className="d-flex justify-content-center mb-3">
-                <img src="/th.jpg" alt="dmc logo" className="img-fluid" />
-              </div> */}
-
               <div className="px-5">
                 <Form onSubmit={(e) => handleLogin(e)}>
                   <div className="mb-3">

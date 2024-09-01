@@ -19,7 +19,6 @@ import { Grid } from "@mantine/core";
 import { FcAcceptDatabase } from "react-icons/fc";
 import Image from "next/image";
 import compmanyLogo from "public/full_logo.png";
-import uploadImg from "public/profile01.jpg";
 import { FcAddImage } from "react-icons/fc";
 
 const PreviousExperience = forwardRef(({ data, onNext, onBack }, ref) => {

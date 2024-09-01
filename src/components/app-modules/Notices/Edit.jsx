@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import useSWR from "swr";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import {
@@ -6,25 +7,18 @@ import {
   TextInput,
   Textarea,
   Button,
-  Select,
+  // Select,
   Group,
-  Checkbox,
-  NumberInput,
-  ActionIcon,
-  rem,
   Grid,
   FileInput,
   MultiSelect,
 } from "@mantine/core";
-import { IoTimeOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
-import { update } from "@/lib/submit";
-import { formatTime } from "@/lib/helper";
 import { FaFileLines } from "react-icons/fa6";
 import { FaRegCalendarDays } from "react-icons/fa6";
-
-const fileIcon = <FaFileLines />;
-const dateIcon = <FaRegCalendarDays />;
+import { update } from "@/lib/submit";
+import { fetcher } from "@/lib/fetch";
+import { getFullName, formatDateToYYYYMMDD } from "@/lib/helper";
 
 const Index = ({ opened, close, item, setItem, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,92 +26,173 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      name: "",
-      in_time: "",
-      out_time: "",
-      late_tolerance_time: 0,
+      title: "",
+      description: "",
+      attachment: null,
+      publish_date: null,
+      expiry_date: null,
+      company: [],
+      branch: [],
+      department: [],
+      user: [],
     },
     validate: {
-      name: (value) =>
-        value.length < 3 ? "Name must have at least 3 letters" : null,
+      title: (value) => (!value ? "Title is required" : null),
     },
   });
 
   useEffect(() => {
     if (item) {
       form.setValues({
-        name: item.name || "",
-        in_time: item.in_time || "",
-        out_time: item.out_time || "",
-        late_tolerance_time: item.late_tolerance_time || 0,
+        title: item?.title || "",
+        description: item?.description || "",
+        attachment: null,
+        publish_date: item?.publish_date ? new Date(item.publish_date) : null,
+        expiry_date: item?.expiry_date ? new Date(item.expiry_date) : null,
+        company: item?.noticeboardcompany_noticeboard?.length
+          ? item.noticeboardcompany_noticeboard
+              .map((c) => c?.company?.id?.toString())
+              .filter(Boolean)
+          : [],
+        branch: item?.noticeboardbranch_noticeboard?.length
+          ? item.noticeboardbranch_noticeboard
+              .map((b) => b?.branch?.id?.toString())
+              .filter(Boolean)
+          : [],
+        department: item?.noticeboarddepartment_noticeboard?.length
+          ? item.noticeboarddepartment_noticeboard
+              .map((d) => d?.id?.toString())
+              .filter(Boolean)
+          : [],
+        user: item?.noticeboardemployee_noticeboard?.length
+          ? item.noticeboardemployee_noticeboard
+              .map((u) => u?.user?.id?.toString())
+              .filter(Boolean)
+          : [],
       });
     }
   }, [item]);
 
-  const refTimeIn = useRef(null);
-  const refTimeOut = useRef(null);
+  const {
+    data: companyData,
+    error: companyError,
+    isLoading: isCompanyLoading,
+  } = useSWR(`/api/company/get-company/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
 
-  const timeIn = (
-    <ActionIcon
-      variant="subtle"
-      color="gray"
-      onClick={() => refTimeIn.current?.showPicker()}
-    >
-      <IoTimeOutline />
-    </ActionIcon>
-  );
+  const companies = companyData?.data?.result?.map((item) => ({
+    label: item?.basic_information?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
 
-  const timeOut = (
-    <ActionIcon
-      variant="subtle"
-      color="gray"
-      onClick={() => refTimeOut.current?.showPicker()}
-    >
-      <IoTimeOutline />
-    </ActionIcon>
-  );
+  const {
+    data: branchesData,
+    error: branchesError,
+    isLoading: isBranchesLoading,
+  } = useSWR(`/api/branch/get-branch/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const branches = branchesData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: departmentsData,
+    error: departmentsError,
+    isLoading: isDepartmentsLoading,
+  } = useSWR(`/api/department/get-department/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const departments = departmentsData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: employeeData,
+    error: employeeError,
+    isLoading: employeeIsFetchLoading,
+  } = useSWR(`/api/user/get-employee/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+    revalidateOnFocus: false,
+  });
+
+  const employees = employeeData?.data.result.map((item) => ({
+    label: getFullName(item?.first_name, item?.last_name),
+    value: item?.id.toString() || "",
+  }));
 
   const handleSubmit = async (values) => {
-    const formattedValues = {
-      ...values,
-      in_time: formatTime(values.in_time),
-      out_time: formatTime(values.out_time),
-    };
-
     setIsSubmitting(true);
 
     try {
+      const formattedExpiryDate = formatDateToYYYYMMDD(values.expiry_date);
+      // const formattedPublishDate = formatDateToYYYYMMDD(new Date());
+
+      const formattedValues = {
+        ...values,
+        expiry_date: formattedExpiryDate,
+        // publish_date: formattedPublishDate,
+      };
+
+      const formValues = new FormData();
+
+      const flattenObject = (obj, prefix = "") => {
+        Object.keys(obj).forEach((key) => {
+          const value = obj[key];
+          const formKey = prefix ? `${prefix}[${key}]` : key;
+
+          if (value && typeof value === "object" && !(value instanceof File)) {
+            flattenObject(value, formKey);
+          } else {
+            formValues.append(formKey, value);
+          }
+        });
+      };
+
+      flattenObject(formattedValues);
+
       const response = await update(
-        `/api/user/update-shift/${item.id}`,
-        formattedValues
+        `/api/notice/update-noticeboard/${item.id}`,
+        formValues,
+        true
       );
 
       if (response?.status === "success") {
-        // console.log(response);
         setIsSubmitting(false);
         close();
         mutate();
-        toast.success("Shift updated successfully");
+        toast.success("Notice updated successfully");
       } else {
-        toast.error(
-          response?.status === "error"
-            ? response?.message[0]
-            : "Error submitting form"
-        );
-      }
-      setTimeout(() => {
         setIsSubmitting(false);
-        mutate();
-      }, 500);
+        if (response?.status === "error" && Array.isArray(response.message)) {
+          response.message.forEach((msg) => {
+            toast.error(msg);
+          });
+        } else {
+          toast.error("Error submitting form");
+        }
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
       setTimeout(() => {
         setIsSubmitting(false);
-        mutate();
       }, 500);
     }
   };
-  const [value, setValue] = useState(null);
+
+  const handleError = (errors) => {
+    console.log(errors);
+  };
+
   return (
     <>
       <Modal
@@ -126,64 +201,97 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
         }}
         opened={opened}
         title="Edit Notice"
-        onClose={close}
+        onClose={() => {
+          setItem(null);
+          close();
+        }}
         centered
       >
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+        <form
+          onSubmit={form.onSubmit(
+            (values) => handleSubmit(values),
+            handleError
+          )}
+        >
           <Grid>
             <Grid.Col span={12}>
               <TextInput
+                mb="sm"
                 label="Title"
                 placeholder="Title"
-                mb="sm"
                 required={true}
                 disabled={isSubmitting}
-                // {...form.getInputProps("name")}
+                {...form.getInputProps("title")}
               />
-              <TextInput
+              <Textarea
+                mb="sm"
                 label="Description"
                 placeholder="Description"
-                mb="sm"
                 required={true}
                 disabled={isSubmitting}
-                // {...form.getInputProps("name")}
+                {...form.getInputProps("description")}
               />
-
               <FileInput
-                rightSection={fileIcon}
-                label="Attachment"
                 mb="sm"
+                rightSection={<FaFileLines />}
+                label="Attachment"
                 placeholder="Attachment"
                 rightSectionPointerEvents="none"
-              />
-
-              <DateInput
-                rightSection={dateIcon}
-                value={value}
+                leftSectionPointerEvents="none"
                 required={true}
-                onChange={setValue}
+                disabled={isSubmitting}
+                {...form.getInputProps("attachment")}
+                key={form.key("attachment")}
+              />
+              <DateInput
                 mb="sm"
+                rightSection={<FaRegCalendarDays />}
                 label="Expire Date"
                 placeholder="MMM/DDD/YYY"
                 rightSectionPointerEvents="none"
+                required={true}
+                disabled={isSubmitting}
+                {...form.getInputProps("expiry_date")}
+                key={form.key("expiry_date")}
               />
               <MultiSelect
+                mb="sm"
+                label="Company"
+                placeholder="Company"
+                hidePickedOptions
+                disabled={isSubmitting}
+                data={companies}
+                {...form.getInputProps("company")}
+                key={form.key("company")}
+              />
+              <MultiSelect
+                mb="sm"
                 label="Branches"
                 placeholder="Branches"
-                mb="sm"
-                data={["Banani", "Mohammadpur", "Dhaka"]}
+                hidePickedOptions
+                disabled={isSubmitting}
+                data={branches}
+                {...form.getInputProps("branch")}
+                key={form.key("branch")}
               />
               <MultiSelect
+                mb="sm"
                 label="Department"
                 placeholder="Department"
-                mb="sm"
-                data={["Development", "Marketing", "SEO"]}
+                hidePickedOptions
+                disabled={isSubmitting}
+                data={departments}
+                {...form.getInputProps("department")}
+                key={form.key("department")}
               />
               <MultiSelect
+                mb="sm"
                 label="Employee"
                 placeholder="Employee"
-                mb="sm"
-                data={["Jiaur", "Nazmul", "Kawsar"]}
+                hidePickedOptions
+                data={employees}
+                {...form.getInputProps("user")}
+                key={form.key("user")}
               />
             </Grid.Col>
           </Grid>

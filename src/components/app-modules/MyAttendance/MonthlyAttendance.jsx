@@ -62,7 +62,7 @@ const MonthlyAttendance = () => {
           </div>
           <div className="d-flex align-items-center ms-3">
             <span className="bg_HollyDay"></span>
-            <p>Holly Day</p>
+            <p>Holiday</p>
           </div>
           <div className="d-flex align-items-center ms-3">
             <span className="bg_Running"></span>

@@ -623,7 +623,7 @@ const index = () => {
                 </h5>
                 <div className="d-flex justify-content-center">
                   <p className="mb-0">
-                    Allowcation: {item?.total_allocation || "0"}
+                    Allocation: {item?.total_allocation || "0"}
                   </p>
                   <p className="mb-0 ms-3">
                     Consumed: {item?.total_consumed || "0"}

@@ -688,12 +688,12 @@ const ProfileView = ({ data }) => {
                   </div>
                 </Grid.Col>
                 <Grid.Col span={6}>
-                  <h4 className="mb-3">
+                  {/* <h4 className="mb-3">
                     <TbSquareRoundedFilled className="roundIcon" />
                     Leave Policy
-                  </h4>
+                  </h4> */}
                   <div className="leavePolicyBox mb-3">
-                    <b className="mb-2 d-block text-dark">Leave Policy 1</b>
+                    <b className="mb-2 d-block text-dark">Leave Policy</b>
                     <Table striped withTableBorder withColumnBorders>
                       <Table.Thead>
                         <Table.Tr>

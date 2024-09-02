@@ -11,6 +11,7 @@ import EducationAndExperience from "./steps/EducationAndExperience";
 import UploadDocuments from "./steps/UploadDocuments";
 import SuccessCheckmarkAnimation from "./steps/SuccessCheckmarkAnimation";
 import { submit } from "@/lib/submit";
+import { formatDateToYYYYMMDD } from "@/lib/helper";
 
 const initialData = {
   personalDetails: {
@@ -187,10 +188,43 @@ const AddEmployee = () => {
   };
 
   const handleFormDataChange2 = (data) => {
+    const updatedExperiences = data.previousExperience.map((item) => ({
+      ...item,
+      from_date: formatDateToYYYYMMDD(item.from_date),
+      to_date: formatDateToYYYYMMDD(item.to_date),
+    }));
+
     setFormData((prev) => ({
       ...prev,
       academicRecord: data.academicRecord,
-      previousExperience: data.previousExperience,
+      previousExperience: updatedExperiences,
+    }));
+  };
+
+  const handleFormDataChange3 = (data) => {
+    const formattedDate = formatDateToYYYYMMDD(data.joining_date);
+
+    setFormData((prev) => ({
+      ...prev,
+      officialDetails: {
+        ...data,
+        joining_date: formattedDate,
+      },
+    }));
+  };
+
+  const handleFormDataChange1 = (data) => {
+    const formattedDate = formatDateToYYYYMMDD(data.dob);
+
+    setFormData((prev) => ({
+      ...prev,
+      personalDetails: {
+        ...data,
+        dob: formattedDate,
+        ...(data.permanentAddressSameAsPresent && {
+          permanent_address: data.present_address,
+        }),
+      },
     }));
   };
 
@@ -221,7 +255,26 @@ const AddEmployee = () => {
         } else {
           stepRefs.current[active].showValidationErrors();
         }
+      } else if (index === active + 1 && active === 1) {
+        const isValid = stepRefs.current[active].validateStep(
+          handleFormDataChange3
+        );
+        if (isValid) {
+          setActive(index);
+        } else {
+          stepRefs.current[active].showValidationErrors();
+        }
+      } else if (index === active + 1 && active === 0) {
+        const isValid = stepRefs.current[active].validateStep(
+          handleFormDataChange1
+        );
+        if (isValid) {
+          setActive(index);
+        } else {
+          stepRefs.current[active].showValidationErrors();
+        }
       }
+
       // Allow clicking only on the immediate previous or next step
       else if (index === active + 1) {
         // const currentStepData = formData[stepKeys[active]];

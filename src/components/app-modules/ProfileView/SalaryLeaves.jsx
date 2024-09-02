@@ -63,6 +63,48 @@ const Index = ({ opened, close, item, setItem }) => {
     value: item?.id.toString() || "",
   }));
 
+  const {
+    data: earningData,
+    error: earningError,
+    isLoading: isEarningLoading,
+  } = useSWR(`/api/payroll/get-payrollearning/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const earningPlicies = earningData?.data?.result?.map((item) => ({
+    label: item?.title?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: deductionData,
+    error: deductionError,
+    isLoading: isDeductionLoading,
+  } = useSWR(`/api/payroll/get-payrolldeduction/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const deductionPlicies = deductionData?.data?.result?.map((item) => ({
+    label: item?.title?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: bankAccountTypeData,
+    error: bankAccountTypeError,
+    isLoading: isBankAccountTypeLoading,
+  } = useSWR(`/api/contribution/get-bankaccounttype/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const bankAccountTypes = bankAccountTypeData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
 
@@ -144,6 +186,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 mb="sm"
                 label="Leave Policy"
                 placeholder="Leave Policy"
+                hidePickedOptions
                 data={leavepolicies}
                 searchable
                 withAsterisk
@@ -153,12 +196,8 @@ const Index = ({ opened, close, item, setItem }) => {
                 mb="sm"
                 label="Earning Policy"
                 placeholder="Earning Policy"
-                data={[
-                  { value: "1", label: "Earning Policy 1" },
-                  { value: "2", label: "Earning Policy 2" },
-                  { value: "3", label: "Earning Policy 3" },
-                  { value: "4", label: "Earning Policy 4" },
-                ]}
+                hidePickedOptions
+                data={earningPlicies}
                 searchable
                 withAsterisk
                 {...form.getInputProps("earningpolicy")}
@@ -168,12 +207,8 @@ const Index = ({ opened, close, item, setItem }) => {
                 mb="sm"
                 label="Deduction Policy"
                 placeholder="Deduction Policy"
-                data={[
-                  { value: "1", label: "Deduction Policy 1" },
-                  { value: "2", label: "Deduction Policy 2" },
-                  { value: "3", label: "Deduction Policy 3" },
-                  { value: "4", label: "Deduction Policy 4" },
-                ]}
+                hidePickedOptions
+                data={deductionPlicies}
                 searchable
                 withAsterisk
                 {...form.getInputProps("deductionpolicy")}
@@ -195,13 +230,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 mb="sm"
                 label="Bank Account Type"
                 placeholder="Bank Account Type"
-                data={[
-                  { value: "1", label: "Current" },
-                  { value: "2", label: "Savings" },
-                  { value: "3", label: "Salary" },
-                  { value: "4", label: "Chequing" },
-                  { value: "5", label: "Business" },
-                ]}
+                data={bankAccountTypes}
                 {...form.getInputProps("bankaccount.account_type")}
               />
               <NumberInput

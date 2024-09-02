@@ -55,6 +55,34 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
   }));
 
   const {
+    data: earningData,
+    error: earningError,
+    isLoading: isEarningLoading,
+  } = useSWR(`/api/payroll/get-payrollearning/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const earningPlicies = earningData?.data?.result?.map((item) => ({
+    label: item?.title?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: deductionData,
+    error: deductionError,
+    isLoading: isDeductionLoading,
+  } = useSWR(`/api/payroll/get-payrolldeduction/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const deductionPlicies = deductionData?.data?.result?.map((item) => ({
+    label: item?.title?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
     data: bankAccountTypeData,
     error: bankAccountTypeError,
     isLoading: isBankAccountTypeLoading,
@@ -166,12 +194,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   }}
                   placeholder="Earning Policy"
                   hidePickedOptions
-                  data={[
-                    { value: "1", label: "Earning Policy 1" },
-                    { value: "2", label: "Earning Policy 2" },
-                    { value: "3", label: "Earning Policy 3" },
-                    { value: "4", label: "Earning Policy 4" },
-                  ]}
+                  data={earningPlicies}
                   searchable
                   withAsterisk
                   {...form.getInputProps("payrollpolicy.earningpolicy")}
@@ -188,12 +211,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   }}
                   placeholder="Deduction Policy"
                   hidePickedOptions
-                  data={[
-                    { value: "1", label: "Deduction Policy 1" },
-                    { value: "2", label: "Deduction Policy 2" },
-                    { value: "3", label: "Deduction Policy 3" },
-                    { value: "4", label: "Deduction Policy 4" },
-                  ]}
+                  data={deductionPlicies}
                   searchable
                   withAsterisk
                   {...form.getInputProps("payrollpolicy.deductionpolicy")}

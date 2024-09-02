@@ -251,9 +251,9 @@ const OfficeDetails = forwardRef(
     // }, [form.values.company, form.values.branch]);
 
     useImperativeHandle(ref, () => ({
-      validateStep: (updateFormData, key) => {
+      validateStep: (updateFormData) => {
         const values = form.getValues();
-        updateFormData(key, values);
+        updateFormData(values);
         return form.isValid();
       },
       showValidationErrors: () => {

@@ -124,9 +124,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
   );
 
   useImperativeHandle(ref, () => ({
-    validateStep: (updateFormData, key) => {
+    validateStep: (updateFormData) => {
       const values = form.getValues();
-      updateFormData(key, values);
+      updateFormData(values);
       return form.isValid();
     },
     showValidationErrors: () => {

@@ -153,7 +153,7 @@ const GeneralSettings = () => {
 
     try {
       const response = await update(
-        "/api/hrm_settings/update-generalsettings/3",
+        `/api/hrm_settings/update-generalsettings/${data?.id}`,
         formattedValues
       );
 

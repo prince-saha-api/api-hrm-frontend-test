@@ -24,7 +24,7 @@ import { CiSearch } from "react-icons/ci";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { constants } from "@/lib/config";
-import { getStoragePath } from "@/lib/helper";
+import { getStoragePath, getFullName } from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import FilterModal from "./FilterModal";
 
@@ -85,12 +85,25 @@ const Index = () => {
   }, [selectedEditItem]);
 
   const columns = [
+    // {
+    //   key: "na",
+    //   accessor: "na",
+    //   title: "#",
+    //   noWrap: true,
+    //   sortable: false,
+    //   width: 40,
+    //   render: (_, index) => (currentPage - 1) * pageSize + index + 1,
+    //   modifier: (_, index) => index + 1,
+    //   // pdfModifier: ({ na }) =>
+    //   //   na > 0 ? "is_text_danger_" + getTime(InTime) : getTime(InTime),
+    // },
     {
-      // for table display
+      key: "employee",
       accessor: "employee",
       title: "Employee",
       sortable: false,
-      render: ({ photo, first_name, last_name }) => (
+      width: 170,
+      render: ({ id, photo, first_name, last_name, official_id }) => (
         <div className="d-flex justify-content-start align-items-center">
           {photo ? (
             <img
@@ -101,56 +114,85 @@ const Index = () => {
           ) : (
             ""
           )}
-          <Link
-            href="/profile-view"
-            className="ms-2 text-decoration-none color-inherit"
-          >
-            {first_name + " " + last_name}
-          </Link>
+          <div className="d-flex flex-column ms-2">
+            <Link
+              href={`/profile/${id}`}
+              className="text-decoration-none color-inherit"
+            >
+              {getFullName(first_name, last_name)}
+            </Link>
+            {official_id && <span>{official_id}</span>}
+          </div>
         </div>
       ),
-      // for export
-      key: "employee",
     },
     {
+      key: "department",
+      accessor: "department",
+      title: "Department",
+      render: ({ department }) => department?.name || "N/A",
+    },
+    {
+      key: "designation",
       accessor: "designation",
       title: "Designation",
-      // visibleMediaQuery: aboveXs,
       render: ({ designation }) => designation?.name || "N/A",
     },
     {
+      key: "date",
       accessor: "date",
       title: "Date",
-      // visibleMediaQuery: aboveXs,
       render: ({ date }) => date || "N/A",
     },
     {
-      accessor: "inTime",
+      key: "in_time",
+      accessor: "in_time",
       title: "In Time",
-      // visibleMediaQuery: aboveXs,
-      render: ({ inTime }) => inTime || "N/A",
+      render: ({ in_time }) => in_time || "N/A",
     },
     {
-      accessor: "outTime",
+      key: "out_time",
+      accessor: "out_time",
       title: "Out Time",
-      // visibleMediaQuery: aboveXs,
-      render: ({ outTime }) => outTime || "N/A",
+      render: ({ out_time }) => out_time || "N/A",
     },
     {
+      key: "status",
       accessor: "status",
       title: "Status",
-      // visibleMediaQuery: aboveXs,
       render: ({ status }) => status || "N/A",
     },
     {
-      accessor: "attendanceMode",
+      key: "attendance_mode",
+      accessor: "attendance_mode",
       title: "Attendance Mode",
-      // visibleMediaQuery: aboveXs,
-      render: ({ attendanceMode }) => attendanceMode || "N/A",
+      render: ({ attendance_mode }) => attendance_mode || "N/A",
+    },
+    {
+      key: "late_time",
+      accessor: "late_time",
+      title: "Late Time (Mins)",
+      render: ({ late_time }) => late_time || "N/A",
+    },
+    {
+      key: "early_leave",
+      accessor: "early_leave",
+      title: "Early Leave (Mins)",
+      render: ({ early_leave }) => early_leave || "N/A",
+    },
+    {
+      key: "overtime",
+      accessor: "overtime",
+      title: "Overtime (Mins)",
+      render: ({ overtime }) => overtime || "N/A",
     },
   ];
 
   const visibleColumns = [
+    // {
+    //   label: "Serial",
+    //   value: "na",
+    // },
     {
       label: "Employee",
       value: "employee",
@@ -169,11 +211,11 @@ const Index = () => {
     },
     {
       label: "In Time",
-      value: "inTime",
+      value: "in_time",
     },
     {
       label: "Out Time",
-      value: "outTime",
+      value: "out_time",
     },
     {
       label: "Status",
@@ -181,15 +223,15 @@ const Index = () => {
     },
     {
       label: "Attendance Mode",
-      value: "attendanceMode",
+      value: "attendance_mode",
     },
     {
       label: "Late Time (Mins)",
-      value: "lateTime",
+      value: "late_time",
     },
     {
       label: "Early Leave (Mins)",
-      value: "earlyLeave",
+      value: "early_leave",
     },
     {
       label: "Overtime (Mins)",
@@ -198,25 +240,24 @@ const Index = () => {
   ];
 
   const [selectedOptions, setSelectedOptions] = useState([
+    // "na",
     "employee",
-    "designation",
+    "department",
     "date",
-    "inTime",
-    "outTime",
+    "in_time",
+    "out_time",
     "status",
-    "attendanceMode",
+    "attendance_mode",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
       ...new Set([
+        // "na", //
         "employee",
-        "designation",
         "date",
-        "inTime",
-        "outTime",
-        "status",
-        "attendanceMode",
+        "in_time",
+        "out_time",
         ...keys,
       ]),
     ];
@@ -602,10 +643,9 @@ const Index = () => {
           verticalAlign="center"
           striped
           idAccessor="id"
-          //  columns={columns.filter((column) =>
-          //     selectedOptions.includes(column.key)
-          //  )}
-          columns={columns}
+          columns={columns.filter((column) =>
+            selectedOptions.includes(column.key)
+          )}
           fetching={isLoading}
           records={apiData?.data.result || []}
           page={currentPage}

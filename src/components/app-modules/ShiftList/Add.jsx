@@ -25,6 +25,7 @@ const Index = ({ opened, close, mutate }) => {
       in_time: "",
       out_time: "",
       late_in_tolerance_time: 0,
+      early_leave_tolerance_time: 0,
     },
     validate: {
       name: (value) => (!value ? "Title is required" : null),
@@ -46,6 +47,10 @@ const Index = ({ opened, close, mutate }) => {
       },
       late_in_tolerance_time: (value) => {
         if (value < 0) return "Late in tolerance time cannot be negative";
+        return null;
+      },
+      early_leave_tolerance_time: (value) => {
+        if (value < 0) return "Early leave tolerance time cannot be negative";
         return null;
       },
     },
@@ -153,11 +158,20 @@ const Index = ({ opened, close, mutate }) => {
             />
 
             <NumberInput
-              label="Late Tolerance"
-              placeholder="Late Tolerance"
+              mb="sm"
+              label="Late In Tolerance"
+              placeholder="Late In Tolerance"
               hideControls
               disabled={isSubmitting}
               {...form.getInputProps("late_in_tolerance_time")}
+            />
+
+            <NumberInput
+              label="Early Leave Tolerance"
+              placeholder="Early Leave Tolerance"
+              hideControls
+              disabled={isSubmitting}
+              {...form.getInputProps("early_leave_tolerance_time")}
             />
           </Grid.Col>
         </Grid>

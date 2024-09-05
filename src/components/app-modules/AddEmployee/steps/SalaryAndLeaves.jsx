@@ -342,7 +342,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                     root: "w-100",
                     wrapper: "cust_iputWrapper",
                   }}
-                  placeholder="Division"
+                  placeholder="Division / State"
                   {...form.getInputProps("bank_account.address.state_division")}
                 />
               </div>
@@ -354,8 +354,8 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // mt="sm"
-                  // label="ZIP Code"
-                  placeholder="ZIP / Postal Code"
+                  // label="Postal / ZIP Code"
+                  placeholder="Postal / ZIP Code"
                   {...form.getInputProps("bank_account.address.post_zip_code")}
                 />
               </div>

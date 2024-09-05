@@ -271,14 +271,14 @@ const Index = ({ opened, close, item, setItem }) => {
               />
               <TextInput
                 mb="sm"
-                label="Division"
-                placeholder="Division"
+                label="Division / State"
+                placeholder="Division / State"
                 {...form.getInputProps("bankaccount.address.state_division")}
               />
               <TextInput
                 mb="sm"
-                label="ZIP / Postal Code"
-                placeholder="ZIP / Postal Code"
+                label="Postal / ZIP Code"
+                placeholder="Postal / ZIP Code"
                 {...form.getInputProps("bankaccount.address.post_zip_code")}
               />
               <Select

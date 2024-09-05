@@ -70,9 +70,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
         !value ? "Address is required" : null,
       "present_address.city": (value) => (value ? null : "City is required"),
       "present_address.state_division": (value) =>
-        value ? null : "State is required",
+        value ? null : "Division / State is required",
       "present_address.post_zip_code": (value) =>
-        value ? null : "Zip code is required",
+        value ? null : "Postal / ZIP Code is required",
       "present_address.country": (value) =>
         value ? null : "Country is required",
       "permanent_address.address": (value, values) =>
@@ -85,11 +85,11 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
           : null,
       "permanent_address.state_division": (value, values) =>
         !values.permanentAddressSameAsPresent && !value
-          ? "State is required"
+          ? "Division / State is required"
           : null,
       "permanent_address.post_zip_code": (value, values) =>
         !values.permanentAddressSameAsPresent && !value
-          ? "ZIP Code is required"
+          ? "Postal / ZIP Code is required"
           : null,
       "permanent_address.country": (value, values) =>
         !values.permanentAddressSameAsPresent && !value
@@ -527,7 +527,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">State</div>
+                <div className="cust_iputLabel">Division / State</div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -536,13 +536,13 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // mt="sm"
-                  // label="State"
-                  placeholder="State"
+                  // label="Division / State"
+                  placeholder="Division / State"
                   {...form.getInputProps("present_address.state_division")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">ZIP Code</div>
+                <div className="cust_iputLabel">Postal / ZIP Code</div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -551,8 +551,8 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // mt="sm"
-                  // label="ZIP Code"
-                  placeholder="ZIP / Postal Code"
+                  // label="Postal / ZIP Code"
+                  placeholder="Postal / ZIP Code"
                   {...form.getInputProps("present_address.post_zip_code")}
                 />
               </div>
@@ -637,7 +637,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">State</div>
+                <div className="cust_iputLabel">Division / State</div>
                 <TextInput
                   classNames={{
                     root: classEase(
@@ -649,15 +649,15 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // mt="sm"
-                  // label="State"
-                  placeholder="State"
+                  // label="Division / State"
+                  placeholder="Division / State"
                   {...form.getInputProps("permanent_address.state_division")}
                   disabled={sameAsPresent}
                   key={form.key("permanent_address.state_division")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">ZIP Code</div>
+                <div className="cust_iputLabel">Postal / ZIP Code</div>
                 <TextInput
                   classNames={{
                     root: classEase(
@@ -669,8 +669,8 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // mt="sm"
-                  // label="ZIP Code"
-                  placeholder="ZIP Code"
+                  // label="Postal / ZIP Code"
+                  placeholder="Postal / ZIP Code"
                   {...form.getInputProps("permanent_address.post_zip_code")}
                   disabled={sameAsPresent}
                   // value={form.getValues().permanent_address.post_zip_code}

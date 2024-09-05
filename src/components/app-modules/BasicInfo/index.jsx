@@ -571,8 +571,8 @@ const BasicInfo = () => {
                       root: "w-100",
                     }}
                     mt="sm"
-                    label="State"
-                    placeholder="State"
+                    label="Division / State"
+                    placeholder="Division / State"
                     {...form.getInputProps(`address.state_division`)}
                     disabled={isSubmitting}
                   />

@@ -258,14 +258,14 @@ const Index = ({ opened, close, item, setItem }) => {
                 />
                 <TextInput
                   mb="sm"
-                  // label="Division"
-                  placeholder="Division"
+                  // label="Division / State"
+                  placeholder="Division / State"
                   {...form.getInputProps("present_address.state_division")}
                 />
                 <TextInput
                   mb="sm"
-                  // label="ZIP / Postal Code"
-                  placeholder="ZIP / Postal Code"
+                  // label="Postal / ZIP Code"
+                  placeholder="Postal / ZIP Code"
                   {...form.getInputProps("present_address.post_zip_code")}
                 />
                 <Select
@@ -309,16 +309,16 @@ const Index = ({ opened, close, item, setItem }) => {
                 />
                 <TextInput
                   mb="sm"
-                  // label="Division"
-                  placeholder="Division"
+                  // label="Division / State"
+                  placeholder="Division / State"
                   disabled={sameAsPresent}
                   {...form.getInputProps("permanent_address.state_division")}
                   key={form.key("permanent_address.state_division")}
                 />
                 <TextInput
                   mb="sm"
-                  // label="ZIP / Postal Code"
-                  placeholder="ZIP / Postal Code"
+                  // label="Postal / ZIP Code"
+                  placeholder="Postal / ZIP Code"
                   disabled={sameAsPresent}
                   {...form.getInputProps("permanent_address.post_zip_code")}
                   key={form.key("permanent_address.post_zip_code")}

@@ -57,8 +57,10 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
         relation: (value) => (!value ? "Relation is required" : null),
         address: {
           city: (value) => (!value ? "City is required" : null),
-          state_division: (value) => (!value ? "State is required" : null),
-          post_zip_code: (value) => (!value ? "ZIP Code is required" : null),
+          state_division: (value) =>
+            !value ? "Division / State is required" : null,
+          post_zip_code: (value) =>
+            !value ? "Postal / ZIP Code is required" : null,
           country: (value) => (value ? null : "Country is required"),
           address: (value) => (!value ? "Address is required" : null),
         },
@@ -236,14 +238,14 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
                     <div className="cust_iputLabel">
-                      <span className="requiredInput">State</span>
+                      <span className="requiredInput">Division / State</span>
                     </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
                         wrapper: "cust_iputWrapper",
                       }}
-                      placeholder="State"
+                      placeholder="Division / State"
                       {...form.getInputProps(
                         `emergencyContacts.${index}.address.state_division`
                       )}
@@ -251,14 +253,14 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
                     <div className="cust_iputLabel">
-                      <span className="requiredInput">ZIP Code</span>
+                      <span className="requiredInput">Postal / ZIP Code</span>
                     </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
                         wrapper: "cust_iputWrapper",
                       }}
-                      placeholder="ZIP Code"
+                      placeholder="Postal / ZIP Code"
                       {...form.getInputProps(
                         `emergencyContacts.${index}.address.post_zip_code`
                       )}

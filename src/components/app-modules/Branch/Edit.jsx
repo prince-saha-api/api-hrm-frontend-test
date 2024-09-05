@@ -61,12 +61,12 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
         //   value.length < 2 ? "City must have at least 2 letters" : null,
         // state_division: (value) =>
         //   value.length < 2
-        //     ? "State/Division must have at least 2 letters"
+        //     ? "Division / State must have at least 2 letters"
         //     : null,
         // post_zip_code: (value) => {
         //   const zipCodePattern = /^[0-9]{5}(-[0-9]{4})?$/;
         //   return !zipCodePattern.test(value)
-        //     ? "Postal/Zip code is invalid"
+        //     ? "Postal / ZIP Code is invalid"
         //     : null;
         // },
         country: (value) => (!value ? "Select a country" : null),
@@ -231,16 +231,16 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
               />
               <TextInput
                 mb="sm"
-                label="State"
-                placeholder="State"
+                label="Division / State"
+                placeholder="Division / State"
                 required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("address.state_division")}
               />
               <TextInput
                 mb="sm"
-                label="ZIP Code"
-                placeholder="ZIP Code"
+                label="Postal / ZIP Code"
+                placeholder="Postal / ZIP Code"
                 required={true}
                 disabled={isSubmitting}
                 {...form.getInputProps("address.post_zip_code")}

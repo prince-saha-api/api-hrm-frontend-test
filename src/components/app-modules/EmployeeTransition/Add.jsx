@@ -87,7 +87,7 @@ const Index = ({ opened, close, mutate }) => {
     //     // post_zip_code: (value) => {
     //     //   const zipCodePattern = /^[0-9]{5}(-[0-9]{4})?$/;
     //     //   return !zipCodePattern.test(value)
-    //     //     ? "Postal/Zip code is invalid"
+    //     //     ? "Postal / ZIP Code is invalid"
     //     //     : null;
     //     // },
     //     country: (value) => (!value ? "Select a country" : null),

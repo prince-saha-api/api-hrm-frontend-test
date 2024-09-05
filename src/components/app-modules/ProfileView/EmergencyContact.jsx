@@ -72,9 +72,13 @@ const Index = ({ opened, close, item, setItem }) => {
           city: (value) =>
             value?.length < 2 ? "City must have at least 2 letters" : null,
           state_division: (value) =>
-            value?.length < 2 ? "State must have at least 2 letters" : null,
+            value?.length < 2
+              ? "Division / State must have at least 2 letters"
+              : null,
           post_zip_code: (value) =>
-            value?.length < 4 ? "ZIP Code must have at least 4 digits" : null,
+            value?.length < 4
+              ? "Postal / ZIP Code must have at least 4 digits"
+              : null,
           country: (value) => (value ? null : "Country is required"),
           address: (value) =>
             value?.length < 5 ? "Address must have at least 5 letters" : null,
@@ -312,8 +316,8 @@ const Index = ({ opened, close, item, setItem }) => {
                   />
                   <TextInput
                     mb="sm"
-                    label="State"
-                    placeholder="State"
+                    label="Division / State"
+                    placeholder="Division / State"
                     // disabled={isSubmitting}
                     {...form.getInputProps(
                       `emergencyContacts.${index}.address.state_division`
@@ -321,8 +325,8 @@ const Index = ({ opened, close, item, setItem }) => {
                   />
                   <TextInput
                     mb="sm"
-                    label="ZIP Code"
-                    placeholder="ZIP Code"
+                    label="Postal / ZIP Code"
+                    placeholder="Postal / ZIP Code"
                     // disabled={isSubmitting}
                     {...form.getInputProps(
                       `emergencyContacts.${index}.address.post_zip_code`

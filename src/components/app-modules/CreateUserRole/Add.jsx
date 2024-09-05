@@ -60,12 +60,12 @@ const Index = ({ opened, close, mutate }) => {
         //   value.length < 2 ? "City must have at least 2 letters" : null,
         // state_division: (value) =>
         //   value.length < 2
-        //     ? "State/Division must have at least 2 letters"
+        //     ? "Division / State must have at least 2 letters"
         //     : null,
         // post_zip_code: (value) => {
         //   const zipCodePattern = /^[0-9]{5}(-[0-9]{4})?$/;
         //   return !zipCodePattern.test(value)
-        //     ? "Postal/Zip code is invalid"
+        //     ? "Postal / ZIP Code is invalid"
         //     : null;
         // },
         country: (value) => (!value ? "Select a country" : null),

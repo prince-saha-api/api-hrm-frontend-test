@@ -24,7 +24,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       name: "",
       in_time: "",
       out_time: "",
-      late_tolerance_time: 0,
+      late_in_tolerance_time: 0,
     },
     validate: {
       name: (value) => (!value ? "Title is required" : null),
@@ -44,8 +44,8 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
         }
         return null;
       },
-      late_tolerance_time: (value) => {
-        if (value < 0) return "Late tolerance time cannot be negative";
+      late_in_tolerance_time: (value) => {
+        if (value < 0) return "Late in tolerance time cannot be negative";
         return null;
       },
     },
@@ -57,7 +57,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
         name: item.name || "",
         in_time: item.in_time || "",
         out_time: item.out_time || "",
-        late_tolerance_time: item.late_tolerance_time || 0,
+        late_in_tolerance_time: item.late_in_tolerance_time || 0,
       });
     }
   }, [item]);
@@ -176,7 +176,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
               placeholder="Late Tolarence"
               hideControls
               disabled={isSubmitting}
-              {...form.getInputProps("late_tolerance_time")}
+              {...form.getInputProps("late_in_tolerance_time")}
             />
           </Grid.Col>
         </Grid>

@@ -2,7 +2,7 @@ import React from "react";
 import AssignShift from "@/components/app-modules/AssignShift";
 
 const Page = () => {
-   return <AssignShift />;
+  return <AssignShift />;
 };
 
 export default Page;

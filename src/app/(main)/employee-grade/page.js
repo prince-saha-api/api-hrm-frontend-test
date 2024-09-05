@@ -2,7 +2,7 @@ import React from "react";
 import EmployeeGrade from "@/components/app-modules/EmployeeGrade";
 
 const Page = () => {
-   return <EmployeeGrade />;
+  return <EmployeeGrade />;
 };
 
 export default Page;

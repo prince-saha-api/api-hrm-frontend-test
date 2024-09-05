@@ -1,8 +1,8 @@
 import React from "react";
-import  Employees from "@/components/app-modules/Employees";
+import Employees from "@/components/app-modules/Employees";
 
 const Page = () => {
-  return <Employees/>;
+  return <Employees />;
 };
 
 export default Page;

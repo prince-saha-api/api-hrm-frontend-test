@@ -2,7 +2,7 @@ import React from "react";
 import AssignDeductions from "@/components/app-modules/AssignDeductions";
 
 const Page = () => {
-   return <AssignDeductions />;
+  return <AssignDeductions />;
 };
 
 export default Page;

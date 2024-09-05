@@ -1,8 +1,8 @@
 import React from "react";
-import  EmployeeTransition from "@/components/app-modules/EmployeeTransition";
+import EmployeeTransition from "@/components/app-modules/EmployeeTransition";
 
 const Page = () => {
-  return <EmployeeTransition/>;
+  return <EmployeeTransition />;
 };
 
 export default Page;

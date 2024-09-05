@@ -134,14 +134,14 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "late_tolerance_time",
-      title: "Late Tolarence Time",
+      accessor: "late_in_tolerance_time",
+      title: "Late In Tolarence Time",
       // visibleMediaQuery: aboveXs,
       // sortable: true,
-      render: ({ late_tolerance_time }) =>
-        late_tolerance_time ? late_tolerance_time : "0",
+      render: ({ late_in_tolerance_time }) =>
+        late_in_tolerance_time ? late_in_tolerance_time : "0",
       // for export
-      key: "late_tolerance_time",
+      key: "late_in_tolerance_time",
     },
     {
       // for table display
@@ -202,8 +202,8 @@ const Index = () => {
       value: "out_time",
     },
     {
-      label: "Late Tolerance",
-      value: "late_tolerance_time",
+      label: "Late In Tolerance",
+      value: "late_in_tolerance_time",
     },
     {
       label: "Actions",
@@ -216,7 +216,7 @@ const Index = () => {
     "name",
     "in_time",
     "out_time",
-    "late_tolerance_time",
+    "late_in_tolerance_time",
     "actions",
   ]);
 

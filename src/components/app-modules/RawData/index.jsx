@@ -91,7 +91,7 @@ const Index = () => {
       accessor: "employee",
       title: "Employee",
       sortable: false,
-      render: ({ photo, first_name, last_name }) => (
+      render: ({ id, photo, first_name, last_name }) => (
         <div className="d-flex justify-content-start align-items-center">
           {photo ? (
             <img
@@ -103,7 +103,7 @@ const Index = () => {
             ""
           )}
           <Link
-            href="/profile-view"
+            href={`/profile/${id}`}
             className="ms-2 text-decoration-none color-inherit"
           >
             {first_name + " " + last_name}

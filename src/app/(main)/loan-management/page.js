@@ -2,7 +2,7 @@ import React from "react";
 import LoanManagement from "@/components/app-modules/LoanManagement";
 
 const Page = () => {
-   return <LoanManagement />;
+  return <LoanManagement />;
 };
 
 export default Page;

@@ -13,6 +13,7 @@ import { HiDotsVertical } from "react-icons/hi";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import { Button, Select, Menu } from "@mantine/core";
+import Breadcrumb from "@/components/utils/Breadcrumb";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { fetcher, getData } from "@/lib/fetch";
 import { constants } from "@/lib/config";
@@ -423,15 +424,15 @@ const Index = () => {
       />
 
       <div className="mb-4 d-flex justify-content-between align-items-end flex-wrap">
-        {/* <Breadcrumb
-          title="Employee Group"
+        <Breadcrumb
+          title="Employee Groups"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Employee Group" },
+            { title: "Employee Groups" },
           ]}
-        /> */}
+        />
 
-        <h5>Employee Group</h5>
+        {/* <h5>Employee Groups</h5> */}
 
         <AddButton
           label="Add Employee Group"

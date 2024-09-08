@@ -63,12 +63,12 @@ const Page = () => {
                           Departments
                         </Link>
                       </li>
-                      {/* <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
                           href="/employee-group"
                           className="text-decoration-none subMenu"
                         >
-                          Employee Group
+                          Employee Groups
                         </Link>
                       </li>
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
@@ -78,15 +78,15 @@ const Page = () => {
                         >
                           Employee Grades
                         </Link>
-                      </li> */}
-                      <li className="text-capitalize text-decoration-none sidenav_sub_item">
+                      </li>
+                      {/* <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
                           href="/employee-group-and-grade"
                           className="text-decoration-none subMenu"
                         >
                           Employee Grades & Group
                         </Link>
-                      </li>
+                      </li> */}
                       <li className="text-capitalize text-decoration-none sidenav_sub_item">
                         <Link
                           href="/designation"

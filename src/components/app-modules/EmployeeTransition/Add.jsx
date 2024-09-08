@@ -57,44 +57,94 @@ const Index = ({ opened, close, mutate }) => {
       increment_amount: null,
       percentage: "",
     },
-    // validate: {
-    //   name: (value) =>
-    //     value.length < 5 ? "Name must have at least 5 letters" : null,
-    //   // description: (value) =>
-    //   //   value.length < 10
-    //   //     ? "Description must have at least 10 characters"
-    //   //     : null,
-    //   company: (value) => (!value ? "Select a company" : null),
-    //   phone: (value) => {
-    //     const phonePattern = /^01[0-9]{9}$/;
-    //     return !phonePattern.test(value) ? "Phone number is invalid" : null;
-    //   },
-    //   email: (value) => {
-    //     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    //     return !emailPattern.test(value) ? "Email is invalid" : null;
-    //   },
-    //   // fax: (value) => {
-    //   //   const faxPattern = /^[0-9]+$/;
-    //   //   return !faxPattern.test(value) ? "Fax number is invalid" : null;
-    //   // },
-    //   address: {
-    //     // city: (value) =>
-    //     //   value.length < 2 ? "City must have at least 2 letters" : null,
-    //     // state_division: (value) =>
-    //     //   value.length < 2
-    //     //     ? "State/Division must have at least 2 letters"
-    //     //     : null,
-    //     // post_zip_code: (value) => {
-    //     //   const zipCodePattern = /^[0-9]{5}(-[0-9]{4})?$/;
-    //     //   return !zipCodePattern.test(value)
-    //     //     ? "Postal / ZIP Code is invalid"
-    //     //     : null;
-    //     // },
-    //     country: (value) => (!value ? "Select a country" : null),
-    //     address: (value) =>
-    //       value.length < 5 ? "Address must have at least 5 characters" : null,
-    //   },
-    // },
+    validate: {
+      user: (value) => (!value ? "Select an employee" : null),
+      effective_from: (value) => {
+        if (
+          statusAdjustment.Promotion ||
+          statusAdjustment.Increment ||
+          statusAdjustment.Transfer ||
+          statusAdjustment.StatusUpdate
+        ) {
+          if (!value) {
+            return "Effective From date is required";
+          }
+          if (new Date(value) > new Date()) {
+            return "The Effective From date cannot exceed the current date";
+          }
+        }
+        return null;
+      },
+      status_adjustment: (value) => {
+        const { Promotion, Increment, Transfer, StatusUpdate } = value;
+
+        if (!(Promotion || Increment || Transfer || StatusUpdate)) {
+          return "At least one status adjustment must be selected.";
+        }
+      },
+      salary: (value) => {
+        if (!value && statusAdjustment.Increment) {
+          return "Salary is required";
+        }
+        return value && isNaN(Number(value)) ? "Salary must be a number" : null;
+      },
+      company: (value) => {
+        if (statusAdjustment.Transfer && !value) {
+          return "Select a company";
+        }
+        return null;
+      },
+      branch: (value) => {
+        if (statusAdjustment.Transfer && !value) {
+          return "Select a branch";
+        }
+        return null;
+      },
+      department: (value) => {
+        if (statusAdjustment.Transfer && !value) {
+          return "Select a department";
+        }
+        return null;
+      },
+      designation: (value) => {
+        if (statusAdjustment.Promotion && !value) {
+          return "Select a designation";
+        }
+        return null;
+      },
+      job_status: (value) => {
+        if (statusAdjustment.StatusUpdate && !value) {
+          return "Select a job status";
+        }
+        return null;
+      },
+      employee_type: (value) => {
+        if (statusAdjustment.StatusUpdate && !value) {
+          return "Select an employee type";
+        }
+        return null;
+      },
+      increment_on: (value) => {
+        if (statusAdjustment.Increment && !value) {
+          return "Select the salary type";
+        }
+        return null;
+      },
+      // increment_amount: (value) => {
+      //   if (statusAdjustment.Increment && value === null) {
+      //     return "Increment amount cannot be null";
+      //   }
+      //   return null;
+      // },
+      // percentage: (value) => {
+      //   if (statusAdjustment.Increment && !value) {
+      //     return "Percentage cannot be empty";
+      //   }
+      //   return value && isNaN(Number(value))
+      //     ? "Percentage must be a number"
+      //     : null;
+      // },
+    },
   });
 
   const {
@@ -190,7 +240,6 @@ const Index = ({ opened, close, mutate }) => {
       fetchDepartments(form.getValues().company, value);
       form.setFieldValue("department", null);
     } else {
-      console.log(value);
       form.setFieldValue("department", "");
       setDepartments([]);
     }
@@ -269,32 +318,77 @@ const Index = ({ opened, close, mutate }) => {
   });
 
   form.watch("user", ({ value }) => {
+    if (!value) {
+      setPreviousSalary((prev) => ({
+        ...prev,
+        gross_salary: 0,
+        basic_salary: 0,
+      }));
+      form.setFieldValue("previous_salary", 0);
+      form.setFieldValue("increment_amount", 0);
+      form.setFieldValue("percentage", 0);
+      return;
+    }
     const selectedUser = employees.find((employee) => employee.value === value);
+    const incrementOn = form.getValues().increment_on;
+
     setPreviousSalary((prev) => ({
       ...prev,
-      gross_salary: selectedUser.gross_salary,
-      basic_salary: selectedUser.basic_salary,
+      gross_salary: selectedUser?.gross_salary,
+      basic_salary: selectedUser?.basic_salary,
     }));
-    form.setFieldValue("previous_salary", selectedUser.gross_salary);
+
+    let prevSalary = 0;
+
+    if (incrementOn === "Gross Salary") {
+      prevSalary = selectedUser?.gross_salary || 0;
+    } else if (incrementOn === "Basic Salary") {
+      prevSalary = selectedUser?.basic_salary || 0;
+    }
+
+    let newSalary = form.getValues().salary;
+    const increment = calculateSalaryIncrement(prevSalary, newSalary);
+
+    form.setFieldValue("previous_salary", prevSalary);
+    form.setFieldValue("increment_amount", increment?.amount);
+    form.setFieldValue("percentage", increment?.percentage);
   });
 
   const calculateSalaryIncrement = (previousSalary, newSalary) => {
+    // Calculate increment amount
+    const amount = newSalary - previousSalary;
+
+    // Handle case where previousSalary is 0 to avoid division by zero
+    const percentage =
+      previousSalary > 0
+        ? ((amount / previousSalary) * 100).toFixed(2) // Round to 2 decimal places
+        : 0; // Set percentage to 0 when previousSalary is 0
+
     return {
-      amount: newSalary - previousSalary,
-      percentage: ((newSalary - previousSalary) / previousSalary) * 100,
+      amount: amount,
+      percentage: parseFloat(percentage), // Ensure the result is a number, not a string
     };
   };
 
   form.watch("increment_on", ({ value }) => {
+    if (!value) {
+      form.setFieldValue("previous_salary", 0);
+      form.setFieldValue("increment_amount", 0);
+      form.setFieldValue("percentage", 0);
+      return;
+    }
+
     let prevSalary = 0;
 
     if (value === "Gross Salary") {
       prevSalary = previousSalary.gross_salary;
-    } else {
+    } else if (value === "Basic Salary") {
       prevSalary = previousSalary.basic_salary;
     }
     let newSalary = form.getValues().salary;
     const increment = calculateSalaryIncrement(prevSalary, newSalary);
+
+    form.setFieldValue("previous_salary", prevSalary);
     form.setFieldValue("increment_amount", increment?.amount);
     form.setFieldValue("percentage", increment?.percentage);
   });
@@ -328,6 +422,18 @@ const Index = ({ opened, close, mutate }) => {
         // console.log(response);
         setIsSubmitting(false);
         form.reset();
+        setStatusAdjustment({
+          Promotion: false,
+          Increment: false,
+          Transfer: false,
+          StatusUpdate: false,
+        });
+        setPreviousSalary({
+          gross_salary: 0,
+          basic_salary: 0,
+        });
+        setBranches([]);
+        setDepartments([]);
         close();
         mutate();
         toast.success("Employee transition created successfully");
@@ -349,6 +455,12 @@ const Index = ({ opened, close, mutate }) => {
     }
   };
 
+  const handleError = (errors) => {
+    if (!errors?.user && errors?.status_adjustment) {
+      toast.error(errors?.status_adjustment);
+    }
+  };
+
   return (
     <>
       <Modal
@@ -360,7 +472,12 @@ const Index = ({ opened, close, mutate }) => {
         onClose={close}
         centered
       >
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+        <form
+          onSubmit={form.onSubmit(
+            (values) => handleSubmit(values),
+            handleError
+          )}
+        >
           <Grid grow gutter="sm">
             <Grid.Col span={12}>
               <Select
@@ -532,7 +649,7 @@ const Index = ({ opened, close, mutate }) => {
                   <TextInput
                     label="Incremented Amount"
                     placeholder="Incremented Amount"
-                    disabled={isSubmitting}
+                    disabled
                     {...form.getInputProps("increment_amount")}
                     key={form.key("increment_amount")}
                   />
@@ -541,7 +658,7 @@ const Index = ({ opened, close, mutate }) => {
                   <TextInput
                     label="Percentage"
                     placeholder="Percentage"
-                    disabled={isSubmitting}
+                    disabled
                     {...form.getInputProps("percentage")}
                     key={form.key("percentage")}
                   />
@@ -557,6 +674,7 @@ const Index = ({ opened, close, mutate }) => {
                 <DateInput
                   label="Effective From"
                   placeholder="Effective From"
+                  maxDate={new Date()}
                   disabled={isSubmitting}
                   {...form.getInputProps("effective_from")}
                   key={form.key("effective_from")}

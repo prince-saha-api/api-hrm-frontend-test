@@ -6,8 +6,7 @@ import { checkIsAuthenticated } from "../../lib/check";
 // import "../../styles/auth.scss";
 
 export const metadata = {
-  title: "Login",
-  description: "DMC HRM",
+  title: "Authentication - API HRM",
 };
 
 export default async function RootLayout({ children }) {

@@ -2,6 +2,10 @@ import React from "react";
 import { fetchData } from "@/lib/get";
 import ProfileView from "@/components/app-modules/ProfileView";
 
+export const metadata = {
+  title: "Profile - API HRM",
+};
+
 async function getData(id) {
   const res = await fetchData(`/api/user/get-profiledetails/${id}`);
   // The return value is *not* serialized

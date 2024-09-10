@@ -9,15 +9,13 @@ import {
   TextInput,
   Select,
   NumberInput,
-  Textarea,
-  DateInput,
-  Checkbox,
 } from "@mantine/core";
 import { FaTrashAlt } from "react-icons/fa";
 import { LuPlus } from "react-icons/lu";
 import { toast } from "react-toastify";
 import { update } from "@/lib/submit";
 import { countries } from "@/data/countries";
+import { validateEmail, validatePhoneNumber } from "@/lib/validate";
 
 const Index = ({ opened, close, item, setItem }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,30 +56,25 @@ const Index = ({ opened, close, item, setItem }) => {
     },
     validate: {
       emergencyContacts: {
-        name: (value) =>
-          value?.length < 2 ? "Name must have at least 2 letters" : null,
-        age: (value) => (value < 1 ? "Age must be a positive number" : null),
+        name: (value) => (!value ? "Name is required" : null),
+        // age: (value) => (value < 1 ? "Age must be a positive number" : null),
         phone_no: (value) =>
-          value?.length < 10
-            ? "Phone number must have at least 10 digits"
-            : null,
-        email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-        relation: (value) =>
-          value?.length < 2 ? "Relation must have at least 2 letters" : null,
+          !value
+            ? "Phone is required"
+            : validatePhoneNumber(value)
+            ? null
+            : "Invalid phone number",
+        email: (value) =>
+          value && !validateEmail(value) ? "Invalid email" : null,
+        relation: (value) => (!value ? "Relation is required" : null),
         address: {
-          city: (value) =>
-            value?.length < 2 ? "City must have at least 2 letters" : null,
+          city: (value) => (!value ? "City is required" : null),
           state_division: (value) =>
-            value?.length < 2
-              ? "Division / State must have at least 2 letters"
-              : null,
+            !value ? "Division / State is required" : null,
           post_zip_code: (value) =>
-            value?.length < 4
-              ? "Postal / ZIP Code must have at least 4 digits"
-              : null,
+            !value ? "Postal / ZIP Code is required" : null,
           country: (value) => (value ? null : "Country is required"),
-          address: (value) =>
-            value?.length < 5 ? "Address must have at least 5 letters" : null,
+          address: (value) => (!value ? "Address is required" : null),
         },
       },
     },
@@ -269,11 +262,11 @@ const Index = ({ opened, close, item, setItem }) => {
                     hideControls
                     {...form.getInputProps(`emergencyContacts.${index}.age`)}
                   />
-                  <NumberInput
+                  <TextInput
                     mb="sm"
                     label="Phone No"
                     placeholder="Phone No"
-                    hideControls
+                    // hideControls
                     {...form.getInputProps(
                       `emergencyContacts.${index}.phone_no`
                     )}

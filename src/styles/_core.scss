@@ -397,3 +397,18 @@ employee manage css end
   cursor: no-drop;
   z-index: 9;
 }
+
+.attachment_icon_in_table {
+  color: #000 !important;
+  text-decoration: none !important;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 29px;
+}
+.attachment_icon_in_table:hover {
+  color: var(--main-color) !important;
+}
+.attachment_icon_in_table svg {
+  // font-size: 17px;
+}

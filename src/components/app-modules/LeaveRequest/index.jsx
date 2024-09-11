@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
-import { FaRegFileAlt } from "react-icons/fa";
+import { FaRegFileAlt, FaRegFile } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
 import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
@@ -30,7 +30,7 @@ import Edit from "./Edit";
 import Delete from "./Delete";
 import Approve from "./Approve";
 import Reject from "./Reject";
-import { formatDate, getFullName } from "@/lib/helper";
+import { formatDate, getFullName, getStoragePath } from "@/lib/helper";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -186,7 +186,22 @@ const index = () => {
       noWrap: true,
       width: 170,
       // visibleMediaQuery: aboveXs,
-      render: ({ attachment }) => "attachment" || "N/A",
+      render: ({ attachment }) =>
+        attachment ? (
+          <>
+            <a
+              className="attachment_icon_in_table"
+              href={getStoragePath(attachment)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaRegFile className="me-1" />
+              View
+            </a>
+          </>
+        ) : (
+          ""
+        ),
       // for export
       key: "attachment",
     },

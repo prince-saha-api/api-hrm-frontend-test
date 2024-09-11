@@ -31,4 +31,10 @@ export const employeeTypes = [
   "Labour",
 ];
 
-export const jobStatus = ["OnGoing", "Resigned", "Terminated", "Retired"];
+export const jobStatus = [
+  "Rejoined",
+  "Resigned",
+  "Terminated",
+  "Retired",
+  "Expired",
+];

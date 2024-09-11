@@ -20,6 +20,8 @@ import { jobStatus, employeeTypes } from "@/data";
 
 const Index = ({ opened, close, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEmployeeTypeDisabled, setIsEmployeeTypeDisabled] = useState(false);
+  const [isJobStatusDisabled, setIsJobStatusDisabled] = useState(false);
   const [branches, setBranches] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [statusAdjustment, setStatusAdjustment] = useState({
@@ -112,14 +114,29 @@ const Index = ({ opened, close, mutate }) => {
         }
         return null;
       },
-      job_status: (value) => {
-        if (statusAdjustment.StatusUpdate && !value) {
+      job_status: (value, values) => {
+        if (
+          !(
+            statusAdjustment.Promotion ||
+            statusAdjustment.Increment ||
+            statusAdjustment.Transfer
+          ) &&
+          !isJobStatusDisabled &&
+          statusAdjustment.StatusUpdate &&
+          !value &&
+          !values.employee_type
+        ) {
           return "Select a job status";
         }
         return null;
       },
-      employee_type: (value) => {
-        if (statusAdjustment.StatusUpdate && !value) {
+      employee_type: (value, values) => {
+        if (
+          statusAdjustment.StatusUpdate &&
+          !isEmployeeTypeDisabled &&
+          values.job_status !== "Rejoined" &&
+          !value
+        ) {
           return "Select an employee type";
         }
         return null;
@@ -250,6 +267,8 @@ const Index = ({ opened, close, mutate }) => {
     ({ previousValue, value, touched, dirty }) => {
       if (!value) {
         form.setFieldValue("designation", "");
+      } else {
+        form.setFieldValue("job_status", "");
       }
       setStatusAdjustment((prev) => ({
         ...prev,
@@ -266,6 +285,8 @@ const Index = ({ opened, close, mutate }) => {
         form.setFieldValue("salary", "");
         form.setFieldValue("increment_amount", "");
         form.setFieldValue("percentage", "");
+      } else {
+        form.setFieldValue("job_status", "");
       }
       setStatusAdjustment((prev) => ({
         ...prev,
@@ -281,6 +302,8 @@ const Index = ({ opened, close, mutate }) => {
         form.setFieldValue("company", "");
         form.setFieldValue("branch", "");
         form.setFieldValue("department", "");
+      } else {
+        form.setFieldValue("job_status", "");
       }
       setStatusAdjustment((prev) => ({
         ...prev,
@@ -302,6 +325,22 @@ const Index = ({ opened, close, mutate }) => {
       }));
     }
   );
+
+  form.watch("job_status", ({ value }) => {
+    form.setFieldError("employee_type", "");
+    if (value && value !== "Rejoined") {
+      form.setFieldValue("employee_type", "");
+      setIsEmployeeTypeDisabled(true);
+    } else {
+      setIsEmployeeTypeDisabled(false);
+    }
+  });
+
+  form.watch("employee_type", ({ value }) => {
+    if (value && !form.getValues().job_status) {
+      form.setFieldError("job_status", "");
+    }
+  });
 
   form.watch("salary", ({ previousValue, value, touched, dirty }) => {
     let prevSalary = 0;
@@ -456,7 +495,14 @@ const Index = ({ opened, close, mutate }) => {
   };
 
   const handleError = (errors) => {
-    if (!errors?.user && errors?.status_adjustment) {
+    console.log(errors);
+    // Object.keys(errors).forEach((key) => {
+    //   if (key !== "user") {
+    //     toast.error(errors[key]);
+    //   }
+    // });
+
+    if (errors?.status_adjustment) {
       toast.error(errors?.status_adjustment);
     }
   };
@@ -590,21 +636,28 @@ const Index = ({ opened, close, mutate }) => {
 
             {statusAdjustment?.StatusUpdate && (
               <>
-                <Grid.Col span={6}>
-                  <Select
-                    label="Job Status Update"
-                    placeholder="Job Status Update"
-                    disabled={isSubmitting}
-                    data={jobStatus}
-                    {...form.getInputProps("job_status")}
-                    key={form.key("job_status")}
-                  />
-                </Grid.Col>
+                {!(
+                  statusAdjustment?.Promotion ||
+                  statusAdjustment?.Increment ||
+                  statusAdjustment?.Transfer
+                ) && (
+                  <Grid.Col span={6}>
+                    <Select
+                      label="Job Status Update"
+                      placeholder="Job Status Update"
+                      disabled={isSubmitting || isJobStatusDisabled}
+                      data={jobStatus}
+                      {...form.getInputProps("job_status")}
+                      key={form.key("job_status")}
+                    />
+                  </Grid.Col>
+                )}
+
                 <Grid.Col span={6}>
                   <Select
                     label="Employee Type"
                     placeholder="Employee Type"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isEmployeeTypeDisabled}
                     data={employeeTypes}
                     {...form.getInputProps("employee_type")}
                     key={form.key("employee_type")}

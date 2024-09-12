@@ -11,8 +11,8 @@ import Button from "react-bootstrap/Button";
 import classEase from "classease";
 import { toast } from "react-toastify";
 import { useUser } from "@/components/contexts/UserContext";
-import { login } from "../../../lib/auth";
-import { authTokenKey, authUserKey } from "../../../lib/config";
+import { login } from "@/lib/auth";
+import { authRoleKey, authTokenKey, authUserKey } from "@/lib/config";
 
 const Page = () => {
   const router = useRouter();
@@ -37,10 +37,12 @@ const Page = () => {
     setLoading(true);
 
     try {
-      const { access, user } = await login({
+      const { access, user: appUser } = await login({
         username: employeeId,
         password,
       });
+
+      const user = { ...appUser, role: appUser?.role || "employee" };
 
       // console.log(user);
       // return;
@@ -54,12 +56,16 @@ const Page = () => {
         // localStorage.setItem("user", JSON.stringify(user));
         setUser(user);
         Cookies.set(authUserKey, user?.id);
+        Cookies.set(authRoleKey, user?.role);
         Cookies.set(authTokenKey, access);
       } else {
         // localStorage.setItem("user", JSON.stringify(user));
         setUser(user);
         // Expires in 30 days
         Cookies.set(authUserKey, user?.id, {
+          expires: 30,
+        });
+        Cookies.set(authRoleKey, user?.role, {
           expires: 30,
         });
         Cookies.set(authTokenKey, access, {

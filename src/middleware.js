@@ -58,7 +58,7 @@ export async function middleware(request) {
   }
 
   const role = await request.cookies.get(authRoleKey);
-  console.log("role", role);
+  // console.log("role", role);
 
   const haveAccess = doesRoleHaveAccessToURL(
     role?.value,

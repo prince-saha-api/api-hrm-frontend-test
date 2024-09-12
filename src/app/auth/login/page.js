@@ -42,7 +42,7 @@ const Page = () => {
         password,
       });
 
-      const user = { ...appUser, role: appUser?.role || "employee" };
+      const user = { ...appUser, role: appUser?.role || "admin" };
 
       // console.log(user);
       // return;

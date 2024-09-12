@@ -56,7 +56,7 @@ export const checkIsAuthenticated = async () => {
       if (res?.data && res?.data?.id == user.value) {
         return {
           status: true,
-          user: { ...res?.data, role: res?.data?.role || "employee" },
+          user: { ...res?.data, role: res?.data?.role || "admin" },
         };
       } else {
         return {

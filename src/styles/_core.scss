@@ -97,10 +97,36 @@ employee manage css start
 .table_user_img {
   height: 40px;
   width: 40px;
+  background-color: #f1f3f5;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.table_user_img img {
+  height: 100%;
+  width: 100%;
   object-fit: cover;
   object-position: center;
   border-radius: 50%;
   overflow: hidden;
+}
+.table_user {
+  width: calc(100% - 40px - 8px);
+}
+.table_user_name {
+  font-size: 16px;
+  color: #000;
+  margin-bottom: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.table_user_id {
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: bolder;
+  color: var(--main-color);
 }
 /*=====================
 employee manage css end

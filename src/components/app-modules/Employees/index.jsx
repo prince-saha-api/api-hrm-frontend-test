@@ -19,7 +19,7 @@ import { CiSearch } from "react-icons/ci";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { constants } from "@/lib/config";
-import { getStoragePath, generateGroupString } from "@/lib/helper";
+import { getStoragePath, generateGroupString, getFullName } from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import FilterModal from "@/components/utils/EmployeeFilterModal";
 
@@ -117,37 +117,42 @@ const Employees = () => {
       accessor: "photo",
       title: "Employee",
       sortable: false,
-      render: ({ id, photo, first_name, last_name }) => (
-        <div className="d-flex justify-content-start align-items-center">
-          {photo ? (
+      render: ({ id, photo, first_name, last_name, official_id }) => (
+        <Link
+          href={`/profile/${id}`}
+          className="d-flex justify-content-start align-items-center text-decoration-none color-inherit"
+        >
+          <span className="table_user_img">
             <img
-              src={getStoragePath(photo)}
-              alt="img"
-              className="table_user_img"
+              src={photo ? getStoragePath(photo) : "/default-profile.png"}
+              alt=""
+              onError={(e) => {
+                e.target.src = "/default-profile.png";
+              }}
             />
-          ) : (
-            ""
-          )}
-          <Link
-            href={`/profile/${id}`}
-            className="ms-2 text-decoration-none color-inherit"
-          >
-            {first_name + " " + last_name}
-          </Link>
-        </div>
+          </span>
+          <div className="d-flex flex-column justify-content-center ms-2 table_user">
+            <h6 className="table_user_name">
+              {getFullName(first_name, last_name)}
+            </h6>
+            {official_id && (
+              <span className="table_user_id">{official_id}</span>
+            )}
+          </div>
+        </Link>
       ),
       // for export
       key: "photo",
     },
-    {
-      // for table display
-      accessor: "official_id",
-      title: "Employee ID",
-      noWrap: true,
-      sortable: true,
-      // for export
-      key: "official_id",
-    },
+    // {
+    //   // for table display
+    //   accessor: "official_id",
+    //   title: "Employee ID",
+    //   noWrap: true,
+    //   sortable: true,
+    //   // for export
+    //   key: "official_id",
+    // },
     {
       accessor: "designation",
       title: "Designation",
@@ -270,10 +275,10 @@ const Employees = () => {
       label: "Employee",
       value: "photo",
     },
-    {
-      label: "Employee ID",
-      value: "official_id",
-    },
+    // {
+    //   label: "Employee ID",
+    //   value: "official_id",
+    // },
     {
       label: "Designation",
       value: "designation",
@@ -311,7 +316,7 @@ const Employees = () => {
   const [selectedOptions, setSelectedOptions] = useState([
     "na",
     "photo",
-    "official_id",
+    // "official_id",
     "designation",
     "group_name",
     "department_name",
@@ -322,9 +327,7 @@ const Employees = () => {
   ]);
 
   const handleChange = (keys) => {
-    const updatedKeys = [
-      ...new Set(["na", "photo", "official_id", "actions", ...keys]),
-    ];
+    const updatedKeys = [...new Set(["na", "photo", "actions", ...keys])];
 
     const reorderedOptions = visibleColumns.filter((column) =>
       updatedKeys.includes(column.value)

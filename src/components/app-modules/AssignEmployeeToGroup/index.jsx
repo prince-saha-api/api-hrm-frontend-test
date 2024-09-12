@@ -234,26 +234,32 @@ const Index = () => {
                       last_name,
                       official_id,
                     }) => (
-                      <div className="d-flex justify-content-start align-items-center">
-                        {photo ? (
+                      <Link
+                        href={`/profile/${id}`}
+                        className="d-flex justify-content-start align-items-center text-decoration-none color-inherit"
+                      >
+                        <span className="table_user_img">
                           <img
-                            src={getStoragePath(photo)}
-                            alt="img"
-                            className="table_user_img"
+                            src={
+                              photo
+                                ? getStoragePath(photo)
+                                : "/default-profile.png"
+                            }
+                            alt=""
+                            onError={(e) => {
+                              e.target.src = "/default-profile.png";
+                            }}
                           />
-                        ) : (
-                          ""
-                        )}
-                        <div className="d-flex flex-column ms-2">
-                          <Link
-                            href={`/profile/${id}`}
-                            className="text-decoration-none color-inherit"
-                          >
+                        </span>
+                        <div className="d-flex flex-column justify-content-center ms-2 table_user">
+                          <h6 className="table_user_name">
                             {getFullName(first_name, last_name)}
-                          </Link>
-                          {official_id && <span>{official_id}</span>}
+                          </h6>
+                          {official_id && (
+                            <span className="table_user_id">{official_id}</span>
+                          )}
                         </div>
-                      </div>
+                      </Link>
                     ),
                   },
                   {

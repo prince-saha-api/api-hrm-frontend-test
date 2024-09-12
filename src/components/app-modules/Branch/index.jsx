@@ -543,10 +543,10 @@ const Index = () => {
 
       <div className="mb-4 d-flex justify-content-between align-items-end">
         <Breadcrumb
-          title="Branch"
+          title="Branches"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Branch" },
+            { title: "Branches" },
           ]}
         />
 

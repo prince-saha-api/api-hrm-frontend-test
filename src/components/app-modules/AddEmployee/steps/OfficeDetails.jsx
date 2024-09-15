@@ -23,6 +23,7 @@ import {
   validateEmail,
   validatePhoneNumber,
 } from "@/lib/validate";
+import UserSelectItem from "@/components/utils/UserSelectItem";
 
 const OfficeDetails = forwardRef(
   (
@@ -157,7 +158,14 @@ const OfficeDetails = forwardRef(
     });
 
     const employees = employeesData?.data?.result?.map((item) => ({
-      label: getFullName(item?.first_name, item?.last_name),
+      // label: getFullName(item?.first_name, item?.last_name),
+      label: [getFullName(item?.first_name, item?.last_name), item?.official_id]
+        .filter(Boolean)
+        .join(" - "),
+      firstName: item?.first_name || "",
+      lastName: item?.last_name || "",
+      officialID: item?.official_id,
+      image: item?.photo,
       value: item?.id.toString() || "",
     }));
 
@@ -525,6 +533,7 @@ const OfficeDetails = forwardRef(
                     data={employees}
                     {...form.getInputProps("supervisor")}
                     key={form.key("supervisor")}
+                    renderOption={UserSelectItem}
                   />
                 </div>
                 <div className="d-flex align-items-start w-100 cust_mt">
@@ -544,6 +553,7 @@ const OfficeDetails = forwardRef(
                     data={employees}
                     {...form.getInputProps("expense_approver")}
                     key={form.key("expense_approver")}
+                    renderOption={UserSelectItem}
                   />
                 </div>
                 <div className="d-flex align-items-start w-100 cust_mt">
@@ -563,6 +573,7 @@ const OfficeDetails = forwardRef(
                     data={employees}
                     {...form.getInputProps("leave_approver")}
                     key={form.key("leave_approver")}
+                    renderOption={UserSelectItem}
                   />
                 </div>
                 <div className="d-flex align-items-start w-100 cust_mt">
@@ -582,6 +593,7 @@ const OfficeDetails = forwardRef(
                     data={employees}
                     {...form.getInputProps("shift_request_approver")}
                     key={form.key("shift_request_approver")}
+                    renderOption={UserSelectItem}
                   />
                 </div>
               </Box>

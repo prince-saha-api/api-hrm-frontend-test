@@ -10,6 +10,7 @@ import { fetcher } from "@/lib/fetch";
 import { formatDateToYYYYMMDD, getFullName } from "@/lib/helper";
 import { validateEmail, validatePhoneNumber } from "@/lib/validate";
 import { bloodGroups, genders, maritalStatus } from "@/data";
+import UserSelectItem from "@/components/utils/UserSelectItem";
 
 const Index = ({ opened, close, item, setItem }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -99,7 +100,13 @@ const Index = ({ opened, close, item, setItem }) => {
   });
 
   const employees = employeesData?.data?.result?.map((item) => ({
-    label: getFullName(item?.first_name, item?.last_name),
+    label: [getFullName(item?.first_name, item?.last_name), item?.official_id]
+      .filter(Boolean)
+      .join(" - "),
+    firstName: item?.first_name || "",
+    lastName: item?.last_name || "",
+    officialID: item?.official_id,
+    image: item?.photo,
     value: item?.id.toString() || "",
   }));
 
@@ -258,8 +265,10 @@ const Index = ({ opened, close, item, setItem }) => {
                 required={true}
                 disabled={isSubmitting}
                 data={employees}
+                searchable
                 {...form.getInputProps("supervisor")}
                 key={form.key("supervisor")}
+                renderOption={UserSelectItem}
               />
               <Select
                 mb="sm"

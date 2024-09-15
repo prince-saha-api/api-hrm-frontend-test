@@ -16,6 +16,7 @@ import { update } from "@/lib/submit";
 import { fetcher, getData } from "@/lib/fetch";
 import { getFullName } from "@/lib/helper";
 import { employeeTypes } from "@/data";
+import UserSelectItem from "@/components/utils/UserSelectItem";
 
 const Index = ({ opened, close, item, setItem }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -124,7 +125,13 @@ const Index = ({ opened, close, item, setItem }) => {
   });
 
   const employees = employeesData?.data?.result?.map((item) => ({
-    label: getFullName(item?.first_name, item?.last_name),
+    label: [getFullName(item?.first_name, item?.last_name), item?.official_id]
+      .filter(Boolean)
+      .join(" - "),
+    firstName: item?.first_name || "",
+    lastName: item?.last_name || "",
+    officialID: item?.official_id,
+    image: item?.photo,
     value: item?.id.toString() || "",
   }));
 
@@ -369,6 +376,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 data={employees}
                 {...form.getInputProps("expense_approver")}
                 key={form.key("expense_approver")}
+                renderOption={UserSelectItem}
               />
               <Select
                 mb="sm"
@@ -378,6 +386,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 data={employees}
                 {...form.getInputProps("leave_approver")}
                 key={form.key("leave_approver")}
+                renderOption={UserSelectItem}
               />
               <Select
                 mb="sm"
@@ -387,6 +396,7 @@ const Index = ({ opened, close, item, setItem }) => {
                 data={employees}
                 {...form.getInputProps("shift_request_approver")}
                 key={form.key("shift_request_approver")}
+                renderOption={UserSelectItem}
               />
             </Grid.Col>
           </Grid>

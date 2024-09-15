@@ -438,3 +438,17 @@ employee manage css end
 .attachment_icon_in_table svg {
   // font-size: 17px;
 }
+
+.user_select_item_image {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+}
+.user_select_item_name {
+}
+.user_select_item_icon {
+  color: #000;
+  opacity: 0.4;
+}

@@ -19,6 +19,7 @@ import { FaRegCalendarDays } from "react-icons/fa6";
 import { submit } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
 import { getFullName, formatDateToYYYYMMDD } from "@/lib/helper";
+import UserSelectItem from "@/components/utils/UserSelectItem";
 
 const Index = ({ opened, close, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -94,7 +95,13 @@ const Index = ({ opened, close, mutate }) => {
   });
 
   const employees = employeeData?.data.result.map((item) => ({
-    label: getFullName(item?.first_name, item?.last_name),
+    label: [getFullName(item?.first_name, item?.last_name), item?.official_id]
+      .filter(Boolean)
+      .join(" - "),
+    firstName: item?.first_name || "",
+    lastName: item?.last_name || "",
+    officialID: item?.official_id,
+    image: item?.photo,
     value: item?.id.toString() || "",
   }));
 
@@ -252,8 +259,10 @@ const Index = ({ opened, close, mutate }) => {
               placeholder="Employee"
               hidePickedOptions
               data={employees}
+              searchable
               {...form.getInputProps("user")}
               key={form.key("user")}
+              renderOption={UserSelectItem}
             />
           </Grid.Col>
         </Grid>

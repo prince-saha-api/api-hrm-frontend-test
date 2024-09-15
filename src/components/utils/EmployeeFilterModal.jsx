@@ -23,6 +23,7 @@ import {
   employeeTypes,
   jobStatus,
 } from "@/data";
+import UserSelectItem from "@/components/utils/UserSelectItem";
 
 const FilterModal = ({ opened, close, data, setData }) => {
   const [branches, setBranches] = useState([]);
@@ -178,7 +179,13 @@ const FilterModal = ({ opened, close, data, setData }) => {
   });
 
   const employees = employeesData?.data?.result?.map((item) => ({
-    label: getFullName(item?.first_name, item?.last_name),
+    label: [getFullName(item?.first_name, item?.last_name), item?.official_id]
+      .filter(Boolean)
+      .join(" - "),
+    firstName: item?.first_name || "",
+    lastName: item?.last_name || "",
+    officialID: item?.official_id,
+    image: item?.photo,
     value: item?.id.toString() || "",
   }));
 
@@ -438,11 +445,12 @@ const FilterModal = ({ opened, close, data, setData }) => {
                   <Select
                     label="Supervisor"
                     placeholder="Supervisor"
-                    // searchable
+                    searchable
                     data={employees}
                     mb="xs"
                     {...form.getInputProps("supervisor")}
                     key={form.key("supervisor")}
+                    renderOption={UserSelectItem}
                   />
 
                   <Select

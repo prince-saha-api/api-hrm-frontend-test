@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { update } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
 import { getFullName, formatDateToYYYYMMDD, formatTime } from "@/lib/helper";
+import UserSelectItem from "@/components/utils/UserSelectItem";
 
 const Index = ({ opened, close, item, setItem, mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,7 +62,13 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
   });
 
   const employees = data?.data.result.map((item) => ({
-    label: getFullName(item?.first_name, item?.last_name),
+    label: [getFullName(item?.first_name, item?.last_name), item?.official_id]
+      .filter(Boolean)
+      .join(" - "),
+    firstName: item?.first_name || "",
+    lastName: item?.last_name || "",
+    officialID: item?.official_id,
+    image: item?.photo,
     value: item?.id.toString() || "",
   }));
 
@@ -168,6 +175,7 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
             nothingFoundMessage="Nothing found..."
             {...form.getInputProps("employee_id")}
             key={form.key("employee_id")}
+            renderOption={UserSelectItem}
           />
           <DateInput
             mb="sm"

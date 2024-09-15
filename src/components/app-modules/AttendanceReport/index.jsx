@@ -1,30 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
-import {
-  Button,
-  Select,
-  Menu,
-  MultiSelect,
-  Popover,
-  Input,
-} from "@mantine/core";
+import { Button, Select, MultiSelect, Popover } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import classEase from "classease";
-import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineFilePdf } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { constants } from "@/lib/config";
-import { getStoragePath, getFullName } from "@/lib/helper";
+import {
+  getStoragePath,
+  getFullName,
+  getDate,
+  convertTimeTo12HourFormat,
+} from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import FilterModal from "./FilterModal";
 
@@ -34,11 +31,11 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "username",
+    columnAccessor: "in_time",
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/user/get-employee/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let apiUrl = `/api/attendance/get-attendance/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -54,7 +51,7 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  // const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
     console.log(status);
@@ -67,22 +64,6 @@ const Index = () => {
     setCurrentPage(1);
     // mutate();
   };
-
-  // for Modal
-  const [addOpened, { open: addOpen, close: addClose }] = useDisclosure(false);
-  const [editOpened, { open: editOpen, close: editClose }] =
-    useDisclosure(false);
-  const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
-    useDisclosure(false);
-
-  const [selectedEditItem, setSelectedEditItem] = useState(null);
-  const [selectedDeleteItem, setSelectedDeleteItem] = useState(null);
-
-  useEffect(() => {
-    if (selectedEditItem) {
-      editOpen();
-    }
-  }, [selectedEditItem]);
 
   const columns = [
     // {
@@ -103,88 +84,107 @@ const Index = () => {
       title: "Employee",
       sortable: false,
       width: 170,
-      render: ({ id, photo, first_name, last_name, official_id }) => (
-        <div className="d-flex justify-content-start align-items-center">
-          {photo ? (
+      render: ({
+        employee: { id, photo, first_name, last_name, official_id },
+      }) => (
+        <Link
+          href={`/profile/${id}`}
+          className="d-flex justify-content-start align-items-center text-decoration-none color-inherit"
+        >
+          <span className="table_user_img">
             <img
-              src={getStoragePath(photo)}
-              alt="img"
-              className="table_user_img"
+              src={photo ? getStoragePath(photo) : "/default-profile.png"}
+              alt=""
+              onError={(e) => {
+                e.target.src = "/default-profile.png";
+              }}
             />
-          ) : (
-            ""
-          )}
-          <div className="d-flex flex-column ms-2">
-            <Link
-              href={`/profile/${id}`}
-              className="text-decoration-none color-inherit"
-            >
+          </span>
+          <div className="d-flex flex-column justify-content-center ms-2 table_user">
+            <h6 className="table_user_name">
               {getFullName(first_name, last_name)}
-            </Link>
-            {official_id && <span>{official_id}</span>}
+            </h6>
+            {official_id && (
+              <span className="table_user_id">{official_id}</span>
+            )}
           </div>
-        </div>
+        </Link>
       ),
+      // modifier: ({
+      //   employee: { id, photo, first_name, last_name, official_id },
+      // }) => getFullName(first_name, last_name),
     },
     {
       key: "department",
       accessor: "department",
       title: "Department",
-      render: ({ department }) => department?.name || "N/A",
+      width: 120,
+      render: ({ department }) => department?.name || "",
     },
     {
       key: "designation",
       accessor: "designation",
       title: "Designation",
-      render: ({ designation }) => designation?.name || "N/A",
+      width: 120,
+      render: ({ designation }) => designation?.name || "",
     },
     {
       key: "date",
       accessor: "date",
       title: "Date",
-      render: ({ date }) => date || "N/A",
+      width: 120,
+      render: ({ date }) => (date ? getDate(date) : ""),
     },
     {
       key: "in_time",
       accessor: "in_time",
       title: "In Time",
-      render: ({ in_time }) => in_time || "N/A",
+      width: 120,
+      render: ({ in_time }) =>
+        in_time ? convertTimeTo12HourFormat(in_time) : "",
     },
     {
       key: "out_time",
       accessor: "out_time",
       title: "Out Time",
-      render: ({ out_time }) => out_time || "N/A",
+      width: 120,
+      render: ({ out_time }) =>
+        out_time ? convertTimeTo12HourFormat(out_time) : "",
     },
     {
       key: "status",
       accessor: "status",
       title: "Status",
-      render: ({ status }) => status || "N/A",
+      width: 120,
+      render: ({ status }) => status || "",
     },
     {
       key: "attendance_mode",
       accessor: "attendance_mode",
       title: "Attendance Mode",
-      render: ({ attendance_mode }) => attendance_mode || "N/A",
+      width: 140,
+      render: ({ attendance_mode }) => attendance_mode || "",
     },
     {
       key: "late_time",
       accessor: "late_time",
       title: "Late Time (Mins)",
-      render: ({ late_time }) => late_time || "N/A",
+      width: 140,
+      render: ({ late_time }) => Number(late_time).toFixed(0) || "",
     },
     {
       key: "early_leave",
       accessor: "early_leave",
       title: "Early Leave (Mins)",
-      render: ({ early_leave }) => early_leave || "N/A",
+      width: 140,
+      render: ({ early_leave }) => Number(early_leave).toFixed(0) || "",
     },
     {
       key: "overtime",
       accessor: "overtime",
       title: "Overtime (Mins)",
-      render: ({ overtime }) => overtime || "N/A",
+      width: 140,
+      render: ({ over_time }) => Number(over_time).toFixed(0) || "",
     },
   ];
 
@@ -235,7 +235,7 @@ const Index = () => {
     },
     {
       label: "Overtime (Mins)",
-      value: "overtime",
+      value: "over_time",
     },
   ];
 
@@ -278,7 +278,7 @@ const Index = () => {
 
   // const [dataToExport, setDataToExport] = useState(null);
   const getExportDataUrl = () => {
-    let url = `/api/branch/get-branch/?column_accessor=${
+    let url = `/api/attendance/get-attendance/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -349,7 +349,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "Branches", "branches");
+        exportToPDF(headers, data, "Attendance Report", "attendance-report");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -412,7 +412,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "branches");
+        exportToCSV(data, "attendance-report");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -474,7 +474,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "branches");
+        exportToExcel(data, "attendance-report");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,

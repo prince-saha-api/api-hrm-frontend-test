@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
@@ -117,8 +118,34 @@ const index = () => {
       width: 170,
       // sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ user }) =>
-        getFullName(user?.first_name, user?.last_name) || "N/A",
+      render: ({ user }) => (
+        <Link
+          href={`/profile/${user?.id}`}
+          className="d-flex justify-content-start align-items-center text-decoration-none color-inherit"
+        >
+          <span className="table_user_img">
+            <img
+              src={
+                user?.photo
+                  ? getStoragePath(user?.photo)
+                  : "/default-profile.png"
+              }
+              alt=""
+              onError={(e) => {
+                e.target.src = "/default-profile.png";
+              }}
+            />
+          </span>
+          <div className="d-flex flex-column justify-content-center ms-2 table_user">
+            <h6 className="table_user_name">
+              {getFullName(user?.first_name, user?.last_name)}
+            </h6>
+            {user?.official_id && (
+              <span className="table_user_id">{user?.official_id}</span>
+            )}
+          </div>
+        </Link>
+      ),
       // for export
       key: "employee",
     },

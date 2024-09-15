@@ -147,7 +147,13 @@ const Index = ({ opened, close, mutate }) => {
             </Grid.Col>
           </Grid>
           <Group justify="flex-end" mt="md">
-            <Button type="submit">Save</Button>
+            <Button
+              type="submit"
+              loading={isSubmitting}
+              loaderProps={{ type: "dots" }}
+            >
+              Save
+            </Button>
           </Group>
         </form>
       </Modal>

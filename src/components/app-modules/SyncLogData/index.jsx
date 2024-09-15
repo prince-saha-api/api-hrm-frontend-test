@@ -1,111 +1,64 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import Link from "next/link";
+import React, { useState } from "react";
 import { useForm } from "@mantine/form";
-import { DateInput } from "@mantine/dates";
-import {
-  TextInput,
-  Textarea,
-  Button,
-  Box,
-  Flex,
-  FileButton,
-  Group,
-  Select,
-  Grid,
-} from "@mantine/core";
-import { FcAcceptDatabase, FcAddImage } from "react-icons/fc";
-import Image from "next/image";
+import { TextInput, Button, Select, Grid } from "@mantine/core";
+import { toast } from "react-toastify";
 import Breadcrumb from "@/components/utils/Breadcrumb";
-import compmanyLogo from "public/full_logo.png";
-import { countries } from "@/data/countries";
+import { submit } from "@/lib/submit";
 
-const BasicInfo = () => {
+const Page = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      name: "",
-      establishment_date: null,
-      business_registration_number: "",
-      tax_id_number: null,
-      bin_no: null,
-      description: "",
-      website_url: null,
-      primary_email: null,
-      primary_phone_number: null,
-      fax: null,
-      logo: null,
-      industry_type: null,
-      address: {
-        city: "",
-        state_division: "",
-        post_zip_code: "",
-        country: "",
-        address: "",
-      },
+      type: null,
+      value: "",
     },
     validate: {
-      name: (value) =>
-        value.length < 2 ? "Name must have at least 2 letters" : null,
-      primary_phone_number: (value) =>
-        value?.length < 12 ? "Phone number must be at least 12 digits" : null,
-      fax: (value) =>
-        value?.length < 8 ? "Fax must be at least 8 digits" : null,
-      primary_email: (value) =>
-        /^\S+@\S+$/.test(value) ? null : "Invalid email",
-      website_url: (value) =>
-        /^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$/.test(value)
-          ? null
-          : "Must be a valid website URL",
+      type: (value) => (!value ? "Select an option" : null),
+      value: (value) => {
+        if (!value) return "Value is required.";
+        const numberValue = Number(value);
+        if (isNaN(numberValue)) return "Value must be a valid number";
+        if (numberValue <= 0) return "Value must be greater than zero";
+        return null;
+      },
     },
   });
 
-  const [file, setFile] = useState(null);
-  const fileInputRef = useRef(null);
-  const [preview, setPreview] = useState(null);
-
   const handleSubmit = async (values) => {
-    console.log(values);
-    const formattedDate = values.establishment_date
-      ? values.establishment_date.toISOString().split("T")[0]
-      : null;
+    // console.log(values);
+    const minutes =
+      values?.type === "Days"
+        ? Number(values?.value) * 24 * 60
+        : Number(values?.value) * 60;
+
+    setIsSubmitting(true);
 
     try {
-      const formValues = new FormData();
+      const response = await submit(`/api/attendance/sync-log-data/${minutes}`);
 
-      const flattenObject = (obj, prefix = "") => {
-        Object.keys(obj).forEach((key) => {
-          const value = obj[key];
-          const formKey = prefix ? `${prefix}[${key}]` : key;
-
-          if (value && typeof value === "object" && !(value instanceof File)) {
-            flattenObject(value, formKey);
-          } else {
-            formValues.append(formKey, value);
-          }
-        });
-      };
-
-      flattenObject(form.values);
+      if (response?.status === "success") {
+        setIsSubmitting(false);
+        form.reset();
+        toast.success("Sync successful");
+      } else {
+        setIsSubmitting(false);
+        if (response?.status === "error" && Array.isArray(response.message)) {
+          response.message.forEach((msg) => {
+            toast.error(msg);
+          });
+        } else {
+          toast.error("Error submitting form");
+        }
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
-    }
-  };
-
-  const handleFileChange = (file) => {
-    setFile(file);
-    setPreview(URL.createObjectURL(file));
-    form.setFieldValue("logo", file); // add this line
-    console.log(preview);
-  };
-
-  const handleClearLogo = () => {
-    setFile(null);
-    setPreview(null);
-    form.setFieldValue("logo", null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // Reset the file input
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 500);
     }
   };
 
@@ -126,39 +79,37 @@ const BasicInfo = () => {
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
           <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: "xl" }}>
             <Grid.Col span={12}>
-              <div className="d-flex align-items-end">
+              <div className="d-flex align-items-start">
                 <Select
                   label="Enter option"
-                  placeholder="Pick value"
+                  placeholder="Select option"
                   data={["Hours", "Days"]}
+                  disabled={isSubmitting}
+                  {...form.getInputProps("type")}
+                  key={form.key("type")}
                 />
                 <TextInput
+                  ms="md"
                   label="Enter value"
                   placeholder="Enter value"
-                  ms="md"
+                  disabled={isSubmitting}
+                  {...form.getInputProps("value")}
+                  key={form.key("value")}
                 />
-                <Button type="submit" ms="md" size="sm">
-                  Get log Data
-                </Button>
+                <div className="">
+                  <p className="mb-0 opacity-0">Fake title</p>
+                  <Button
+                    type="submit"
+                    ms="md"
+                    size="sm"
+                    loading={isSubmitting}
+                    loaderProps={{ type: "dots" }}
+                  >
+                    Get log Data
+                  </Button>
+                </div>
               </div>
             </Grid.Col>
-            {/* <Grid.Col span={12}>
-              <div className="d-flex align-items-end">
-                <Select
-                  label="Enter option"
-                  placeholder="Pick value"
-                  data={["Hours", "Days"]}
-                />
-                <TextInput
-                  label="Enter value"
-                  placeholder="Enter value"
-                  ms="md"
-                />
-                <Button type="submit" ms="md" size="sm">
-                  Sync With MIS
-                </Button>
-              </div>
-            </Grid.Col> */}
           </Grid>
         </form>
       </div>
@@ -166,4 +117,4 @@ const BasicInfo = () => {
   );
 };
 
-export default BasicInfo;
+export default Page;

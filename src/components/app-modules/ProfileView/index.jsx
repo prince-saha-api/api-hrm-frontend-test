@@ -38,6 +38,7 @@ import {
   generateAddressString,
   formatCurrency,
   generateGroupString,
+  generateStringFromArray,
 } from "@/lib/helper";
 import ProfileEdit from "./ProfileEdit";
 import ProfileImage from "./ProfileImage";
@@ -585,38 +586,46 @@ const ProfileView = ({ data }) => {
                     <TbSquareRoundedFilled className="roundIcon" />
                     Job History
                   </h4>
-                  <div className="jobHistoryBox">
+                  <div className="overflow-auto">
                     <Table striped withTableBorder withColumnBorders>
                       <Table.Thead>
                         <Table.Tr>
                           <Table.Th>Transition Type</Table.Th>
-                          <Table.Th>Date</Table.Th>
-                          <Table.Th>Job Status</Table.Th>
                           <Table.Th>Designation</Table.Th>
                           <Table.Th>Department</Table.Th>
-                          <Table.Th>Joining Salary</Table.Th>
-                          <Table.Th>New Salary</Table.Th>
+                          <Table.Th>Incremented Amount</Table.Th>
+                          <Table.Th>Salary</Table.Th>
+                          <Table.Th>Effective From</Table.Th>
                         </Table.Tr>
                       </Table.Thead>
-                      {profile?.employeejobhistoryone?.length ? (
+                      {profile?.employeejobhistory_user?.length ? (
                         <Table.Tbody>
-                          {profile.employeejobhistoryone.map((item, index) => (
-                            <Table.Tr key={index}>
-                              <Table.Td>{item?.status_adjustment}</Table.Td>
-                              <Table.Td>
-                                {getDate(item?.effective_from)}
-                              </Table.Td>
-                              <Table.Td>{item?.status_adjustment}</Table.Td>
-                              <Table.Td>{item?.designation || "N/A"}</Table.Td>
-                              <Table.Td>{item?.department || "N/A"}</Table.Td>
-                              <Table.Td>
-                                {formatCurrency(item?.new_salary)}
-                              </Table.Td>
-                              <Table.Td>
-                                {formatCurrency(item?.new_salary)}
-                              </Table.Td>
-                            </Table.Tr>
-                          ))}
+                          {profile.employeejobhistory_user.map(
+                            (item, index) => (
+                              <Table.Tr key={index}>
+                                <Table.Td>
+                                  {generateStringFromArray(
+                                    item?.status_adjustment || []
+                                  )}
+                                </Table.Td>
+                                <Table.Td>
+                                  {item?.designation?.name || ""}
+                                </Table.Td>
+                                <Table.Td>
+                                  {item?.department?.name || ""}
+                                </Table.Td>
+                                <Table.Td>
+                                  {formatCurrency(item?.increment_amount)}
+                                </Table.Td>
+                                <Table.Td>
+                                  {formatCurrency(item?.salary)}
+                                </Table.Td>
+                                <Table.Td>
+                                  {getDate(item?.effective_from)}
+                                </Table.Td>
+                              </Table.Tr>
+                            )
+                          )}
                         </Table.Tbody>
                       ) : (
                         ""

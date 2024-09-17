@@ -144,15 +144,15 @@ const Index = () => {
       // for export
       key: "department",
     },
-    {
-      // for table display
-      accessor: "joining_salary",
-      title: "Joining Salary",
-      // visibleMediaQuery: aboveXs,
-      render: ({ joining_salary }) => joining_salary || "",
-      // for export
-      key: "joining_salary",
-    },
+    // {
+    //   // for table display
+    //   accessor: "joining_salary",
+    //   title: "Joining Salary",
+    //   // visibleMediaQuery: aboveXs,
+    //   render: ({ joining_salary }) => joining_salary || "",
+    //   // for export
+    //   key: "joining_salary",
+    // },
     {
       // for table display
       accessor: "increment_amount",
@@ -251,10 +251,10 @@ const Index = () => {
       label: "Department",
       value: "department",
     },
-    {
-      label: "joining Salary",
-      value: "joining_salary",
-    },
+    // {
+    //   label: "joining Salary",
+    //   value: "joining_salary",
+    // },
     {
       label: "incremented Amount",
       value: "increment_amount",
@@ -279,7 +279,7 @@ const Index = () => {
     "transition",
     "designation",
     "department",
-    "joining_salary",
+    // "joining_salary",
     "increment_amount",
     "present_salary",
     "effective_from",

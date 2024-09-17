@@ -1,21 +1,10 @@
 import React, { useState } from "react";
 import useSWR from "swr";
 import { useForm } from "@mantine/form";
-import {
-  Modal,
-  TextInput,
-  Textarea,
-  Button,
-  Select,
-  Group,
-  Grid,
-  PasswordInput,
-  Checkbox,
-} from "@mantine/core";
+import { Button, Select } from "@mantine/core";
 import { toast } from "react-toastify";
 import { submit } from "@/lib/submit";
 import { fetcher } from "@/lib/fetch";
-import { countries } from "@/data/countries";
 
 const Index = ({ mutate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,12 +12,12 @@ const Index = ({ mutate }) => {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      deviceid: "",
-      groupid: "",
+      device: null,
+      group: null,
     },
     validate: {
-      deviceid: (value) => (value ? null : "Device is required"),
-      groupid: (value) => (value ? null : "Group is required"),
+      device: (value) => (value ? null : "Device is required"),
+      group: (value) => (value ? null : "Group is required"),
     },
   });
 
@@ -61,14 +50,10 @@ const Index = ({ mutate }) => {
   }));
 
   const handleSubmit = async (values) => {
-    // e.preventDefault();
-    // console.log(values);
-    // return;
-
     const formattedValues = {
       ...values,
-      deviceid: values.deviceid ? Number(values.deviceid) : null,
-      groupid: values.groupid ? Number(values.groupid) : null,
+      device: values?.device ? Number(values.device) : null,
+      group: values?.group ? Number(values.group) : null,
     };
 
     setIsSubmitting(true);
@@ -80,7 +65,6 @@ const Index = ({ mutate }) => {
       );
 
       if (response?.status === "success") {
-        // console.log(response);
         setIsSubmitting(false);
         form.reset();
         mutate();
@@ -102,42 +86,42 @@ const Index = ({ mutate }) => {
   };
 
   return (
-    <>
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <div className="d-flex justify-content-start align-items-end mb-4">
-          {/* <div className="me-2">Select Device</div> */}
-          <Select
-            me="sm"
-            label="Device"
-            placeholder="Select Device"
-            required={true}
-            disabled={isSubmitting}
-            data={devices}
-            {...form.getInputProps("deviceid")}
-          />
-          {/* <div className="ms-3 me-2">Select Group</div> */}
-          <Select
-            // mt="sm"
-            label="Group"
-            placeholder="Select Group"
-            required={true}
-            disabled={isSubmitting}
-            data={groups}
-            {...form.getInputProps("groupid")}
-          />
+    <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <div className="d-flex justify-content-start align-items-end mb-4">
+        {/* <div className="me-2">Select Device</div> */}
+        <Select
+          me="sm"
+          label="Device"
+          placeholder="Select Device"
+          required={true}
+          disabled={isSubmitting}
+          data={devices}
+          {...form.getInputProps("device")}
+          key={form.key("device")}
+        />
+        {/* <div className="ms-3 me-2">Select Group</div> */}
+        <Select
+          // mt="sm"
+          label="Group"
+          placeholder="Select Group"
+          required={true}
+          disabled={isSubmitting}
+          data={groups}
+          {...form.getInputProps("group")}
+          key={form.key("group")}
+        />
 
-          <Button
-            type="submit"
-            ms="sm"
-            variant="filled"
-            loading={isSubmitting}
-            loaderProps={{ type: "dots" }}
-          >
-            Submit
-          </Button>
-        </div>
-      </form>
-    </>
+        <Button
+          type="submit"
+          ms="sm"
+          variant="filled"
+          loading={isSubmitting}
+          loaderProps={{ type: "dots" }}
+        >
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 };
 

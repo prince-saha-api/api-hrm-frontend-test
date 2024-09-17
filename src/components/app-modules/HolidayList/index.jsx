@@ -49,7 +49,7 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  // const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
     console.log(status);

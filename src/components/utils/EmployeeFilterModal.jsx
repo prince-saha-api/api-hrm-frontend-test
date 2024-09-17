@@ -23,6 +23,7 @@ import {
   employeeTypes,
   jobStatus,
 } from "@/data";
+import UserSelectItem from "@/components/utils/UserSelectItem";
 
 const FilterModal = ({ opened, close, data, setData }) => {
   const [branches, setBranches] = useState([]);
@@ -178,7 +179,13 @@ const FilterModal = ({ opened, close, data, setData }) => {
   });
 
   const employees = employeesData?.data?.result?.map((item) => ({
-    label: getFullName(item?.first_name, item?.last_name),
+    label: [getFullName(item?.first_name, item?.last_name), item?.official_id]
+      .filter(Boolean)
+      .join(" - "),
+    firstName: item?.first_name || "",
+    lastName: item?.last_name || "",
+    officialID: item?.official_id,
+    image: item?.photo,
     value: item?.id.toString() || "",
   }));
 
@@ -286,8 +293,8 @@ const FilterModal = ({ opened, close, data, setData }) => {
           <Accordion.Item key="Personal Info" value="Personal Info">
             <Accordion.Control>Personal Info</Accordion.Control>
             <Accordion.Panel>
-              <Grid>
-                <Grid.Col span={6}>
+              <Grid gutter={{ base: 8, xl: "md" }}>
+                <Grid.Col span={{ base: 12, lg: 6 }}>
                   <TextInput
                     label="First Name"
                     placeholder="First Name"
@@ -319,7 +326,7 @@ const FilterModal = ({ opened, close, data, setData }) => {
                     key={form.key("marital_status")}
                   />
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={{ base: 12, lg: 6 }}>
                   <TextInput
                     label="Last Name"
                     placeholder="Last Name"
@@ -358,7 +365,7 @@ const FilterModal = ({ opened, close, data, setData }) => {
             <Accordion.Control>Work Info</Accordion.Control>
             <Accordion.Panel>
               <Grid>
-                <Grid.Col span={6}>
+                <Grid.Col span={{ base: 12, lg: 6 }}>
                   <TextInput //
                     label="Employee ID"
                     placeholder="Employee ID"
@@ -412,12 +419,11 @@ const FilterModal = ({ opened, close, data, setData }) => {
                     placeholder="Group"
                     // searchable
                     data={groups}
-                    mb="xs"
                     {...form.getInputProps("ethnicgroup_user")}
                     key={form.key("ethnicgroup_user")}
                   />
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={{ base: 12, lg: 6 }}>
                   <Select
                     label="Company"
                     placeholder="Company"
@@ -439,11 +445,12 @@ const FilterModal = ({ opened, close, data, setData }) => {
                   <Select
                     label="Supervisor"
                     placeholder="Supervisor"
-                    // searchable
+                    searchable
                     data={employees}
                     mb="xs"
                     {...form.getInputProps("supervisor")}
                     key={form.key("supervisor")}
+                    renderOption={UserSelectItem}
                   />
 
                   <Select

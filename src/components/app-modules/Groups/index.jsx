@@ -48,7 +48,7 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  // const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
     console.log(status);
@@ -442,10 +442,10 @@ const Index = () => {
 
       <div className="mb-4 d-flex justify-content-between align-items-end">
         <Breadcrumb
-          title="Groups"
+          title="Device Groups"
           items={[
             { title: "Dashboard", href: "/dashboard" },
-            { title: "Groups" },
+            { title: "Device Groups" },
           ]}
         />
 

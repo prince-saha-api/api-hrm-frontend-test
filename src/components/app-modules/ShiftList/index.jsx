@@ -49,7 +49,7 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  // const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
     console.log(status);
@@ -109,6 +109,7 @@ const Index = () => {
       // for table display
       accessor: "in_time",
       title: "In Time",
+      sortable: true,
       noWrap: true,
       // visibleMediaQuery: aboveXs,
       render: ({ in_time }) =>
@@ -133,14 +134,25 @@ const Index = () => {
     },
     {
       // for table display
-      accessor: "late_tolerance_time",
-      title: "Late Tolarence Time",
+      accessor: "late_in_tolerance_time",
+      title: "Late In Tolerance Time",
       // visibleMediaQuery: aboveXs,
-      sortable: true,
-      render: ({ late_tolerance_time }) =>
-        late_tolerance_time ? late_tolerance_time : "N/A",
+      // sortable: true,
+      render: ({ late_in_tolerance_time }) =>
+        late_in_tolerance_time ? late_in_tolerance_time : "0",
       // for export
-      key: "late_tolerance_time",
+      key: "late_in_tolerance_time",
+    },
+    {
+      // for table display
+      accessor: "early_leave_tolerance_time",
+      title: "Early Leave Tolerance Time",
+      // visibleMediaQuery: aboveXs,
+      // sortable: true,
+      render: ({ early_leave_tolerance_time }) =>
+        early_leave_tolerance_time ? early_leave_tolerance_time : "0",
+      // for export
+      key: "early_leave_tolerance_time",
     },
     {
       // for table display
@@ -201,8 +213,12 @@ const Index = () => {
       value: "out_time",
     },
     {
-      label: "Late Tolerance",
-      value: "late_tolerance_time",
+      label: "Late In Tolerance",
+      value: "late_in_tolerance_time",
+    },
+    {
+      label: "Early Leave Tolerance",
+      value: "early_leave_tolerance_time",
     },
     {
       label: "Actions",
@@ -215,13 +231,14 @@ const Index = () => {
     "name",
     "in_time",
     "out_time",
-    "late_tolerance_time",
+    "late_in_tolerance_time",
+    "early_leave_tolerance_time",
     "actions",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
-      ...new Set(["na", "title", "leave_type", "actions", ...keys]),
+      ...new Set(["na", "name", "in_time", "actions", ...keys]),
     ];
 
     const reorderedOptions = visibleColumns.filter((column) =>

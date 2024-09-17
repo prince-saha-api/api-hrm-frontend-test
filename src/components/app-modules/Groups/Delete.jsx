@@ -12,14 +12,11 @@ const Index = ({ opened, close, item, mutate }) => {
 
       if (res?.status === "success") {
         toast.success("Item deleted successfully");
-        mutate(); // Re-fetch the data
+        mutate();
         close();
       } else {
-        console.log(res);
         toast.error(res.message[0]);
         close();
-        // mutate();
-        // throw new Error("Failed to delete item");
       }
     } catch (error) {
       toast.error(error.message);

@@ -11,8 +11,8 @@ import Button from "react-bootstrap/Button";
 import classEase from "classease";
 import { toast } from "react-toastify";
 import { useUser } from "@/components/contexts/UserContext";
-import { login } from "../../../lib/auth";
-import { authTokenKey, authUserKey } from "../../../lib/config";
+import { login } from "@/lib/auth";
+import { authRoleKey, authTokenKey, authUserKey } from "@/lib/config";
 
 const Page = () => {
   const router = useRouter();
@@ -37,10 +37,12 @@ const Page = () => {
     setLoading(true);
 
     try {
-      const { access, user } = await login({
+      const { access, user: appUser } = await login({
         username: employeeId,
         password,
       });
+
+      const user = { ...appUser, role: appUser?.role || "admin" };
 
       // console.log(user);
       // return;
@@ -54,12 +56,16 @@ const Page = () => {
         // localStorage.setItem("user", JSON.stringify(user));
         setUser(user);
         Cookies.set(authUserKey, user?.id);
+        Cookies.set(authRoleKey, user?.role);
         Cookies.set(authTokenKey, access);
       } else {
         // localStorage.setItem("user", JSON.stringify(user));
         setUser(user);
         // Expires in 30 days
         Cookies.set(authUserKey, user?.id, {
+          expires: 30,
+        });
+        Cookies.set(authRoleKey, user?.role, {
           expires: 30,
         });
         Cookies.set(authTokenKey, access, {
@@ -83,10 +89,6 @@ const Page = () => {
         <Row>
           <Col lg={6} className="div_height">
             <div className="w-100 bg-white py-5 rounded-1 auth_box">
-              {/* <div className="d-flex justify-content-center mb-3">
-                <img src="/th.jpg" alt="dmc logo" className="img-fluid" />
-              </div> */}
-
               <div className="px-5">
                 <Form onSubmit={(e) => handleLogin(e)}>
                   <div className="mb-3">

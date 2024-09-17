@@ -1,8 +1,12 @@
 import React from "react";
-import  EmployeeTransition from "@/components/app-modules/EmployeeTransition";
+import EmployeeTransition from "@/components/app-modules/EmployeeTransition";
+
+export const metadata = {
+  title: "Employee Transition - API HRM",
+};
 
 const Page = () => {
-  return <EmployeeTransition/>;
+  return <EmployeeTransition />;
 };
 
 export default Page;

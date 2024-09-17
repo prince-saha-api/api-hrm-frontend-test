@@ -20,14 +20,24 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: data,
-    // validate: {
-    //   firstName: (value) =>
-    //     value.length < 2 ? "First Name must have at least 2 letters" : null,
-    //   lastName: (value) =>
-    //     value.length < 2 ? "Last Name must have at least 2 letters" : null,
-    //   // email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-    //   // // add other validations as needed
-    // },
+    validate: {
+      payment_in: (value) => (!value ? "Payment method is required" : null),
+      gross_salary: (value) => (!value ? "Salary is required" : null),
+      leavepolicy: (value) =>
+        !value || !value.length ? "Leave policy is required" : null,
+      "payrollpolicy.earningpolicy": (value) =>
+        !value || !value.length ? "Earning policy is required" : null,
+      "payrollpolicy.deductionpolicy": (value) =>
+        !value || !value.length ? "Deduction policy is required" : null,
+      "bank_account.bank_name": (value) =>
+        !value ? "Bank account name is required" : null,
+      "bank_account.branch_name": (value) =>
+        !value ? "Bank account branch is required" : null,
+      "bank_account.account_type": (value) =>
+        !value ? "Bank account type is required" : null,
+      "bank_account.account_no": (value) =>
+        !value ? "Bank account number is required" : null,
+    },
   });
 
   const {
@@ -40,6 +50,48 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
   });
 
   const leavepolicies = leavepolicyData?.data?.result?.map((item) => ({
+    label: item?.name?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: earningData,
+    error: earningError,
+    isLoading: isEarningLoading,
+  } = useSWR(`/api/payroll/get-payrollearning/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const earningPlicies = earningData?.data?.result?.map((item) => ({
+    label: item?.title?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: deductionData,
+    error: deductionError,
+    isLoading: isDeductionLoading,
+  } = useSWR(`/api/payroll/get-payrolldeduction/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const deductionPlicies = deductionData?.data?.result?.map((item) => ({
+    label: item?.title?.toString() || "",
+    value: item?.id.toString() || "",
+  }));
+
+  const {
+    data: bankAccountTypeData,
+    error: bankAccountTypeError,
+    isLoading: isBankAccountTypeLoading,
+  } = useSWR(`/api/contribution/get-bankaccounttype/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+  });
+
+  const bankAccountTypes = bankAccountTypeData?.data?.result?.map((item) => ({
     label: item?.name?.toString() || "",
     value: item?.id.toString() || "",
   }));
@@ -66,7 +118,9 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
           <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel"><span className="requiredInput">Payment In</span></div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Payment In</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -80,7 +134,9 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel"><span className="requiredInput">Monthly Gross Salary</span></div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Monthly Gross Salary</span>
+                </div>
                 <NumberInput
                   classNames={{
                     root: "w-100",
@@ -94,7 +150,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   {...form.getInputProps("gross_salary")}
                 />
               </div>
-              <div className="d-flex align-items-start w-100 cust_mt">
+              {/* <div className="d-flex align-items-start w-100 cust_mt">
                 <div className="cust_iputLabel">Monthly Basic Salary</div>
                 <NumberInput
                   classNames={{
@@ -108,9 +164,11 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   placeholder="Monthly Basic Salary"
                   {...form.getInputProps("basic_salary")}
                 />
-              </div>
+              </div> */}
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel"><span className="requiredInput">Leave Policy</span></div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Leave Policy</span>
+                </div>
                 <MultiSelect
                   classNames={{
                     root: "w-100",
@@ -120,43 +178,40 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   data={leavepolicies}
                   searchable
                   withAsterisk
+                  hidePickedOptions
                   {...form.getInputProps("leavepolicy")}
                   key={form.key("leavepolicy")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel"><span className="requiredInput">Earning Policy</span></div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Earning Policy</span>
+                </div>
                 <MultiSelect
                   classNames={{
                     root: "w-100",
                     wrapper: "cust_iputWrapper",
                   }}
                   placeholder="Earning Policy"
-                  data={[
-                    { value: "1", label: "Earning Policy 1" },
-                    { value: "2", label: "Earning Policy 2" },
-                    { value: "3", label: "Earning Policy 3" },
-                    { value: "4", label: "Earning Policy 4" },
-                  ]}
+                  hidePickedOptions
+                  data={earningPlicies}
                   searchable
                   withAsterisk
                   {...form.getInputProps("payrollpolicy.earningpolicy")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel"><span className="requiredInput">Deduction Policy</span></div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Deduction Policy</span>
+                </div>
                 <MultiSelect
                   classNames={{
                     root: "w-100",
                     wrapper: "cust_iputWrapper",
                   }}
                   placeholder="Deduction Policy"
-                  data={[
-                    { value: "1", label: "Deduction Policy 1" },
-                    { value: "2", label: "Deduction Policy 2" },
-                    { value: "3", label: "Deduction Policy 3" },
-                    { value: "4", label: "Deduction Policy 4" },
-                  ]}
+                  hidePickedOptions
+                  data={deductionPlicies}
                   searchable
                   withAsterisk
                   {...form.getInputProps("payrollpolicy.deductionpolicy")}
@@ -164,7 +219,9 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
               </div>
 
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel"><span className="requiredInput">Bank Name</span></div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Bank Name</span>
+                </div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -177,7 +234,9 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel"><span className="requiredInput">Branch</span></div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Branch</span>
+                </div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -189,7 +248,9 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel"><span className="requiredInput">Bank Account Type</span></div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Bank Account Type</span>
+                </div>
                 <Select
                   classNames={{
                     root: "w-100",
@@ -198,13 +259,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                   // mt="sm"
                   // label="Bank Account Type"
                   placeholder="Bank Account Type"
-                  data={[
-                    { value: "1", label: "Current" },
-                    { value: "2", label: "Savings" },
-                    { value: "3", label: "Salary" },
-                    { value: "4", label: "Chequing" },
-                    { value: "5", label: "Business" },
-                  ]}
+                  data={bankAccountTypes}
                   {...form.getInputProps("bank_account.account_type")}
                 />
               </div>
@@ -214,7 +269,9 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
           <Grid.Col span={6}>
             <Box className="stepBox">
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel"><span className="requiredInput">Account No.</span></div>
+                <div className="cust_iputLabel">
+                  <span className="requiredInput">Account No.</span>
+                </div>
                 <NumberInput
                   classNames={{
                     root: "w-100",
@@ -285,7 +342,7 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                     root: "w-100",
                     wrapper: "cust_iputWrapper",
                   }}
-                  placeholder="Division"
+                  placeholder="Division / State"
                   {...form.getInputProps("bank_account.address.state_division")}
                 />
               </div>
@@ -297,8 +354,8 @@ const SalaryAndLeaves = forwardRef(({ data, onNext, onBack }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // mt="sm"
-                  // label="ZIP Code"
-                  placeholder="ZIP / Postal Code"
+                  // label="Postal / ZIP Code"
+                  placeholder="Postal / ZIP Code"
                   {...form.getInputProps("bank_account.address.post_zip_code")}
                 />
               </div>

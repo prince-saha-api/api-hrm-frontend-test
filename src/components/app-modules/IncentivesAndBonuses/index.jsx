@@ -273,7 +273,7 @@ const index = () => {
          <Delete opened={deleteOpened} close={deleteClose} />
          <Add opened={addOpened} close={addClose} />
 
-         <div className="mb-4 d-flex justify-content-between align-items-end">
+         <div className="mb-4 d-md-flex justify-content-between align-items-end">
             <div className="pageTop">
                <h3>Incentives And Bonuses</h3>
                <Breadcrumbs>{items}</Breadcrumbs>
@@ -340,8 +340,8 @@ const index = () => {
             </Button>
          </div>
 
-         <div className="d-flex justify-content-between mb-3">
-            <div className="showItem d-flex align-items-center justify-content-center">
+         <div className="d-flex justify-content-between mb-3 flex-wrap">
+            <div className="showItem d-flex align-items-center">
                <p className="mb-0 me-2">Show</p>
                <Select
                   withCheckIcon={false}
@@ -415,7 +415,7 @@ const index = () => {
                      accessor: "na",
                      noWrap: true,
                      sortable: false,
-                     width: 90,
+                     width: 40,
                      render: (_, index) =>
                         (currentPage - 1) * pageSize + index + 1,
                   },
@@ -423,50 +423,58 @@ const index = () => {
                      accessor: "designation_name",
                      title: "Title",
                      noWrap: true,
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ designation_name }) =>
                         designation_name || "N/A",
                   },
                   {
                      accessor: "department_name",
-                     title: "Description",
+                     title: "Employees",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
-                     title: "Employees",
+                     title: "Description",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
+                  
                   {
                      accessor: "department_name",
                      title: "Amount Type",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
                      title: "Amount",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
                      title: "Issuing Date",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "department_name",
                      title: "Date Disbursement",
+                     width: 170,
                      // visibleMediaQuery: aboveXs,
                      render: ({ department_name }) => department_name || "N/A",
                   },
                   {
                      accessor: "actions",
                      title: "Actions",
-                     width: 90,
+                     width: 80,
                      textAlign: "center",
                      // width: "0%",
                      render: (item) => (

@@ -8,28 +8,22 @@ import { Grid } from "@mantine/core";
 import { toast } from "react-toastify";
 import { countries } from "@/data/countries";
 import { DataTable } from "mantine-datatable";
-import {
-  Button,
-  Select,
-  Breadcrumbs,
-  Anchor,
-  Accordion,
-  TextInput,
-  MultiSelect,
-  Popover,
-  Box,
-  Modal,
-  NumberInput,
-  Menu,
-} from "@mantine/core";
+import { Button, MultiSelect } from "@mantine/core";
 import { constants } from "@/lib/config";
 import { submit } from "@/lib/submit";
 import { fetcher, getData } from "@/lib/fetch";
-import { formatDate, getDate, getTime, getStoragePath } from "@/lib/helper";
+import {
+  formatDate,
+  getDate,
+  getTime,
+  getStoragePath,
+  getFullName,
+  generateStringFromArray,
+} from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import FilterModal from "@/components/utils/EmployeeFilterModal";
 
-const PAGE_SIZES = [20, 30, 40, 50];
+const PAGE_SIZES = constants.PAGE_SIZES;
 
 const Index = () => {
   const [filterOpened, { open: filterOpen, close: filterClose }] =
@@ -249,24 +243,39 @@ const Index = () => {
                     title: "Employee",
                     sortable: false,
                     width: 170,
-                    render: ({ id, photo, first_name, last_name }) => (
-                      <div className="d-flex justify-content-start align-items-center">
-                        {photo ? (
+                    render: ({
+                      id,
+                      photo,
+                      first_name,
+                      last_name,
+                      official_id,
+                    }) => (
+                      <Link
+                        href={`/profile/${id}`}
+                        className="d-flex justify-content-start align-items-center text-decoration-none color-inherit"
+                      >
+                        <span className="table_user_img">
                           <img
-                            src={getStoragePath(photo)}
-                            alt="img"
-                            className="table_user_img"
+                            src={
+                              photo
+                                ? getStoragePath(photo)
+                                : "/default-profile.png"
+                            }
+                            alt=""
+                            onError={(e) => {
+                              e.target.src = "/default-profile.png";
+                            }}
                           />
-                        ) : (
-                          ""
-                        )}
-                        <Link
-                          href={`/profile/${id}`}
-                          className="ms-2 text-decoration-none color-inherit"
-                        >
-                          {first_name + " " + last_name}
-                        </Link>
-                      </div>
+                        </span>
+                        <div className="d-flex flex-column justify-content-center ms-2 table_user">
+                          <h6 className="table_user_name">
+                            {getFullName(first_name, last_name)}
+                          </h6>
+                          {official_id && (
+                            <span className="table_user_id">{official_id}</span>
+                          )}
+                        </div>
+                      </Link>
                     ),
                   },
                   {
@@ -285,21 +294,28 @@ const Index = () => {
                       departmenttwo?.[0]?.name || "N/A",
                   },
                   {
-                    // for table display
-                    accessor: "official_id",
-                    title: "Employee ID",
-                    width: 170,
-                    noWrap: true,
-                    sortable: true,
-                    render: ({ official_id }) => official_id || "N/A",
-                  },
-                  {
                     accessor: "employee_type",
                     title: "Employee Type",
                     width: 170,
                     noWrap: true,
                     sortable: true,
                     render: ({ employee_type }) => employee_type || "N/A",
+                  },
+                  {
+                    // for table display
+                    accessor: "leave_policy",
+                    title: "Leave Policy",
+                    width: 170,
+                    noWrap: true,
+                    sortable: true,
+                    render: ({ leavesummary_user }) =>
+                      leavesummary_user?.length
+                        ? generateStringFromArray(
+                            leavesummary_user?.map(
+                              (item) => item?.leavepolicy?.name || ""
+                            ) || []
+                          )
+                        : "N/A",
                   },
                 ]}
                 fetching={isLoading}

@@ -28,7 +28,7 @@ const Index = ({ opened, close }) => {
          >
             <form>
                <Grid>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={{ base: 12, lg: 6 }}>
                      <TextInput mb="sm" label="Title" placeholder="Title" />
                      <Select
                         mb="sm"
@@ -51,13 +51,12 @@ const Index = ({ opened, close }) => {
                         placeholder="Amount"
                      />
                      <Select
-                        mb="sm"
                         label="Adjustment Type"
                         placeholder="Pick value"
                         data={["Salary", "Cash"]}
                      />
                   </Grid.Col>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={{ base: 12, lg: 6 }}>
                      <NumberInput
                         mb="sm"
                         label="Total Installment"

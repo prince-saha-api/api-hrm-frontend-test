@@ -18,6 +18,9 @@ import {
 import classEase from "classease";
 import { fetcher } from "@/lib/fetch";
 import { countries } from "@/data/countries";
+import { validateEmail, validatePhoneNumber } from "@/lib/validate";
+import { bloodGroups, genders, maritalStatus } from "@/data";
+import { formatDateToYYYYMMDD } from "@/lib/helper";
 
 const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
   const form = useForm({
@@ -29,60 +32,70 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
         ? data?.present_address
         : data?.permanent_address,
     },
-    // validate: {
-    //   first_name: (value) => (!value ? "First Name is required" : null),
-    //   // last_name: (value) => (!value ? "Last Name is required" : null),
-    //   gender: (value) => (value ? null : "Gender is required"),
-    //   dob: (value) => (value ? null : "Date of Birth is required"),
-    //   blood_group: (value) => (value ? null : "Blood Group is required"),
-    //   fathers_name: (value) => (!value ? "Father's Name is required" : null),
-    //   mothers_name: (value) => (!value ? "Mother's Name is required" : null),
-    //   marital_status: (value) => (value ? null : "Marital Status is required"),
-    //   spouse_name: (value, values) =>
-    //     values?.marital_status === "Married" && !value
-    //       ? "Spouse name is required"
-    //       : null,
-    //   personal_email: (value) =>
-    //     value && /^\S+@\S+$/.test(value) ? null : "Invalid email",
-    //   personal_phone: (value) =>
-    //     value && value.toString().length < 11
-    //       ? "Contact No must have at least 11 digits"
-    //       : null,
-    //   // nid_passport_no: (value) =>
-    //   //   value.toString().length < 10
-    //   //     ? "NID / Passport must have at least 10 digits"
-    //   //     : null,
-    //   // tin_no: (value) => (value ? null : "TIN No is required"),
-    //   "present_address.address": (value) =>
-    //     !value ? "Address is required" : null,
-    //   "present_address.city": (value) => (value ? null : "City is required"),
-    //   "present_address.state_division": (value) =>
-    //     value ? null : "State is required",
-    //   "present_address.post_zip_code": (value) =>
-    //     value ? null : "Zip code is required",
-    //   "present_address.country": (value) =>
-    //     value ? null : "Country is required",
-    //   "permanent_address.address": (value, values) =>
-    //     !values.permanentAddressSameAsPresent && !value
-    //       ? "Address is required"
-    //       : null,
-    //   "permanent_address.city": (value, values) =>
-    //     !values.permanentAddressSameAsPresent && !value
-    //       ? "City is required"
-    //       : null,
-    //   "permanent_address.state_division": (value, values) =>
-    //     !values.permanentAddressSameAsPresent && !value
-    //       ? "State is required"
-    //       : null,
-    //   "permanent_address.post_zip_code": (value, values) =>
-    //     !values.permanentAddressSameAsPresent && !value
-    //       ? "ZIP Code is required"
-    //       : null,
-    //   "permanent_address.country": (value, values) =>
-    //     !values.permanentAddressSameAsPresent && !value
-    //       ? "Country is required"
-    //       : null,
-    // },
+    validate: {
+      first_name: (value) => (!value ? "First Name is required" : null),
+      last_name: (value) => (!value ? "Last Name is required" : null),
+      gender: (value) => (value ? null : "Gender is required"),
+      dob: (value) => (value ? null : "Date of Birth is required"),
+      // blood_group: (value) => (value ? null : "Blood Group is required"),
+      fathers_name: (value) => (!value ? "Father's Name is required" : null),
+      // mothers_name: (value) => (!value ? "Mother's Name is required" : null),
+      marital_status: (value) => (value ? null : "Marital Status is required"),
+      spouse_name: (value, values) =>
+        values?.marital_status === "Married" && !value
+          ? "Spouse name is required"
+          : null,
+      nationality: (value) => (value ? null : "Nationality is required"),
+      religion: (value) => (value ? null : "Religion is required"),
+      personal_email: (value) =>
+        !value
+          ? "Email is required"
+          : validateEmail(value)
+          ? null
+          : "Invalid email",
+      personal_phone: (value) =>
+        !value
+          ? "Phone is required"
+          : validatePhoneNumber(value)
+          ? null
+          : "Invalid phone number",
+      nid_passport_no: (value) =>
+        !value
+          ? "NID / Passport is required"
+          : value.toString().length < 10
+          ? "NID / Passport must have at least 10 digits"
+          : null,
+      // tin_no: (value) => (value ? null : "TIN No is required"),
+      "present_address.address": (value) =>
+        !value ? "Address is required" : null,
+      "present_address.city": (value) => (value ? null : "City is required"),
+      "present_address.state_division": (value) =>
+        value ? null : "Division / State is required",
+      "present_address.post_zip_code": (value) =>
+        value ? null : "Postal / ZIP Code is required",
+      "present_address.country": (value) =>
+        value ? null : "Country is required",
+      "permanent_address.address": (value, values) =>
+        !values.permanentAddressSameAsPresent && !value
+          ? "Address is required"
+          : null,
+      "permanent_address.city": (value, values) =>
+        !values.permanentAddressSameAsPresent && !value
+          ? "City is required"
+          : null,
+      "permanent_address.state_division": (value, values) =>
+        !values.permanentAddressSameAsPresent && !value
+          ? "Division / State is required"
+          : null,
+      "permanent_address.post_zip_code": (value, values) =>
+        !values.permanentAddressSameAsPresent && !value
+          ? "Postal / ZIP Code is required"
+          : null,
+      "permanent_address.country": (value, values) =>
+        !values.permanentAddressSameAsPresent && !value
+          ? "Country is required"
+          : null,
+    },
   });
 
   // console.log(form.values);
@@ -111,9 +124,9 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
   );
 
   useImperativeHandle(ref, () => ({
-    validateStep: (updateFormData, key) => {
+    validateStep: (updateFormData) => {
       const values = form.getValues();
-      updateFormData(key, values);
+      updateFormData(values);
       return form.isValid();
     },
     showValidationErrors: () => {
@@ -159,9 +172,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
   });
 
   const handleSubmit = (values) => {
-    const formattedDOB = values.dob
-      ? values.dob.toISOString().split("T")[0]
-      : null;
+    const formattedDOB = formatDateToYYYYMMDD(values.dob);
 
     onNext({
       ...values,
@@ -229,7 +240,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   // mt="sm"
                   // label="Gender"
                   placeholder="Gender"
-                  data={["Male", "Female", "Other"]}
+                  data={genders}
                   {...form.getInputProps("gender")}
                 />
               </div>
@@ -268,17 +279,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                   // mt="sm"
                   // label="Blood Group"
                   placeholder="Blood Group"
-                  data={[
-                    "A+",
-                    "A-",
-                    "B+",
-                    "B-",
-                    "AB+",
-                    "AB-",
-                    "O+",
-                    "O-",
-                    "Golden Blood(Rh Null)",
-                  ]}
+                  data={bloodGroups}
                   {...form.getInputProps("blood_group")}
                 />
               </div>
@@ -334,20 +335,16 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     // label="Marital Status"
                     placeholder="Marital Status"
                     // value={form.getValues().marital_status}
-                    data={[
-                      "Single",
-                      "Married",
-                      "Widowed",
-                      "Divorced",
-                      "Separated",
-                    ]}
+                    data={maritalStatus}
                     {...form.getInputProps("marital_status")}
                   />
                 </div>
               </div>
               {isMarried && (
                 <div className="d-flex align-items-start w-100 cust_mt">
-                  <div className="cust_iputLabel">Spouse Name</div>
+                  <div className="cust_iputLabel">
+                    <span className="requiredInput">Spouse Name</span>
+                  </div>
                   <TextInput
                     classNames={{
                       root: "w-100",
@@ -530,7 +527,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">State</div>
+                <div className="cust_iputLabel">Division / State</div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -539,13 +536,13 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // mt="sm"
-                  // label="State"
-                  placeholder="State"
+                  // label="Division / State"
+                  placeholder="Division / State"
                   {...form.getInputProps("present_address.state_division")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">ZIP Code</div>
+                <div className="cust_iputLabel">Postal / ZIP Code</div>
                 <TextInput
                   classNames={{
                     root: "w-100",
@@ -554,8 +551,8 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // mt="sm"
-                  // label="ZIP Code"
-                  placeholder="ZIP / Postal Code"
+                  // label="Postal / ZIP Code"
+                  placeholder="Postal / ZIP Code"
                   {...form.getInputProps("present_address.post_zip_code")}
                 />
               </div>
@@ -640,7 +637,7 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">State</div>
+                <div className="cust_iputLabel">Division / State</div>
                 <TextInput
                   classNames={{
                     root: classEase(
@@ -652,15 +649,15 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // mt="sm"
-                  // label="State"
-                  placeholder="State"
+                  // label="Division / State"
+                  placeholder="Division / State"
                   {...form.getInputProps("permanent_address.state_division")}
                   disabled={sameAsPresent}
                   key={form.key("permanent_address.state_division")}
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">ZIP Code</div>
+                <div className="cust_iputLabel">Postal / ZIP Code</div>
                 <TextInput
                   classNames={{
                     root: classEase(
@@ -672,8 +669,8 @@ const PersonalDetails = forwardRef(({ data, onNext }, ref) => {
                     wrapper: "cust_iputWrapper",
                   }}
                   // mt="sm"
-                  // label="ZIP Code"
-                  placeholder="ZIP Code"
+                  // label="Postal / ZIP Code"
+                  placeholder="Postal / ZIP Code"
                   {...form.getInputProps("permanent_address.post_zip_code")}
                   disabled={sameAsPresent}
                   // value={form.getValues().permanent_address.post_zip_code}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { TextInput, Textarea } from "@mantine/core";
+
 import useSWR from "swr";
 import Image from "next/image";
 import { useDisclosure } from "@mantine/hooks";
@@ -19,10 +19,11 @@ import { fetcher } from "../../../lib/fetch";
 import { AiOutlineFilePdf } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
-import { LuPlus } from "react-icons/lu";
+import { FaPlus } from "react-icons/fa6";
 import Logo from "../../../../public/api_logo.png";
-
 import {
+  TextInput,
+  Textarea,
   Modal,
   Popover,
   Button,
@@ -266,15 +267,47 @@ const index = () => {
     </Table.Tr>
   ));
 
+  const [opened, { open, close }] = useDisclosure(false);
+
   return (
     <>
-      <div className="mb-4 d-flex justify-content-between align-items-end">
+      <Modal opened={opened} onClose={close} title="Earnings" centered>
+        <form action="">
+          <TextInput
+            mb="sm"
+            label="Title"
+            placeholder="Title"
+            required={false}
+            // disabled={isSubmitting}
+            // {...form.getInputProps("name")}
+          />
+          <TextInput
+            mb="sm"
+            label="Amount"
+            placeholder="Amount"
+            required={false}
+            // disabled={isSubmitting}
+            // {...form.getInputProps("name")}
+          />
+          <Group justify="flex-end" mt="md">
+            <Button
+              type="submit"
+              // loading={isSubmitting}
+              // loaderProps={{ type: "dots" }}
+            >
+              Save
+            </Button>
+          </Group>
+        </form>
+      </Modal>
+
+      <div className="mb-4 d-md-flex justify-content-between align-items-end">
         <div className="pageTop">
           <h3>Payslip</h3>
           <Breadcrumbs>{items}</Breadcrumbs>
         </div>
 
-        <div className="downItem d-flex">
+        <div className="downItem d-flex mt-3 mt-md-0">
           <div className="me-2">
             <Button
               type="submit"
@@ -316,23 +349,28 @@ const index = () => {
         <div className="slipHeader">
           <Image src={Logo} width={100} className="mb-3" alt="Logo" />
           <p className="mb-0">
-            House -4, Road 23/A, Block B, Banani Dhaka 1213, Bangladesh
+            Address: House -4, Road 23/A, Block B, Banani Dhaka 1213, Bangladesh
           </p>
-          <p className="mb-0">John Doe</p>
-          <p className="mb-0">Web Designer</p>
-          <p className="mb-0">Employee ID: FT-0009</p>
-          <p className="mb-4">Joining Date: 1 Jan 2013</p>
+          <p className="mb-0">Nmae: John Doe</p>
+          <p className="mb-0">Designation: Web Developer</p>
+          <p className="mb-0">Employee ID: API2021209212</p>
+          <p className="mb-4">Joining Date: 1-Jan-2023</p>
         </div>
 
         <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, lg: 6 }}>
             <Table stickyHeader stickyHeaderOffset={60} withTableBorder>
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Earnings</Table.Th>
-                  <Table.Th></Table.Th>
-                  {/* <Table.Th>Symbol</Table.Th>
-                        <Table.Th>Atomic mass</Table.Th> */}
+                  <Table.Th>
+                    <div className="d-flex justify-content-end">
+                      <Button size="compact-xs" onClick={open}>
+                        <FaPlus className="me-1" />
+                        Add
+                      </Button>
+                    </div>
+                  </Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>{rows}</Table.Tbody>
@@ -342,62 +380,19 @@ const index = () => {
               </Table.Caption>
             </Table>
           </Grid.Col>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, lg: 6 }}>
             <Table stickyHeader stickyHeaderOffset={60} withTableBorder>
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Deductions</Table.Th>
-                  <Table.Th></Table.Th>
-                  {/* <Table.Th>Symbol</Table.Th>
-                        <Table.Th>Atomic mass</Table.Th> */}
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>{rows}</Table.Tbody>
-              <Table.Caption>
-                Net Salary: BDT: 59698 (Fifty nine thousand six hundred and
-                ninety eight only.)
-              </Table.Caption>
-            </Table>
-          </Grid.Col>
-        </Grid>
-
-        <div className="slipHeader">
-          <Image src={Logo} width={100} className="mb-3" alt="Logo" />
-          <p className="mb-0">
-            House -4, Road 23/A, Block B, Banani Dhaka 1213, Bangladesh
-          </p>
-          <p className="mb-0">John Doe</p>
-          <p className="mb-0">Web Designer</p>
-          <p className="mb-0">Employee ID: FT-0009</p>
-          <p className="mb-4">Joining Date: 1 Jan 2013</p>
-        </div>
-
-        <Grid gutter={{ base: 5, xs: "md", md: "xl", xl: 50 }}>
-          <Grid.Col span={6}>
-            <Table stickyHeader stickyHeaderOffset={60} withTableBorder>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>Earnings</Table.Th>
-                  <Table.Th></Table.Th>
-                  {/* <Table.Th>Symbol</Table.Th>
-                        <Table.Th>Atomic mass</Table.Th> */}
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>{rows}</Table.Tbody>
-              <Table.Caption>
-                Net Salary: BDT: 59698 (Fifty nine thousand six hundred and
-                ninety eight only.)
-              </Table.Caption>
-            </Table>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <Table stickyHeader stickyHeaderOffset={60} withTableBorder>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>Deductions</Table.Th>
-                  <Table.Th></Table.Th>
-                  {/* <Table.Th>Symbol</Table.Th>
-                        <Table.Th>Atomic mass</Table.Th> */}
+                  <Table.Th>
+                    <div className="d-flex justify-content-end">
+                      <Button size="compact-xs" onClick={open}>
+                        <FaPlus className="me-1" />
+                        Add
+                      </Button>
+                    </div>
+                  </Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>{rows}</Table.Tbody>

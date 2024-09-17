@@ -1,17 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "@mantine/form";
-import { DateInput } from "@mantine/dates";
 import {
   Modal,
   TextInput,
-  Textarea,
   Button,
-  Select,
   Group,
-  Checkbox,
   NumberInput,
   ActionIcon,
-  rem,
   Grid,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
@@ -29,11 +24,35 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
       name: "",
       in_time: "",
       out_time: "",
-      late_tolerance_time: 0,
+      late_in_tolerance_time: 0,
+      early_leave_tolerance_time: 0,
     },
     validate: {
-      name: (value) =>
-        value.length < 3 ? "Name must have at least 3 letters" : null,
+      name: (value) => (!value ? "Title is required" : null),
+      in_time: (value) => {
+        if (!value) return "Start time is required";
+        if (isNaN(new Date(`1970-01-01T${value}`))) return "Invalid start time";
+        return null;
+      },
+      out_time: (value, values) => {
+        if (!value) return "End time is required";
+        if (isNaN(new Date(`1970-01-01T${value}`))) return "Invalid end time";
+        if (
+          new Date(`1970-01-01T${value}`) <=
+          new Date(`1970-01-01T${values.in_time}`)
+        ) {
+          return "End time must be later than start time";
+        }
+        return null;
+      },
+      late_in_tolerance_time: (value) => {
+        if (value < 0) return "Late in tolerance time cannot be negative";
+        return null;
+      },
+      early_leave_tolerance_time: (value) => {
+        if (value < 0) return "Early leave tolerance time cannot be negative";
+        return null;
+      },
     },
   });
 
@@ -43,7 +62,8 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
         name: item.name || "",
         in_time: item.in_time || "",
         out_time: item.out_time || "",
-        late_tolerance_time: item.late_tolerance_time || 0,
+        late_in_tolerance_time: item.late_in_tolerance_time || 0,
+        early_leave_tolerance_time: item.early_leave_tolerance_time || 0,
       });
     }
   }, [item]);
@@ -113,70 +133,80 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
   };
 
   return (
-    <>
-      <Modal
-        classNames={{
-          title: "modalTitle",
-        }}
-        opened={opened}
-        title="Edit Shift"
-        onClose={close}
-        centered
-      >
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-          <Grid>
-            <Grid.Col span={12}>
-              <TextInput
-                label="Title"
-                placeholder="Title"
-                mb="sm"
-                required={true}
-                disabled={isSubmitting}
-                {...form.getInputProps("name")}
-              />
+    <Modal
+      classNames={{
+        title: "modalTitle",
+      }}
+      opened={opened}
+      title="Edit Shift"
+      onClose={() => {
+        setItem(null);
+        close();
+      }}
+      centered
+    >
+      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+        <Grid>
+          <Grid.Col span={12}>
+            <TextInput
+              label="Title"
+              placeholder="Title"
+              mb="sm"
+              required={true}
+              disabled={isSubmitting}
+              {...form.getInputProps("name")}
+            />
 
-              <TimeInput
-                mb="sm"
-                label="Start Time"
-                required={true}
-                disabled={isSubmitting}
-                ref={refTimeIn}
-                rightSection={timeIn}
-                {...form.getInputProps("in_time")}
-              />
+            <TimeInput
+              mb="sm"
+              label="Start Time"
+              required={true}
+              disabled={isSubmitting}
+              ref={refTimeIn}
+              rightSection={timeIn}
+              {...form.getInputProps("in_time")}
+            />
 
-              <TimeInput
-                mb="sm"
-                label="End Time"
-                required={true}
-                disabled={isSubmitting}
-                ref={refTimeOut}
-                rightSection={timeOut}
-                {...form.getInputProps("out_time")}
-              />
+            <TimeInput
+              mb="sm"
+              label="End Time"
+              required={true}
+              disabled={isSubmitting}
+              ref={refTimeOut}
+              rightSection={timeOut}
+              {...form.getInputProps("out_time")}
+            />
 
-              <NumberInput
-                label="Late Tolarence"
-                placeholder="Late Tolarence"
-                hideControls
-                disabled={isSubmitting}
-                {...form.getInputProps("late_tolerance_time")}
-              />
-            </Grid.Col>
-          </Grid>
+            <NumberInput
+              mb="sm"
+              label="Late In Tolerance"
+              placeholder="Late In Tolerance"
+              hideControls
+              disabled={isSubmitting}
+              {...form.getInputProps("late_in_tolerance_time")}
+            />
 
-          <Group justify="flex-end" mt="sm">
-            <Button
-              type="submit"
-              loading={isSubmitting}
-              loaderProps={{ type: "dots" }}
-            >
-              Update
-            </Button>
-          </Group>
-        </form>
-      </Modal>
-    </>
+            <NumberInput
+              label="Early Leave Tolerance"
+              placeholder="Early Leave Tolerance"
+              hideControls
+              disabled={isSubmitting}
+              {...form.getInputProps("early_leave_tolerance_time")}
+            />
+          </Grid.Col>
+        </Grid>
+
+        <Group justify="flex-end" mt="sm">
+          <Button
+            type="submit"
+            loading={isSubmitting}
+            loaderProps={{ type: "dots" }}
+          >
+            Update
+          </Button>
+        </Group>
+      </form>
+    </Modal>
   );
 };
 

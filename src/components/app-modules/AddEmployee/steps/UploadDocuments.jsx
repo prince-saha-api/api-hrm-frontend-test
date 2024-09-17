@@ -122,9 +122,7 @@ const UploadDocuments = forwardRef(({ data, onNext, onBack }, ref) => {
                 />
               </div>
               <div className="d-flex align-items-start w-100 cust_mt">
-                <div className="cust_iputLabel">
-                  <span className="requiredInput">Appointment Letter</span>
-                </div>
+                <div className="cust_iputLabel">Appointment Letter</div>
                 <FileInput
                   classNames={{
                     root: "w-100",

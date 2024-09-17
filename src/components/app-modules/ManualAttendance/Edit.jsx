@@ -1,24 +1,79 @@
-import { useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import useSWR from "swr";
+import { useForm } from "@mantine/form";
 import { DateInput, TimeInput } from "@mantine/dates";
 import {
   Modal,
-  TextInput,
   Textarea,
   Button,
   Select,
   Group,
-  MultiSelect,
-  FileInput,
-  Grid,
-  NumberInput,
   ActionIcon,
 } from "@mantine/core";
-import { FiFile } from "react-icons/fi";
 import { IoTimeOutline } from "react-icons/io5";
-const Index = ({ opened, close }) => {
+import { toast } from "react-toastify";
+import { update } from "@/lib/submit";
+import { fetcher } from "@/lib/fetch";
+import { getFullName, formatDateToYYYYMMDD, formatTime } from "@/lib/helper";
+import UserSelectItem from "@/components/utils/UserSelectItem";
 
-  // Time picker
+const Index = ({ opened, close, item, setItem, mutate }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      employee_id: "",
+      date: null,
+      in_time: null,
+      out_time: null,
+      admin_note: "",
+      // requested_by: ""
+    },
+    validate: {
+      employee_id: (value) => (!value ? "Employee is required" : null),
+      date: (value) => (!value ? "Date is required" : null),
+      in_time: (value) => (!value ? "In time is required" : null),
+      out_time: (value) => (!value ? "Out time is required" : null),
+      // admin_note: (value) => (!value ? "Reason is required" : null),
+    },
+  });
+
+  useEffect(() => {
+    if (item) {
+      form.setValues({
+        employee_id: item?.employee_id?.toString() || "",
+        date: item?.date ? new Date(item.date) : null,
+        in_time: item?.in_time || null,
+        out_time: item?.out_time || null,
+        admin_note: item?.admin_note || "",
+      });
+    }
+  }, [item]);
+
+  const {
+    data,
+    error,
+    isLoading: isFetchLoading,
+  } = useSWR(`/api/user/get-employee/`, fetcher, {
+    errorRetryCount: 2,
+    keepPreviousData: true,
+    revalidateOnFocus: false,
+  });
+
+  const employees = data?.data.result.map((item) => ({
+    label: [getFullName(item?.first_name, item?.last_name), item?.official_id]
+      .filter(Boolean)
+      .join(" - "),
+    firstName: item?.first_name || "",
+    lastName: item?.last_name || "",
+    officialID: item?.official_id,
+    image: item?.photo,
+    value: item?.id.toString() || "",
+  }));
+
   const refInTime = useRef(null);
+
   const inTime = (
     <ActionIcon
       variant="subtle"
@@ -28,7 +83,9 @@ const Index = ({ opened, close }) => {
       <IoTimeOutline />
     </ActionIcon>
   );
+
   const refOutTime = useRef(null);
+
   const outTime = (
     <ActionIcon
       variant="subtle"
@@ -38,7 +95,54 @@ const Index = ({ opened, close }) => {
       <IoTimeOutline />
     </ActionIcon>
   );
-  // Time picker
+
+  const handleSubmit = async (values) => {
+    setIsSubmitting(true);
+
+    try {
+      const formattedDate = formatDateToYYYYMMDD(values.date);
+      const formattedInTime = formatTime(values.in_time);
+      const formattedOutTime = formatTime(values.out_time);
+
+      const formattedValues = {
+        ...values,
+        date: formattedDate,
+        in_time: formattedInTime,
+        out_time: formattedOutTime,
+      };
+
+      const response = await update(
+        `/api/attendance/update-manual-attendence/${item?.id}`,
+        formattedValues
+      );
+
+      if (response?.status === "success") {
+        setIsSubmitting(false);
+        // form.reset();
+        close();
+        mutate();
+        toast.success("Attendance updated successfully");
+      } else {
+        setIsSubmitting(false);
+        if (response?.status === "error" && Array.isArray(response.message)) {
+          response.message.forEach((msg) => {
+            toast.error(msg);
+          });
+        } else {
+          toast.error("Error submitting form");
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 500);
+    }
+  };
+
+  const handleError = (errors) => {
+    console.log(errors);
+  };
 
   return (
     <>
@@ -48,37 +152,79 @@ const Index = ({ opened, close }) => {
         }}
         opened={opened}
         title="Edit Attendance"
-        onClose={close}
+        onClose={() => {
+          setItem(null);
+          close();
+        }}
         centered
       >
-        <form>
+        <form
+          onSubmit={form.onSubmit(
+            (values) => handleSubmit(values),
+            handleError
+          )}
+        >
           <Select
             mb="sm"
             label="Employee"
             placeholder="Employee"
-            data={["Jiaur Rahman", "Nazmul Hussain"]}
+            required
+            disabled={isSubmitting}
+            data={employees}
+            searchable
+            nothingFoundMessage="Nothing found..."
+            {...form.getInputProps("employee_id")}
+            key={form.key("employee_id")}
+            renderOption={UserSelectItem}
           />
           <DateInput
             mb="sm"
             valueFormat="DD MMM YYYY"
             label="Date"
             placeholder="DD MMM YYYY"
+            required
+            disabled={isSubmitting}
+            {...form.getInputProps("date")}
+            key={form.key("date")}
           />
           <TimeInput
             mb="sm"
             label="In Time"
             ref={refInTime}
             rightSection={inTime}
+            // withSeconds
+            required
+            disabled={isSubmitting}
+            {...form.getInputProps("in_time")}
+            key={form.key("in_time")}
           />
           <TimeInput
             mb="sm"
             label="Out Time"
             ref={refOutTime}
             rightSection={outTime}
+            // withSeconds
+            required
+            disabled={isSubmitting}
+            {...form.getInputProps("out_time")}
+            key={form.key("out_time")}
           />
-          <Textarea mb="sm" label="Admin Note" placeholder="Admin Note" />
-          <Group justify="flex-end">
-            <Button type="submit">Update</Button>
+          <Textarea
+            mb="sm"
+            label="Reason"
+            placeholder="Reason"
+            disabled={isSubmitting}
+            {...form.getInputProps("admin_note")}
+          />
+
+          <Group justify="flex-end" mt="sm">
+            <Button
+              type="submit"
+              loading={isSubmitting}
+              loaderProps={{ type: "dots" }}
+            >
+              Update
+            </Button>
           </Group>
         </form>
       </Modal>

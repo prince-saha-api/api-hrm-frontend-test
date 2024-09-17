@@ -23,7 +23,7 @@ const Index = ({ opened, close, item, setItem }) => {
           ? item.employee_experiencehistory.map((item) => ({
               ...item,
               from_date: item?.from_date ? new Date(item.from_date) : null,
-              to_date: item?.from_date ? new Date(item.to_date) : null,
+              to_date: item?.to_date ? new Date(item.to_date) : null,
               key: randomId(),
             }))
           : [

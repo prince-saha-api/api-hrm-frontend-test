@@ -13,8 +13,9 @@ import "aos/dist/aos.css";
 import "../styles/globals.scss";
 
 export const metadata = {
-  title: "Root",
-  description: "API HRM",
+  title: "API HRM",
+  description:
+    "API HRM is a comprehensive human resource management system designed to simplify employee onboarding, attendance management, shift management, payroll, and document handling. Efficiently manage your workforce with powerful API integrations and user-friendly interfaces.",
 };
 
 export default function RootLayout({ children }) {

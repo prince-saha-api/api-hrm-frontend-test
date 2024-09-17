@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, forwardRef, useImperativeHandle } from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
 import {
@@ -15,6 +15,7 @@ import {
 import { LuPlus } from "react-icons/lu";
 import { FaTrashAlt } from "react-icons/fa";
 import { countries } from "@/data/countries";
+import { validateEmail, validatePhoneNumber } from "@/lib/validate";
 
 const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
   const form = useForm({
@@ -43,26 +44,25 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
     },
     validate: {
       emergencyContacts: {
-        name: (value) =>
-          value?.length < 2 ? "Name must have at least 2 letters" : null,
-        age: (value) => (value < 1 ? "Age must be a positive number" : null),
+        name: (value) => (!value ? "Name is required" : null),
+        // age: (value) => (value < 1 ? "Age must be a positive number" : null),
         phone_no: (value) =>
-          value?.length < 10
-            ? "Phone number must have at least 10 digits"
-            : null,
-        email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-        relation: (value) =>
-          value?.length < 2 ? "Relation must have at least 2 letters" : null,
+          !value
+            ? "Phone is required"
+            : validatePhoneNumber(value)
+            ? null
+            : "Invalid phone number",
+        email: (value) =>
+          value && !validateEmail(value) ? "Invalid email" : null,
+        relation: (value) => (!value ? "Relation is required" : null),
         address: {
-          city: (value) =>
-            value?.length < 2 ? "City must have at least 2 letters" : null,
+          city: (value) => (!value ? "City is required" : null),
           state_division: (value) =>
-            value?.length < 2 ? "State must have at least 2 letters" : null,
+            !value ? "Division / State is required" : null,
           post_zip_code: (value) =>
-            value?.length < 4 ? "ZIP Code must have at least 4 digits" : null,
+            !value ? "Postal / ZIP Code is required" : null,
           country: (value) => (value ? null : "Country is required"),
-          address: (value) =>
-            value?.length < 5 ? "Address must have at least 5 letters" : null,
+          address: (value) => (!value ? "Address is required" : null),
         },
       },
     },
@@ -208,6 +208,21 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                 <Box className="stepBox">
                   <div className="d-flex align-items-start w-100 cust_mt">
                     <div className="cust_iputLabel">
+                      <span className="requiredInput">Address</span>
+                    </div>
+                    <TextInput
+                      classNames={{
+                        root: "w-100",
+                        wrapper: "cust_iputWrapper",
+                      }}
+                      placeholder="Address"
+                      {...form.getInputProps(
+                        `emergencyContacts.${index}.address.address`
+                      )}
+                    />
+                  </div>
+                  <div className="d-flex align-items-start w-100 cust_mt">
+                    <div className="cust_iputLabel">
                       <span className="requiredInput">City</span>
                     </div>
                     <TextInput
@@ -223,14 +238,14 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
                     <div className="cust_iputLabel">
-                      <span className="requiredInput">State</span>
+                      <span className="requiredInput">Division / State</span>
                     </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
                         wrapper: "cust_iputWrapper",
                       }}
-                      placeholder="State"
+                      placeholder="Division / State"
                       {...form.getInputProps(
                         `emergencyContacts.${index}.address.state_division`
                       )}
@@ -238,14 +253,14 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                   </div>
                   <div className="d-flex align-items-start w-100 cust_mt">
                     <div className="cust_iputLabel">
-                      <span className="requiredInput">ZIP Code</span>
+                      <span className="requiredInput">Postal / ZIP Code</span>
                     </div>
                     <TextInput
                       classNames={{
                         root: "w-100",
                         wrapper: "cust_iputWrapper",
                       }}
-                      placeholder="ZIP Code"
+                      placeholder="Postal / ZIP Code"
                       {...form.getInputProps(
                         `emergencyContacts.${index}.address.post_zip_code`
                       )}
@@ -265,21 +280,6 @@ const EmergencyContact = forwardRef(({ data, onNext, onBack }, ref) => {
                       data={countries}
                       {...form.getInputProps(
                         `emergencyContacts.${index}.address.country`
-                      )}
-                    />
-                  </div>
-                  <div className="d-flex align-items-start w-100 cust_mt">
-                    <div className="cust_iputLabel">
-                      <span className="requiredInput">Address</span>
-                    </div>
-                    <TextInput
-                      classNames={{
-                        root: "w-100",
-                        wrapper: "cust_iputWrapper",
-                      }}
-                      placeholder="Address"
-                      {...form.getInputProps(
-                        `emergencyContacts.${index}.address.address`
                       )}
                     />
                   </div>

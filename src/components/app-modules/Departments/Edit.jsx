@@ -257,15 +257,15 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
               />
               <TextInput
                 mb="sm"
-                label="State"
-                placeholder="State"
+                label="Division / State"
+                placeholder="Division / State"
                 disabled={isSubmitting}
                 {...form.getInputProps("address.state_division")}
               />
               <TextInput
                 mb="sm"
-                label="ZIP Code"
-                placeholder="ZIP Code"
+                label="Postal / ZIP Code"
+                placeholder="Postal / ZIP Code"
                 disabled={isSubmitting}
                 {...form.getInputProps("address.post_zip_code")}
               />

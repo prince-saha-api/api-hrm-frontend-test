@@ -18,8 +18,6 @@ const Index = ({ opened, close, item, mutate }) => {
         console.log(res);
         toast.error(res.message[0]);
         close();
-        // mutate();
-        // throw new Error("Failed to delete item");
       }
     } catch (error) {
       toast.error(error.message);

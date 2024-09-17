@@ -38,6 +38,7 @@ import {
   generateAddressString,
   formatCurrency,
   generateGroupString,
+  generateStringFromArray,
 } from "@/lib/helper";
 import ProfileEdit from "./ProfileEdit";
 import ProfileImage from "./ProfileImage";
@@ -259,8 +260,8 @@ const ProfileView = ({ data }) => {
       <Documents
         opened={documentsOpened}
         close={documentsClose}
-        // item={selectedDeleteItem}
-        // mutate={mutate}
+        item={profile}
+        setItem={setProfile}
       />
 
       <Breadcrumb
@@ -291,7 +292,6 @@ const ProfileView = ({ data }) => {
             <div className="profileBox borderRight h-100 d-flex">
               <div className="profile position-relative">
                 <Image
-                  // src="/profile03.jpg"
                   src={
                     profilePhoto?.photo
                       ? getStoragePath(profilePhoto?.photo)
@@ -399,7 +399,6 @@ const ProfileView = ({ data }) => {
                 <span>Supervisor:</span>
                 <Image
                   className="reportsImg"
-                  // src="/profile01.jpg"
                   src={
                     profile?.supervisor?.photo
                       ? getStoragePath(profile?.supervisor?.photo)
@@ -587,38 +586,46 @@ const ProfileView = ({ data }) => {
                     <TbSquareRoundedFilled className="roundIcon" />
                     Job History
                   </h4>
-                  <div className="jobHistoryBox">
+                  <div className="overflow-auto">
                     <Table striped withTableBorder withColumnBorders>
                       <Table.Thead>
                         <Table.Tr>
                           <Table.Th>Transition Type</Table.Th>
-                          <Table.Th>Date</Table.Th>
-                          <Table.Th>Job Status</Table.Th>
                           <Table.Th>Designation</Table.Th>
                           <Table.Th>Department</Table.Th>
-                          <Table.Th>Joining Salary</Table.Th>
-                          <Table.Th>New Salary</Table.Th>
+                          <Table.Th>Incremented Amount</Table.Th>
+                          <Table.Th>Salary</Table.Th>
+                          <Table.Th>Effective From</Table.Th>
                         </Table.Tr>
                       </Table.Thead>
-                      {profile?.employeejobhistoryone?.length ? (
+                      {profile?.employeejobhistory_user?.length ? (
                         <Table.Tbody>
-                          {profile.employeejobhistoryone.map((item, index) => (
-                            <Table.Tr key={index}>
-                              <Table.Td>{item?.status_adjustment}</Table.Td>
-                              <Table.Td>
-                                {getDate(item?.effective_from)}
-                              </Table.Td>
-                              <Table.Td>{item?.status_adjustment}</Table.Td>
-                              <Table.Td>{item?.designation || "N/A"}</Table.Td>
-                              <Table.Td>{item?.department || "N/A"}</Table.Td>
-                              <Table.Td>
-                                {formatCurrency(item?.new_salary)}
-                              </Table.Td>
-                              <Table.Td>
-                                {formatCurrency(item?.new_salary)}
-                              </Table.Td>
-                            </Table.Tr>
-                          ))}
+                          {profile.employeejobhistory_user.map(
+                            (item, index) => (
+                              <Table.Tr key={index}>
+                                <Table.Td>
+                                  {generateStringFromArray(
+                                    item?.status_adjustment || []
+                                  )}
+                                </Table.Td>
+                                <Table.Td>
+                                  {item?.designation?.name || ""}
+                                </Table.Td>
+                                <Table.Td>
+                                  {item?.department?.name || ""}
+                                </Table.Td>
+                                <Table.Td>
+                                  {formatCurrency(item?.increment_amount)}
+                                </Table.Td>
+                                <Table.Td>
+                                  {formatCurrency(item?.salary)}
+                                </Table.Td>
+                                <Table.Td>
+                                  {getDate(item?.effective_from)}
+                                </Table.Td>
+                              </Table.Tr>
+                            )
+                          )}
                         </Table.Tbody>
                       ) : (
                         ""
@@ -690,12 +697,12 @@ const ProfileView = ({ data }) => {
                   </div>
                 </Grid.Col>
                 <Grid.Col span={6}>
-                  <h4 className="mb-3">
+                  {/* <h4 className="mb-3">
                     <TbSquareRoundedFilled className="roundIcon" />
                     Leave Policy
-                  </h4>
+                  </h4> */}
                   <div className="leavePolicyBox mb-3">
-                    <b className="mb-2 d-block text-dark">Leave Policy 1</b>
+                    <b className="mb-2 d-block text-dark">Leave Policy</b>
                     <Table striped withTableBorder withColumnBorders>
                       <Table.Thead>
                         <Table.Tr>
@@ -916,49 +923,48 @@ const ProfileView = ({ data }) => {
               <div className="d-flex flex-wrap">
                 {profile?.employee_docs?.length
                   ? profile?.employee_docs.map((doc, index) => (
-                      <>
-                        {/* <button
-                          key={index}
-                          className="docItem me-4 mb-4"
-                          onClick={() => {
-                            setSingleDocument({
-                              title: doc?.title,
-                              attachment: doc?.attachment,
-                            });
-                            singleDocumentOpen();
-                          }}
-                        >
-                          {doc?.title === "NID/Passport" ? (
-                            <CiCreditCard2 className="docBtn" />
-                          ) : doc?.title === "Resume" ? (
-                            <PiIdentificationCardLight className="docBtn" />
-                          ) : doc?.title === "Appointment Letter" ? (
-                            <CiFileOn className="docBtn fs-2" />
-                          ) : (
-                            <CiFileOn className="docBtn fs-2" />
-                          )}
-                          <h6>{doc?.title || "N/A"}</h6>
-                        </button> */}
-                        <a
-                          key={index}
-                          className="docItem me-4 mb-4"
-                          href={getStoragePath(doc?.attachment)}
-                          target="_blank"
-                        >
-                          {doc?.title === "NID/Passport" ? (
-                            <CiCreditCard2 className="docBtn" />
-                          ) : doc?.title === "Resume" ? (
-                            <PiIdentificationCardLight className="docBtn" />
-                          ) : doc?.title === "Appointment Letter" ? (
-                            <CiFileOn className="docBtn fs-2" />
-                          ) : (
-                            <CiFileOn className="docBtn fs-2" />
-                          )}
-                          <h6>{doc?.title || "N/A"}</h6>
-                        </a>
-                      </>
+                      <a
+                        key={index}
+                        className="docItem me-4 mb-4"
+                        href={getStoragePath(doc?.attachment)}
+                        target="_blank"
+                      >
+                        {doc?.title === "NID/Passport" ? (
+                          <CiCreditCard2 className="docBtn" />
+                        ) : doc?.title === "Resume" ? (
+                          <PiIdentificationCardLight className="docBtn" />
+                        ) : doc?.title === "Appointment Letter" ? (
+                          <CiFileOn className="docBtn fs-2" />
+                        ) : (
+                          <CiFileOn className="docBtn fs-2" />
+                        )}
+                        <h6>{doc?.title || "N/A"}</h6>
+                      </a>
                     ))
                   : ""}
+
+                {/* <button
+                  key={index}
+                  className="docItem me-4 mb-4"
+                  onClick={() => {
+                    setSingleDocument({
+                      title: doc?.title,
+                      attachment: doc?.attachment,
+                    });
+                    singleDocumentOpen();
+                  }}
+                >
+                  {doc?.title === "NID/Passport" ? (
+                    <CiCreditCard2 className="docBtn" />
+                  ) : doc?.title === "Resume" ? (
+                    <PiIdentificationCardLight className="docBtn" />
+                  ) : doc?.title === "Appointment Letter" ? (
+                    <CiFileOn className="docBtn fs-2" />
+                  ) : (
+                    <CiFileOn className="docBtn fs-2" />
+                  )}
+                  <h6>{doc?.title || "N/A"}</h6>
+                </button> */}
 
                 {/* <button
                   className="docItem me-4"

@@ -1,30 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
-import {
-  Button,
-  Select,
-  Menu,
-  MultiSelect,
-  Popover,
-  Input,
-} from "@mantine/core";
+import { Button, Select, MultiSelect, Popover } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import classEase from "classease";
-import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineFilePdf } from "react-icons/ai";
 import { FaRegFileAlt } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 import { fetcher, getData } from "@/lib/fetch";
 import { exportToPDF, exportToExcel, exportToCSV } from "@/lib/export";
 import { constants } from "@/lib/config";
-import { getStoragePath } from "@/lib/helper";
+import {
+  getStoragePath,
+  getFullName,
+  getDate,
+  convertTimeTo12HourFormat,
+} from "@/lib/helper";
 import Breadcrumb from "@/components/utils/Breadcrumb";
 import FilterModal from "./FilterModal";
 
@@ -34,11 +31,11 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [sortStatus, setSortStatus] = useState({
-    columnAccessor: "username",
+    columnAccessor: "in_time",
     direction: "asc", // desc
   });
 
-  let apiUrl = `/api/user/get-employee/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
+  let apiUrl = `/api/attendance/get-attendance/?page=${currentPage}&page_size=${pageSize}&column_accessor=${
     sortStatus?.direction === "desc" ? "-" : ""
   }${sortStatus.columnAccessor}`;
 
@@ -54,7 +51,7 @@ const Index = () => {
     revalidateOnFocus: false,
   });
 
-  const [selectedRecords, setSelectedRecords] = useState([]);
+  // const [selectedRecords, setSelectedRecords] = useState([]);
 
   const handleSortStatusChange = (status) => {
     console.log(status);
@@ -68,89 +65,134 @@ const Index = () => {
     // mutate();
   };
 
-  // for Modal
-  const [addOpened, { open: addOpen, close: addClose }] = useDisclosure(false);
-  const [editOpened, { open: editOpen, close: editClose }] =
-    useDisclosure(false);
-  const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
-    useDisclosure(false);
-
-  const [selectedEditItem, setSelectedEditItem] = useState(null);
-  const [selectedDeleteItem, setSelectedDeleteItem] = useState(null);
-
-  useEffect(() => {
-    if (selectedEditItem) {
-      editOpen();
-    }
-  }, [selectedEditItem]);
-
   const columns = [
+    // {
+    //   key: "na",
+    //   accessor: "na",
+    //   title: "#",
+    //   noWrap: true,
+    //   sortable: false,
+    //   width: 40,
+    //   render: (_, index) => (currentPage - 1) * pageSize + index + 1,
+    //   modifier: (_, index) => index + 1,
+    //   // pdfModifier: ({ na }) =>
+    //   //   na > 0 ? "is_text_danger_" + getTime(InTime) : getTime(InTime),
+    // },
     {
-      // for table display
+      key: "employee",
       accessor: "employee",
       title: "Employee",
       sortable: false,
-      render: ({ photo, first_name, last_name }) => (
-        <div className="d-flex justify-content-start align-items-center">
-          {photo ? (
+      width: 170,
+      render: ({
+        employee: { id, photo, first_name, last_name, official_id },
+      }) => (
+        <Link
+          href={`/profile/${id}`}
+          className="d-flex justify-content-start align-items-center text-decoration-none color-inherit"
+        >
+          <span className="table_user_img">
             <img
-              src={getStoragePath(photo)}
-              alt="img"
-              className="table_user_img"
+              src={photo ? getStoragePath(photo) : "/default-profile.png"}
+              alt=""
+              onError={(e) => {
+                e.target.src = "/default-profile.png";
+              }}
             />
-          ) : (
-            ""
-          )}
-          <Link
-            href="/profile-view"
-            className="ms-2 text-decoration-none color-inherit"
-          >
-            {first_name + " " + last_name}
-          </Link>
-        </div>
+          </span>
+          <div className="d-flex flex-column justify-content-center ms-2 table_user">
+            <h6 className="table_user_name">
+              {getFullName(first_name, last_name)}
+            </h6>
+            {official_id && (
+              <span className="table_user_id">{official_id}</span>
+            )}
+          </div>
+        </Link>
       ),
-      // for export
-      key: "employee",
+      // modifier: ({
+      //   employee: { id, photo, first_name, last_name, official_id },
+      // }) => getFullName(first_name, last_name),
     },
     {
+      key: "department",
+      accessor: "department",
+      title: "Department",
+      width: 120,
+      render: ({ department }) => department?.name || "",
+    },
+    {
+      key: "designation",
       accessor: "designation",
       title: "Designation",
-      // visibleMediaQuery: aboveXs,
-      render: ({ designation }) => designation?.name || "N/A",
+      width: 120,
+      render: ({ designation }) => designation?.name || "",
     },
     {
+      key: "date",
       accessor: "date",
       title: "Date",
-      // visibleMediaQuery: aboveXs,
-      render: ({ date }) => date || "N/A",
+      width: 120,
+      render: ({ date }) => (date ? getDate(date) : ""),
     },
     {
-      accessor: "inTime",
+      key: "in_time",
+      accessor: "in_time",
       title: "In Time",
-      // visibleMediaQuery: aboveXs,
-      render: ({ inTime }) => inTime || "N/A",
+      width: 120,
+      render: ({ in_time }) =>
+        in_time ? convertTimeTo12HourFormat(in_time) : "",
     },
     {
-      accessor: "outTime",
+      key: "out_time",
+      accessor: "out_time",
       title: "Out Time",
-      // visibleMediaQuery: aboveXs,
-      render: ({ outTime }) => outTime || "N/A",
+      width: 120,
+      render: ({ out_time }) =>
+        out_time ? convertTimeTo12HourFormat(out_time) : "",
     },
     {
+      key: "status",
       accessor: "status",
       title: "Status",
-      // visibleMediaQuery: aboveXs,
-      render: ({ status }) => status || "N/A",
+      width: 120,
+      render: ({ status }) => status || "",
     },
     {
-      accessor: "attendanceMode",
+      key: "attendance_mode",
+      accessor: "attendance_mode",
       title: "Attendance Mode",
-      // visibleMediaQuery: aboveXs,
-      render: ({ attendanceMode }) => attendanceMode || "N/A",
+      width: 140,
+      render: ({ attendance_mode }) => attendance_mode || "",
+    },
+    {
+      key: "late_time",
+      accessor: "late_time",
+      title: "Late Time (Mins)",
+      width: 140,
+      render: ({ late_time }) => Number(late_time).toFixed(0) || "",
+    },
+    {
+      key: "early_leave",
+      accessor: "early_leave",
+      title: "Early Leave (Mins)",
+      width: 140,
+      render: ({ early_leave }) => Number(early_leave).toFixed(0) || "",
+    },
+    {
+      key: "overtime",
+      accessor: "overtime",
+      title: "Overtime (Mins)",
+      width: 140,
+      render: ({ over_time }) => Number(over_time).toFixed(0) || "",
     },
   ];
 
   const visibleColumns = [
+    // {
+    //   label: "Serial",
+    //   value: "na",
+    // },
     {
       label: "Employee",
       value: "employee",
@@ -169,11 +211,11 @@ const Index = () => {
     },
     {
       label: "In Time",
-      value: "inTime",
+      value: "in_time",
     },
     {
       label: "Out Time",
-      value: "outTime",
+      value: "out_time",
     },
     {
       label: "Status",
@@ -181,42 +223,41 @@ const Index = () => {
     },
     {
       label: "Attendance Mode",
-      value: "attendanceMode",
+      value: "attendance_mode",
     },
     {
       label: "Late Time (Mins)",
-      value: "lateTime",
+      value: "late_time",
     },
     {
       label: "Early Leave (Mins)",
-      value: "earlyLeave",
+      value: "early_leave",
     },
     {
       label: "Overtime (Mins)",
-      value: "overtime",
+      value: "over_time",
     },
   ];
 
   const [selectedOptions, setSelectedOptions] = useState([
+    // "na",
     "employee",
-    "designation",
+    "department",
     "date",
-    "inTime",
-    "outTime",
+    "in_time",
+    "out_time",
     "status",
-    "attendanceMode",
+    "attendance_mode",
   ]);
 
   const handleChange = (keys) => {
     const updatedKeys = [
       ...new Set([
+        // "na", //
         "employee",
-        "designation",
         "date",
-        "inTime",
-        "outTime",
-        "status",
-        "attendanceMode",
+        "in_time",
+        "out_time",
         ...keys,
       ]),
     ];
@@ -237,7 +278,7 @@ const Index = () => {
 
   // const [dataToExport, setDataToExport] = useState(null);
   const getExportDataUrl = () => {
-    let url = `/api/branch/get-branch/?column_accessor=${
+    let url = `/api/attendance/get-attendance/?column_accessor=${
       sortStatus?.direction === "desc" ? "-" : ""
     }${sortStatus.columnAccessor}`;
 
@@ -308,7 +349,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToPDF(headers, data, "Branches", "branches");
+        exportToPDF(headers, data, "Attendance Report", "attendance-report");
         setIsExportDataFetching((prev) => ({
           ...prev,
           pdf: false,
@@ -371,7 +412,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToCSV(data, "branches");
+        exportToCSV(data, "attendance-report");
         setIsExportDataFetching((prev) => ({
           ...prev,
           csv: false,
@@ -433,7 +474,7 @@ const Index = () => {
       });
 
       setTimeout(() => {
-        exportToExcel(data, "branches");
+        exportToExcel(data, "attendance-report");
         setIsExportDataFetching((prev) => ({
           ...prev,
           excel: false,
@@ -602,10 +643,9 @@ const Index = () => {
           verticalAlign="center"
           striped
           idAccessor="id"
-          //  columns={columns.filter((column) =>
-          //     selectedOptions.includes(column.key)
-          //  )}
-          columns={columns}
+          columns={columns.filter((column) =>
+            selectedOptions.includes(column.key)
+          )}
           fetching={isLoading}
           records={apiData?.data.result || []}
           page={currentPage}

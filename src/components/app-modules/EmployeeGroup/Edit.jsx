@@ -71,7 +71,10 @@ const Index = ({ opened, close, item, setItem, mutate }) => {
         }}
         opened={opened}
         title="Edit Employee Group"
-        onClose={close}
+        onClose={() => {
+          setItem(null);
+          close();
+        }}
         centered
       >
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>

@@ -11,11 +11,6 @@ import PageContent from "@/components/providers/PageContent";
 import PageWrapper from "@/components/providers/PageWrapper";
 // import "../../styles/main.scss";
 
-export const metadata = {
-  title: "Dashboard",
-  description: "API HRM",
-};
-
 export default async function RootLayout({ children }) {
   // const cookieStore = cookies();
   // let token = cookieStore.get(authTokenKey);

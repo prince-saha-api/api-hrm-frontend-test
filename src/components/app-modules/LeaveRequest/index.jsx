@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import useSWR from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import { toast } from "react-toastify";
@@ -14,7 +15,7 @@ import {
 } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import { AiOutlineFilePdf, AiOutlineDelete } from "react-icons/ai";
-import { FaRegFileAlt } from "react-icons/fa";
+import { FaRegFileAlt, FaRegFile } from "react-icons/fa";
 import { RiFileExcel2Line } from "react-icons/ri";
 import { LuPlus } from "react-icons/lu";
 import { HiDotsVertical } from "react-icons/hi";
@@ -30,7 +31,7 @@ import Edit from "./Edit";
 import Delete from "./Delete";
 import Approve from "./Approve";
 import Reject from "./Reject";
-import { formatDate, getFullName } from "@/lib/helper";
+import { formatDate, getFullName, getStoragePath } from "@/lib/helper";
 
 const PAGE_SIZES = constants.PAGE_SIZES;
 
@@ -101,7 +102,7 @@ const index = () => {
       title: "#",
       noWrap: true,
       sortable: false,
-      width: 90,
+      width: 40,
       render: (_, index) => (currentPage - 1) * pageSize + index + 1,
       // for export
       key: "na",
@@ -114,10 +115,37 @@ const index = () => {
       accessor: "employee",
       title: "Employee",
       noWrap: true,
+      width: 170,
       // sortable: true,
       // visibleMediaQuery: aboveXs,
-      render: ({ user }) =>
-        getFullName(user?.first_name, user?.last_name) || "N/A",
+      render: ({ user }) => (
+        <Link
+          href={`/profile/${user?.id}`}
+          className="d-flex justify-content-start align-items-center text-decoration-none color-inherit"
+        >
+          <span className="table_user_img">
+            <img
+              src={
+                user?.photo
+                  ? getStoragePath(user?.photo)
+                  : "/default-profile.png"
+              }
+              alt=""
+              onError={(e) => {
+                e.target.src = "/default-profile.png";
+              }}
+            />
+          </span>
+          <div className="d-flex flex-column justify-content-center ms-2 table_user">
+            <h6 className="table_user_name">
+              {getFullName(user?.first_name, user?.last_name)}
+            </h6>
+            {user?.official_id && (
+              <span className="table_user_id">{user?.official_id}</span>
+            )}
+          </div>
+        </Link>
+      ),
       // for export
       key: "employee",
     },
@@ -127,6 +155,7 @@ const index = () => {
       title: "Request Type",
       noWrap: true,
       sortable: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ request_type }) => request_type || "N/A",
       // for export
@@ -137,6 +166,7 @@ const index = () => {
       accessor: "leavepolicy",
       title: "Leave Type",
       noWrap: true,
+      width: 170,
       // sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ leavepolicy }) => leavepolicy?.name || "N/A",
@@ -148,6 +178,7 @@ const index = () => {
       accessor: "from_date",
       title: "From Date",
       noWrap: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ from_date }) => (from_date ? formatDate(from_date) : "N/A"),
       // for export
@@ -158,6 +189,7 @@ const index = () => {
       accessor: "to_date",
       title: "To Date",
       noWrap: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ to_date }) => (to_date ? formatDate(to_date) : "N/A"),
       // for export
@@ -168,6 +200,7 @@ const index = () => {
       accessor: "total_leave",
       title: "Total Days",
       noWrap: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
       render: ({ total_leave }) => total_leave || "N/A",
       // for export
@@ -178,8 +211,24 @@ const index = () => {
       accessor: "attachment",
       title: "Attachment",
       noWrap: true,
+      width: 170,
       // visibleMediaQuery: aboveXs,
-      render: ({ attachment }) => "attachment" || "N/A",
+      render: ({ attachment }) =>
+        attachment ? (
+          <>
+            <a
+              className="attachment_icon_in_table"
+              href={getStoragePath(attachment)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaRegFile className="me-1" />
+              View
+            </a>
+          </>
+        ) : (
+          ""
+        ),
       // for export
       key: "attachment",
     },
@@ -188,6 +237,7 @@ const index = () => {
       accessor: "reason",
       title: "Detail",
       noWrap: true,
+      width: 170,
       // sortable: true,
       // visibleMediaQuery: aboveXs,
       render: ({ reason }) => reason || "N/A",
@@ -199,12 +249,14 @@ const index = () => {
       accessor: "status",
       title: "Status",
       noWrap: true,
+      width: 100,
       // visibleMediaQuery: aboveXs,
       render: (item) => (
         <Group gap="xs">
           {item?.status === "Pending" ? (
             <>
               <Button
+                variant="filled"
                 size="compact-xs"
                 color="teal"
                 onClick={() => {
@@ -229,7 +281,7 @@ const index = () => {
           ) : (
             <>
               <Button
-                variant="filled"
+                variant="light"
                 size="compact-xs"
                 color={item?.status === "Approved" ? "green" : "red"}
               >
@@ -641,8 +693,8 @@ const index = () => {
         />
       </div>
 
-      <div className="d-flex justify-content-between mb-3">
-        <div className="showItem d-flex align-items-center justify-content-center">
+      <div className="d-flex justify-content-between mb-3 flex-wrap">
+        <div className="showItem d-flex align-items-center">
           <p className="mb-0 me-2">Show</p>
           <Select
             classNames={{
